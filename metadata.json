@@ -1,0 +1,8 @@
+{
+  "name": "Sunny — Personal AI Companion",
+  "description": "A warm, emotionally supportive AI companion app with a cozy dark purple and sunshine yellow theme, memory vault, and mindful grounding tools.",
+  "version": "1.0.0",
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
