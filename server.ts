@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { createServer as createViteServer } from 'vite';
+import { createClient } from '@supabase/supabase-js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -833,6 +834,79 @@ app.get(
         error:
           error?.message ||
           'Failed to retrieve Gemini models.',
+      });
+    }
+  }
+);
+
+// --------------------------------------------------
+// Account deletion
+// --------------------------------------------------
+
+app.delete(
+  '/api/account',
+  async (req: Request, res: Response) => {
+    try {
+      const authorization = req.headers.authorization;
+
+      if (!authorization?.startsWith('Bearer ')) {
+        return res.status(401).json({
+          success: false,
+          error: 'Authentication is required.',
+        });
+      }
+
+      const accessToken = authorization.slice('Bearer '.length).trim();
+      const supabaseUrl = process.env.VITE_SUPABASE_URL;
+      const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+      if (!supabaseUrl || !serviceRoleKey) {
+        return res.status(503).json({
+          success: false,
+          error: 'Account deletion is not configured on the server yet.',
+        });
+      }
+
+      const userClient = createClient(
+        supabaseUrl,
+        process.env.VITE_SUPABASE_PUBLISHABLE_KEY || serviceRoleKey,
+        { auth: { persistSession: false, autoRefreshToken: false } }
+      );
+
+      const { data: userData, error: userError } = await userClient.auth.getUser(accessToken);
+
+      if (userError || !userData.user) {
+        return res.status(401).json({
+          success: false,
+          error: 'Your session is no longer valid. Please sign in again.',
+        });
+      }
+
+      const adminClient = createClient(supabaseUrl, serviceRoleKey, {
+        auth: { persistSession: false, autoRefreshToken: false },
+      });
+
+      const { error: deleteError } = await adminClient.auth.admin.deleteUser(
+        userData.user.id
+      );
+
+      if (deleteError) {
+        console.error('[server /api/account] Account deletion failed:', deleteError);
+        return res.status(500).json({
+          success: false,
+          error: 'Sunny could not complete account deletion. Please try again.',
+        });
+      }
+
+      return res.json({
+        success: true,
+        message: 'Your Sunny account and associated cloud data were deleted.',
+      });
+    } catch (error: any) {
+      console.error('[server /api/account] Unexpected error:', error);
+      return res.status(500).json({
+        success: false,
+        error: 'Sunny could not complete account deletion. Please try again.',
       });
     }
   }
