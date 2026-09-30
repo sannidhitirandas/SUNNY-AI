@@ -166,4 +166,169 @@ export const cloudStorageService = {
       onboardingCompleted: data.onboarding_completed,
     };
   },
+
+  /**
+   * One-time migration for users upgrading from Sunny's old localStorage-only version.
+   * Local data is never deleted automatically. It is copied to the signed-in account
+   * and a local marker prevents repeated migration attempts.
+   */
+  async migrateLegacyLocalData(): Promise<{
+    migrated: boolean;
+    chatSessions: number;
+    chatMessages: number;
+    memories: number;
+    preferences: boolean;
+  }> {
+    if (typeof window === 'undefined' || !window.localStorage) {
+      return { migrated: false, chatSessions: 0, chatMessages: 0, memories: 0, preferences: false };
+    }
+
+    const migrationKey = '@sunny_cloud_migration_v1';
+    if (window.localStorage.getItem(migrationKey) === 'completed') {
+      return { migrated: false, chatSessions: 0, chatMessages: 0, memories: 0, preferences: false };
+    }
+
+    const userId = await getUserId();
+    let chatSessions = 0;
+    let chatMessages = 0;
+    let memories = 0;
+    let preferences = false;
+
+    // Migrate all legacy chat sessions stored under @sunny_chat_messages_<sessionId>.
+    const chatKeys: string[] = [];
+    for (let index = 0; index < window.localStorage.length; index += 1) {
+      const key = window.localStorage.key(index);
+      if (key?.startsWith('@sunny_chat_messages_')) {
+        chatKeys.push(key);
+      }
+    }
+
+    for (const key of chatKeys) {
+      const sessionId = key.slice('@sunny_chat_messages_'.length) || 'default-session';
+      try {
+        const raw = window.localStorage.getItem(key);
+        if (!raw) continue;
+
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) continue;
+
+        const legacyMessages = parsed.filter(
+          (message): message is ChatMessage =>
+            message &&
+            typeof message.id === 'string' &&
+            typeof message.content === 'string' &&
+            (message.role === 'user' || message.role === 'assistant' || message.role === 'system')
+        );
+
+        if (legacyMessages.length === 0) continue;
+
+        const existing = await this.getChatMessages(sessionId);
+        if (existing.length === 0) {
+          await this.saveChatMessages(sessionId, legacyMessages);
+          chatSessions += 1;
+          chatMessages += legacyMessages.length;
+        }
+      } catch (error) {
+        console.warn(`[cloudStorageService] Could not migrate chat key ${key}:`, error);
+        throw error;
+      }
+    }
+
+    // Migrate real memories only; legacy demo/sample memories are intentionally skipped.
+    try {
+      const rawMemories = window.localStorage.getItem('@sunny_memories');
+      if (rawMemories) {
+        const parsed = JSON.parse(rawMemories);
+        if (Array.isArray(parsed)) {
+          const legacyMemories = parsed.filter(
+            (memory): memory is Memory =>
+              memory &&
+              typeof memory.id === 'string' &&
+              typeof memory.title === 'string' &&
+              typeof memory.content === 'string' &&
+              !memory.isDemoData &&
+              !memory.id.startsWith('demo-mem-')
+          );
+
+          const existingMemories = await this.getMemories();
+          if (existingMemories.length === 0 && legacyMemories.length > 0) {
+            await Promise.all(
+              legacyMemories.map((memory) =>
+                this.saveMemory({
+                  ...memory,
+                  userId,
+                  isDemoData: false,
+                })
+              )
+            );
+            memories = legacyMemories.length;
+          }
+        }
+      }
+    } catch (error) {
+      console.warn('[cloudStorageService] Could not migrate legacy memories:', error);
+      throw error;
+    }
+
+    // Migrate saved preferences only when the account has no cloud preferences yet.
+    try {
+      const existingPreferences = await this.getPreferences();
+      if (!existingPreferences) {
+        const rawPreferences = window.localStorage.getItem('@sunny_user_preferences');
+        const rawOnboarding = window.localStorage.getItem('@sunny_onboarding_completed');
+
+        if (rawPreferences) {
+          const parsedPreferences = JSON.parse(rawPreferences) as Partial<UserPreferences>;
+          const onboardingCompleted = rawOnboarding
+            ? JSON.parse(rawOnboarding) === true
+            : false;
+
+          const rawNotifications = window.localStorage.getItem('@sunny_notification_preferences');
+          let notificationsEnabled =
+            typeof parsedPreferences.notificationsEnabled === 'boolean'
+              ? parsedPreferences.notificationsEnabled
+              : true;
+
+          if (rawNotifications) {
+            try {
+              const notificationPrefs = JSON.parse(rawNotifications) as { enabled?: unknown };
+              if (typeof notificationPrefs.enabled === 'boolean') {
+                notificationsEnabled = notificationPrefs.enabled;
+              }
+            } catch {
+              // Keep the preference value already available in the main preferences object.
+            }
+          }
+
+          await this.savePreferences(
+            {
+              preferredTone: parsedPreferences.preferredTone ?? 'adaptive',
+              interests: Array.isArray(parsedPreferences.interests)
+                ? parsedPreferences.interests.filter((item): item is string => typeof item === 'string')
+                : [],
+              preferredName:
+                typeof parsedPreferences.preferredName === 'string'
+                  ? parsedPreferences.preferredName
+                  : 'Sunshine',
+              memoryEnabled:
+                typeof parsedPreferences.memoryEnabled === 'boolean'
+                  ? parsedPreferences.memoryEnabled
+                  : true,
+              notificationsEnabled,
+            },
+            onboardingCompleted
+          );
+          preferences = true;
+        }
+      }
+    } catch (error) {
+      console.warn('[cloudStorageService] Could not migrate legacy preferences:', error);
+      throw error;
+    }
+
+    window.localStorage.setItem(migrationKey, 'completed');
+
+    return { migrated: true, chatSessions, chatMessages, memories, preferences };
+  },
+
 };
