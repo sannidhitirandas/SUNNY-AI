@@ -1,6 +1,7 @@
 import { chatService } from '@/services/chatService';
 import { ChatMessage, StarterIntent } from '@/types/chat';
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabase';
 import { useMemories } from './MemoryContext';
 import { usePreferences } from './PreferencesContext';
 
@@ -27,13 +28,37 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [activeIntent, setActiveIntent] = useState<StarterIntent | null>(null);
 
   useEffect(() => {
-    loadChatMessages();
-  }, []);
+    let mounted = true;
 
-  const loadChatMessages = async () => {
-    const loaded = await chatService.getMessages('default-session');
-    setMessages(loaded);
-  };
+    const loadChatMessages = async () => {
+      try {
+        const loaded = await chatService.getMessages('default-session');
+        if (mounted) setMessages(loaded);
+      } catch (error) {
+        console.warn('[ChatContext] Error loading cloud chat:', error);
+        if (mounted) setMessages([]);
+      }
+    };
+
+    void loadChatMessages();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        void loadChatMessages();
+      } else if (mounted) {
+        setMessages([]);
+        setActiveIntent(null);
+        setLastError(null);
+      }
+    });
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, []);
 
   const startConversationWithIntent = async (intent: StarterIntent) => {
     setActiveIntent(intent);
@@ -76,7 +101,6 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       await chatService.saveMessages('default-session', updatedWithUser);
 
-      // Send the message to Sunny via the server proxy
       const aiResult = await chatService.sendMessageToAI({
         message: content.trim(),
         history: updatedWithUser,
@@ -104,11 +128,13 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('[ChatContext] Error sending message:', err);
       const errorMsg = err?.message || 'Failed to connect to Sunny. Please check your connection and tap retry.';
       setLastError(errorMsg);
-
-      // The user's message DID reach Sunny's server. Only AI generation failed,
-      // so never label the user's message as "Not delivered".
       setMessages(updatedWithUser);
-      await chatService.saveMessages('default-session', updatedWithUser);
+
+      try {
+        await chatService.saveMessages('default-session', updatedWithUser);
+      } catch (saveError) {
+        console.error('[ChatContext] Error saving user message:', saveError);
+      }
     } finally {
       setIsThinking(false);
     }
@@ -118,7 +144,6 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const target = messages.find((m) => m.id === id);
     if (!target) return;
 
-    // Remove failed user message and re-send
     const filtered = messages.filter((m) => m.id !== id);
     setMessages(filtered);
     await sendMessage(target.content);
