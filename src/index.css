@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+@theme {
+  --color-sunny-bg: #100B22;
+  --color-sunny-secondary: #17102C;
+  --color-sunny-card: #21163A;
+  --color-sunny-elevated: #302149;
+  --color-sunny-input: #1B1430;
+  --color-sunny-yellow: #FFD84D;
+  --color-sunny-gold: #F6BD45;
+  --color-sunny-border: #392858;
+  --color-sunny-text-primary: #FFFFFF;
+  --color-sunny-text-secondary: #C6B8E5;
+  --color-sunny-text-muted: #9B8AB9;
+  --color-sunny-text-dark: #100B22;
+  --color-sunny-error: #FF8D9A;
+  --color-sunny-success: #A8D9A0;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: #100B22;
+  color: #FFFFFF;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #17102C;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #392858;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FFD84D;
+}
+
+@keyframes gentle-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.65;
+  }
+}
+
+.animate-glow {
+  animation: gentle-pulse 4s ease-in-out infinite;
+}
+
+@keyframes typing-bounce {
+  0%, 80%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  40% {
+    transform: translateY(-5px);
+    opacity: 1;
+  }
+}
+
+.typing-dot-1 {
+  animation: typing-bounce 1.4s infinite ease-in-out;
+}
+.typing-dot-2 {
+  animation: typing-bounce 1.4s infinite ease-in-out 0.2s;
+}
+.typing-dot-3 {
+  animation: typing-bounce 1.4s infinite ease-in-out 0.4s;
+}
