@@ -2,7 +2,7 @@ import { ChatMessage, StarterIntent } from '@/types/chat';
 import { Memory } from '@/types/memory';
 import { PersonalityTone } from '@/types/user';
 
-import { storageService } from './storageService';
+import { cloudStorageService } from './cloudStorageService';
 
 const INITIAL_MESSAGES: ChatMessage[] = [
   {
@@ -28,32 +28,17 @@ export interface SendMessageOptions {
 }
 
 export const chatService = {
-  async getMessages(
-    sessionId: string = 'default-session'
-  ): Promise<ChatMessage[]> {
-    const key = `${storageService.KEYS.CHAT_MESSAGES}_${sessionId}`;
-
-    return await storageService.getItem<ChatMessage[]>(
-      key,
-      INITIAL_MESSAGES
-    );
+  async getMessages(sessionId: string = 'default-session'): Promise<ChatMessage[]> {
+    const saved = await cloudStorageService.getChatMessages(sessionId);
+    return saved.length > 0 ? saved : INITIAL_MESSAGES;
   },
 
-  async saveMessages(
-    sessionId: string,
-    messages: ChatMessage[]
-  ): Promise<void> {
-    const key = `${storageService.KEYS.CHAT_MESSAGES}_${sessionId}`;
-
-    await storageService.setItem(key, messages);
+  async saveMessages(sessionId: string, messages: ChatMessage[]): Promise<void> {
+    await cloudStorageService.saveChatMessages(sessionId, messages);
   },
 
-  async clearMessages(
-    sessionId: string = 'default-session'
-  ): Promise<void> {
-    const key = `${storageService.KEYS.CHAT_MESSAGES}_${sessionId}`;
-
-    await storageService.setItem(key, INITIAL_MESSAGES);
+  async clearMessages(sessionId: string = 'default-session'): Promise<void> {
+    await cloudStorageService.clearChatMessages(sessionId);
   },
 
   getStarterGreeting(
@@ -76,9 +61,7 @@ export const chatService = {
     }
   },
 
-  async sendMessageToAI(
-    options: SendMessageOptions
-  ): Promise<{ text: string }> {
+  async sendMessageToAI(options: SendMessageOptions): Promise<{ text: string }> {
     const {
       message,
       history,
@@ -90,13 +73,9 @@ export const chatService = {
     } = options;
 
     const controller = new AbortController();
-
-    const timeoutId = setTimeout(() => {
-      controller.abort();
-    }, 35000);
+    const timeoutId = setTimeout(() => controller.abort(), 35000);
 
     try {
-      // Convert chat history into the format expected by the backend.
       const formattedHistory = history
         .filter((m) => m.deliveryStatus !== 'failed')
         .map((m) => ({
@@ -104,7 +83,6 @@ export const chatService = {
           content: m.content,
         }));
 
-      // Only send saved memories when memory is enabled.
       const memoryPayloads = memoryEnabled
         ? memories.map((m) => ({
             title: m.title,
@@ -131,52 +109,27 @@ export const chatService = {
       });
 
       clearTimeout(timeoutId);
-
       const data = await response.json().catch(() => null);
 
       if (!response.ok) {
-        const errorMsg =
-          data?.error ||
-          `Server responded with status ${response.status}`;
-
-        throw new Error(errorMsg);
+        throw new Error(data?.error || `Server responded with status ${response.status}`);
       }
 
-      if (
-        !data ||
-        !data.success ||
-        typeof data.text !== 'string'
-      ) {
-        throw new Error(
-          data?.error ||
-            'Received an invalid response format from Sunny AI.'
-        );
+      if (!data || !data.success || typeof data.text !== 'string') {
+        throw new Error(data?.error || 'Received an invalid response format from Sunny AI.');
       }
 
-      // Only return Sunny's response text.
-      // The Gemini model name is intentionally not exposed to the UI.
-      return {
-        text: data.text,
-      };
+      return { text: data.text };
     } catch (err: unknown) {
       clearTimeout(timeoutId);
 
-      if (
-        err instanceof DOMException &&
-        err.name === 'AbortError'
-      ) {
-        throw new Error(
-          'Sunny took a bit too long to respond. Please tap Retry to try again.'
-        );
+      if (err instanceof DOMException && err.name === 'AbortError') {
+        throw new Error('Sunny took a bit too long to respond. Please tap Retry to try again.');
       }
 
-      if (err instanceof Error) {
-        throw err;
-      }
+      if (err instanceof Error) throw err;
 
-      throw new Error(
-        'Sunny had a brief connection stumble. Please tap Retry to try again.'
-      );
+      throw new Error('Sunny had a brief connection stumble. Please tap Retry to try again.');
     }
   },
 };
