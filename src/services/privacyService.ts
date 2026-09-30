@@ -1,24 +1,30 @@
-import { storageService } from './storageService';
 import { memoryService } from './memoryService';
 import { chatService } from './chatService';
+import { cloudStorageService } from './cloudStorageService';
+import { supabase } from '@/lib/supabase';
 
 export const privacyService = {
   async exportAllUserData(): Promise<string> {
-    const preferences = await storageService.getItem(storageService.KEYS.USER_PREFERENCES, {});
-    const currentUser = await storageService.getItem(storageService.KEYS.CURRENT_USER, {});
+    const { data: { user } } = await supabase.auth.getUser();
+    const preferences = await cloudStorageService.getPreferences();
     const memories = await memoryService.getMemories();
     const chatMessages = await chatService.getMessages();
-    const notifications = await storageService.getItem(storageService.KEYS.NOTIFICATION_PREFERENCES, {});
 
     const exportPayload = {
       appName: 'Sunny AI Companion',
       exportDate: new Date().toISOString(),
-      userProfile: currentUser,
-      preferences,
+      account: user
+        ? {
+            id: user.id,
+            email: user.email ?? null,
+            createdAt: user.created_at,
+          }
+        : null,
+      preferences: preferences?.preferences ?? null,
+      onboardingCompleted: preferences?.onboardingCompleted ?? false,
       memories,
       chatMessages,
-      notifications,
-      disclaimer: 'Sunny demo mode data export. All data was stored locally on your device.',
+      note: 'This export contains the Sunny data currently associated with your signed-in account.',
     };
 
     return JSON.stringify(exportPayload, null, 2);
@@ -33,29 +39,50 @@ export const privacyService = {
   },
 
   async deleteAccountAndAllData(): Promise<void> {
-    await storageService.clearAll();
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session?.access_token) {
+      throw new Error('Please sign in again before deleting your account.');
+    }
+
+    const response = await fetch('/api/account', {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${session.access_token}`,
+      },
+    });
+
+    const data = await response.json().catch(() => null);
+
+    if (!response.ok || !data?.success) {
+      throw new Error(
+        data?.error || 'Sunny could not complete account deletion. Please try again.'
+      );
+    }
+
+    await supabase.auth.signOut();
   },
 
   getPrivacyHighlights() {
     return [
       {
-        title: 'Local-First in Demo Mode',
-        description: 'All your current messages, preferences, and saved memories stay strictly on your local device.',
+        title: 'Cloud data tied to your account',
+        description: 'Your Sunny chats, saved memories, and preferences are stored in your authenticated Supabase account.',
         icon: 'ShieldCheck',
       },
       {
-        title: 'Memory with Consent',
-        description: "Sunny only remembers details you explicitly choose to save. You can view, edit, or delete any memory at any time.",
+        title: 'Memory with consent',
+        description: 'When memory is enabled, Sunny can use the memories you save. You can review or delete them at any time.',
         icon: 'Heart',
       },
       {
-        title: 'Never Sold or Advertised',
-        description: "Your conversations are personal reflections, never used for advertising profiles or third-party brokers.",
+        title: 'No advertising profile',
+        description: 'Sunny does not use your conversations to build an advertising profile.',
         icon: 'Lock',
       },
       {
-        title: 'Instant Data Purge',
-        description: "One-tap controls allow you to export your data or permanently wipe your chat history and memory vault.",
+        title: 'Data export & deletion',
+        description: 'You can export your Sunny data, clear chat or memories, or permanently delete your account and associated cloud data.',
         icon: 'Trash2',
       },
     ];
