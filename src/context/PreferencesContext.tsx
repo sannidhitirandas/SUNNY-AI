@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { PersonalityTone, UserPreferences } from '@/types/user';
-import { storageService } from '@/services/storageService';
+import { cloudStorageService } from '@/services/cloudStorageService';
+import { supabase } from '@/lib/supabase';
 
 interface PreferencesContextType {
   preferences: UserPreferences;
@@ -31,31 +32,49 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    loadPreferences();
-  }, []);
+    let mounted = true;
 
-  const loadPreferences = async () => {
-    try {
-      const savedPrefs = await storageService.getItem<UserPreferences>(
-        storageService.KEYS.USER_PREFERENCES,
-        DEFAULT_PREFERENCES
-      );
-      const onboarded = await storageService.getItem<boolean>(
-        storageService.KEYS.ONBOARDING_COMPLETED,
-        false
-      );
-      setPreferences(savedPrefs);
-      setHasCompletedOnboarding(onboarded);
-    } catch (e) {
-      console.warn('Error loading preferences', e);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    const loadPreferences = async () => {
+      try {
+        const saved = await cloudStorageService.getPreferences();
+
+        if (!mounted) return;
+
+        if (saved) {
+          setPreferences(saved.preferences);
+          setHasCompletedOnboarding(saved.onboardingCompleted);
+        }
+      } catch (error) {
+        console.warn('[PreferencesContext] Error loading cloud preferences:', error);
+      } finally {
+        if (mounted) setIsLoading(false);
+      }
+    };
+
+    void loadPreferences();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        setIsLoading(true);
+        void loadPreferences();
+      } else if (mounted) {
+        setPreferences(DEFAULT_PREFERENCES);
+        setHasCompletedOnboarding(false);
+        setIsLoading(false);
+      }
+    });
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, []);
 
   const saveUpdatedPreferences = async (newPrefs: UserPreferences) => {
     setPreferences(newPrefs);
-    await storageService.setItem(storageService.KEYS.USER_PREFERENCES, newPrefs);
+    await cloudStorageService.savePreferences(newPrefs, hasCompletedOnboarding);
   };
 
   const updateTone = async (tone: PersonalityTone) => {
@@ -85,12 +104,12 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const completeOnboarding = async () => {
     setHasCompletedOnboarding(true);
-    await storageService.setItem(storageService.KEYS.ONBOARDING_COMPLETED, true);
+    await cloudStorageService.savePreferences(preferences, true);
   };
 
   const resetOnboarding = async () => {
     setHasCompletedOnboarding(false);
-    await storageService.setItem(storageService.KEYS.ONBOARDING_COMPLETED, false);
+    await cloudStorageService.savePreferences(preferences, false);
   };
 
   return (
