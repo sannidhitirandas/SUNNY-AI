@@ -1,57 +1,53 @@
 import { Memory, MemoryCategory } from '@/types/memory';
-import { storageService } from './storageService';
+import { cloudStorageService } from './cloudStorageService';
 
 export const memoryService = {
   async getMemories(): Promise<Memory[]> {
-    const saved = await storageService.getItem<Memory[]>(storageService.KEYS.MEMORIES, []);
-    // Remove legacy sample/demo memories so they are never presented as user data.
-    const realMemories = saved.filter((memory) => !memory.isDemoData && !memory.id.startsWith('demo-mem-'));
-    if (realMemories.length !== saved.length) {
-      await storageService.setItem(storageService.KEYS.MEMORIES, realMemories);
-    }
-    return realMemories;
+    return await cloudStorageService.getMemories();
   },
 
   async saveMemories(memories: Memory[]): Promise<boolean> {
-    return await storageService.setItem(storageService.KEYS.MEMORIES, memories);
+    await Promise.all(memories.map((memory) => cloudStorageService.saveMemory(memory)));
+    return true;
   },
 
   async addMemory(memory: Omit<Memory, 'id' | 'createdAt' | 'updatedAt'>): Promise<Memory> {
-    const memories = await this.getMemories();
     const newMemory: Memory = {
       ...memory,
       id: `mem-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-    const updated = [newMemory, ...memories];
-    await this.saveMemories(updated);
+    await cloudStorageService.saveMemory(newMemory);
     return newMemory;
   },
 
-  async updateMemory(id: string, updates: Partial<Pick<Memory, 'title' | 'content' | 'category' | 'userConfirmed'>>): Promise<Memory | null> {
+  async updateMemory(
+    id: string,
+    updates: Partial<Pick<Memory, 'title' | 'content' | 'category' | 'userConfirmed'>>
+  ): Promise<Memory | null> {
     const memories = await this.getMemories();
-    const index = memories.findIndex((m) => m.id === id);
-    if (index === -1) return null;
+    const existing = memories.find((memory) => memory.id === id);
+    if (!existing) return null;
 
     const updatedMemory: Memory = {
-      ...memories[index],
+      ...existing,
       ...updates,
       updatedAt: new Date().toISOString(),
     };
-    memories[index] = updatedMemory;
-    await this.saveMemories(memories);
+
+    await cloudStorageService.saveMemory(updatedMemory);
     return updatedMemory;
   },
 
   async deleteMemory(id: string): Promise<boolean> {
-    const memories = await this.getMemories();
-    const filtered = memories.filter((m) => m.id !== id);
-    return await this.saveMemories(filtered);
+    await cloudStorageService.deleteMemory(id);
+    return true;
   },
 
   async clearAllMemories(): Promise<boolean> {
-    return await this.saveMemories([]);
+    await cloudStorageService.clearAllMemories();
+    return true;
   },
 
   filterMemories(memories: Memory[], category: MemoryCategory | 'all', search: string): Memory[] {
