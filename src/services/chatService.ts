@@ -3,6 +3,7 @@ import { Memory } from '@/types/memory';
 import { PersonalityTone } from '@/types/user';
 
 import { cloudStorageService } from './cloudStorageService';
+import { apiUrl } from '@/lib/api';
 
 const INITIAL_MESSAGES: ChatMessage[] = [
   {
@@ -91,7 +92,7 @@ export const chatService = {
           }))
         : [];
 
-      const response = await fetch('/api/chat', {
+      const response = await fetch(apiUrl('/api/chat'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
