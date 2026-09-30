@@ -2,6 +2,7 @@ import { memoryService } from './memoryService';
 import { chatService } from './chatService';
 import { cloudStorageService } from './cloudStorageService';
 import { supabase } from '@/lib/supabase';
+import { apiUrl } from '@/lib/api';
 
 export const privacyService = {
   async exportAllUserData(): Promise<string> {
@@ -45,7 +46,7 @@ export const privacyService = {
       throw new Error('Please sign in again before deleting your account.');
     }
 
-    const response = await fetch('/api/account', {
+    const response = await fetch(apiUrl('/api/account'), {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${session.access_token}`,
