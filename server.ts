@@ -1200,7 +1200,7 @@ async function startServer() {
 
   app.listen(
     PORT,
-    'localhost',
+    '0.0.0.0',
     () => {
       console.log(
         `☀️ Sunny AI Companion Server running at http://localhost:${PORT}`
