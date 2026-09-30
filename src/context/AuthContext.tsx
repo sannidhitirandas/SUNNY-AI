@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, PersonalityTone } from '@/types/user';
 import { authService } from '@/services/authService';
 import { supabase } from '@/lib/supabase';
+import { cloudStorageService } from '@/services/cloudStorageService';
 
 interface AuthContextType {
   user: User | null;
@@ -37,6 +38,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         const currentUser = await authService.getCurrentUser();
 
         if (mounted) {
+          if (currentUser) {
+            try {
+              await cloudStorageService.migrateLegacyLocalData();
+            } catch (migrationError) {
+              console.warn('[AuthContext] Legacy local data migration skipped:', migrationError);
+            }
+          }
           setUser(currentUser);
         }
       } catch (error) {
@@ -65,6 +73,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         const currentUser = await authService.getCurrentUser();
 
         if (mounted) {
+          if (currentUser) {
+            try {
+              await cloudStorageService.migrateLegacyLocalData();
+            } catch (migrationError) {
+              console.warn('[AuthContext] Legacy local data migration skipped:', migrationError);
+            }
+          }
           setUser(currentUser);
         }
       } else {
