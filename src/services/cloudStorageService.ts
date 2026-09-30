@@ -110,6 +110,15 @@ export const cloudStorageService = {
     if (error) throw error;
   },
 
+  async clearAllMemories(): Promise<void> {
+    const userId = await getUserId();
+    const { error } = await supabase
+      .from('sunny_memories')
+      .delete()
+      .eq('user_id', userId);
+    if (error) throw error;
+  },
+
   async deleteMemory(id: string): Promise<void> {
     const userId = await getUserId();
     const { error } = await supabase
