@@ -1,0 +1,160 @@
+import { supabase } from '@/lib/supabase';
+import { ChatMessage } from '@/types/chat';
+import { Memory } from '@/types/memory';
+import { UserPreferences } from '@/types/user';
+
+const getUserId = async (): Promise<string> => {
+  const { data, error } = await supabase.auth.getUser();
+  if (error || !data.user) {
+    throw new Error('You need to be signed in to save Sunny data.');
+  }
+  return data.user.id;
+};
+
+export const cloudStorageService = {
+  async getChatMessages(sessionId = 'default-session'): Promise<ChatMessage[]> {
+    const userId = await getUserId();
+    const { data, error } = await supabase
+      .from('sunny_chat_messages')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('session_id', sessionId)
+      .order('created_at', { ascending: true });
+
+    if (error) throw error;
+    return (data ?? []).map((row) => ({
+      id: row.id,
+      sessionId: row.session_id,
+      role: row.role,
+      content: row.content,
+      createdAt: row.created_at,
+      deliveryStatus: row.delivery_status,
+      isDemoResponse: row.is_demo_response,
+      model: row.model ?? undefined,
+      errorMessage: row.error_message ?? undefined,
+    }));
+  },
+
+  async saveChatMessages(sessionId: string, messages: ChatMessage[]): Promise<void> {
+    const userId = await getUserId();
+    if (messages.length === 0) return;
+
+    const rows = messages.map((message) => ({
+      id: message.id,
+      user_id: userId,
+      session_id: sessionId,
+      role: message.role,
+      content: message.content,
+      created_at: message.createdAt,
+      delivery_status: message.deliveryStatus,
+      is_demo_response: message.isDemoResponse ?? false,
+      model: message.model ?? null,
+      error_message: message.errorMessage ?? null,
+    }));
+
+    const { error } = await supabase
+      .from('sunny_chat_messages')
+      .upsert(rows, { onConflict: 'id' });
+
+    if (error) throw error;
+  },
+
+  async clearChatMessages(sessionId = 'default-session'): Promise<void> {
+    const userId = await getUserId();
+    const { error } = await supabase
+      .from('sunny_chat_messages')
+      .delete()
+      .eq('user_id', userId)
+      .eq('session_id', sessionId);
+    if (error) throw error;
+  },
+
+  async getMemories(): Promise<Memory[]> {
+    const userId = await getUserId();
+    const { data, error } = await supabase
+      .from('sunny_memories')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('is_demo_data', false)
+      .order('updated_at', { ascending: false });
+
+    if (error) throw error;
+    return (data ?? []).map((row) => ({
+      id: row.id,
+      userId: row.user_id,
+      title: row.title,
+      content: row.content,
+      category: row.category,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
+      userConfirmed: row.user_confirmed,
+      sourceSessionId: row.source_session_id ?? undefined,
+      isDemoData: row.is_demo_data,
+    }));
+  },
+
+  async saveMemory(memory: Memory): Promise<void> {
+    const userId = await getUserId();
+    const { error } = await supabase.from('sunny_memories').upsert({
+      id: memory.id,
+      user_id: userId,
+      title: memory.title,
+      content: memory.content,
+      category: memory.category,
+      created_at: memory.createdAt,
+      updated_at: memory.updatedAt,
+      user_confirmed: memory.userConfirmed,
+      source_session_id: memory.sourceSessionId ?? null,
+      is_demo_data: false,
+    });
+    if (error) throw error;
+  },
+
+  async deleteMemory(id: string): Promise<void> {
+    const userId = await getUserId();
+    const { error } = await supabase
+      .from('sunny_memories')
+      .delete()
+      .eq('id', id)
+      .eq('user_id', userId);
+    if (error) throw error;
+  },
+
+  async savePreferences(preferences: UserPreferences, onboardingCompleted: boolean): Promise<void> {
+    const userId = await getUserId();
+    const { error } = await supabase.from('sunny_preferences').upsert({
+      user_id: userId,
+      preferred_tone: preferences.preferredTone,
+      interests: preferences.interests,
+      preferred_name: preferences.preferredName,
+      memory_enabled: preferences.memoryEnabled,
+      notifications_enabled: preferences.notificationsEnabled,
+      onboarding_completed: onboardingCompleted,
+      updated_at: new Date().toISOString(),
+    });
+    if (error) throw error;
+  },
+
+  async getPreferences(): Promise<{ preferences: UserPreferences; onboardingCompleted: boolean } | null> {
+    const userId = await getUserId();
+    const { data, error } = await supabase
+      .from('sunny_preferences')
+      .select('*')
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) return null;
+
+    return {
+      preferences: {
+        preferredTone: data.preferred_tone,
+        interests: data.interests ?? [],
+        preferredName: data.preferred_name,
+        memoryEnabled: data.memory_enabled,
+        notificationsEnabled: data.notifications_enabled,
+      },
+      onboardingCompleted: data.onboarding_completed,
+    };
+  },
+};
