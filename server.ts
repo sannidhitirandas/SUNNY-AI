@@ -1181,8 +1181,7 @@ async function startServer() {
 
     app.use(express.static(distPath));
 
-    app.get(
-      '*',
+    app.use(
       (_req: Request, res: Response) => {
         res.sendFile(
           path.resolve(
