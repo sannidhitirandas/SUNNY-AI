@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { PreferencesProvider } from '@/context/PreferencesContext';
 import { AuthProvider } from '@/context/AuthContext';
+import { PreferencesProvider } from '@/context/PreferencesContext';
 import { MemoryProvider } from '@/context/MemoryContext';
 import { ChatProvider } from '@/context/ChatContext';
 import App from './App';
@@ -14,14 +14,14 @@ if (!rootElement) {
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <PreferencesProvider>
-      <AuthProvider>
+    <AuthProvider>
+      <PreferencesProvider>
         <MemoryProvider>
           <ChatProvider>
             <App />
           </ChatProvider>
         </MemoryProvider>
-      </AuthProvider>
-    </PreferencesProvider>
+      </PreferencesProvider>
+    </AuthProvider>
   </React.StrictMode>
 );
