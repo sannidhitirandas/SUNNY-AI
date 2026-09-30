@@ -30,6 +30,7 @@ export const PrivacyScreen: React.FC<PrivacyScreenProps> = ({ onBack, onResetToO
   const { clearChat } = useChat();
   const { clearAllMemories } = useMemories();
   const [exportNotice, setExportNotice] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const highlights = privacyService.getPrivacyHighlights();
 
@@ -54,7 +55,7 @@ export const PrivacyScreen: React.FC<PrivacyScreenProps> = ({ onBack, onResetToO
   };
 
   const handleClearHistory = async () => {
-    if (window.confirm('Clear Conversation History?\nAll current chat messages will be deleted from your device.')) {
+    if (window.confirm('Clear Conversation History?\nAll current chat messages will be permanently deleted from your Sunny account.')) {
       await clearChat();
       alert('Chat history cleared.');
     }
@@ -131,7 +132,7 @@ export const PrivacyScreen: React.FC<PrivacyScreenProps> = ({ onBack, onResetToO
       <SettingsSection title="DATA ACTIONS">
         <SettingsRow
           title="Export My Complete Data"
-          subtitle="View or save your local dataset in standard JSON"
+          subtitle="View or save the data associated with your Sunny account"
           icon={<Download size={16} className="text-[#A8D9A0]" />}
           onPress={handleExport}
         />
@@ -151,12 +152,18 @@ export const PrivacyScreen: React.FC<PrivacyScreenProps> = ({ onBack, onResetToO
         />
         <SettingsRow
           title="Reset Everything & Start Over"
-          subtitle="Clear all storage and return to onboarding"
+          subtitle="Permanently delete your account and associated cloud data"
           icon={<RefreshCw size={16} className="text-[#FF8D9A]" />}
           destructive
           onPress={handleDeleteEverything}
         />
       </SettingsSection>
+
+      {deleteError && (
+        <div className="mt-4 p-3 rounded-2xl bg-[#3A1722] border border-[#7A3045] text-sm text-[#FFD0D8]" role="alert">
+          {deleteError}
+        </div>
+      )}
 
       <div className="mt-4">
         <AppButton
