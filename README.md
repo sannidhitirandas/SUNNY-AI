@@ -2,13 +2,13 @@
 
 > *"You don't have to start over every time you come back."*
 
-Sunny is a warm, emotionally supportive AI companion application built with **React 19**, **Vite**, **TypeScript**, and **Tailwind CSS**. Designed with a cozy, premium visual identity of deep dark purple and radiant sunshine yellow, Sunny offers a calm, safe digital corner to talk, laugh, reflect, and feel heard.
+Sunny is a warm, emotionally supportive AI companion application built with **React 19**, **Vite**, **TypeScript**, **Tailwind CSS**, **Express**, and **Supabase**. It combines a cozy, premium visual identity with real authentication and server-side AI conversations, creating a calm digital space to talk, laugh, reflect, and feel heard.
 
 ---
 
 ## 🎨 Visual Identity — Dark Purple + Sunshine Yellow
 
-Sunny adheres to a bespoke, comforting dark theme:
+Sunny uses a bespoke dark theme designed to feel calm, warm, and welcoming:
 
 | Element | Hex Color | Usage |
 | :--- | :--- | :--- |
@@ -23,126 +23,321 @@ Sunny adheres to a bespoke, comforting dark theme:
 | **Lavender Text** | `#C6B8E5` | Supporting descriptions & subtitles |
 | **Muted Text** | `#9B8AB9` | Captions, placeholders & timestamps |
 | **Borders** | `#392858` | Subtle card & row boundaries |
-| **Success / Warning / Error**| `#A8D9A0` / `#F6BD45` / `#FF8D9A` | Status states |
+| **Success / Warning / Error** | `#A8D9A0` / `#F6BD45` / `#FF8D9A` | Status states |
 
 ---
 
-## 📱 Core Features Implemented
+## 📱 Core Features
 
-### 1. Splash & Guided Onboarding Flow
-- **Splash Screen**: Glowing animated sun logo, smooth fade-in, and auto-routing.
+### 1. Splash & Guided Onboarding
+
+- **Splash Screen**: Glowing animated sun logo with smooth fade-in and automatic routing.
 - **Welcome**: Warm introduction to Sunny's purpose.
-- **Interests**: Multi-selectable goals (listening, encouragement, reflection).
-- **Personality Choice**: Select Sunny's conversational vibe (**Adaptive**, **Playful**, **Gentle**, **Calm**).
-- **Memory Consent**: Transparent consent selection for saving personal memories.
-- **Notification Consent**: Gentle check-in opt-in explanation.
-- **Completion**: Cheerful entry into Sunny's space.
+- **Interests**: Select goals such as listening, encouragement, and reflection.
+- **Personality Choice**: Choose Sunny's conversational vibe (**Adaptive**, **Playful**, **Gentle**, or **Calm**).
+- **Memory Consent**: Clear consent flow for memory-related features.
+- **Notification Consent**: Optional check-in notification preferences.
+- **Completion**: Smooth transition into Sunny's main experience.
 
-### 2. Authentication Flow
-- **Login**: Email/password sign-in with field validation, password toggle, and one-tap **Explore in Demo Mode** guest access.
-- **Sign-Up**: Display name, email, password strength check, and local storage consent.
+### 2. Authentication
+
+- Email/password authentication through **Supabase Auth**.
+- Login and registration validation.
+- Password visibility toggle.
+- Display name / preferred name support.
+- Persistent authenticated sessions.
+- Optional guest/demo access where enabled by the application.
 
 ### 3. Home Screen — The Heart of Sunny
-- **Header**: Brand logo, tagline, demo mode indicator, and quick settings link.
-- **Greeting Card**: Welcomes the user by their preferred name with "Talk to Sunny" primary CTA.
-- **Conversation Starters ("What's the vibe today?")**: 4 intent-driven cards:
-  1. *I need someone to listen* (Empathetic / Gentle)
-  2. *Distract me and make me laugh* (Playful / Humorous)
-  3. *I need a little encouragement* (Supportive / Grounding)
-  4. *Let's talk about anything* (Open curiosity)
-  *Tapping any card directly launches the Chat screen with the selected context.*
-- **Daily Sunshine**: Rotating thoughtful reminders and reflections with "Another ☀️" button.
-- **Recent Conversation Preview**: Tap-to-resume last conversation snippet.
+
+- **Header**: Sunny branding, tagline, and quick settings access.
+- **Greeting Card**: Welcomes the user by their preferred name with a **Talk to Sunny** CTA.
+- **Conversation Starters ("What's the vibe today?")**:
+  1. *I need someone to listen*
+  2. *Distract me and make me laugh*
+  3. *I need a little encouragement*
+  4. *Let's talk about anything*
+- Conversation starters can launch Chat with the selected context.
+- **Daily Sunshine**: Rotating thoughtful reminders and reflections.
+- **Recent Conversation Preview**: Quick access to recent conversation context.
 
 ### 4. Chat Screen — The Main Experience
-- **Sunny & User Message Bubbles**:
-  - Sunny: Dark purple card bubble with avatar badge, timestamp, and demo tag.
-  - User: Radiant sunshine yellow bubble with dark purple text, timestamps, and delivery indicators.
-- **Typing Indicator**: Animated 3-dot pulse while Sunny is generating a reply.
-- **Auto-Expanding Composer**: Multiline text input with character limits, send button with up arrow.
-- **Realistic Demo AI Engine**:
-  - Deterministic contextual responses reflecting the chosen personality tone.
-  - Built-in crisis keywords detection routing to immediate emergency resources.
-  - Retry failed message handling.
-- **Chat Options Modal**: Clear chat, view memories, and access crisis safety info.
 
-### 5. Memories Management Vault
-- **Live Search & Category Filters**: Filter memories by *All, Personal, Relationships, Events, Ongoing, Preferences*.
-- **Add / Edit / Delete**:
-  - Dedicated **MemoryModal** for saving and updating notes with explicit confirmation.
-  - Delete with confirmation.
-- **Memory Disabled State**: Clear UI when memory is toggled off, respecting privacy.
-- **Sample Memories**: Pre-seeded demo memories that users can view, edit, delete, or reset.
+- **Sunny & User Message Bubbles** with timestamps and delivery states.
+- **Typing Indicator** while Sunny generates a response.
+- **Auto-Expanding Composer** for multiline messages.
+- **Real AI Conversations** through the application's server-side AI service.
+- **Groq as the primary AI provider** for fast responses.
+- **Gemini as the fallback provider** when the primary provider is unavailable.
+- Conversational context including recent chat history, selected tone, preferred name, memory setting, and available memories.
+- Friendly retry/error states when AI providers are temporarily unavailable.
+- Crisis-safety routing for supported safety keywords and emergency resources.
+- **Chat Options** for clearing conversations, accessing memories, and viewing safety information.
 
-### 6. Comprehensive Settings
-- **Section A (Your Sunny)**: Personality switcher modal, preferred name editor, theme indicator.
-- **Section B (Memory)**: Master memory toggle switch, manage saved memories, privacy explanation.
-- **Section C (Notifications)**: Preferences screen link, quiet hours notice.
-- **Section D (Privacy & Security)**: Data export in standard JSON, clear chat history, wipe data.
-- **Section E (Help & Safety)**: Crisis hotlines (988 Lifeline, 741741, international) and interactive 5-4-3-2-1 mindful grounding tool.
-- **Section F (Account)**: Profile details, replay onboarding, sign out, and wipe account.
+### 5. Memories Management
 
----
+- Live search and category filtering.
+- Memory categories include **Personal, Relationships, Events, Ongoing, and Preferences**.
+- Add, edit, and delete memory items.
+- Explicit memory consent and memory enable/disable controls.
+- Privacy-focused memory management.
+- Clear controls for removing stored conversation or memory data.
 
-## 🏗️ Architecture & Clean Service Layer
+### 6. Settings & Privacy
 
-```
-src/
-├── main.tsx                         # Root entry with React 19 & Context providers
-├── App.tsx                          # App shell, tab router, bottom nav
-├── index.css                        # Tailwind CSS v4 & theme variables
-├── constants/
-│   └── theme.ts                     # Color palette & spacing constants
-├── types/
-│   ├── chat.ts                      # Chat message & session interfaces
-│   ├── memory.ts                    # Memory items & categories
-│   ├── user.ts                      # User profile & preferences
-│   └── notifications.ts             # Notification schedules
-├── services/
-│   ├── storageService.ts            # LocalStorage persistence wrapper with in-memory fallback
-│   ├── authService.ts               # Authentication & demo guest sessions
-│   ├── chatService.ts               # Chat session manager & AI engine
-│   ├── memoryService.ts             # Memory store, category filters & consent handling
-│   ├── notificationService.ts       # Notification schedules & preview items
-│   └── privacyService.ts            # Data export (JSON) & permanent wipe controls
-├── context/
-│   ├── AuthContext.tsx              # Authentication state
-│   ├── PreferencesContext.tsx       # Tone, name, memory & notification toggles
-│   ├── ChatContext.tsx              # Chat state & intent triggers
-│   └── MemoryContext.tsx            # Memory items & search filters
-├── screens/
-│   ├── SplashScreen.tsx             # Animated startup splash
-│   ├── HomeScreen.tsx               # Home tab
-│   ├── ChatScreen.tsx               # Chat tab
-│   ├── MemoriesScreen.tsx           # Memories tab
-│   ├── SettingsScreen.tsx           # Settings tab
-│   ├── onboarding/                  # Multi-step onboarding flow
-│   ├── auth/                        # Login & Register views
-│   └── settings/                    # Detail sub-screens (Safety, Privacy, Notifications, About)
-└── components/
-    ├── brand/                       # SunnyLogo SVG component
-    ├── ui/                          # AppButton, AppCard, AppInput, Badge, EmptyState
-    ├── home/                        # GreetingCard, ConversationStarter, DailySunshineCard, RecentConversations
-    ├── chat/                        # ChatHeader, MessageBubble, MessageComposer, TypingIndicator
-    ├── memories/                    # MemoryCard, MemoryModal
-    └── settings/                    # SettingsRow, SettingsSection
-```
+- **Your Sunny**: Personality and preferred-name controls.
+- **Memory**: Memory enable/disable and memory management.
+- **Notifications**: Notification preferences and quiet-hours settings.
+- **Privacy & Security**: Data export, chat clearing, and data-wipe controls.
+- **Help & Safety**: Crisis resources and a 5-4-3-2-1 grounding tool.
+- **Account**: Profile information, onboarding replay, sign out, and account/data controls.
 
 ---
 
-## 🚀 Running the App
+## 🧠 AI Architecture
+
+Sunny keeps provider credentials on the server and never exposes AI API keys to the browser.
+
+```
+React Frontend
+      │
+      ▼
+POST /api/chat
+      │
+      ▼
+Express Server
+      │
+      ├──► Groq (Primary)
+      │       │
+      │       └── openai/gpt-oss-120b
+      │
+      └──► Gemini (Fallback)
+              │
+              ├── gemini-3.8-flash
+              ├── gemini-3.7-flash
+              └── gemini-3.6-flash
+```
+
+The server handles provider selection, timeouts, fallback behavior, and friendly error responses.
+
+---
+
+## 🔐 Authentication & Data
+
+Sunny uses **Supabase** for authentication and application configuration.
+
+The browser uses only the Supabase URL and publishable key. Secret provider credentials remain server-side.
+
+### Environment variables
+
+Required server/client configuration:
+
+```env
+GROQ_API_KEY=your-groq-api-key
+GEMINI_API_KEY=your-gemini-api-key
+VITE_SUPABASE_URL=your-supabase-project-url
+VITE_SUPABASE_PUBLISHABLE_KEY=your-supabase-publishable-key
+```
+
+Optional:
+
+```env
+GROQ_MODEL=openai/gpt-oss-120b
+GEMINI_MODEL=gemini-3.8-flash
+PORT=3000
+```
+
+**Never commit `.env.local`, API keys, service-role keys, private keys, or other secrets to GitHub.**
+
+Do not place `GROQ_API_KEY` or `GEMINI_API_KEY` in `VITE_` variables. Vite variables are exposed to the frontend.
+
+---
+
+## 🏗️ Project Architecture
+
+```
+SUNNY-AI/
+├── src/
+│   ├── main.tsx
+│   ├── App.tsx
+│   ├── index.css
+│   │
+│   ├── constants/
+│   │   └── theme.ts
+│   │
+│   ├── types/
+│   │   ├── chat.ts
+│   │   ├── memory.ts
+│   │   ├── user.ts
+│   │   └── notifications.ts
+│   │
+│   ├── services/
+│   │   ├── storageService.ts
+│   │   ├── authService.ts
+│   │   ├── chatService.ts
+│   │   ├── memoryService.ts
+│   │   ├── notificationService.ts
+│   │   └── privacyService.ts
+│   │
+│   ├── context/
+│   │   ├── AuthContext.tsx
+│   │   ├── PreferencesContext.tsx
+│   │   ├── ChatContext.tsx
+│   │   └── MemoryContext.tsx
+│   │
+│   ├── screens/
+│   │   ├── SplashScreen.tsx
+│   │   ├── HomeScreen.tsx
+│   │   ├── ChatScreen.tsx
+│   │   ├── MemoriesScreen.tsx
+│   │   ├── SettingsScreen.tsx
+│   │   ├── onboarding/
+│   │   ├── auth/
+│   │   └── settings/
+│   │
+│   └── components/
+│       ├── brand/
+│       ├── ui/
+│       ├── home/
+│       ├── chat/
+│       ├── memories/
+│       └── settings/
+│
+├── server.ts
+├── index.html
+├── package.json
+├── vite.config.ts
+├── tsconfig.json
+└── .env.example
+```
+
+### Service responsibilities
+
+| Service | Responsibility |
+| :--- | :--- |
+| `authService.ts` | Supabase authentication and user sessions |
+| `chatService.ts` | Chat requests, conversation context, and AI response handling |
+| `memoryService.ts` | Memory operations and consent handling |
+| `notificationService.ts` | Notification preferences and schedules |
+| `privacyService.ts` | Data export and privacy controls |
+| `storageService.ts` | Local application persistence and fallback storage |
+| `server.ts` | Express API, AI providers, rate limiting, and production serving |
+
+---
+
+## 🚀 Running Sunny Locally
+
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Configure environment variables
+
+Create a local `.env.local` file using `.env.example` as a reference.
+
+Add your own credentials locally:
+
+```env
+GROQ_API_KEY=your-groq-api-key
+GEMINI_API_KEY=your-gemini-api-key
+VITE_SUPABASE_URL=your-supabase-project-url
+VITE_SUPABASE_PUBLISHABLE_KEY=your-supabase-publishable-key
+```
+
+### 3. Start the development server
 
 ```bash
 npm run dev
 ```
 
-Listens on port `3000` with host `0.0.0.0`.
+Sunny runs on:
 
+```
+http://localhost:3000
+```
 
-## Gemini API setup
-Set `GEMINI_API_KEY` and optionally `GEMINI_MODEL=gemini-2.5-flash` in your server environment. Do not expose the key in frontend `VITE_` variables or commit local env files.
+The Express server binds to `0.0.0.0` so it can also run correctly in cloud hosting environments.
 
+---
 
-## Sunny AI provider setup
+## 🏭 Production Build
 
-Sunny uses Groq as the primary AI provider and Gemini as the fallback. The default Groq model is `openai/gpt-oss-120b`; set `GROQ_MODEL` in your local `.env.local` if your Groq account uses a different available model. Never commit `.env.local` or API keys.
+Build the frontend and TypeScript server:
+
+```bash
+npm run build
+```
+
+Start the production server:
+
+```bash
+npm start
+```
+
+The server uses the `PORT` environment variable when provided by the hosting platform.
+
+---
+
+## ☁️ Deployment
+
+Sunny can be deployed as a Node/Express web service on platforms such as Render.
+
+Typical configuration:
+
+**Build command**
+
+```bash
+npm install && npm run build
+```
+
+**Start command**
+
+```bash
+npm start
+```
+
+Configure the required environment variables in the hosting provider's dashboard rather than committing them to the repository.
+
+---
+
+## 🔒 Security Notes
+
+- AI provider API keys are server-side only.
+- Never expose `GROQ_API_KEY` or `GEMINI_API_KEY` through `VITE_` environment variables.
+- Never commit `.env.local`.
+- Never commit Supabase service-role or other secret keys.
+- The Supabase publishable key is intended for client-side use and should still be protected by correct Supabase Row Level Security policies.
+- Keep authentication and database authorization enforced by Supabase rather than trusting client-side state.
+- Rotate any credential immediately if it is accidentally committed or exposed.
+
+---
+
+## 🛠️ Tech Stack
+
+- **React 19**
+- **TypeScript**
+- **Vite**
+- **Tailwind CSS**
+- **Express**
+- **Supabase**
+- **Groq API**
+- **Google Gemini API**
+- **Node.js**
+
+---
+
+## 💛 Philosophy
+
+Sunny is built around a simple idea:
+
+> *You shouldn't have to start over every time you come back.*
+
+The goal is to make conversations feel warm and natural while giving users control over their preferences, memories, privacy, and data.
+
+---
+
+## 📄 License
+
+See the [LICENSE](LICENSE) file for license information.
