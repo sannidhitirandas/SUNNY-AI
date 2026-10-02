@@ -9,6 +9,7 @@ import { storageService } from './storageService';
 import type { AutomaticMemoryCandidate } from './automaticMemory';
 import { getVibeStarterText } from '@/lib/vibeStarterMessages';
 import { NORMAL_CHAT_GREETING } from '@/lib/chatEntry';
+import { createChatRequestBody } from '@/lib/chatRequest';
 
 const INITIAL_MESSAGES: ChatMessage[] = [
   {
@@ -26,6 +27,7 @@ export interface SendMessageOptions {
   message: string;
   history: ChatMessage[];
   tone?: PersonalityTone;
+  intent?: StarterIntent | null;
   preferredName?: string;
   memoryEnabled?: boolean;
   memories?: Memory[];
@@ -77,6 +79,7 @@ export const chatService = {
       message,
       history,
       tone = 'adaptive',
+      intent = null,
       preferredName,
       memoryEnabled = true,
       memories = [],
@@ -116,15 +119,16 @@ export const chatService = {
       const response = await fetch(apiUrl('/api/chat'), {
         method: 'POST',
         headers,
-        body: JSON.stringify({
+        body: JSON.stringify(createChatRequestBody({
           message: message.trim(),
           history: formattedHistory,
-          preferredTone: tone,
+          tone,
+          intent,
           preferredName: preferredName?.trim() || undefined,
           memoryEnabled,
           memories: memoryPayloads,
           sessionId,
-        }),
+        })),
         signal: controller.signal,
       });
 

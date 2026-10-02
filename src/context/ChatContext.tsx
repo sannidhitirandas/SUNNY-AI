@@ -161,6 +161,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         message: content.trim(),
         history: updatedWithUser,
         tone: preferences.preferredTone,
+        intent: activeIntent,
         preferredName: preferences.preferredName,
         memoryEnabled: preferences.memoryEnabled,
         memories: preferences.memoryEnabled ? memories : [],

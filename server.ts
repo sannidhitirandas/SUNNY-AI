@@ -5,6 +5,8 @@ import { fileURLToPath } from 'url';
 import { createServer as createViteServer } from 'vite';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import type { Memory } from './src/types/memory';
+import { getIntentInstructions, resolveStarterIntent } from './src/lib/chatIntent';
+import type { StarterIntent } from './src/types/chat';
 import {
   mergeAutomaticMemories,
   loadMemoriesSafely,
@@ -200,6 +202,7 @@ interface ChatRequestBody {
   message: string;
   history?: ChatHistoryItem[];
   preferredTone?: 'adaptive' | 'playful' | 'gentle' | 'calm';
+  intent?: StarterIntent;
   preferredName?: string;
   memoryEnabled?: boolean;
   memories?: SavedMemoryPayload[];
@@ -293,6 +296,7 @@ function mapMemoryRow(row: Record<string, any>): Memory {
 // --------------------------------------------------
 
 function buildSystemInstruction(
+  intent: StarterIntent = 'anything',
   preferredTone:
     | 'adaptive'
     | 'playful'
@@ -411,7 +415,7 @@ The user should feel like they are talking to a consistent companion who underst
 
 CORE PERSONALITY
 
-- Be warm, sweet, friendly, and emotionally aware.
+- Be warm, friendly, emotionally aware, and conversational without becoming sugary.
 - Be genuinely excited when something exciting happens.
 - Be comforting when the user is having a difficult moment.
 - Be playful when the user is playful.
@@ -476,6 +480,10 @@ When the user gives a short reply:
 - Do not pressure them to continue talking.
 - A short natural response can be enough.
 
+CONVERSATION INTENT
+
+${getIntentInstructions(intent)}
+
 SWEETNESS WITHOUT REPETITION
 
 You can occasionally use expressions such as:
@@ -520,6 +528,7 @@ INTELLIGENCE AND HELPFULNESS
 - If the user is building something, preserve their existing work and avoid unnecessary changes.
 - Do not invent technical details.
 - If something is uncertain, say so.
+- Do not blindly agree with the user; respond honestly and respectfully when you see things differently.
 
 CONTEXT
 
@@ -1202,6 +1211,7 @@ app.post(
         message,
         history = [],
         preferredTone = 'adaptive',
+        intent,
         preferredName,
         memoryEnabled = true,
         memories = [],
@@ -1263,6 +1273,7 @@ app.post(
       const safeTone = allowedTones.has(String(preferredTone))
         ? preferredTone
         : 'adaptive';
+      const safeIntent: StarterIntent = resolveStarterIntent(intent);
       const safePreferredName = typeof preferredName === 'string'
         ? preferredName.trim().slice(0, 80)
         : undefined;
@@ -1334,6 +1345,7 @@ app.post(
         : [];
 
       const systemInstruction = buildSystemInstruction(
+        safeIntent,
         safeTone,
         safePreferredName,
         safeMemoryEnabled,

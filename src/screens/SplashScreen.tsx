@@ -7,35 +7,30 @@ interface SplashScreenProps {
 
 export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
   useEffect(() => {
-    const timer = setTimeout(() => {
-      onReady();
-    }, 1400);
+    const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+    const timer = window.setTimeout(onReady, prefersReducedMotion ? 250 : 3000);
     return () => clearTimeout(timer);
   }, [onReady]);
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#100B22] p-6 text-center select-none animate-in fade-in duration-300">
-      <div className="relative mb-6">
-        <SunnyLogo size="huge" />
+    <div
+      className="sunny-intro fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#100B22] p-6 text-center select-none"
+      role="status"
+      aria-live="polite"
+    >
+      <div className="sunny-intro-pop mb-6">
+        <div className="sunny-intro-spin">
+          <SunnyLogo size="huge" />
+        </div>
       </div>
 
-      <h1 className="text-3xl font-bold tracking-tight text-white mb-2">
-        Sunny <span className="text-xl">☀️</span>
-      </h1>
-      <p className="text-sm text-[#C6B8E5] mb-6">
-        Your little corner of sunshine
-      </p>
-
-      <div className="max-w-xs p-3.5 rounded-2xl bg-[#21163A]/80 border border-[#FFD84D]/25 backdrop-blur-xs">
-        <p className="text-xs italic text-[#FFD84D] font-medium leading-relaxed">
-          "You don't have to start over every time you come back."
+      <div className="sunny-intro-greeting">
+        <h1 className="text-2xl font-bold tracking-tight text-white mb-2">
+          Hey, Sunshine! 💛
+        </h1>
+        <p className="text-sm text-[#C6B8E5]">
+          Your little corner of sunshine.
         </p>
-      </div>
-
-      <div className="mt-8 flex items-center gap-1.5">
-        <span className="w-2 h-2 rounded-full bg-[#FFD84D] typing-dot-1" />
-        <span className="w-2 h-2 rounded-full bg-[#FFD84D] typing-dot-2" />
-        <span className="w-2 h-2 rounded-full bg-[#FFD84D] typing-dot-3" />
       </div>
     </div>
   );

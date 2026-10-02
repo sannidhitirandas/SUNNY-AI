@@ -74,10 +74,6 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
           <ArrowUp size={18} strokeWidth={2.5} />
         </button>
       </div>
-      <div className="flex justify-between items-center px-1 mt-1 text-[10px] text-[#9B8AB9]">
-        <span>Press Enter to send, Shift+Enter for new line</span>
-        <span>{text.length}/1000</span>
-      </div>
     </div>
   );
 };

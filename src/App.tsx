@@ -80,6 +80,10 @@ export function App() {
     setActiveTab('chat');
   };
 
+  const handleSplashReady = useCallback(() => {
+    setShowSplash(false);
+  }, []);
+
   const route = resolveAppRoute({
     authLoading,
     preferencesLoading: prefsLoading,
@@ -146,7 +150,7 @@ export function App() {
   if (showSplash) {
     return (
       <SplashScreen
-        onReady={() => setShowSplash(false)}
+        onReady={handleSplashReady}
       />
     );
   }
