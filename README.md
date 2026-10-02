@@ -151,6 +151,10 @@ PORT=3000
 
 Do not place `GROQ_API_KEY` or `GEMINI_API_KEY` in `VITE_` variables. Vite variables are exposed to the frontend.
 
+### Supabase authentication redirects
+
+Keep the Supabase email-confirmation setting enabled or disabled according to your existing project policy; Sunny handles both responses. In Supabase Authentication URL Configuration, set the deployed web origin as the Site URL and allow that origin plus the local development origin and `sunnyai://auth/callback` as Redirect URLs. The custom URI is used by the Capacitor Android app for email confirmation and password recovery. The native deep-link handler is included in the Android manifest; run `npx cap sync android` after installing dependencies.
+
 ### Database migrations
 
 For an existing project with `001_cloud_persistence.sql` already applied, apply `supabase/migrations/002_automatic_memory.sql` in the Supabase SQL Editor before deploying the updated server. New database setups should apply migrations `001` and `002` in order. The second migration adds an idempotency key and optional expiry to memories; existing user-scoped Row Level Security policies remain enabled.

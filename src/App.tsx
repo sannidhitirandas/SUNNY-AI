@@ -6,6 +6,7 @@ import { usePreferences } from '@/context/PreferencesContext';
 import { SplashScreen } from '@/screens/SplashScreen';
 import { LoginScreen } from '@/screens/auth/LoginScreen';
 import { RegisterScreen } from '@/screens/auth/RegisterScreen';
+import { PasswordRecoveryScreen } from '@/screens/auth/PasswordRecoveryScreen';
 import { HomeScreen } from '@/screens/HomeScreen';
 import { ChatScreen } from '@/screens/ChatScreen';
 import { MemoriesScreen } from '@/screens/MemoriesScreen';
@@ -17,6 +18,7 @@ import { SafetyScreen } from '@/screens/settings/SafetyScreen';
 import { AboutScreen } from '@/screens/settings/AboutScreen';
 
 import { OnboardingFlow } from '@/screens/onboarding/OnboardingFlow';
+import { resolveAppRoute } from '@/lib/authRouting';
 
 import {
   Home,
@@ -37,7 +39,7 @@ type SubScreen =
 type AuthScreen = 'none' | 'login' | 'register';
 
 export function App() {
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { isAuthenticated, isLoading: authLoading, passwordRecovery } = useAuth();
 
   const {
     hasCompletedOnboarding,
@@ -51,6 +53,15 @@ export function App() {
   const [authView, setAuthView] =
     useState<AuthScreen>('none');
 
+  const route = resolveAppRoute({
+    authLoading,
+    preferencesLoading: prefsLoading,
+    passwordRecovery,
+    isAuthenticated,
+    hasCompletedOnboarding,
+    authView,
+  });
+
   if (showSplash) {
     return (
       <SplashScreen
@@ -59,7 +70,7 @@ export function App() {
     );
   }
 
-  if (authLoading || prefsLoading) {
+  if (route === 'loading') {
     return (
       <div className="min-h-screen bg-[#100B22] flex items-center justify-center">
         <div className="w-8 h-8 rounded-full border-3 border-[#FFD84D] border-t-transparent animate-spin" />
@@ -67,16 +78,11 @@ export function App() {
     );
   }
 
-  if (authView === 'login') {
-    return (
-      <LoginScreen
-        onLoginSuccess={() => setAuthView('none')}
-        onNavigateToRegister={() => setAuthView('register')}
-      />
-    );
+  if (route === 'recovery') {
+    return <PasswordRecoveryScreen />;
   }
 
-  if (authView === 'register') {
+  if (route === 'register') {
     return (
       <RegisterScreen
         onRegisterSuccess={() => setAuthView('none')}
@@ -85,7 +91,16 @@ export function App() {
     );
   }
 
-  if (!hasCompletedOnboarding && !isAuthenticated) {
+  if (route === 'login') {
+    return (
+      <LoginScreen
+        onLoginSuccess={() => setAuthView('none')}
+        onNavigateToRegister={() => setAuthView('register')}
+      />
+    );
+  }
+
+  if (route === 'onboarding') {
     return (
       <OnboardingFlow
         onComplete={() => setActiveTab('home')}

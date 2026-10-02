@@ -4,7 +4,7 @@ import { usePreferences } from '@/context/PreferencesContext';
 import { SunnyLogo } from '@/components/brand/SunnyLogo';
 import { AppInput } from '@/components/ui/AppInput';
 import { AppButton } from '@/components/ui/AppButton';
-import { Badge } from '@/components/ui/Badge';
+import { validateRegistrationFields } from '@/lib/authValidation';
 
 interface RegisterScreenProps {
   onRegisterSuccess: () => void;
@@ -24,37 +24,37 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [confirmationRequired, setConfirmationRequired] = useState(false);
 
   const handleRegister = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     setError('');
-    if (!name.trim()) {
-      setError('Please enter your preferred name or nickname.');
-      return;
-    }
-    if (!email.trim() || !email.includes('@')) {
-      setError('Please enter a valid email address.');
-      return;
-    }
-    if (!password || password.length < 6) {
-      setError('Password must be at least 6 characters.');
-      return;
-    }
-    if (password !== confirmPassword) {
-      setError('Passwords do not match.');
+    const validationError = validateRegistrationFields({ name, email, password, confirmPassword });
+    if (validationError) {
+      setError(validationError);
       return;
     }
 
     setLoading(true);
-    const res = await register(name, email, password);
-    setLoading(false);
+    try {
+      const res = await register(name, email, password);
+      if (!res.success) {
+        setError(res.error || 'Registration failed.');
+        return;
+      }
 
-    if (res.success) {
       await updatePreferredName(name.trim());
+      if (res.requiresEmailConfirmation) {
+        setConfirmationRequired(true);
+        return;
+      }
+
       await completeOnboarding();
       onRegisterSuccess();
-    } else {
-      setError(res.error || 'Registration failed.');
+    } catch {
+      setError('Sunny could not reach the authentication service. Check your connection and try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -63,10 +63,11 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
       <div className="flex flex-col items-center text-center mb-6">
         <SunnyLogo size="medium" />
         <h1 className="text-2xl font-bold text-white mt-4 mb-1">Join Sunny</h1>
-        <p className="text-xs text-[#C6B8E5]">Create your private companion space.</p>
+        <p className="text-xs text-[#C6B8E5]">Create your secure Sunny account.</p>
       </div>
 
       <form onSubmit={handleRegister} className="space-y-1 mb-6">
+        {!confirmationRequired && <>
         <AppInput
           label="What should Sunny call you?"
           placeholder="e.g. Alex, Sam, Sunshine"
@@ -114,9 +115,9 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
           <p className="text-xs text-[#FF8D9A] font-medium py-1">{error}</p>
         )}
 
-        <p className="text-[11px] text-[#9B8AB9] text-center my-3 leading-relaxed">
-          Your account will be created securely once account services are connected.
-        </p>
+        {error && (
+          <p className="text-xs text-[#FF8D9A] font-medium py-1">{error}</p>
+        )}
 
         <AppButton
           title="Create Account"
@@ -126,6 +127,22 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
           size="large"
           fullWidth
         />
+        </>}
+
+        {confirmationRequired && (
+          <div className="text-[11px] text-[#A8D9A0] text-center my-3 leading-relaxed" role="status">
+            Account created. Check {email.trim()} for a verification link. After verifying, return here and sign in below.
+          </div>
+        )}
+        {confirmationRequired && (
+          <AppButton
+            title="Continue to Sign In"
+            onPress={onNavigateToLogin}
+            variant="primary"
+            size="large"
+            fullWidth
+          />
+        )}
       </form>
 
       <div className="text-center text-xs text-[#C6B8E5]">

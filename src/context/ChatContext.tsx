@@ -1,6 +1,6 @@
 import { chatService } from '@/services/chatService';
 import { ChatMessage, StarterIntent } from '@/types/chat';
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useMemories } from './MemoryContext';
 import { usePreferences } from './PreferencesContext';
@@ -26,17 +26,19 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isThinking, setIsThinking] = useState<boolean>(false);
   const [lastError, setLastError] = useState<string | null>(null);
   const [activeIntent, setActiveIntent] = useState<StarterIntent | null>(null);
+  const loadRequestRef = useRef(0);
 
   useEffect(() => {
     let mounted = true;
 
     const loadChatMessages = async () => {
+      const requestId = ++loadRequestRef.current;
       try {
         const loaded = await chatService.getMessages('default-session');
-        if (mounted) setMessages(loaded);
+        if (mounted && requestId === loadRequestRef.current) setMessages(loaded);
       } catch (error) {
         console.warn('[ChatContext] Error loading cloud chat:', error);
-        if (mounted) setMessages([]);
+        if (mounted && requestId === loadRequestRef.current) setMessages([]);
       }
     };
 
@@ -44,11 +46,15 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'TOKEN_REFRESHED') return;
+      loadRequestRef.current += 1;
+      if (mounted) setMessages([]);
       if (session?.user) {
-        void loadChatMessages();
+        window.setTimeout(() => {
+          if (mounted) void loadChatMessages();
+        }, 0);
       } else if (mounted) {
-        setMessages([]);
         setActiveIntent(null);
         setLastError(null);
       }

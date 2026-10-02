@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useRef } from 'react';
 import { Memory, MemoryCategory } from '@/types/memory';
 import { memoryService } from '@/services/memoryService';
 import { supabase } from '@/lib/supabase';
@@ -32,19 +32,21 @@ export const MemoryProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<MemoryCategory | 'all'>('all');
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const loadRequestRef = useRef(0);
 
   useEffect(() => {
     let mounted = true;
 
     const loadMemories = async () => {
+      const requestId = ++loadRequestRef.current;
       try {
         const items = await memoryService.getMemories();
-        if (mounted) setMemories(items);
+        if (mounted && requestId === loadRequestRef.current) setMemories(items);
       } catch (e) {
         console.warn('[MemoryContext] Error loading cloud memories:', e);
-        if (mounted) setMemories([]);
+        if (mounted && requestId === loadRequestRef.current) setMemories([]);
       } finally {
-        if (mounted) setIsLoading(false);
+        if (mounted && requestId === loadRequestRef.current) setIsLoading(false);
       }
     };
 
@@ -52,13 +54,19 @@ export const MemoryProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(() => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       if (!mounted) return;
+      if (event === 'TOKEN_REFRESHED') return;
+      loadRequestRef.current += 1;
       setMemories([]);
       setIsLoading(true);
-      window.setTimeout(() => {
-        if (mounted) void loadMemories();
-      }, 0);
+      if (session?.user) {
+        window.setTimeout(() => {
+          if (mounted) void loadMemories();
+        }, 0);
+      } else {
+        setIsLoading(false);
+      }
     });
 
     return () => {
