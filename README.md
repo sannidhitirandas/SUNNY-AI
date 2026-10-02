@@ -151,6 +151,12 @@ PORT=3000
 
 Do not place `GROQ_API_KEY` or `GEMINI_API_KEY` in `VITE_` variables. Vite variables are exposed to the frontend.
 
+### Database migrations
+
+For an existing project with `001_cloud_persistence.sql` already applied, apply `supabase/migrations/002_automatic_memory.sql` in the Supabase SQL Editor before deploying the updated server. New database setups should apply migrations `001` and `002` in order. The second migration adds an idempotency key and optional expiry to memories; existing user-scoped Row Level Security policies remain enabled.
+
+Automatic extraction and authenticated memory retrieval run through the Express `/api/chat` endpoint, so deploy the updated backend as well as the Android/web client.
+
 ---
 
 ## 🏗️ Project Architecture

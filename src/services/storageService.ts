@@ -7,6 +7,9 @@ const STORAGE_KEYS = {
   MEMORIES: '@sunny_memories',
   CHAT_MESSAGES: '@sunny_chat_messages',
   NOTIFICATION_PREFERENCES: '@sunny_notification_preferences',
+  GUEST_PREFERENCES: '@sunny_guest_preferences',
+  GUEST_ONBOARDING_COMPLETED: '@sunny_guest_onboarding_completed',
+  GUEST_MEMORIES: '@sunny_guest_memories',
 };
 
 export const storageService = {

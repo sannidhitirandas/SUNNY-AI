@@ -90,6 +90,8 @@ export const cloudStorageService = {
       userConfirmed: row.user_confirmed,
       sourceSessionId: row.source_session_id ?? undefined,
       isDemoData: row.is_demo_data,
+      memoryKey: row.memory_key ?? undefined,
+      expiresAt: row.expires_at ?? undefined,
     }));
   },
 
@@ -106,8 +108,31 @@ export const cloudStorageService = {
       user_confirmed: memory.userConfirmed,
       source_session_id: memory.sourceSessionId ?? null,
       is_demo_data: false,
-    });
+      memory_key: memory.memoryKey ?? null,
+      expires_at: memory.expiresAt ?? null,
+    }, memory.memoryKey ? { onConflict: 'user_id,memory_key' } : { onConflict: 'id' });
     if (error) throw error;
+  },
+
+  async insertMemoryIfMissing(memory: Memory): Promise<boolean> {
+    const userId = await getUserId();
+    const { error } = await supabase.from('sunny_memories').insert({
+      id: memory.id,
+      user_id: userId,
+      title: memory.title,
+      content: memory.content,
+      category: memory.category,
+      created_at: memory.createdAt,
+      updated_at: memory.updatedAt,
+      user_confirmed: memory.userConfirmed,
+      source_session_id: memory.sourceSessionId ?? null,
+      is_demo_data: false,
+      memory_key: memory.memoryKey ?? null,
+      expires_at: memory.expiresAt ?? null,
+    });
+    if (error?.code === '23505') return false;
+    if (error) throw error;
+    return true;
   },
 
   async clearAllMemories(): Promise<void> {

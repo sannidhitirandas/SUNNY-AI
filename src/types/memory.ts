@@ -16,4 +16,6 @@ export interface Memory {
   userConfirmed: boolean;
   sourceSessionId?: string;
   isDemoData?: boolean;
+  memoryKey?: string;
+  expiresAt?: string;
 }

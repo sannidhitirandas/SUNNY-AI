@@ -87,7 +87,7 @@ export const MemoryModal: React.FC<MemoryModalProps> = ({
 
         <div className="p-6 max-h-[80vh] overflow-y-auto">
           <p className="text-xs text-[#C6B8E5] leading-relaxed mb-4">
-            Sunny only stores memories you explicitly confirm. You can update or delete them whenever you wish.
+            When memory is enabled, Sunny automatically saves useful details from chat. You can review, update, or delete them whenever you wish.
           </p>
 
           <AppInput

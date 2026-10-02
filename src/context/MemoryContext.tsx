@@ -3,6 +3,9 @@ import { Memory, MemoryCategory } from '@/types/memory';
 import { memoryService } from '@/services/memoryService';
 import { supabase } from '@/lib/supabase';
 import { usePreferences } from './PreferencesContext';
+import type { AutomaticMemoryCandidate } from '@/services/automaticMemory';
+import { useAuth } from './AuthContext';
+import { storageService } from '@/services/storageService';
 
 interface MemoryContextType {
   memories: Memory[];
@@ -16,12 +19,15 @@ interface MemoryContextType {
   updateMemory: (id: string, updates: Partial<Pick<Memory, 'title' | 'content' | 'category' | 'userConfirmed'>>) => Promise<void>;
   deleteMemory: (id: string) => Promise<void>;
   clearAllMemories: () => Promise<void>;
+  refreshMemories: () => Promise<void>;
+  applyAutomaticGuestMemories: (candidates: AutomaticMemoryCandidate[], sessionId: string) => Promise<void>;
 }
 
 const MemoryContext = createContext<MemoryContextType | undefined>(undefined);
 
 export const MemoryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { preferences } = usePreferences();
+  const { user, isLoading: authLoading } = useAuth();
   const [memories, setMemories] = useState<Memory[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<MemoryCategory | 'all'>('all');
@@ -46,14 +52,13 @@ export const MemoryProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        setIsLoading(true);
-        void loadMemories();
-      } else if (mounted) {
-        setMemories([]);
-        setIsLoading(false);
-      }
+    } = supabase.auth.onAuthStateChange(() => {
+      if (!mounted) return;
+      setMemories([]);
+      setIsLoading(true);
+      window.setTimeout(() => {
+        if (mounted) void loadMemories();
+      }, 0);
     });
 
     return () => {
@@ -61,6 +66,51 @@ export const MemoryProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       subscription.unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    if (authLoading || !user || typeof window === 'undefined') return;
+    let mounted = true;
+
+    const offerGuestMemoryImport = async () => {
+      const guestMemories = await memoryService.getGuestMemories();
+      if (!mounted || guestMemories.length === 0) return;
+
+      const choiceKey = `@sunny_guest_memory_migration_${user.id}`;
+      const guestSnapshot = guestMemories
+        .map((memory) => `${memory.id}:${memory.updatedAt}`)
+        .sort()
+        .join('|');
+      const previousChoice = await storageService.getItem<string>(choiceKey, '');
+      if (!mounted || previousChoice === guestSnapshot) return;
+
+      const shouldImport = window.confirm(
+        `Sunny found ${guestMemories.length} memories saved on this device. Import memories that are not already in your account? Existing account memories will not be overwritten. Choose Cancel to keep guest memories separate on this device.`
+      );
+
+      if (!mounted) return;
+      if (!shouldImport) {
+        await storageService.setItem(choiceKey, guestSnapshot);
+        return;
+      }
+
+      try {
+        const result = await memoryService.importGuestMemories();
+        await storageService.setItem(choiceKey, guestSnapshot);
+        setMemories(await memoryService.getMemories());
+        window.alert(
+          `Imported ${result.imported} memories. ${result.skipped} existing or duplicate memories were left unchanged.`
+        );
+      } catch (error) {
+        console.warn('[MemoryContext] Guest memory import failed:', error);
+        window.alert('Sunny could not finish importing memories. Your guest memories are still saved on this device.');
+      }
+    };
+
+    void offerGuestMemoryImport();
+    return () => {
+      mounted = false;
+    };
+  }, [authLoading, user?.id]);
 
   const filteredMemories = useMemo(() => {
     if (!preferences.memoryEnabled) return [];
@@ -93,6 +143,19 @@ export const MemoryProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setMemories([]);
   };
 
+  const refreshMemories = async () => {
+    const items = await memoryService.getMemories();
+    setMemories(items);
+  };
+
+  const applyAutomaticGuestMemories = async (
+    candidates: AutomaticMemoryCandidate[],
+    sessionId: string
+  ) => {
+    const updated = await memoryService.saveAutomaticGuestMemories(candidates, sessionId);
+    setMemories(updated);
+  };
+
   return (
     <MemoryContext.Provider
       value={{
@@ -107,6 +170,8 @@ export const MemoryProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         updateMemory,
         deleteMemory,
         clearAllMemories,
+        refreshMemories,
+        applyAutomaticGuestMemories,
       }}>
       {children}
     </MemoryContext.Provider>

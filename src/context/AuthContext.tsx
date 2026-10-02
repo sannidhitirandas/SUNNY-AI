@@ -64,29 +64,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (!mounted) {
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!mounted) return;
+
+      if (!session?.user) {
+        setUser(null);
+        setIsLoading(false);
         return;
       }
 
-      if (session?.user) {
-        const currentUser = await authService.getCurrentUser();
-
-        if (mounted) {
-          if (currentUser) {
-            try {
-              await cloudStorageService.migrateLegacyLocalData();
-            } catch (migrationError) {
-              console.warn('[AuthContext] Legacy local data migration skipped:', migrationError);
+      setIsLoading(true);
+      // Supabase recommends avoiding additional auth calls inside its auth callback.
+      // Deferring this work prevents lock contention/deadlocks during sign-in refreshes.
+      window.setTimeout(() => {
+        void (async () => {
+          try {
+            const currentUser = await authService.getCurrentUser();
+            if (currentUser) {
+              try {
+                await cloudStorageService.migrateLegacyLocalData();
+              } catch (migrationError) {
+                console.warn('[AuthContext] Legacy local data migration skipped:', migrationError);
+              }
             }
+            if (mounted) setUser(currentUser);
+          } catch (error) {
+            console.warn('[AuthContext] Could not refresh authenticated user:', error);
+            if (mounted) setUser(null);
+          } finally {
+            if (mounted) setIsLoading(false);
           }
-          setUser(currentUser);
-        }
-      } else {
-        setUser(null);
-      }
-
-      setIsLoading(false);
+        })();
+      }, 0);
     });
 
     return () => {

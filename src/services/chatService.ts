@@ -4,6 +4,9 @@ import { PersonalityTone } from '@/types/user';
 
 import { cloudStorageService } from './cloudStorageService';
 import { apiUrl } from '@/lib/api';
+import { supabase } from '@/lib/supabase';
+import { storageService } from './storageService';
+import type { AutomaticMemoryCandidate } from './automaticMemory';
 
 const INITIAL_MESSAGES: ChatMessage[] = [
   {
@@ -30,16 +33,31 @@ export interface SendMessageOptions {
 
 export const chatService = {
   async getMessages(sessionId: string = 'default-session'): Promise<ChatMessage[]> {
-    const saved = await cloudStorageService.getChatMessages(sessionId);
-    return saved.length > 0 ? saved : INITIAL_MESSAGES;
+    const { data } = await supabase.auth.getSession();
+    if (data.session?.user) {
+      const saved = await cloudStorageService.getChatMessages(sessionId);
+      return saved.length > 0 ? saved : INITIAL_MESSAGES;
+    }
+    const local = await storageService.getItem<ChatMessage[]>(`@sunny_guest_chat_messages_${sessionId}`, []);
+    return local.length > 0 ? local : INITIAL_MESSAGES;
   },
 
   async saveMessages(sessionId: string, messages: ChatMessage[]): Promise<void> {
-    await cloudStorageService.saveChatMessages(sessionId, messages);
+    const { data } = await supabase.auth.getSession();
+    if (data.session?.user) {
+      await cloudStorageService.saveChatMessages(sessionId, messages);
+      return;
+    }
+    await storageService.setItem(`@sunny_guest_chat_messages_${sessionId}`, messages);
   },
 
   async clearMessages(sessionId: string = 'default-session'): Promise<void> {
-    await cloudStorageService.clearChatMessages(sessionId);
+    const { data } = await supabase.auth.getSession();
+    if (data.session?.user) {
+      await cloudStorageService.clearChatMessages(sessionId);
+      return;
+    }
+    await storageService.removeItem(`@sunny_guest_chat_messages_${sessionId}`);
   },
 
   getStarterGreeting(
@@ -62,7 +80,11 @@ export const chatService = {
     }
   },
 
-  async sendMessageToAI(options: SendMessageOptions): Promise<{ text: string }> {
+  async sendMessageToAI(options: SendMessageOptions): Promise<{
+    text: string;
+    memoriesUpdated: boolean;
+    memoryUpdates: AutomaticMemoryCandidate[];
+  }> {
     const {
       message,
       history,
@@ -84,19 +106,28 @@ export const chatService = {
           content: m.content,
         }));
 
-      const memoryPayloads = memoryEnabled
+      const { data: { session } } = await supabase.auth.getSession();
+      const memoryPayloads = memoryEnabled && !session
         ? memories.map((m) => ({
+            id: m.id,
+            memoryKey: m.memoryKey,
             title: m.title,
             content: m.content,
             category: m.category,
+            expiresAt: m.expiresAt,
           }))
         : [];
 
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      if (session?.access_token) {
+        headers.Authorization = `Bearer ${session.access_token}`;
+      }
+
       const response = await fetch(apiUrl('/api/chat'), {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         body: JSON.stringify({
           message: message.trim(),
           history: formattedHistory,
@@ -120,7 +151,24 @@ export const chatService = {
         throw new Error(data?.error || 'Received an invalid response format from Sunny AI.');
       }
 
-      return { text: data.text };
+      const memoryUpdates = Array.isArray(data.memoryUpdates)
+        ? data.memoryUpdates.filter((item: unknown): item is AutomaticMemoryCandidate =>
+            Boolean(item) &&
+            typeof item === 'object' &&
+            typeof (item as AutomaticMemoryCandidate).key === 'string' &&
+            typeof (item as AutomaticMemoryCandidate).title === 'string' &&
+            typeof (item as AutomaticMemoryCandidate).content === 'string' &&
+            ['personal', 'relationships', 'events', 'ongoing', 'preferences'].includes(
+              (item as AutomaticMemoryCandidate).category
+            )
+          )
+        : [];
+
+      return {
+        text: data.text,
+        memoriesUpdated: data.memoriesUpdated === true,
+        memoryUpdates,
+      };
     } catch (err: unknown) {
       clearTimeout(timeoutId);
 

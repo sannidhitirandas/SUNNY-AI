@@ -73,7 +73,7 @@ export const privacyService = {
       },
       {
         title: 'Memory with consent',
-        description: 'When memory is enabled, Sunny can use the memories you save. You can review or delete them at any time.',
+        description: 'When memory is enabled, Sunny automatically saves useful details from chat. Review, edit, or delete them at any time.',
         icon: 'Heart',
       },
       {

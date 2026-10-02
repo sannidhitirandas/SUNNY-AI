@@ -157,7 +157,7 @@ export const MemoriesScreen: React.FC = () => {
               description={
                 searchQuery
                   ? `No memories matched "${searchQuery}". Try a different search term.`
-                  : 'Tap "Add" in the top corner to save your first memory.'
+                  : 'As you chat, Sunny can save useful details here when memory is enabled. You can also add a memory yourself.'
               }
             />
           )}

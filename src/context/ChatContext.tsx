@@ -20,7 +20,7 @@ const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
 export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { preferences } = usePreferences();
-  const { memories } = useMemories();
+  const { memories, refreshMemories, applyAutomaticGuestMemories } = useMemories();
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isThinking, setIsThinking] = useState<boolean>(false);
@@ -110,6 +110,20 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         memories: preferences.memoryEnabled ? memories : [],
         sessionId: 'default-session',
       });
+
+      if (aiResult.memoriesUpdated) {
+        try {
+          await refreshMemories();
+        } catch (memoryError) {
+          console.warn('[ChatContext] Could not refresh saved memories:', memoryError);
+        }
+      } else if (aiResult.memoryUpdates.length > 0) {
+        try {
+          await applyAutomaticGuestMemories(aiResult.memoryUpdates, 'default-session');
+        } catch (memoryError) {
+          console.warn('[ChatContext] Could not save guest memories:', memoryError);
+        }
+      }
 
       const aiMessage: ChatMessage = {
         id: `ai-${Date.now()}`,

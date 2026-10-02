@@ -96,8 +96,23 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
   };
 
   const handleFinish = async () => {
-    await completeOnboarding();
-    onComplete();
+    try {
+      await completeOnboarding();
+    } catch (error) {
+      console.warn('[OnboardingFlow] Could not persist onboarding completion:', error);
+    } finally {
+      onComplete();
+    }
+  };
+
+  const persistAndAdvance = async (persist: () => Promise<void>, nextStep: number) => {
+    try {
+      await persist();
+    } catch (error) {
+      console.warn('[OnboardingFlow] Could not persist onboarding choice:', error);
+    } finally {
+      setStep(nextStep);
+    }
   };
 
   return (
@@ -191,10 +206,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           <div className="w-full space-y-2 mt-6">
             <AppButton
               title="Continue"
-              onPress={async () => {
-                await updateInterests(selectedInterests);
-                setStep(2);
-              }}
+              onPress={() => persistAndAdvance(() => updateInterests(selectedInterests), 2)}
               variant="primary"
               size="large"
               fullWidth
@@ -269,10 +281,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           <div className="w-full mt-6">
             <AppButton
               title="Continue"
-              onPress={async () => {
-                await updateTone(selectedTone);
-                setStep(3);
-              }}
+              onPress={() => persistAndAdvance(() => updateTone(selectedTone), 3)}
               variant="primary"
               size="large"
               fullWidth
@@ -292,7 +301,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
               Sunny can remember the little things.
             </h2>
             <p className="text-xs text-[#C6B8E5] leading-relaxed mb-5">
-              With your permission, Sunny can remember details you choose to share—like your interests, important events, and things you want to revisit.
+              With your permission, Sunny automatically saves useful details you share—like interests, goals, and upcoming events—to help in future conversations. Sunny avoids saving passwords and other sensitive details. You can review or delete memories anytime.
             </p>
 
             <div className="space-y-3">
@@ -362,10 +371,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           <div className="w-full mt-6">
             <AppButton
               title="Continue"
-              onPress={async () => {
-                await toggleMemory(memoryConsent);
-                setStep(4);
-              }}
+              onPress={() => persistAndAdvance(() => toggleMemory(memoryConsent), 4)}
               variant="primary"
               size="large"
               fullWidth
@@ -459,10 +465,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           <div className="w-full mt-6">
             <AppButton
               title="Continue"
-              onPress={async () => {
-                await toggleNotifications(notificationConsent);
-                setStep(5);
-              }}
+              onPress={() => persistAndAdvance(() => toggleNotifications(notificationConsent), 5)}
               variant="primary"
               size="large"
               fullWidth
