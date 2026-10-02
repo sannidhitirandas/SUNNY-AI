@@ -20,6 +20,7 @@ import {
 interface OnboardingFlowProps {
   onComplete: () => void;
   onNavigateToLogin: () => void;
+  registerHardwareBackHandler: (handler: (() => boolean) | null) => void;
 }
 
 const AVAILABLE_INTERESTS = [
@@ -71,6 +72,7 @@ const TONE_OPTIONS: ToneOption[] = [
 export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
   onComplete,
   onNavigateToLogin,
+  registerHardwareBackHandler,
 }) => {
   const {
     preferences,
@@ -86,6 +88,15 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
   const [selectedTone, setSelectedTone] = useState<PersonalityTone>(preferences.preferredTone || 'adaptive');
   const [memoryConsent, setMemoryConsent] = useState<boolean>(preferences.memoryEnabled);
   const [notificationConsent, setNotificationConsent] = useState<boolean>(preferences.notificationsEnabled);
+
+  React.useEffect(() => {
+    registerHardwareBackHandler(() => {
+      if (step === 0) return false;
+      setStep((currentStep) => currentStep - 1);
+      return true;
+    });
+    return () => registerHardwareBackHandler(null);
+  }, [step, registerHardwareBackHandler]);
 
   const toggleInterest = (item: string) => {
     if (selectedInterests.includes(item)) {

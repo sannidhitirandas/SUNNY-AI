@@ -9,11 +9,13 @@ import { validateRegistrationFields } from '@/lib/authValidation';
 interface RegisterScreenProps {
   onRegisterSuccess: () => void;
   onNavigateToLogin: () => void;
+  registerHardwareBackHandler: (handler: (() => boolean) | null) => void;
 }
 
 export const RegisterScreen: React.FC<RegisterScreenProps> = ({
   onRegisterSuccess,
   onNavigateToLogin,
+  registerHardwareBackHandler,
 }) => {
   const { register } = useAuth();
   const { completeOnboarding, updatePreferredName } = usePreferences();
@@ -25,6 +27,14 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [confirmationRequired, setConfirmationRequired] = useState(false);
+
+  React.useEffect(() => {
+    registerHardwareBackHandler(() => {
+      onNavigateToLogin();
+      return true;
+    });
+    return () => registerHardwareBackHandler(null);
+  }, [onNavigateToLogin, registerHardwareBackHandler]);
 
   const handleRegister = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();

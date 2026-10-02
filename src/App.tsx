@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { App as CapacitorApp } from '@capacitor/app';
+import { Capacitor, type PluginListenerHandle } from '@capacitor/core';
 
 import { useAuth } from '@/context/AuthContext';
 import { usePreferences } from '@/context/PreferencesContext';
+import { useChat } from '@/context/ChatContext';
 
 import { SplashScreen } from '@/screens/SplashScreen';
 import { LoginScreen } from '@/screens/auth/LoginScreen';
@@ -19,6 +22,7 @@ import { AboutScreen } from '@/screens/settings/AboutScreen';
 
 import { OnboardingFlow } from '@/screens/onboarding/OnboardingFlow';
 import { resolveAppRoute } from '@/lib/authRouting';
+import { resolveAndroidBackAction, type AndroidBackState } from '@/lib/androidBackNavigation';
 
 import {
   Home,
@@ -39,7 +43,8 @@ type SubScreen =
 type AuthScreen = 'none' | 'login' | 'register';
 
 export function App() {
-  const { isAuthenticated, isLoading: authLoading, passwordRecovery } = useAuth();
+  const { isAuthenticated, isLoading: authLoading, passwordRecovery, logout } = useAuth();
+  const { enterChat } = useChat();
 
   const {
     hasCompletedOnboarding,
@@ -52,6 +57,28 @@ export function App() {
     useState<SubScreen>('none');
   const [authView, setAuthView] =
     useState<AuthScreen>('none');
+  const screenBackHandlerRef = useRef<(() => boolean) | null>(null);
+  const logoutRef = useRef(logout);
+  logoutRef.current = logout;
+  const navigationStateRef = useRef<AndroidBackState>({
+    showSplash: true,
+    isLoading: true,
+    isAuthenticated: false,
+    activeTab: 'home',
+    hasActiveSubscreen: false,
+    authView: 'none',
+    hasCompletedOnboarding: false,
+    passwordRecovery: false,
+  });
+
+  const registerScreenBackHandler = useCallback((handler: (() => boolean) | null) => {
+    screenBackHandlerRef.current = handler;
+  }, []);
+
+  const handleEnterChat = async (entry: Parameters<typeof enterChat>[0]) => {
+    await enterChat(entry);
+    setActiveTab('chat');
+  };
 
   const route = resolveAppRoute({
     authLoading,
@@ -61,6 +88,60 @@ export function App() {
     hasCompletedOnboarding,
     authView,
   });
+
+  navigationStateRef.current = {
+    showSplash,
+    isLoading: authLoading || prefsLoading,
+    isAuthenticated,
+    activeTab,
+    hasActiveSubscreen: activeSubScreen !== 'none',
+    authView,
+    hasCompletedOnboarding,
+    passwordRecovery,
+  };
+
+  useEffect(() => {
+    if (Capacitor.getPlatform() !== 'android') return;
+
+    let mounted = true;
+    let listener: PluginListenerHandle | undefined;
+    void CapacitorApp.addListener('backButton', () => {
+      if (screenBackHandlerRef.current?.()) return;
+
+      switch (resolveAndroidBackAction(navigationStateRef.current)) {
+        case 'close-subscreen':
+          setActiveSubScreen('none');
+          break;
+        case 'show-home':
+          setActiveTab('home');
+          break;
+        case 'show-login':
+          setAuthView('login');
+          break;
+        case 'show-onboarding':
+          setAuthView('none');
+          break;
+        case 'cancel-password-recovery':
+          void logoutRef.current()
+            .catch((error) => console.warn('[App] Could not end password recovery session:', error))
+            .finally(() => setAuthView('login'));
+          break;
+        case 'exit':
+          void CapacitorApp.exitApp();
+          break;
+        case 'ignore':
+          break;
+      }
+    }).then((handle) => {
+      if (mounted) listener = handle;
+      else void handle.remove();
+    });
+
+    return () => {
+      mounted = false;
+      void listener?.remove();
+    };
+  }, []);
 
   if (showSplash) {
     return (
@@ -87,6 +168,7 @@ export function App() {
       <RegisterScreen
         onRegisterSuccess={() => setAuthView('none')}
         onNavigateToLogin={() => setAuthView('login')}
+        registerHardwareBackHandler={registerScreenBackHandler}
       />
     );
   }
@@ -96,6 +178,7 @@ export function App() {
       <LoginScreen
         onLoginSuccess={() => setAuthView('none')}
         onNavigateToRegister={() => setAuthView('register')}
+        registerHardwareBackHandler={registerScreenBackHandler}
       />
     );
   }
@@ -105,6 +188,7 @@ export function App() {
       <OnboardingFlow
         onComplete={() => setActiveTab('home')}
         onNavigateToLogin={() => setAuthView('login')}
+        registerHardwareBackHandler={registerScreenBackHandler}
       />
     );
   }
@@ -151,6 +235,7 @@ export function App() {
         {activeTab === 'home' && (
           <HomeScreen
             onNavigateToTab={(tab) => setActiveTab(tab)}
+            onEnterChat={handleEnterChat}
           />
         )}
 
@@ -205,7 +290,7 @@ export function App() {
 
           <button
             type="button"
-            onClick={() => setActiveTab('chat')}
+            onClick={() => void handleEnterChat({ source: 'normal' })}
             className={`flex flex-col items-center justify-center w-16 h-full transition-all cursor-pointer ${
               activeTab === 'chat'
                 ? 'text-[#FFD84D]'

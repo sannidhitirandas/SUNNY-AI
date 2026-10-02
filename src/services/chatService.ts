@@ -7,14 +7,15 @@ import { apiUrl } from '@/lib/api';
 import { supabase } from '@/lib/supabase';
 import { storageService } from './storageService';
 import type { AutomaticMemoryCandidate } from './automaticMemory';
+import { getVibeStarterText } from '@/lib/vibeStarterMessages';
+import { NORMAL_CHAT_GREETING } from '@/lib/chatEntry';
 
 const INITIAL_MESSAGES: ChatMessage[] = [
   {
     id: 'welcome-msg-1',
     sessionId: 'default-session',
     role: 'assistant',
-    content:
-      "Hey, sunshine! ☀️ I'm really glad you're here. What's on your mind today?",
+    content: NORMAL_CHAT_GREETING,
     createdAt: new Date().toISOString(),
     deliveryStatus: 'sent',
     isDemoResponse: false,
@@ -64,20 +65,7 @@ export const chatService = {
     intent: StarterIntent,
     _tone: PersonalityTone = 'adaptive'
   ): string {
-    switch (intent) {
-      case 'listen':
-        return "I'm right here with you. Take all the time you need—what's been weighing on your heart or mind?";
-
-      case 'laugh':
-        return 'Tiny adventure time! 😄 Would you like a silly question, a bizarre fun fact, or just a little playful distraction?';
-
-      case 'encourage':
-        return "Hey, take a slow breath with me. 💛 You don't have to carry the whole mountain today. What feels heavy right now?";
-
-      case 'anything':
-      default:
-        return "Anything goes! A random thought, something cool you saw today, or just daydreaming—what are you thinking about?";
-    }
+    return getVibeStarterText(intent);
   },
 
   async sendMessageToAI(options: SendMessageOptions): Promise<{

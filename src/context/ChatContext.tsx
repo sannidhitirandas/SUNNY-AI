@@ -4,6 +4,16 @@ import React, { createContext, useContext, useEffect, useRef, useState } from 'r
 import { supabase } from '@/lib/supabase';
 import { useMemories } from './MemoryContext';
 import { usePreferences } from './PreferencesContext';
+import {
+  createVibeStarterMessage,
+  nextVibeStarterTimestamp,
+  normalizeHydratedVibeStarters,
+} from '@/lib/vibeStarterMessages';
+import {
+  applyChatEntry,
+  createNormalChatGreeting,
+  type ChatEntrySource,
+} from '@/lib/chatEntry';
 
 interface ChatContextType {
   messages: ChatMessage[];
@@ -13,7 +23,7 @@ interface ChatContextType {
   sendMessage: (content: string) => Promise<void>;
   retryMessage: (id: string) => Promise<void>;
   clearChat: () => Promise<void>;
-  startConversationWithIntent: (intent: StarterIntent) => Promise<void>;
+  enterChat: (entry: ChatEntrySource) => Promise<void>;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -27,19 +37,44 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [lastError, setLastError] = useState<string | null>(null);
   const [activeIntent, setActiveIntent] = useState<StarterIntent | null>(null);
   const loadRequestRef = useRef(0);
+  const messagesRef = useRef<ChatMessage[]>([]);
+  const hydratedRef = useRef(false);
+  const hydrationPromiseRef = useRef<Promise<void> | null>(null);
+  const starterPersistenceRef = useRef<Promise<void>>(Promise.resolve());
+
+  const updateMessages = (nextMessages: ChatMessage[]) => {
+    messagesRef.current = nextMessages;
+    setMessages(nextMessages);
+  };
+
+  const ensureMessagesHydrated = () => {
+    if (hydratedRef.current) return Promise.resolve();
+    if (hydrationPromiseRef.current) return hydrationPromiseRef.current;
+
+    const requestId = ++loadRequestRef.current;
+    const loading = chatService.getMessages('default-session')
+      .then((loaded) => {
+        if (requestId !== loadRequestRef.current) return;
+        const hydratedMessages = normalizeHydratedVibeStarters(loaded);
+        updateMessages(hydratedMessages);
+        hydratedRef.current = true;
+      })
+      .catch((error) => {
+        console.warn('[ChatContext] Error loading cloud chat:', error);
+      })
+      .finally(() => {
+        if (hydrationPromiseRef.current === loading) hydrationPromiseRef.current = null;
+      });
+
+    hydrationPromiseRef.current = loading;
+    return loading;
+  };
 
   useEffect(() => {
     let mounted = true;
 
     const loadChatMessages = async () => {
-      const requestId = ++loadRequestRef.current;
-      try {
-        const loaded = await chatService.getMessages('default-session');
-        if (mounted && requestId === loadRequestRef.current) setMessages(loaded);
-      } catch (error) {
-        console.warn('[ChatContext] Error loading cloud chat:', error);
-        if (mounted && requestId === loadRequestRef.current) setMessages([]);
-      }
+      await ensureMessagesHydrated();
     };
 
     void loadChatMessages();
@@ -49,7 +84,9 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'TOKEN_REFRESHED') return;
       loadRequestRef.current += 1;
-      if (mounted) setMessages([]);
+      hydratedRef.current = false;
+      hydrationPromiseRef.current = null;
+      if (mounted) updateMessages([]);
       if (session?.user) {
         window.setTimeout(() => {
           if (mounted) void loadChatMessages();
@@ -66,24 +103,37 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, []);
 
-  const startConversationWithIntent = async (intent: StarterIntent) => {
-    setActiveIntent(intent);
-    const starterPrompt = chatService.getStarterGreeting(intent, preferences.preferredTone);
+  const enterChat = async (entry: ChatEntrySource) => {
+    await ensureMessagesHydrated();
+    const entryStarter = entry.source === 'vibe'
+      ? createVibeStarterMessage(
+          entry.selectedVibe,
+          `starter-${entry.selectedVibe}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          nextVibeStarterTimestamp(messagesRef.current)
+        )
+      : createNormalChatGreeting(
+          `starter-normal-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          nextVibeStarterTimestamp(messagesRef.current)
+        );
+    setActiveIntent(entry.source === 'vibe' ? entry.selectedVibe : null);
 
-    const starterMessage: ChatMessage = {
-      id: `starter-${Date.now()}`,
-      sessionId: 'default-session',
-      role: 'assistant',
-      content: starterPrompt,
-      createdAt: new Date().toISOString(),
-      deliveryStatus: 'sent',
-      isDemoResponse: false,
-      model: 'sunny',
-    };
+    const { messages: updated, changed } = applyChatEntry(
+      messagesRef.current,
+      entry,
+      entryStarter
+    );
+    if (!changed) return;
+    updateMessages(updated);
 
-    const updated = [...messages, starterMessage];
-    setMessages(updated);
-    await chatService.saveMessages('default-session', updated);
+    if (!hydratedRef.current) return;
+
+    const persistence = starterPersistenceRef.current.then(async () => {
+      await chatService.saveMessages('default-session', updated);
+    });
+    starterPersistenceRef.current = persistence.catch((error) => {
+      console.warn('[ChatContext] Could not persist selected vibe starter:', error);
+    });
+    await starterPersistenceRef.current;
   };
 
   const sendMessage = async (content: string) => {
@@ -101,7 +151,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const updatedWithUser = [...messages, userMessage];
-    setMessages(updatedWithUser);
+    updateMessages(updatedWithUser);
     setIsThinking(true);
 
     try {
@@ -142,13 +192,13 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
 
       const finalMessages = [...updatedWithUser, aiMessage];
-      setMessages(finalMessages);
+      updateMessages(finalMessages);
       await chatService.saveMessages('default-session', finalMessages);
     } catch (err: any) {
       console.error('[ChatContext] Error sending message:', err);
       const errorMsg = err?.message || 'Failed to connect to Sunny. Please check your connection and tap retry.';
       setLastError(errorMsg);
-      setMessages(updatedWithUser);
+      updateMessages(updatedWithUser);
 
       try {
         await chatService.saveMessages('default-session', updatedWithUser);
@@ -165,14 +215,14 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!target) return;
 
     const filtered = messages.filter((m) => m.id !== id);
-    setMessages(filtered);
+    updateMessages(filtered);
     await sendMessage(target.content);
   };
 
   const clearChat = async () => {
     await chatService.clearMessages('default-session');
     const fresh = await chatService.getMessages('default-session');
-    setMessages(fresh);
+    updateMessages(normalizeHydratedVibeStarters(fresh));
     setActiveIntent(null);
     setLastError(null);
   };
@@ -187,7 +237,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         sendMessage,
         retryMessage,
         clearChat,
-        startConversationWithIntent,
+        enterChat,
       }}>
       {children}
     </ChatContext.Provider>

@@ -2,6 +2,7 @@ import React from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { usePreferences } from '@/context/PreferencesContext';
 import { useChat } from '@/context/ChatContext';
+import type { ChatEntrySource } from '@/lib/chatEntry';
 import { StarterIntent } from '@/types/chat';
 import { SunnyLogo } from '@/components/brand/SunnyLogo';
 
@@ -13,22 +14,22 @@ import { Settings } from 'lucide-react';
 
 interface HomeScreenProps {
   onNavigateToTab: (tab: 'home' | 'chat' | 'memories' | 'settings') => void;
+  onEnterChat: (entry: ChatEntrySource) => Promise<void>;
 }
 
-export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigateToTab }) => {
+export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigateToTab, onEnterChat }) => {
   const { user } = useAuth();
   const { preferences } = usePreferences();
-  const { messages, startConversationWithIntent } = useChat();
+  const { messages } = useChat();
 
   const displayName = preferences.preferredName || user?.displayName || 'sunshine';
 
   const handleTalkToSunny = () => {
-    onNavigateToTab('chat');
+    void onEnterChat({ source: 'normal' });
   };
 
   const handleSelectIntent = async (intent: StarterIntent) => {
-    await startConversationWithIntent(intent);
-    onNavigateToTab('chat');
+    await onEnterChat({ source: 'vibe', selectedVibe: intent });
   };
 
   const lastMessage = messages.length > 0 ? messages[messages.length - 1] : undefined;

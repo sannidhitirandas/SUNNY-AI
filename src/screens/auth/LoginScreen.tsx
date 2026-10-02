@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { authService } from '@/services/authService';
 import { isValidEmailAddress, validateLoginFields } from '@/lib/authValidation';
@@ -9,11 +9,13 @@ import { AppButton } from '@/components/ui/AppButton';
 interface LoginScreenProps {
   onLoginSuccess: () => void;
   onNavigateToRegister: () => void;
+  registerHardwareBackHandler: (handler: (() => boolean) | null) => void;
 }
 
 export const LoginScreen: React.FC<LoginScreenProps> = ({
   onLoginSuccess,
   onNavigateToRegister,
+  registerHardwareBackHandler,
 }) => {
   const { login } = useAuth();
 
@@ -23,6 +25,17 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
   const [loading, setLoading] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
   const [notice, setNotice] = useState('');
+
+  useEffect(() => {
+    registerHardwareBackHandler(() => {
+      if (!forgotPassword) return false;
+      setForgotPassword(false);
+      setError('');
+      setNotice('');
+      return true;
+    });
+    return () => registerHardwareBackHandler(null);
+  }, [forgotPassword, registerHardwareBackHandler]);
 
   const handleSignIn = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
