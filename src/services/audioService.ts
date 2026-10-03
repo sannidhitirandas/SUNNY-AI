@@ -43,14 +43,14 @@ export const MUSIC_ASSET_CANDIDATES: Record<MusicName, string[]> = {
     '/src/assets/music/dust-in-the-curtains.mp3',
   ],
   anything: [
-    'music/after-school-rain.mp3',
-    '/music/after-school-rain.mp3',
-    '/src/assets/music/after-school-rain.mp3',
+    'music/sunny-app-ambience.mp3',
+    '/music/sunny-app-ambience.mp3',
+    '/src/assets/music/sunny-app-ambience.mp3',
   ],
   ambient: [
-    'music/after-school-rain.mp3',
-    '/music/after-school-rain.mp3',
-    '/src/assets/music/after-school-rain.mp3',
+    'music/sunny-app-ambience.mp3',
+    '/music/sunny-app-ambience.mp3',
+    '/src/assets/music/sunny-app-ambience.mp3',
   ],
 };
 
@@ -68,8 +68,8 @@ export const MUSIC_ASSETS: Record<MusicName, string> = {
   listen: 'music/midnight-notes-on-the-floor.mp3',
   laugh: 'music/blossoms-on-the-pavement.mp3',
   encourage: 'music/dust-in-the-curtains.mp3',
-  anything: 'music/after-school-rain.mp3',
-  ambient: 'music/after-school-rain.mp3',
+  anything: 'music/sunny-app-ambience.mp3',
+  ambient: 'music/sunny-app-ambience.mp3',
 };
 
 class AudioService {
