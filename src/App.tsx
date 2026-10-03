@@ -84,10 +84,10 @@ export function App() {
   }, []);
 
   const handleTabChange = (tab: Tab) => {
-    if (tab !== 'chat') {
-      audioService.pauseMusic();
-    } else {
+    if (tab === 'chat') {
       audioService.resumeMusic();
+    } else {
+      void audioService.playMusic('ambient');
     }
     setActiveTab(tab);
   };
@@ -123,6 +123,11 @@ export function App() {
   };
 
   const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Local Time';
+
+  useEffect(() => {
+    if (showSplash || route !== 'application' || activeTab === 'chat') return;
+    void audioService.playMusic('ambient');
+  }, [showSplash, route, activeTab, activeSubScreen]);
 
   useEffect(() => {
     if (prefsLoading || preferences.notificationPreferences.timezone === deviceTimezone) return;
