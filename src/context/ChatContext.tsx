@@ -1,4 +1,5 @@
 import { chatService } from '@/services/chatService';
+import { audioService } from '@/services/audioService';
 import { ChatMessage, StarterIntent } from '@/types/chat';
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { supabase } from '@/lib/supabase';
@@ -116,6 +117,8 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
           nextVibeStarterTimestamp(messagesRef.current)
         );
     setActiveIntent(entry.source === 'vibe' ? entry.selectedVibe : null);
+    const musicTheme = entry.source === 'vibe' ? entry.selectedVibe : 'anything';
+    void audioService.playMusic(musicTheme);
 
     const { messages: updated, changed } = applyChatEntry(
       messagesRef.current,
@@ -140,6 +143,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!content.trim()) return;
 
     setLastError(null);
+    void audioService.play('send');
 
     const userMessage: ChatMessage = {
       id: `msg-${Date.now()}`,
@@ -195,10 +199,12 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const finalMessages = [...updatedWithUser, aiMessage];
       updateMessages(finalMessages);
       await chatService.saveMessages('default-session', finalMessages);
+      void audioService.play('receive');
     } catch (err: any) {
       console.error('[ChatContext] Error sending message:', err);
       const errorMsg = err?.message || 'Failed to connect to Sunny. Please check your connection and tap retry.';
       setLastError(errorMsg);
+      void audioService.play('error');
       updateMessages(updatedWithUser);
 
       try {

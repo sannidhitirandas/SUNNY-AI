@@ -1,9 +1,17 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { normalizeUserPreferences, PersonalityTone, SunnyTheme, UserPreferences } from '@/types/user';
+import {
+  AudioPreferences,
+  DEFAULT_AUDIO_PREFERENCES,
+  normalizeUserPreferences,
+  PersonalityTone,
+  SunnyTheme,
+  UserPreferences,
+} from '@/types/user';
 import { DEFAULT_NOTIFICATION_PREFERENCES, NotificationPreferences, normalizeNotificationPreferences } from '@/types/notifications';
 import { cloudStorageService } from '@/services/cloudStorageService';
 import { storageService } from '@/services/storageService';
 import { notificationService } from '@/services/notificationService';
+import { audioService } from '@/services/audioService';
 import { supabase } from '@/lib/supabase';
 
 interface PreferencesContextType {
@@ -17,6 +25,7 @@ interface PreferencesContextType {
   toggleNotifications: (enabled: boolean) => Promise<void>;
   updateTheme: (theme: SunnyTheme) => Promise<void>;
   updateNotificationPreferences: (updates: Partial<NotificationPreferences>) => Promise<void>;
+  updateAudioPreferences: (updates: Partial<AudioPreferences>) => Promise<void>;
   completeOnboarding: () => Promise<void>;
   resetOnboarding: () => Promise<void>;
   resetAfterAccountDeletion: () => Promise<void>;
@@ -30,6 +39,7 @@ export const DEFAULT_PREFERENCES: UserPreferences = {
   notificationsEnabled: false,
   theme: 'sunny-dark',
   notificationPreferences: DEFAULT_NOTIFICATION_PREFERENCES,
+  audioPreferences: DEFAULT_AUDIO_PREFERENCES,
 };
 
 const PreferencesContext = createContext<PreferencesContextType | undefined>(undefined);
@@ -185,6 +195,14 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }));
   };
 
+  const updateAudioPreferences = async (updates: Partial<AudioPreferences>) => {
+    const audioPreferences = { ...preferences.audioPreferences, ...updates };
+    await saveUpdatedPreferences(normalizeUserPreferences({
+      ...preferences,
+      audioPreferences,
+    }));
+  };
+
   const completeOnboarding = async () => {
     setHasCompletedOnboarding(true);
     await persist(preferences, true);
@@ -217,11 +235,16 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
     document.documentElement.dataset.theme = preferences.theme;
   }, [preferences.theme]);
 
+  useEffect(() => {
+    audioService.updateSettings(preferences.audioPreferences);
+  }, [preferences.audioPreferences]);
+
   return (
     <PreferencesContext.Provider value={{
       preferences, hasCompletedOnboarding, isLoading,
       updateTone, updateInterests, updatePreferredName,
       toggleMemory, toggleNotifications, updateTheme, updateNotificationPreferences,
+      updateAudioPreferences,
       completeOnboarding, resetOnboarding, resetAfterAccountDeletion,
     }}>
       {children}

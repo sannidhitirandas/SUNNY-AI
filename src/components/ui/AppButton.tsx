@@ -1,4 +1,5 @@
 import React from 'react';
+import { audioService } from '@/services/audioService';
 
 interface AppButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   title: string;
@@ -23,6 +24,17 @@ export const AppButton: React.FC<AppButtonProps> = ({
   onClick,
   ...props
 }) => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!disabled && !loading) {
+      void audioService.play('button');
+    }
+    if (onPress) {
+      onPress(e);
+    } else if (onClick) {
+      onClick(e);
+    }
+  };
+
   const getVariantStyles = () => {
     switch (variant) {
       case 'secondary':
@@ -53,7 +65,7 @@ export const AppButton: React.FC<AppButtonProps> = ({
     <button
       type="button"
       disabled={disabled || loading}
-      onClick={onPress || onClick}
+      onClick={handleClick}
       className={`inline-flex items-center justify-center font-medium transition-all duration-150 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none ${getVariantStyles()} ${getSizeStyles()} ${fullWidth ? 'w-full' : ''} ${className}`}
       {...props}
     >

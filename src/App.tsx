@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { usePreferences } from '@/context/PreferencesContext';
 import { useChat } from '@/context/ChatContext';
 import { notificationService } from '@/services/notificationService';
+import { audioService } from '@/services/audioService';
 
 import { SplashScreen } from '@/screens/SplashScreen';
 import { LoginScreen } from '@/screens/auth/LoginScreen';
@@ -82,8 +83,18 @@ export function App() {
     screenBackHandlerRef.current = handler;
   }, []);
 
+  const handleTabChange = (tab: Tab) => {
+    if (tab !== 'chat') {
+      audioService.pauseMusic();
+    } else {
+      audioService.resumeMusic();
+    }
+    setActiveTab(tab);
+  };
+
   const handleEnterChat = async (entry: Parameters<typeof enterChat>[0]) => {
     await enterChat(entry);
+    audioService.resumeMusic();
     setActiveTab('chat');
   };
 
@@ -283,14 +294,14 @@ export function App() {
       <main className="flex-1 flex flex-col overflow-hidden">
         {activeTab === 'home' && (
           <HomeScreen
-            onNavigateToTab={(tab) => setActiveTab(tab)}
+            onNavigateToTab={(tab) => handleTabChange(tab)}
             onEnterChat={handleEnterChat}
           />
         )}
 
         {activeTab === 'chat' && (
           <ChatScreen
-            onNavigateToTab={(tab) => setActiveTab(tab)}
+            onNavigateToTab={(tab) => handleTabChange(tab)}
             onNavigateToSafety={() =>
               setActiveSubScreen('safety')
             }
@@ -303,12 +314,12 @@ export function App() {
 
         {activeTab === 'settings' && (
           <SettingsScreen
-            onNavigateToTab={(tab) => setActiveTab(tab)}
+            onNavigateToTab={(tab) => handleTabChange(tab)}
             onNavigateSubscreen={(sub) =>
               setActiveSubScreen(sub)
             }
             onReplayOnboarding={() =>
-              setActiveTab('home')
+              handleTabChange('home')
             }
             onSignOut={() => setAuthView('login')}
           />
@@ -319,7 +330,7 @@ export function App() {
         <div className="flex items-center justify-around h-16 px-2">
           <button
             type="button"
-            onClick={() => setActiveTab('home')}
+            onClick={() => handleTabChange('home')}
             className={`flex flex-col items-center justify-center w-16 h-full transition-all cursor-pointer ${
               activeTab === 'home'
                 ? 'text-[#FFD84D]'
@@ -359,7 +370,7 @@ export function App() {
 
           <button
             type="button"
-            onClick={() => setActiveTab('memories')}
+            onClick={() => handleTabChange('memories')}
             className={`flex flex-col items-center justify-center w-16 h-full transition-all cursor-pointer ${
               activeTab === 'memories'
                 ? 'text-[#FFD84D]'
@@ -379,7 +390,7 @@ export function App() {
 
           <button
             type="button"
-            onClick={() => setActiveTab('settings')}
+            onClick={() => handleTabChange('settings')}
             className={`flex flex-col items-center justify-center w-16 h-full transition-all cursor-pointer ${
               activeTab === 'settings'
                 ? 'text-[#FFD84D]'

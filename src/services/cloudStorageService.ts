@@ -157,7 +157,7 @@ export const cloudStorageService = {
 
   async savePreferences(preferences: UserPreferences, onboardingCompleted: boolean): Promise<void> {
     const userId = await getUserId();
-    const { error } = await supabase.from('sunny_preferences').upsert({
+    const payload: Record<string, unknown> = {
       user_id: userId,
       preferred_tone: preferences.preferredTone,
       interests: preferences.interests,
@@ -166,10 +166,21 @@ export const cloudStorageService = {
       notifications_enabled: preferences.notificationsEnabled,
       theme: preferences.theme,
       notification_preferences: preferences.notificationPreferences,
+      audio_preferences: preferences.audioPreferences,
       onboarding_completed: onboardingCompleted,
       updated_at: new Date().toISOString(),
-    });
-    if (error) throw error;
+    };
+
+    const { error } = await supabase.from('sunny_preferences').upsert(payload);
+    if (error) {
+      if (error.message?.includes('audio_preferences') || error.code === 'PGRST204') {
+        delete payload.audio_preferences;
+        const { error: fallbackError } = await supabase.from('sunny_preferences').upsert(payload);
+        if (fallbackError) throw fallbackError;
+      } else {
+        throw error;
+      }
+    }
   },
 
   async getPreferences(): Promise<{ preferences: UserPreferences; onboardingCompleted: boolean } | null> {
@@ -200,6 +211,7 @@ export const cloudStorageService = {
         notificationsEnabled: notificationSettings.enabled,
         theme: data.theme,
         notificationPreferences: notificationSettings,
+        audioPreferences: data.audio_preferences as any,
       }),
       onboardingCompleted: data.onboarding_completed,
     };

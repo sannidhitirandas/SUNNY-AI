@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useMemories } from '@/context/MemoryContext';
 import { usePreferences } from '@/context/PreferencesContext';
+import { audioService } from '@/services/audioService';
 import { Memory, MemoryCategory } from '@/types/memory';
 import { MemoryCard } from '@/components/memories/MemoryCard';
 import { MemoryModal } from '@/components/memories/MemoryModal';
@@ -53,6 +54,7 @@ export const MemoriesScreen: React.FC = () => {
     } else {
       await addMemory(data);
     }
+    void audioService.play('success');
   };
 
   return (

@@ -1,0 +1,19 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Install final Sunny debug APK",
+			"type": "shell",
+			"command": "C:\\Users\\tiran\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe",
+			"args": [
+				"-s",
+				"qwqw5dtkww9tdamn",
+				"install",
+				"-r",
+				"android/app/build/outputs/apk/debug/app-debug.apk"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		}
+	]
+}

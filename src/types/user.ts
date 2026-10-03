@@ -3,6 +3,41 @@ import { NotificationPreferences, normalizeNotificationPreferences } from './not
 export type PersonalityTone = 'adaptive' | 'playful' | 'gentle' | 'calm';
 export type SunnyTheme = 'sunny-dark' | 'sunny-light';
 
+export interface AudioPreferences {
+  soundEnabled: boolean;
+  musicEnabled: boolean;
+  masterVolume: number;
+  sfxVolume: number;
+  musicVolume: number;
+}
+
+export const DEFAULT_AUDIO_PREFERENCES: AudioPreferences = {
+  soundEnabled: true,
+  musicEnabled: false,
+  masterVolume: 1,
+  sfxVolume: 1,
+  musicVolume: 0.25,
+};
+
+export const normalizeAudioPreferences = (value?: Partial<AudioPreferences>): AudioPreferences => {
+  const clamp = (val: unknown, def: number): number => {
+    if (typeof val !== 'number' || isNaN(val)) return def;
+    return Math.max(0, Math.min(1, val));
+  };
+
+  return {
+    soundEnabled: typeof value?.soundEnabled === 'boolean'
+      ? value.soundEnabled
+      : DEFAULT_AUDIO_PREFERENCES.soundEnabled,
+    musicEnabled: typeof value?.musicEnabled === 'boolean'
+      ? value.musicEnabled
+      : DEFAULT_AUDIO_PREFERENCES.musicEnabled,
+    masterVolume: clamp(value?.masterVolume, DEFAULT_AUDIO_PREFERENCES.masterVolume),
+    sfxVolume: clamp(value?.sfxVolume, DEFAULT_AUDIO_PREFERENCES.sfxVolume),
+    musicVolume: clamp(value?.musicVolume, DEFAULT_AUDIO_PREFERENCES.musicVolume),
+  };
+};
+
 export interface UserPreferences {
   preferredTone: PersonalityTone;
   interests: string[];
@@ -11,10 +46,12 @@ export interface UserPreferences {
   notificationsEnabled: boolean;
   theme: SunnyTheme;
   notificationPreferences: NotificationPreferences;
+  audioPreferences: AudioPreferences;
 }
 
 export const normalizeUserPreferences = (value: Partial<UserPreferences>): UserPreferences => {
   const notificationPreferences = normalizeNotificationPreferences(value.notificationPreferences);
+  const audioPreferences = normalizeAudioPreferences(value.audioPreferences);
   const notificationsEnabled = typeof value.notificationsEnabled === 'boolean'
     ? value.notificationsEnabled
     : notificationPreferences.enabled;
@@ -27,6 +64,7 @@ export const normalizeUserPreferences = (value: Partial<UserPreferences>): UserP
     notificationsEnabled,
     theme: value.theme === 'sunny-light' ? 'sunny-light' : 'sunny-dark',
     notificationPreferences: { ...notificationPreferences, enabled: notificationsEnabled },
+    audioPreferences,
   };
 };
 

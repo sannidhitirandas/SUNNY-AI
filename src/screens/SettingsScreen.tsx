@@ -26,6 +26,8 @@ import {
   LogOut,
   Trash2,
   CheckCircle2,
+  Volume2,
+  Music,
 } from 'lucide-react';
 
 interface SettingsScreenProps {
@@ -34,6 +36,34 @@ interface SettingsScreenProps {
   onReplayOnboarding: () => void;
   onSignOut: () => void;
 }
+
+const VolumeSliderRow: React.FC<{
+  title: string;
+  value: number;
+  disabled?: boolean;
+  onChange: (val: number) => void;
+}> = ({ title, value, disabled = false, onChange }) => {
+  const percentage = Math.round(value * 100);
+  return (
+    <div className={`flex flex-col gap-1.5 px-4 py-3 border-b border-[#392858]/40 ${disabled ? 'opacity-40' : ''}`}>
+      <div className="flex items-center justify-between text-xs sm:text-sm font-medium">
+        <span className="text-white">{title}</span>
+        <span className="text-[#FFD84D] font-semibold">{percentage}%</span>
+      </div>
+      <input
+        type="range"
+        min="0"
+        max="1"
+        step="0.05"
+        disabled={disabled}
+        value={value}
+        onChange={(e) => onChange(parseFloat(e.target.value))}
+        aria-label={title}
+        className="w-full accent-[#FFD84D] bg-[#21163A] h-2 rounded-lg cursor-pointer"
+      />
+    </div>
+  );
+};
 
 export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   onNavigateToTab,
@@ -48,6 +78,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
     updatePreferredName,
     updateTheme,
     toggleMemory,
+    updateAudioPreferences,
     resetOnboarding,
   } = usePreferences();
   const { clearChat } = useChat();
@@ -163,6 +194,43 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           icon={<Palette size={16} className="text-[#FFD84D]" />}
           rightText={preferences.theme === 'sunny-light' ? 'Sunny Day' : 'Sunny Night'}
           onPress={() => setThemeModalVisible(true)}
+        />
+      </SettingsSection>
+
+      {/* Section Audio — Audio & Sounds */}
+      <SettingsSection title="AUDIO & SOUNDS">
+        <SettingsRow
+          title="Sound Effects"
+          subtitle="Play UI sounds for chat, buttons, and events"
+          icon={<Volume2 size={16} className="text-[#FFD84D]" />}
+          isSwitch
+          switchValue={preferences.audioPreferences.soundEnabled}
+          onSwitchChange={(enabled) => updateAudioPreferences({ soundEnabled: enabled })}
+        />
+        <SettingsRow
+          title="Background Music"
+          subtitle="Calm ambient music in the background"
+          icon={<Music size={16} className="text-[#FFD84D]" />}
+          isSwitch
+          switchValue={preferences.audioPreferences.musicEnabled}
+          onSwitchChange={(enabled) => updateAudioPreferences({ musicEnabled: enabled })}
+        />
+        <VolumeSliderRow
+          title="Master Volume"
+          value={preferences.audioPreferences.masterVolume}
+          onChange={(vol) => updateAudioPreferences({ masterVolume: vol })}
+        />
+        <VolumeSliderRow
+          title="Sound Effects Volume"
+          value={preferences.audioPreferences.sfxVolume}
+          disabled={!preferences.audioPreferences.soundEnabled}
+          onChange={(vol) => updateAudioPreferences({ sfxVolume: vol })}
+        />
+        <VolumeSliderRow
+          title="Music Volume"
+          value={preferences.audioPreferences.musicVolume}
+          disabled={!preferences.audioPreferences.musicEnabled}
+          onChange={(vol) => updateAudioPreferences({ musicVolume: vol })}
         />
       </SettingsSection>
 
