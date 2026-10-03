@@ -10,9 +10,10 @@ import {
 test('audio preferences defaults and normalization', () => {
   assert.equal(DEFAULT_AUDIO_PREFERENCES.soundEnabled, true);
   assert.equal(DEFAULT_AUDIO_PREFERENCES.musicEnabled, false);
-  assert.equal(DEFAULT_AUDIO_PREFERENCES.masterVolume, 1);
-  assert.equal(DEFAULT_AUDIO_PREFERENCES.sfxVolume, 1);
-  assert.equal(DEFAULT_AUDIO_PREFERENCES.musicVolume, 0.25);
+  assert.equal(DEFAULT_AUDIO_PREFERENCES.masterVolume, 0.75);
+  assert.equal(DEFAULT_AUDIO_PREFERENCES.sfxVolume, 0.75);
+  assert.equal(DEFAULT_AUDIO_PREFERENCES.musicVolume, 0.50);
+  assert.equal(DEFAULT_AUDIO_PREFERENCES.selectedBackgroundMusic, 'ambient');
 
   const normalizedDefault = normalizeAudioPreferences();
   assert.deepEqual(normalizedDefault, DEFAULT_AUDIO_PREFERENCES);
@@ -21,22 +22,25 @@ test('audio preferences defaults and normalization', () => {
     masterVolume: 2.5,
     sfxVolume: -0.5,
     musicVolume: 0.8,
+    selectedBackgroundMusic: 'midnight-notes',
   });
 
   assert.equal(clamped.masterVolume, 1);
   assert.equal(clamped.sfxVolume, 0);
   assert.equal(clamped.musicVolume, 0.8);
+  assert.equal(clamped.selectedBackgroundMusic, 'midnight-notes');
 
   const userPref = normalizeUserPreferences({
     audioPreferences: {
       soundEnabled: false,
-      musicVolume: 0.5,
+      musicVolume: 0.4,
+      selectedBackgroundMusic: 'blossoms',
     },
   });
 
   assert.equal(userPref.audioPreferences.soundEnabled, false);
-  assert.equal(userPref.audioPreferences.musicVolume, 0.5);
-  assert.equal(userPref.audioPreferences.sfxVolume, 1);
+  assert.equal(userPref.audioPreferences.musicVolume, 0.4);
+  assert.equal(userPref.audioPreferences.selectedBackgroundMusic, 'blossoms');
 });
 
 test('audio service settings update, mute, and volume clamping', () => {
@@ -44,16 +48,18 @@ test('audio service settings update, mute, and volume clamping', () => {
     soundEnabled: true,
     musicEnabled: true,
     masterVolume: 0.8,
-    sfxVolume: 0.5,
-    musicVolume: 0.3,
+    sfxVolume: 0.6,
+    musicVolume: 0.4,
+    selectedBackgroundMusic: 'dust',
   });
 
   let settings = audioService.getSettings();
   assert.equal(settings.soundEnabled, true);
   assert.equal(settings.musicEnabled, true);
   assert.equal(settings.masterVolume, 0.8);
-  assert.equal(settings.sfxVolume, 0.5);
-  assert.equal(settings.musicVolume, 0.3);
+  assert.equal(settings.sfxVolume, 0.6);
+  assert.equal(settings.musicVolume, 0.4);
+  assert.equal(settings.selectedBackgroundMusic, 'dust');
 
   audioService.setMuted(true);
   settings = audioService.getSettings();
@@ -99,16 +105,26 @@ test('playing sound effects and missing assets fail gracefully without throwing'
   audioService.updateSettings(DEFAULT_AUDIO_PREFERENCES);
 });
 
-test('four context-based music themes (listen, laugh, encourage, anything, normal) handle playback and same-track non-restarting cleanly', async () => {
+test('five background music options and four chat themes handle playback and same-track non-restarting cleanly', async () => {
   audioService.updateSettings({ musicEnabled: true, masterVolume: 1, musicVolume: 0.5 });
 
   await assert.doesNotReject(async () => {
+    // Test 5 non-chat music options
+    await audioService.playNonChatMusic('ambient');
+    await audioService.playNonChatMusic('midnight-notes');
+    await audioService.playNonChatMusic('blossoms');
+    await audioService.playNonChatMusic('dust');
+    await audioService.playNonChatMusic('after-school-rain');
+
+    // Test 4 chat vibe themes
     await audioService.playMusic('listen');
     await audioService.playMusic('laugh');
     await audioService.playMusic('encourage');
     await audioService.playMusic('anything');
-    // Normal chat entry maps to 'anything' (after-school-rain.mp3)
+
+    // Same track invocation does not restart
     await audioService.playMusic('anything');
+
     audioService.pauseMusic();
     await audioService.resumeMusic();
     audioService.stopMusic();
@@ -117,7 +133,7 @@ test('four context-based music themes (listen, laugh, encourage, anything, norma
   // Disabling music stops music and prevents playback
   audioService.updateSettings({ musicEnabled: false });
   await assert.doesNotReject(async () => {
-    await audioService.playMusic('listen');
+    await audioService.playNonChatMusic('ambient');
   });
 
   audioService.updateSettings(DEFAULT_AUDIO_PREFERENCES);

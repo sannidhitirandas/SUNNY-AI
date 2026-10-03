@@ -84,19 +84,33 @@ export function App() {
   }, []);
 
   const handleTabChange = (tab: Tab) => {
-    if (tab === 'chat') {
-      audioService.resumeMusic();
+    if (tab !== 'chat') {
+      if (preferences.audioPreferences.musicEnabled) {
+        void audioService.playNonChatMusic(preferences.audioPreferences.selectedBackgroundMusic);
+      } else {
+        audioService.pauseMusic();
+      }
     } else {
-      void audioService.playMusic('ambient');
+      if (preferences.audioPreferences.musicEnabled) {
+        audioService.resumeMusic();
+      }
     }
     setActiveTab(tab);
   };
 
   const handleEnterChat = async (entry: Parameters<typeof enterChat>[0]) => {
     await enterChat(entry);
-    audioService.resumeMusic();
+    if (preferences.audioPreferences.musicEnabled) {
+      audioService.resumeMusic();
+    }
     setActiveTab('chat');
   };
+
+  useEffect(() => {
+    if (preferences.audioPreferences.musicEnabled && activeTab !== 'chat') {
+      void audioService.playNonChatMusic(preferences.audioPreferences.selectedBackgroundMusic);
+    }
+  }, [preferences.audioPreferences.selectedBackgroundMusic, preferences.audioPreferences.musicEnabled, activeTab]);
 
   const handleSplashReady = useCallback(() => {
     setShowSplash(false);
@@ -123,11 +137,6 @@ export function App() {
   };
 
   const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Local Time';
-
-  useEffect(() => {
-    if (showSplash || route !== 'application' || activeTab === 'chat') return;
-    void audioService.playMusic('ambient');
-  }, [showSplash, route, activeTab, activeSubScreen]);
 
   useEffect(() => {
     if (prefsLoading || preferences.notificationPreferences.timezone === deviceTimezone) return;

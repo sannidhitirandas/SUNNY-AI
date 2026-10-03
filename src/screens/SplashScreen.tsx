@@ -1,19 +1,24 @@
 import React, { useEffect } from 'react';
 import { SunnyLogo } from '@/components/brand/SunnyLogo';
 import { audioService } from '@/services/audioService';
+import { usePreferences } from '@/context/PreferencesContext';
 
 interface SplashScreenProps {
   onReady: () => void;
 }
 
 export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
+  const { preferences } = usePreferences();
+
   useEffect(() => {
     void audioService.play('open');
-    void audioService.playMusic('ambient');
+    if (preferences.audioPreferences.musicEnabled) {
+      void audioService.playNonChatMusic(preferences.audioPreferences.selectedBackgroundMusic);
+    }
     const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
     const timer = window.setTimeout(onReady, prefersReducedMotion ? 250 : 3000);
     return () => clearTimeout(timer);
-  }, [onReady]);
+  }, [onReady, preferences.audioPreferences.musicEnabled, preferences.audioPreferences.selectedBackgroundMusic]);
 
   return (
     <div

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { usePreferences } from '@/context/PreferencesContext';
 import { useChat } from '@/context/ChatContext';
+import { audioService } from '@/services/audioService';
 import { PersonalityTone, SunnyTheme } from '@/types/user';
 import { SettingsSection } from '@/components/settings/SettingsSection';
 import { SettingsRow } from '@/components/settings/SettingsRow';
@@ -232,6 +233,43 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           disabled={!preferences.audioPreferences.musicEnabled}
           onChange={(vol) => updateAudioPreferences({ musicVolume: vol })}
         />
+
+        {/* Background Music Track Selection */}
+        <div className="px-4 py-3 space-y-2 border-t border-[#392858]/40">
+          <span className="text-xs font-semibold text-[#C6B8E5] block tracking-wider uppercase mb-1">Background Music Track</span>
+          <div className="space-y-1.5">
+            {[
+              { id: 'ambient', label: 'Sunny Ambience', desc: 'The official default Sunny app ambience' },
+              { id: 'midnight-notes', label: 'Midnight Notes on the Floor', desc: 'Emotional / warm / reflective' },
+              { id: 'blossoms', label: 'Blossoms on the Pavement', desc: 'Playful / upbeat' },
+              { id: 'dust', label: 'Dust in the Curtains', desc: 'Hopeful / uplifting' },
+              { id: 'after-school-rain', label: 'After-School Rain', desc: 'Dreamy / relaxed' },
+            ].map((opt) => {
+              const isSelected = preferences.audioPreferences.selectedBackgroundMusic === opt.id;
+              return (
+                <button
+                  key={opt.id}
+                  type="button"
+                  onClick={async () => {
+                    await updateAudioPreferences({ selectedBackgroundMusic: opt.id as any });
+                    if (preferences.audioPreferences.musicEnabled) {
+                      await audioService.playNonChatMusic(opt.id as any);
+                    }
+                  }}
+                  className={`w-full flex items-center justify-between p-3 rounded-xl border text-left transition-colors cursor-pointer ${
+                    isSelected ? 'border-[#FFD84D] bg-[#FFD84D]/15' : 'border-[#392858] bg-[#21163A] hover:border-white/20'
+                  }`}
+                >
+                  <div>
+                    <span className={`text-xs sm:text-sm font-semibold block ${isSelected ? 'text-[#FFD84D]' : 'text-white'}`}>{opt.label}</span>
+                    <span className="text-[11px] text-[#9B8AB9] block mt-0.5">{opt.desc}</span>
+                  </div>
+                  {isSelected && <CheckCircle2 size={16} className="text-[#FFD84D] shrink-0 ml-2" />}
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </SettingsSection>
 
       {/* Section B — Memory */}

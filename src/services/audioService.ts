@@ -1,5 +1,6 @@
 import {
   AudioPreferences,
+  BackgroundMusicOption,
   DEFAULT_AUDIO_PREFERENCES,
   normalizeAudioPreferences,
 } from '@/types/user';
@@ -14,7 +15,7 @@ export type SoundName =
   | 'notification';
 
 export type MusicTheme = 'listen' | 'laugh' | 'encourage' | 'anything';
-export type MusicName = MusicTheme | 'ambient';
+export type MusicName = BackgroundMusicOption | MusicTheme | 'ambient';
 
 export const SOUND_ASSET_CANDIDATES: Record<SoundName, string[]> = {
   button: ['sounds/button.mp3', '/sounds/button.mp3', '/src/assets/sounds/button.mp3'],
@@ -26,7 +27,32 @@ export const SOUND_ASSET_CANDIDATES: Record<SoundName, string[]> = {
   notification: ['sounds/notification.mp3', '/sounds/notification.mp3', '/src/assets/sounds/notification.mp3'],
 };
 
-export const MUSIC_ASSET_CANDIDATES: Record<MusicName, string[]> = {
+export const MUSIC_ASSET_CANDIDATES: Record<string, string[]> = {
+  ambient: [
+    'music/sunny-app-ambience.mp3',
+    '/music/sunny-app-ambience.mp3',
+    '/src/assets/music/sunny-app-ambience.mp3',
+  ],
+  'midnight-notes': [
+    'music/midnight-notes-on-the-floor.mp3',
+    '/music/midnight-notes-on-the-floor.mp3',
+    '/src/assets/music/midnight-notes-on-the-floor.mp3',
+  ],
+  blossoms: [
+    'music/blossoms-on-the-pavement.mp3',
+    '/music/blossoms-on-the-pavement.mp3',
+    '/src/assets/music/blossoms-on-the-pavement.mp3',
+  ],
+  dust: [
+    'music/dust-in-the-curtains.mp3',
+    '/music/dust-in-the-curtains.mp3',
+    '/src/assets/music/dust-in-the-curtains.mp3',
+  ],
+  'after-school-rain': [
+    'music/after-school-rain.mp3',
+    '/music/after-school-rain.mp3',
+    '/src/assets/music/after-school-rain.mp3',
+  ],
   listen: [
     'music/midnight-notes-on-the-floor.mp3',
     '/music/midnight-notes-on-the-floor.mp3',
@@ -47,29 +73,6 @@ export const MUSIC_ASSET_CANDIDATES: Record<MusicName, string[]> = {
     '/music/sunny-app-ambience.mp3',
     '/src/assets/music/sunny-app-ambience.mp3',
   ],
-  ambient: [
-    'music/sunny-app-ambience.mp3',
-    '/music/sunny-app-ambience.mp3',
-    '/src/assets/music/sunny-app-ambience.mp3',
-  ],
-};
-
-export const SOUND_ASSETS: Record<SoundName, string> = {
-  button: 'sounds/button.mp3',
-  send: 'sounds/send.mp3',
-  receive: 'sounds/receive.mp3',
-  success: 'sounds/success.mp3',
-  error: 'sounds/error.mp3',
-  open: 'sounds/open.mp3',
-  notification: 'sounds/notification.mp3',
-};
-
-export const MUSIC_ASSETS: Record<MusicName, string> = {
-  listen: 'music/midnight-notes-on-the-floor.mp3',
-  laugh: 'music/blossoms-on-the-pavement.mp3',
-  encourage: 'music/dust-in-the-curtains.mp3',
-  anything: 'music/sunny-app-ambience.mp3',
-  ambient: 'music/sunny-app-ambience.mp3',
 };
 
 class AudioService {
@@ -124,7 +127,7 @@ class AudioService {
     if (!this.settings.musicEnabled && prevMusicEnabled) {
       this.pauseMusic();
     } else if (this.settings.musicEnabled && !prevMusicEnabled) {
-      void this.playMusic(this.currentMusicName || 'anything');
+      void this.playNonChatMusic(this.settings.selectedBackgroundMusic);
     }
 
     // Update active music volume if playing
@@ -169,7 +172,7 @@ class AudioService {
   }
 
   public isAssetAvailable(name: SoundName | MusicName): boolean {
-    const candidates = SOUND_ASSET_CANDIDATES[name as SoundName] || MUSIC_ASSET_CANDIDATES[name as MusicName] || [];
+    const candidates = SOUND_ASSET_CANDIDATES[name as SoundName] || MUSIC_ASSET_CANDIDATES[name as string] || [];
     return candidates.some((path) => !this.failedAssets.has(path));
   }
 
@@ -218,13 +221,20 @@ class AudioService {
   }
 
   /**
-   * Plays background music theme cleanly without duplicate instances or unnecessary restarts.
+   * Plays non-chat background music option (Sunny Ambience, Midnight Notes, Blossoms, Dust, After-School Rain).
    */
-  public async playMusic(musicName: MusicName = 'anything'): Promise<void> {
+  public async playNonChatMusic(option: BackgroundMusicOption = 'ambient'): Promise<void> {
+    await this.playMusic(option);
+  }
+
+  /**
+   * Plays background music theme or track cleanly without duplicate instances or unnecessary restarts.
+   */
+  public async playMusic(musicName: MusicName = 'ambient'): Promise<void> {
     if (!this.settings.musicEnabled) return;
     const effectiveVolume = this.getEffectiveMusicVolume();
 
-    const candidates = MUSIC_ASSET_CANDIDATES[musicName] || MUSIC_ASSET_CANDIDATES.anything;
+    const candidates = MUSIC_ASSET_CANDIDATES[musicName as string] || MUSIC_ASSET_CANDIDATES.ambient;
     const availableCandidates = candidates.filter((path) => !this.failedAssets.has(path));
     if (availableCandidates.length === 0) return;
 
@@ -326,6 +336,8 @@ class AudioService {
       }
     } else if (this.currentMusicName) {
       await this.playMusic(this.currentMusicName);
+    } else {
+      await this.playNonChatMusic(this.settings.selectedBackgroundMusic);
     }
   }
 

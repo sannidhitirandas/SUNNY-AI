@@ -2,6 +2,7 @@ import { NotificationPreferences, normalizeNotificationPreferences } from './not
 
 export type PersonalityTone = 'adaptive' | 'playful' | 'gentle' | 'calm';
 export type SunnyTheme = 'sunny-dark' | 'sunny-light';
+export type BackgroundMusicOption = 'ambient' | 'midnight-notes' | 'blossoms' | 'dust' | 'after-school-rain';
 
 export interface AudioPreferences {
   soundEnabled: boolean;
@@ -9,14 +10,16 @@ export interface AudioPreferences {
   masterVolume: number;
   sfxVolume: number;
   musicVolume: number;
+  selectedBackgroundMusic: BackgroundMusicOption;
 }
 
 export const DEFAULT_AUDIO_PREFERENCES: AudioPreferences = {
   soundEnabled: true,
   musicEnabled: false,
-  masterVolume: 1,
-  sfxVolume: 1,
-  musicVolume: 0.25,
+  masterVolume: 0.75,
+  sfxVolume: 0.75,
+  musicVolume: 0.50,
+  selectedBackgroundMusic: 'ambient',
 };
 
 export const normalizeAudioPreferences = (value?: Partial<AudioPreferences>): AudioPreferences => {
@@ -24,6 +27,11 @@ export const normalizeAudioPreferences = (value?: Partial<AudioPreferences>): Au
     if (typeof val !== 'number' || isNaN(val)) return def;
     return Math.max(0, Math.min(1, val));
   };
+
+  const validOptions: BackgroundMusicOption[] = ['ambient', 'midnight-notes', 'blossoms', 'dust', 'after-school-rain'];
+  const selectedBackgroundMusic = validOptions.includes(value?.selectedBackgroundMusic as any)
+    ? (value?.selectedBackgroundMusic as BackgroundMusicOption)
+    : DEFAULT_AUDIO_PREFERENCES.selectedBackgroundMusic;
 
   return {
     soundEnabled: typeof value?.soundEnabled === 'boolean'
@@ -35,6 +43,7 @@ export const normalizeAudioPreferences = (value?: Partial<AudioPreferences>): Au
     masterVolume: clamp(value?.masterVolume, DEFAULT_AUDIO_PREFERENCES.masterVolume),
     sfxVolume: clamp(value?.sfxVolume, DEFAULT_AUDIO_PREFERENCES.sfxVolume),
     musicVolume: clamp(value?.musicVolume, DEFAULT_AUDIO_PREFERENCES.musicVolume),
+    selectedBackgroundMusic,
   };
 };
 
