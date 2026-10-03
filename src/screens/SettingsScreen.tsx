@@ -20,7 +20,6 @@ import {
   Bell,
   Moon,
   Lock,
-  Download,
   MessageSquareX,
   HeartHandshake,
   Info,
@@ -29,7 +28,6 @@ import {
   LogOut,
   Trash2,
   CheckCircle2,
-  X,
 } from 'lucide-react';
 
 interface SettingsScreenProps {
@@ -59,7 +57,6 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   const [toneModalVisible, setToneModalVisible] = useState(false);
   const [nameModalVisible, setNameModalVisible] = useState(false);
   const [newName, setNewName] = useState(preferences.preferredName || '');
-  const [exportNotice, setExportNotice] = useState<string | null>(null);
 
   const TONES: { tone: PersonalityTone; label: string; desc: string }[] = [
     { tone: 'adaptive', label: 'Adaptive', desc: 'Balances tone to your conversations' },
@@ -80,11 +77,6 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       await clearChat();
       alert('Your conversation history has been cleared.');
     }
-  };
-
-  const handleExportData = async () => {
-    const dataJson = await privacyService.exportAllUserData();
-    setExportNotice(dataJson);
   };
 
   const handleSignOut = async () => {
@@ -191,12 +183,6 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           subtitle="Review what is stored and managed locally"
           icon={<Lock size={16} className="text-[#FFD84D]" />}
           onPress={() => onNavigateSubscreen('privacy')}
-        />
-        <SettingsRow
-          title="Export My Data"
-          subtitle="Download your preferences, notes, and chats"
-          icon={<Download size={16} className="text-[#A8D9A0]" />}
-          onPress={handleExportData}
         />
         <SettingsRow
           title="Clear Chat History"
@@ -334,46 +320,6 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         </div>
       )}
 
-      {/* Data Export Notice Modal */}
-      {exportNotice && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-[#21163A] border border-[#392858] rounded-3xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between pb-3 mb-2 border-b border-[#392858]">
-              <h3 className="text-base font-bold text-[#FFD84D]">Data Export Ready</h3>
-              <button
-                type="button"
-                onClick={() => setExportNotice(null)}
-                className="text-[#9B8AB9] hover:text-white"
-              >
-                <X size={18} />
-              </button>
-            </div>
-            <p className="text-xs text-[#C6B8E5] mb-3">
-              Your local companion dataset in standard JSON format:
-            </p>
-            <pre className="p-3 bg-[#17102C] border border-[#392858] rounded-xl text-[11px] text-[#A8D9A0] font-mono max-h-48 overflow-y-auto mb-4 select-all">
-              {exportNotice}
-            </pre>
-            <div className="flex items-center gap-2">
-              <AppButton
-                title="Copy JSON"
-                onPress={() => {
-                  navigator.clipboard?.writeText(exportNotice);
-                  alert('Copied to clipboard!');
-                }}
-                variant="primary"
-                fullWidth
-              />
-              <AppButton
-                title="Close"
-                onPress={() => setExportNotice(null)}
-                variant="ghost"
-                fullWidth
-              />
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
