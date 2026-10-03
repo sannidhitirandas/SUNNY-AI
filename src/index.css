@@ -19,9 +19,59 @@
 
 body {
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background-color: #100B22;
-  color: #FFFFFF;
+  background-color: var(--sunny-page-background, #100B22);
+  color: var(--sunny-primary-text, #FFFFFF);
 }
+
+*:focus-visible {
+  outline: 2px solid #FFD84D;
+  outline-offset: 2px;
+}
+
+:root[data-theme='sunny-light'] *:focus-visible {
+  outline-color: #795900;
+}
+
+:root[data-theme='sunny-dark'] {
+  color-scheme: dark;
+  --sunny-page-background: #100B22;
+  --sunny-primary-text: #FFFFFF;
+  --sunny-scroll-track: #17102C;
+  --sunny-scroll-thumb: #392858;
+}
+
+:root[data-theme='sunny-light'] {
+  color-scheme: light;
+  --sunny-page-background: #F8F6FC;
+  --sunny-primary-text: #251A35;
+  --sunny-scroll-track: #F0EDF6;
+  --sunny-scroll-thumb: #C8BDD8;
+}
+
+:root[data-theme='sunny-light'] [class*="bg-[#100B22]"] { background-color: #F8F6FC !important; }
+:root[data-theme='sunny-light'] [class*="bg-[#17102C]"] { background-color: #F0EDF6 !important; }
+:root[data-theme='sunny-light'] [class*="bg-[#1B1430]"] { background-color: #FFFFFF !important; }
+:root[data-theme='sunny-light'] [class*="bg-[#21163A]"] { background-color: #FFFFFF !important; }
+:root[data-theme='sunny-light'] [class*="bg-[#261A42]"] { background-color: #F0EDF6 !important; }
+:root[data-theme='sunny-light'] [class*="bg-[#2B1D4A]"] { background-color: #E8E1F0 !important; }
+:root[data-theme='sunny-light'] [class*="bg-[#302149]"] { background-color: #E8E1F0 !important; }
+:root[data-theme='sunny-light'] [class*="bg-[#3D2A5C]"] { background-color: #DED5E9 !important; }
+:root[data-theme='sunny-light'] [class*="bg-[#3A1722]"] { background-color: #F8E8EB !important; }
+:root[data-theme='sunny-light'] [class*="bg-[#7A3045]"] { background-color: #EBCBD2 !important; }
+:root[data-theme='sunny-light'] [class*="text-white"] { color: #251A35 !important; }
+:root[data-theme='sunny-light'] [class*="text-[#FFFFFF]"] { color: #251A35 !important; }
+:root[data-theme='sunny-light'] [class*="text-[#C6B8E5]"] { color: #594B6E !important; }
+:root[data-theme='sunny-light'] [class*="text-[#9B8AB9]"] { color: #756789 !important; }
+:root[data-theme='sunny-light'] [class*="text-[#FFD84D]"] { color: #795900 !important; }
+:root[data-theme='sunny-light'] [class*="text-[#F6BD45]"] { color: #785300 !important; }
+:root[data-theme='sunny-light'] [class*="text-[#FF8D9A]"] { color: #A13B4B !important; }
+:root[data-theme='sunny-light'] [class*="text-[#A8D9A0]"] { color: #347447 !important; }
+:root[data-theme='sunny-light'] [class*="border-[#392858]"] { border-color: #D6CCE3 !important; }
+:root[data-theme='sunny-light'] [class*="border-[#3E2C60]"] { border-color: #D6CCE3 !important; }
+:root[data-theme='sunny-light'] [class*="border-[#FFD84D]"] { border-color: #C99A16 !important; }
+:root[data-theme='sunny-light'] [class*="divide-[#392858]"] { --tw-divide-opacity: 0.7; }
+:root[data-theme='sunny-light'] input[type='time'],
+:root[data-theme='sunny-light'] select { color-scheme: light; }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
@@ -30,11 +80,11 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #17102C;
+  background: var(--sunny-scroll-track, #17102C);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #392858;
+  background: var(--sunny-scroll-thumb, #392858);
   border-radius: 9999px;
 }
 

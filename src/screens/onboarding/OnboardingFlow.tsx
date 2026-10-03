@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { Capacitor } from '@capacitor/core';
 import { usePreferences } from '@/context/PreferencesContext';
+import { notificationService } from '@/services/notificationService';
 import { PersonalityTone } from '@/types/user';
 import { SunnyLogo } from '@/components/brand/SunnyLogo';
 import { AppButton } from '@/components/ui/AppButton';
@@ -88,6 +90,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
   const [selectedTone, setSelectedTone] = useState<PersonalityTone>(preferences.preferredTone || 'adaptive');
   const [memoryConsent, setMemoryConsent] = useState<boolean>(preferences.memoryEnabled);
   const [notificationConsent, setNotificationConsent] = useState<boolean>(preferences.notificationsEnabled);
+  const [notificationPermissionNote, setNotificationPermissionNote] = useState<string | null>(null);
 
   React.useEffect(() => {
     registerHardwareBackHandler(() => {
@@ -124,6 +127,26 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
     } finally {
       setStep(nextStep);
     }
+  };
+
+  const handleNotificationContinue = async () => {
+    let selected = notificationConsent;
+    setNotificationPermissionNote(null);
+    if (selected && !preferences.notificationsEnabled && Capacitor.getPlatform() === 'android') {
+      try {
+        const status = await notificationService.requestPermissionFromUser();
+        if (status.permission !== 'granted' || !status.systemEnabled) {
+          selected = false;
+          setNotificationConsent(false);
+          setNotificationPermissionNote('Android notification access was not granted. You can enable it later in Settings.');
+        }
+      } catch {
+        selected = false;
+        setNotificationConsent(false);
+        setNotificationPermissionNote('Sunny could not request Android notification access. You can try again later in Settings.');
+      }
+    }
+    await persistAndAdvance(() => toggleNotifications(selected), 5);
   };
 
   return (
@@ -370,6 +393,9 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                 </p>
               </button>
             </div>
+            {notificationPermissionNote && (
+              <p role="status" className="mt-3 text-xs text-[#C6B8E5]">{notificationPermissionNote}</p>
+            )}
 
             <div className="mt-4 p-3.5 rounded-2xl bg-[#17102C] border border-[#392858] flex items-start gap-2.5">
               <ShieldCheck size={18} className="text-[#FFD84D] shrink-0 mt-0.5" />
@@ -476,7 +502,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           <div className="w-full mt-6">
             <AppButton
               title="Continue"
-              onPress={() => persistAndAdvance(() => toggleNotifications(notificationConsent), 5)}
+              onPress={handleNotificationContinue}
               variant="primary"
               size="large"
               fullWidth
@@ -497,6 +523,9 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
             <p className="text-sm text-[#C6B8E5] leading-relaxed mb-6">
               Sunny is here whenever you need a moment to reflect, laugh, or just talk through your day.
             </p>
+            {notificationPermissionNote && (
+              <p role="status" className="mb-4 max-w-sm text-xs text-[#C6B8E5]">{notificationPermissionNote}</p>
+            )}
 
             <div className="p-5 rounded-2xl bg-[#21163A] border border-[#392858] text-left max-w-sm">
               <span className="text-[11px] font-bold tracking-wider text-[#FFD84D] uppercase block mb-1">

@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { usePreferences } from '@/context/PreferencesContext';
 import { useChat } from '@/context/ChatContext';
-import { useMemories } from '@/context/MemoryContext';
-import { privacyService } from '@/services/privacyService';
-import { PersonalityTone } from '@/types/user';
+import { PersonalityTone, SunnyTheme } from '@/types/user';
 import { SettingsSection } from '@/components/settings/SettingsSection';
 import { SettingsRow } from '@/components/settings/SettingsRow';
 import { AppInput } from '@/components/ui/AppInput';
@@ -43,19 +41,24 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   onReplayOnboarding,
   onSignOut,
 }) => {
-  const { user, logout } = useAuth();
+  const { user, logout, updateDisplayName } = useAuth();
   const {
     preferences,
     updateTone,
     updatePreferredName,
+    updateTheme,
     toggleMemory,
     resetOnboarding,
   } = usePreferences();
   const { clearChat } = useChat();
-  const { clearAllMemories } = useMemories();
 
   const [toneModalVisible, setToneModalVisible] = useState(false);
+  const [themeModalVisible, setThemeModalVisible] = useState(false);
   const [nameModalVisible, setNameModalVisible] = useState(false);
+  const [profileModalVisible, setProfileModalVisible] = useState(false);
+  const [profileName, setProfileName] = useState('');
+  const [profileError, setProfileError] = useState<string | null>(null);
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [newName, setNewName] = useState(preferences.preferredName || '');
 
   const TONES: { tone: PersonalityTone; label: string; desc: string }[] = [
@@ -64,6 +67,17 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
     { tone: 'gentle', label: 'Gentle', desc: 'Soft, empathetic, and validating' },
     { tone: 'calm', label: 'Calm', desc: 'Grounded, mindful, and unhurried' },
   ];
+
+  const THEMES: { theme: SunnyTheme; label: string; description: string }[] = [
+    { theme: 'sunny-dark', label: 'Sunny Night', description: 'The original dark purple and sunshine palette' },
+    { theme: 'sunny-light', label: 'Sunny Day', description: 'A bright, soft version of Sunny’s colors' },
+  ];
+
+  const formatTime = (time: string) => {
+    const [hours, minutes] = time.split(':').map(Number);
+    const period = hours >= 12 ? 'PM' : 'AM';
+    return `${hours % 12 || 12}:${String(minutes).padStart(2, '0')} ${period}`;
+  };
 
   const handleSaveName = async () => {
     if (newName.trim()) {
@@ -86,13 +100,30 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
     }
   };
 
-  const handleDeleteAccount = async () => {
-    if (window.confirm('Delete Account & All Data?\nThis will permanently wipe all local chat history, memories, and preferences. You will be returned to the initial onboarding screen.')) {
-      await privacyService.deleteAccountAndAllData();
-      await clearChat();
-      await clearAllMemories();
-      await resetOnboarding();
-      onReplayOnboarding();
+  const handleSaveProfile = async () => {
+    const normalizedName = profileName.trim();
+    if (!normalizedName || normalizedName.length > 60) {
+      setProfileError('Enter a display name between 1 and 60 characters.');
+      return;
+    }
+
+    setIsSavingProfile(true);
+    setProfileError(null);
+    try {
+      if (user) {
+        const result = await updateDisplayName(normalizedName);
+        if (!result.success) {
+          setProfileError(result.error || 'Sunny could not save your profile name. Please try again.');
+          return;
+        }
+      } else {
+        await updatePreferredName(normalizedName);
+      }
+      setProfileModalVisible(false);
+    } catch (error) {
+      setProfileError(error instanceof Error ? error.message : 'Sunny could not save your profile name. Please try again.');
+    } finally {
+      setIsSavingProfile(false);
     }
   };
 
@@ -128,10 +159,10 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         />
         <SettingsRow
           title="Theme"
-          subtitle="Dark Purple & Sunshine Yellow"
+          subtitle="Choose Sunny’s appearance"
           icon={<Palette size={16} className="text-[#FFD84D]" />}
-          rightText="Active"
-          showChevron={false}
+          rightText={preferences.theme === 'sunny-light' ? 'Sunny Day' : 'Sunny Night'}
+          onPress={() => setThemeModalVisible(true)}
         />
       </SettingsSection>
 
@@ -163,15 +194,16 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       <SettingsSection title="NOTIFICATIONS">
         <SettingsRow
           title="Notification Preferences"
-          subtitle="Configure morning, afternoon & evening check-ins"
+          subtitle={preferences.notificationsEnabled ? 'Preference is on; review Android permission and schedule status' : 'Notification preference is off'}
           icon={<Bell size={16} className="text-[#FFD84D]" />}
+          rightText={preferences.notificationsEnabled ? 'On' : 'Off'}
           onPress={() => onNavigateSubscreen('notifications')}
         />
         <SettingsRow
           title="Quiet Hours"
-          subtitle="10:00 PM – 8:00 AM local time"
+          subtitle={`${formatTime(preferences.notificationPreferences.quietHoursStart)} – ${formatTime(preferences.notificationPreferences.quietHoursEnd)} local time`}
           icon={<Moon size={16} className="text-[#C6B8E5]" />}
-          rightText="Active"
+          rightText={preferences.notificationPreferences.quietHoursEnabled ? 'On' : 'Off'}
           onPress={() => onNavigateSubscreen('notifications')}
         />
       </SettingsSection>
@@ -180,7 +212,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       <SettingsSection title="PRIVACY & SECURITY">
         <SettingsRow
           title="Privacy & Data Controls"
-          subtitle="Review what is stored and managed locally"
+          subtitle="Review local, account, and AI conversation data"
           icon={<Lock size={16} className="text-[#FFD84D]" />}
           onPress={() => onNavigateSubscreen('privacy')}
         />
@@ -213,9 +245,14 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       <SettingsSection title="ACCOUNT">
         <SettingsRow
           title="Account Profile"
-          subtitle={user?.email || 'Not signed in'}
+          subtitle={user?.email || 'Guest profile saved on this device'}
           icon={<UserCheck size={16} className="text-[#FFD84D]" />}
-          showChevron={false}
+          rightText={user?.displayName || preferences.preferredName || 'Set name'}
+          onPress={() => {
+            setProfileName(user?.displayName || preferences.preferredName || '');
+            setProfileError(null);
+            setProfileModalVisible(true);
+          }}
         />
         <SettingsRow
           title="Replay Onboarding"
@@ -232,20 +269,22 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           destructive
           onPress={handleSignOut}
         />
-        <SettingsRow
-          title="Delete Account & Data"
-          subtitle="Permanently erase all data on this device"
-          icon={<Trash2 size={16} className="text-[#FF8D9A]" />}
-          destructive
-          onPress={handleDeleteAccount}
-        />
+        {user && (
+          <SettingsRow
+            title="Delete Account & Data"
+            subtitle="Review account and cloud deletion details"
+            icon={<Trash2 size={16} className="text-[#FF8D9A]" />}
+            destructive
+            onPress={() => onNavigateSubscreen('privacy')}
+          />
+        )}
       </SettingsSection>
 
       {/* Tone Picker Modal */}
       {toneModalVisible && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
-          <div className="w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-3xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
-            <h3 className="text-base font-bold text-white mb-3">
+          <div role="dialog" aria-modal="true" aria-labelledby="tone-picker-title" className="w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+            <h3 id="tone-picker-title" className="text-base font-bold text-white mb-3">
               Choose Sunny's Personality
             </h3>
             <div className="space-y-2 mb-4">
@@ -290,17 +329,52 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         </div>
       )}
 
+      {themeModalVisible && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
+          <div role="dialog" aria-modal="true" aria-labelledby="theme-picker-title" className="w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+            <h3 id="theme-picker-title" className="text-base font-bold text-white mb-3">Choose a theme</h3>
+            <div className="space-y-2 mb-4">
+              {THEMES.map((item) => {
+                const isSelected = preferences.theme === item.theme;
+                return (
+                  <button
+                    key={item.theme}
+                    type="button"
+                    onClick={async () => {
+                      await updateTheme(item.theme);
+                      setThemeModalVisible(false);
+                    }}
+                    className={`w-full flex items-center justify-between p-3 rounded-2xl border text-left transition-colors cursor-pointer ${
+                      isSelected ? 'border-[#FFD84D] bg-[#FFD84D]/15' : 'border-[#392858] bg-[#302149] hover:border-white/20'
+                    }`}
+                  >
+                    <span>
+                      <span className={`text-sm font-semibold block ${isSelected ? 'text-[#FFD84D]' : 'text-white'}`}>{item.label}</span>
+                      <span className="text-xs text-[#C6B8E5] block mt-0.5">{item.description}</span>
+                    </span>
+                    {isSelected && <CheckCircle2 size={18} className="text-[#FFD84D] shrink-0 ml-2" />}
+                  </button>
+                );
+              })}
+            </div>
+            <AppButton title="Close" onPress={() => setThemeModalVisible(false)} variant="ghost" fullWidth />
+          </div>
+        </div>
+      )}
+
       {/* Edit Name Modal */}
       {nameModalVisible && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
-          <div className="w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-3xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
-            <h3 className="text-base font-bold text-white mb-3">
+          <div role="dialog" aria-modal="true" aria-labelledby="preferred-name-title" className="w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+            <h3 id="preferred-name-title" className="text-base font-bold text-white mb-3">
               What should Sunny call you?
             </h3>
             <AppInput
+              label="Preferred name"
               placeholder="e.g. Alex, Sam, Sunshine"
               value={newName}
               onChangeText={setNewName}
+              maxLength={60}
             />
             <div className="flex flex-col gap-2 mt-4">
               <AppButton
@@ -320,6 +394,44 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         </div>
       )}
 
+      {profileModalVisible && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
+          <div role="dialog" aria-modal="true" aria-labelledby="profile-title" className="w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+            <h3 id="profile-title" className="text-base font-bold text-white mb-2">Account profile</h3>
+            <p className="text-xs text-[#C6B8E5] mb-4">
+              {user
+                ? `Signed in as ${user.email}. Only your display name can be changed here.`
+                : 'Your guest name is saved with preferences on this device; it is not a cloud account.'}
+            </p>
+            <AppInput
+              label="Display name"
+              value={profileName}
+              onChangeText={setProfileName}
+              placeholder="Your name"
+              maxLength={60}
+              autoFocus
+              disabled={isSavingProfile}
+            />
+            {profileError && <p role="alert" className="mb-3 text-sm text-[#FFD0D8]">{profileError}</p>}
+            <div className="flex flex-col gap-2 mt-4">
+              <AppButton
+                title="Save profile"
+                onPress={handleSaveProfile}
+                variant="primary"
+                fullWidth
+                loading={isSavingProfile}
+              />
+              <AppButton
+                title="Cancel"
+                onPress={() => setProfileModalVisible(false)}
+                variant="ghost"
+                fullWidth
+                disabled={isSavingProfile}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -7,6 +7,9 @@ const STORAGE_KEYS = {
   MEMORIES: '@sunny_memories',
   CHAT_MESSAGES: '@sunny_chat_messages',
   NOTIFICATION_PREFERENCES: '@sunny_notification_preferences',
+  NOTIFICATION_PERMISSION_CONSENT: '@sunny_notification_permission_consent',
+  NOTIFICATION_PERMISSION_REQUESTED: '@sunny_notification_permission_requested',
+  NOTIFICATION_SCHEDULE_STATE: '@sunny_notification_schedule_state',
   GUEST_PREFERENCES: '@sunny_guest_preferences',
   GUEST_ONBOARDING_COMPLETED: '@sunny_guest_onboarding_completed',
   GUEST_MEMORIES: '@sunny_guest_memories',
@@ -71,6 +74,35 @@ export const storageService = {
       console.warn('[storageService] Error clearing all storage:', error);
       return false;
     }
+  },
+
+  async clearAccountCache(): Promise<boolean> {
+    const fixedKeys = [
+      STORAGE_KEYS.USER_PREFERENCES,
+      STORAGE_KEYS.CURRENT_USER,
+      STORAGE_KEYS.ONBOARDING_COMPLETED,
+      STORAGE_KEYS.MEMORIES,
+      STORAGE_KEYS.CHAT_MESSAGES,
+      STORAGE_KEYS.NOTIFICATION_PREFERENCES,
+      '@sunny_cloud_migration_v1',
+    ];
+    const accountChatKeys = new Set(
+      [...memoryStore.keys()].filter((key) => key.startsWith('@sunny_chat_messages_')),
+    );
+
+    if (typeof window !== 'undefined' && window.localStorage) {
+      for (let index = 0; index < window.localStorage.length; index += 1) {
+        const key = window.localStorage.key(index);
+        if (key?.startsWith('@sunny_chat_messages_') || key?.startsWith('@sunny_guest_memory_migration_')) {
+          accountChatKeys.add(key);
+        }
+      }
+    }
+
+    const results = await Promise.all(
+      [...fixedKeys, ...accountChatKeys].map((key) => this.removeItem(key)),
+    );
+    return results.every(Boolean);
   },
 
   KEYS: STORAGE_KEYS,

@@ -1,36 +1,10 @@
 import { memoryService } from './memoryService';
 import { chatService } from './chatService';
-import { cloudStorageService } from './cloudStorageService';
 import { supabase } from '@/lib/supabase';
 import { apiUrl } from '@/lib/api';
+import { storageService } from './storageService';
 
 export const privacyService = {
-  async exportAllUserData(): Promise<string> {
-    const { data: { user } } = await supabase.auth.getUser();
-    const preferences = await cloudStorageService.getPreferences();
-    const memories = await memoryService.getMemories();
-    const chatMessages = await chatService.getMessages();
-
-    const exportPayload = {
-      appName: 'Sunny AI Companion',
-      exportDate: new Date().toISOString(),
-      account: user
-        ? {
-            id: user.id,
-            email: user.email ?? null,
-            createdAt: user.created_at,
-          }
-        : null,
-      preferences: preferences?.preferences ?? null,
-      onboardingCompleted: preferences?.onboardingCompleted ?? false,
-      memories,
-      chatMessages,
-      note: 'This export contains the Sunny data currently associated with your signed-in account.',
-    };
-
-    return JSON.stringify(exportPayload, null, 2);
-  },
-
   async clearAllChatHistory(): Promise<void> {
     await chatService.clearMessages('default-session');
   },
@@ -61,29 +35,37 @@ export const privacyService = {
       );
     }
 
-    await supabase.auth.signOut();
+    await supabase.auth.signOut({ scope: 'local' });
+    const cacheCleared = await storageService.clearAccountCache();
+    if (!cacheCleared) {
+      console.warn('[privacyService] Account was deleted, but some local account cache could not be cleared.');
+    }
   },
 
-  getPrivacyHighlights() {
+  getPrivacyHighlights(isAuthenticated: boolean) {
     return [
       {
-        title: 'Cloud data tied to your account',
-        description: 'Your Sunny chats, saved memories, and preferences are stored in your authenticated Supabase account.',
+        title: isAuthenticated ? 'Account data syncs through Supabase' : 'Guest data stays on this device',
+        description: isAuthenticated
+          ? 'Your chat history, saved memories, and preferences are associated with your Supabase account and sync across signed-in sessions.'
+          : 'Guest chat history, saved memories, and preferences are stored in this app on this device. They are not attached to a cloud account.',
         icon: 'ShieldCheck',
       },
       {
-        title: 'Memory with consent',
-        description: 'When memory is enabled, Sunny automatically saves useful details from chat. Review, edit, or delete them at any time.',
+        title: 'AI conversation processing',
+        description: 'Messages and recent conversation context are sent to Sunny’s server and its configured AI provider to generate replies. Stored chat history follows the guest or signed-in storage described above.',
         icon: 'Heart',
       },
       {
-        title: 'No advertising profile',
-        description: 'Sunny does not use your conversations to build an advertising profile.',
+        title: 'Memory is optional',
+        description: 'When memory is enabled, Sunny can save useful conversation details. Guest memories stay on this device; signed-in memories are stored with your Supabase account.',
         icon: 'Lock',
       },
       {
-        title: 'Data export & deletion',
-        description: 'You can export your Sunny data, clear chat or memories, or permanently delete your account and associated cloud data.',
+        title: isAuthenticated ? 'Account deletion removes cloud data' : 'Guest data controls',
+        description: isAuthenticated
+          ? 'Deleting your account removes the Supabase Auth account and its related cloud rows. Sunny also clears account-associated local cache; separate guest-only data is kept.'
+          : 'You can clear guest chat history or saved memories here. Guest data is not an account and cannot be deleted through the account deletion flow.',
         icon: 'Trash2',
       },
     ];

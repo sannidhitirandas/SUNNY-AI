@@ -22,6 +22,7 @@ interface AuthContextType {
     password: string,
     tone?: PersonalityTone
   ) => Promise<{ success: boolean; error?: string; requiresEmailConfirmation?: boolean }>;
+  updateDisplayName: (displayName: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
 }
 
@@ -191,6 +192,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     await authService.logout();
   };
 
+  const updateDisplayName = async (displayName: string) => {
+    const result = await authService.updateDisplayName(displayName);
+    if (!result.success || !result.user) return { success: false, error: result.error };
+    setUser(result.user);
+    activeUserIdRef.current = result.user.id;
+    return { success: true };
+  };
+
   const completePasswordRecovery = async (password: string) => {
     const result = await authService.updatePassword(password);
     if (result.success) setPasswordRecovery(false);
@@ -210,6 +219,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         dismissPasswordRecovery,
         login,
         register,
+        updateDisplayName,
         logout,
       }}
     >

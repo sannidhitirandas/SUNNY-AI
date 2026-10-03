@@ -1,78 +1,93 @@
-import { NotificationPreferences, NotificationItem } from '@/types/notifications';
+import { Capacitor } from '@capacitor/core';
+import { LocalNotifications } from '@capacitor/local-notifications';
+import type { LocalNotificationSchema } from '@capacitor/local-notifications';
+import {
+  type NotificationPreferences,
+  normalizeNotificationPreferences,
+} from '@/types/notifications';
+import {
+  createNotificationCoordinator,
+  dispatchNotificationTap,
+  SUNNY_NOTIFICATION_SOURCE,
+  type NativeNotificationAdapter,
+} from '@/lib/notificationCoordinator';
 import { storageService } from './storageService';
 
-export const DEFAULT_NOTIFICATION_PREFERENCES: NotificationPreferences = {
-  enabled: true,
-  dailyLimit: 3,
-  morningEnabled: true,
-  afternoonEnabled: true,
-  eveningEnabled: true,
-  memoryFollowUpsEnabled: true,
-  moodCheckInsEnabled: true,
-  encouragementEnabled: true,
-  morningTime: '09:00',
-  afternoonTime: '15:00',
-  eveningTime: '21:00',
-  quietHoursEnabled: true,
-  quietHoursStart: '22:00',
-  quietHoursEnd: '08:00',
-  timezone: 'Local Time',
+export { DEFAULT_NOTIFICATION_PREFERENCES } from '@/types/notifications';
+
+const notificationAdapter: NativeNotificationAdapter = {
+  checkPermissions: () => LocalNotifications.checkPermissions(),
+  requestPermissions: () => LocalNotifications.requestPermissions(),
+  areEnabled: () => LocalNotifications.areEnabled(),
+  getPending: async () => {
+    const result = await LocalNotifications.getPending();
+    return { notifications: result.notifications.map(({ id, extra }) => ({ id, extra })) };
+  },
+  getTriggered: async () => {
+    const result = await LocalNotifications.getAll({ state: 'TRIGGERED' });
+    return { notifications: result.notifications.map(({ extra }) => ({ extra })) };
+  },
+  cancel: async (ids) => {
+    await LocalNotifications.cancel({ notifications: ids.map((id) => ({ id })) });
+  },
+  schedule: async (notifications) => {
+    await LocalNotifications.schedule({ notifications: notifications as LocalNotificationSchema[] });
+  },
+  createChannel: async (channel) => {
+    await LocalNotifications.createChannel(channel);
+  },
 };
 
-export const SAMPLE_NOTIFICATIONS: NotificationItem[] = [
-  {
-    id: 'sample-1',
-    category: 'morning',
-    title: 'Good morning, sunshine ☀️',
-    body: 'I hope today brings you one little thing to smile about.',
-    scheduledTime: '9:00 AM',
-  },
-  {
-    id: 'sample-2',
-    category: 'checkin',
-    title: 'Gentle check-in 💛',
-    body: "How's your day going so far? No pressure to reply.",
-    scheduledTime: '3:00 PM',
-  },
-  {
-    id: 'sample-3',
-    category: 'encouragement',
-    title: 'Little love note 💛',
-    body: 'Just a reminder: you deserve kindness, especially from yourself.',
-    scheduledTime: '5:30 PM',
-  },
-  {
-    id: 'sample-4',
-    category: 'evening',
-    title: 'Evening wind-down 🌙',
-    body: 'Before the day ends, take a deep breath. You made it through today.',
-    scheduledTime: '9:00 PM',
-  },
-];
+const coordinator = createNotificationCoordinator({
+  platform: () => Capacitor.getPlatform(),
+  pluginAvailable: () => Capacitor.isPluginAvailable('LocalNotifications'),
+  plugin: notificationAdapter,
+  storage: storageService,
+});
+
+let notificationListeners: Promise<void> | null = null;
+
+const initializeListeners = (): Promise<void> => {
+  if (Capacitor.getPlatform() !== 'android' || !Capacitor.isPluginAvailable('LocalNotifications')) {
+    return Promise.resolve();
+  }
+  if (notificationListeners) return notificationListeners;
+
+  notificationListeners = Promise.all([
+    LocalNotifications.addListener('localNotificationReceived', (notification) => {
+      void coordinator.recordDeliveredNotification(notification.extra);
+    }),
+    LocalNotifications.addListener('localNotificationActionPerformed', (action) => {
+      const extra = action.notification?.extra;
+      if (extra && typeof extra === 'object' && (extra as Record<string, unknown>).source === SUNNY_NOTIFICATION_SOURCE) {
+        void coordinator.recordDeliveredNotification(extra);
+        dispatchNotificationTap();
+      }
+    }),
+  ]).then(() => undefined).catch((error) => {
+    notificationListeners = null;
+    console.warn('[notificationService] Could not register Android notification listeners:', error);
+  });
+
+  return notificationListeners;
+};
 
 export const notificationService = {
-  async getPreferences(): Promise<NotificationPreferences> {
-    return await storageService.getItem<NotificationPreferences>(
+  async getLegacyPreferences(): Promise<Partial<NotificationPreferences> | null> {
+    const saved = await storageService.getItem<Partial<NotificationPreferences> | null>(
       storageService.KEYS.NOTIFICATION_PREFERENCES,
-      DEFAULT_NOTIFICATION_PREFERENCES
+      null,
     );
+    if (!saved) return null;
+    const legacyPreferences: Partial<NotificationPreferences> = { ...normalizeNotificationPreferences(saved) };
+    if (typeof saved.enabled === 'boolean') legacyPreferences.enabled = saved.enabled;
+    else delete legacyPreferences.enabled;
+    return legacyPreferences;
   },
 
-  async savePreferences(preferences: NotificationPreferences): Promise<boolean> {
-    return await storageService.setItem(
-      storageService.KEYS.NOTIFICATION_PREFERENCES,
-      preferences
-    );
-  },
-
-  getSamplePreviews(): NotificationItem[] {
-    return SAMPLE_NOTIFICATIONS;
-  },
-
-  getDeliveryStatus(): { connected: boolean; statusLabel: string } {
-    return {
-      connected: false,
-      statusLabel: 'Not connected in demo mode (Local preview only)',
-    };
-  },
+  getRuntimeStatus: coordinator.getRuntimeStatus,
+  requestPermissionFromUser: coordinator.requestPermissionFromUser,
+  syncNotificationSchedule: coordinator.syncNotificationSchedule,
+  initializeListeners,
+  addNotificationTapListener: coordinator.addNotificationTapListener,
 };

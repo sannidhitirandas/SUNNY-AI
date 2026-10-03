@@ -191,6 +191,25 @@ export const authService = {
     }
   },
 
+  async updateDisplayName(displayName: string): Promise<{ success: boolean; user?: User; error?: string }> {
+    const normalizedName = displayName.trim();
+    if (!normalizedName || normalizedName.length > 60) {
+      return { success: false, error: 'Enter a display name between 1 and 60 characters.' };
+    }
+
+    try {
+      const { data, error } = await supabase.auth.updateUser({
+        data: { displayName: normalizedName },
+      });
+      if (error || !data.user) {
+        return { success: false, error: getFriendlyAuthError(error, 'Unable to update your profile name.') };
+      }
+      return { success: true, user: mapSupabaseUser(data.user) };
+    } catch (error) {
+      return { success: false, error: getFriendlyAuthError(error, 'Unable to update your profile name.') };
+    }
+  },
+
   async completeAuthRedirect(url: string): Promise<{ recovery: boolean; error?: string }> {
     try {
       const callback = new URL(url);

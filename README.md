@@ -157,9 +157,22 @@ Keep the Supabase email-confirmation setting enabled or disabled according to yo
 
 ### Database migrations
 
-For an existing project with `001_cloud_persistence.sql` already applied, apply `supabase/migrations/002_automatic_memory.sql` in the Supabase SQL Editor before deploying the updated server. New database setups should apply migrations `001` and `002` in order. The second migration adds an idempotency key and optional expiry to memories; existing user-scoped Row Level Security policies remain enabled.
+For an existing project, apply any unapplied files in `supabase/migrations/` in numeric order using the Supabase SQL Editor before deploying. New database setups should apply migrations `001`, `002`, and `003` in order. Migration `003` adds persisted theme and notification preference fields; existing user-scoped Row Level Security policies remain enabled.
 
 Automatic extraction and authenticated memory retrieval run through the Express `/api/chat` endpoint, so deploy the updated backend as well as the Android/web client.
+
+### Android local notifications
+
+Sunny uses Capacitor Local Notifications 8 for device-local reminders. No notification server or push service is used. Guest and signed-in notification preferences continue through the existing Preferences context; the schedule, Android permission markers, and daily delivery ledger stay on the device.
+
+- New notification preferences default to off. Enabling them in onboarding or Settings is user-driven. On Android 13+, Sunny checks `POST_NOTIFICATIONS` and requests it only from that opt-in action. If permission is denied or already denied, Sunny does not repeat the prompt on launch; enable notification access in Android app settings, then return to Sunny. The saved preference and Android permission are shown separately.
+- Sunny checks and reconciles schedules after preferences load, after notification-setting changes, and when the Android app resumes. It schedules one-shot native alarms for the next 30 local calendar days. The Capacitor plugin restores pending alarms after device reboot. Open Sunny at least once within that horizon to extend it.
+- Scheduled occurrences are calculated using the device's local date, clock, and timezone. Quiet hours use a start-inclusive/end-exclusive range; an equal start and end means no quiet period. A slot falling inside quiet hours is deferred to the quiet-hours end; a late-night slot may roll over to the next local date. The configured daily cap is reserved per delivery date and persisted before native scheduling, so relaunching or changing settings cannot refill a day's quota. A slot whose scheduled time has passed is treated as used for that local day, even if its time is edited. Identical slot times are coalesced.
+- Sunny rechecks the device timezone whenever Android resumes and rebuilds the schedule. If a device changes timezone or daylight-saving offset while Sunny remains closed, already-registered one-shot alarms may be shifted or deferred until the app next resumes and reconciles them.
+- Sunny uses inexact alarms and does not request Android's separate exact-alarm access. `allowWhileIdle` helps alarms run during Doze, subject to Android's per-app idle-alarm throttling; battery-saving modes may still defer reminders. The user can adjust or disable the notification channel in Android settings.
+- Notification titles and bodies are generic and contain no chat, memory, or profile details. Tapping a Sunny reminder opens the existing app and Home screen. On the web, preferences remain editable and persist, but local delivery is a no-op.
+
+To test, run `npm test`, `npm run build`, then `npx cap sync android`; install the Android app, enable notifications, and grant Android permission. Set one check-in a few minutes ahead, background or close Sunny, then verify delivery and tap routing. Repeat after changing a time and after disabling notifications. Emulator/device validation is required to confirm OS-specific delivery and battery behavior.
 
 ---
 

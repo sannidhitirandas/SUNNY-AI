@@ -16,7 +16,7 @@ export const AboutScreen: React.FC<AboutScreenProps> = ({ onBack }) => {
         <button
           type="button"
           onClick={onBack}
-          className="p-1.5 rounded-lg bg-[#21163A] border border-[#392858] text-[#C6B8E5] hover:text-white transition-colors cursor-pointer"
+          className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#21163A] border border-[#392858] text-[#C6B8E5] hover:text-white transition-colors cursor-pointer"
           aria-label="Back to settings"
         >
           <ArrowLeft size={18} />
@@ -30,7 +30,7 @@ export const AboutScreen: React.FC<AboutScreenProps> = ({ onBack }) => {
         <h2 className="text-2xl font-bold text-white mt-3">Sunny</h2>
         <p className="text-sm text-[#C6B8E5] mt-0.5">A Personal AI Companion</p>
         <div className="mt-2.5">
-          <Badge label="Version 1.0.0 (Web Edition)" variant="yellow" />
+          <Badge label={`Version ${__APP_VERSION__} · Web & Android`} variant="yellow" />
         </div>
       </div>
 
@@ -38,7 +38,7 @@ export const AboutScreen: React.FC<AboutScreenProps> = ({ onBack }) => {
       <AppCard className="p-5 mb-4">
         <h3 className="text-base font-bold text-white mb-2">The Vision</h3>
         <p className="text-xs sm:text-sm text-[#C6B8E5] leading-relaxed">
-          Sunny was born out of a desire for a softer, warmer digital space. A companion that remembers what matters to you with your permission, so that you never have to feel like you're starting completely over.
+          Sunny is an AI companion for everyday conversation, reflection, and gentle encouragement. When memory is enabled, it can save useful details you share for future conversations.
         </p>
         <div className="mt-4 p-3 rounded-xl bg-[#17102C] border border-[#FFD84D]/25 text-center">
           <p className="text-xs sm:text-sm italic text-[#FFD84D]">

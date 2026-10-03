@@ -5,6 +5,7 @@ import { Capacitor, type PluginListenerHandle } from '@capacitor/core';
 import { useAuth } from '@/context/AuthContext';
 import { usePreferences } from '@/context/PreferencesContext';
 import { useChat } from '@/context/ChatContext';
+import { notificationService } from '@/services/notificationService';
 
 import { SplashScreen } from '@/screens/SplashScreen';
 import { LoginScreen } from '@/screens/auth/LoginScreen';
@@ -47,8 +48,10 @@ export function App() {
   const { enterChat } = useChat();
 
   const {
+    preferences,
     hasCompletedOnboarding,
     isLoading: prefsLoading,
+    updateNotificationPreferences,
   } = usePreferences();
 
   const [showSplash, setShowSplash] = useState(true);
@@ -70,6 +73,10 @@ export function App() {
     hasCompletedOnboarding: false,
     passwordRecovery: false,
   });
+  const notificationPreferencesRef = useRef(preferences.notificationPreferences);
+  notificationPreferencesRef.current = preferences.notificationPreferences;
+  const updateNotificationPreferencesRef = useRef(updateNotificationPreferences);
+  updateNotificationPreferencesRef.current = updateNotificationPreferences;
 
   const registerScreenBackHandler = useCallback((handler: (() => boolean) | null) => {
     screenBackHandlerRef.current = handler;
@@ -104,11 +111,31 @@ export function App() {
     passwordRecovery,
   };
 
+  const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Local Time';
+
+  useEffect(() => {
+    if (prefsLoading || preferences.notificationPreferences.timezone === deviceTimezone) return;
+    void updateNotificationPreferences({ timezone: deviceTimezone });
+  }, [prefsLoading, preferences.notificationPreferences.timezone, deviceTimezone, updateNotificationPreferences]);
+
+  useEffect(() => {
+    if (prefsLoading) return;
+    void notificationService
+      .syncNotificationSchedule(preferences.notificationPreferences)
+      .catch((error) => console.warn('[App] Could not reconcile local notifications:', error));
+  }, [prefsLoading]);
+
+  useEffect(() => notificationService.addNotificationTapListener(() => {
+    setActiveSubScreen('none');
+    setActiveTab('home');
+  }), []);
+
   useEffect(() => {
     if (Capacitor.getPlatform() !== 'android') return;
 
     let mounted = true;
     let listener: PluginListenerHandle | undefined;
+    let appStateListener: PluginListenerHandle | undefined;
     void CapacitorApp.addListener('backButton', () => {
       if (screenBackHandlerRef.current?.()) return;
 
@@ -141,9 +168,27 @@ export function App() {
       else void handle.remove();
     });
 
+    void CapacitorApp.addListener('appStateChange', ({ isActive }) => {
+      if (!isActive) return;
+      const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Local Time';
+      const currentPreferences = notificationPreferencesRef.current;
+      const updatedPreferences = { ...currentPreferences, timezone: currentTimezone };
+      notificationPreferencesRef.current = updatedPreferences;
+      void (async () => {
+        if (currentPreferences.timezone !== currentTimezone) {
+          await updateNotificationPreferencesRef.current({ timezone: currentTimezone });
+        }
+        await notificationService.syncNotificationSchedule(updatedPreferences);
+      })().catch((error) => console.warn('[App] Could not reconcile notifications on resume:', error));
+    }).then((handle) => {
+      if (mounted) appStateListener = handle;
+      else void handle.remove();
+    });
+
     return () => {
       mounted = false;
       void listener?.remove();
+      void appStateListener?.remove();
     };
   }, []);
 

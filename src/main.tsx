@@ -8,6 +8,7 @@ import { MemoryProvider } from '@/context/MemoryContext';
 import { ChatProvider } from '@/context/ChatContext';
 import App from './App';
 import { authService, NATIVE_AUTH_CALLBACK_URL } from '@/services/authService';
+import { notificationService } from '@/services/notificationService';
 import './index.css';
 
 const handleNativeAuthUrl = async (url: string) => {
@@ -32,6 +33,7 @@ const handleNativeAuthUrl = async (url: string) => {
 };
 
 if (Capacitor.isNativePlatform()) {
+  void notificationService.initializeListeners();
   void CapacitorApp.addListener('appUrlOpen', ({ url }) => {
     void handleNativeAuthUrl(url);
   });

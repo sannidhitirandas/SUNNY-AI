@@ -1,7 +1,8 @@
 import { supabase } from '@/lib/supabase';
 import { ChatMessage } from '@/types/chat';
 import { Memory } from '@/types/memory';
-import { UserPreferences } from '@/types/user';
+import { normalizeUserPreferences, UserPreferences } from '@/types/user';
+import { NotificationPreferences, normalizeNotificationPreferences } from '@/types/notifications';
 
 const getUserId = async (): Promise<string> => {
   const { data, error } = await supabase.auth.getUser();
@@ -163,6 +164,8 @@ export const cloudStorageService = {
       preferred_name: preferences.preferredName,
       memory_enabled: preferences.memoryEnabled,
       notifications_enabled: preferences.notificationsEnabled,
+      theme: preferences.theme,
+      notification_preferences: preferences.notificationPreferences,
       onboarding_completed: onboardingCompleted,
       updated_at: new Date().toISOString(),
     });
@@ -180,14 +183,24 @@ export const cloudStorageService = {
     if (error) throw error;
     if (!data) return null;
 
+    const savedNotificationSettings = data.notification_preferences as Partial<NotificationPreferences> | null;
+    const notificationSettings = normalizeNotificationPreferences({
+      ...savedNotificationSettings,
+      enabled: typeof savedNotificationSettings?.enabled === 'boolean'
+        ? savedNotificationSettings.enabled
+        : data.notifications_enabled,
+    });
+
     return {
-      preferences: {
+      preferences: normalizeUserPreferences({
         preferredTone: data.preferred_tone,
         interests: data.interests ?? [],
         preferredName: data.preferred_name,
         memoryEnabled: data.memory_enabled,
-        notificationsEnabled: data.notifications_enabled,
-      },
+        notificationsEnabled: notificationSettings.enabled,
+        theme: data.theme,
+        notificationPreferences: notificationSettings,
+      }),
       onboardingCompleted: data.onboarding_completed,
     };
   },
@@ -312,7 +325,7 @@ export const cloudStorageService = {
           let notificationsEnabled =
             typeof parsedPreferences.notificationsEnabled === 'boolean'
               ? parsedPreferences.notificationsEnabled
-              : true;
+              : false;
 
           if (rawNotifications) {
             try {
@@ -325,8 +338,23 @@ export const cloudStorageService = {
             }
           }
 
+          let legacyNotificationPreferences = normalizeNotificationPreferences({ enabled: notificationsEnabled });
+          if (rawNotifications) {
+            try {
+              const parsedNotificationPreferences = JSON.parse(rawNotifications) as Partial<NotificationPreferences>;
+              legacyNotificationPreferences = normalizeNotificationPreferences({
+                ...parsedNotificationPreferences,
+                enabled: typeof parsedNotificationPreferences.enabled === 'boolean'
+                  ? parsedNotificationPreferences.enabled
+                  : notificationsEnabled,
+              });
+            } catch {
+              // Keep the enabled value from the main preferences record.
+            }
+          }
+
           await this.savePreferences(
-            {
+            normalizeUserPreferences({
               preferredTone: parsedPreferences.preferredTone ?? 'adaptive',
               interests: Array.isArray(parsedPreferences.interests)
                 ? parsedPreferences.interests.filter((item): item is string => typeof item === 'string')
@@ -339,10 +367,15 @@ export const cloudStorageService = {
                 typeof parsedPreferences.memoryEnabled === 'boolean'
                   ? parsedPreferences.memoryEnabled
                   : true,
-              notificationsEnabled,
-            },
+              notificationsEnabled: legacyNotificationPreferences.enabled,
+              theme: parsedPreferences.theme,
+              notificationPreferences: legacyNotificationPreferences,
+            }),
             onboardingCompleted
           );
+          if (rawNotifications) {
+            window.localStorage.removeItem('@sunny_notification_preferences');
+          }
           preferences = true;
         }
       }

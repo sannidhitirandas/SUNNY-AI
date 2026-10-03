@@ -53,7 +53,7 @@ export const SafetyScreen: React.FC<SafetyScreenProps> = ({ onBack }) => {
         <button
           type="button"
           onClick={onBack}
-          className="p-1.5 rounded-lg bg-[#21163A] border border-[#392858] text-[#C6B8E5] hover:text-white transition-colors cursor-pointer"
+          className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#21163A] border border-[#392858] text-[#C6B8E5] hover:text-white transition-colors cursor-pointer"
           aria-label="Back to settings"
         >
           <ArrowLeft size={18} />
@@ -144,8 +144,8 @@ export const SafetyScreen: React.FC<SafetyScreenProps> = ({ onBack }) => {
               <button
                 type="button"
                 onClick={() => setBreathingStep(0)}
-                className="p-2 rounded-xl text-[#9B8AB9] hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
-                title="Reset to beginning"
+                className="flex h-11 w-11 items-center justify-center rounded-xl text-[#9B8AB9] hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+                aria-label="Reset grounding exercise"
               >
                 <RotateCcw size={18} />
               </button>
