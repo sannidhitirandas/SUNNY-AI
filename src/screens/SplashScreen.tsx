@@ -9,6 +9,7 @@ interface SplashScreenProps {
 export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
   useEffect(() => {
     void audioService.play('open');
+    void audioService.playMusic('ambient');
     const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
     const timer = window.setTimeout(onReady, prefersReducedMotion ? 250 : 3000);
     return () => clearTimeout(timer);
