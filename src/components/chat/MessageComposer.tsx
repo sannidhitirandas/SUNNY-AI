@@ -19,40 +19,6 @@ interface SunnyFilePickerPlugin {
 
 const SunnyFilePicker = registerPlugin<SunnyFilePickerPlugin>('SunnyFilePicker');
 
-const pickedFileToFile = async (picked: {
-  name: string;
-  mimeType: string;
-  modifiedAt?: number;
-  blob?: Blob;
-  webPath?: string;
-  data?: string;
-  path?: string;
-}) => {
-  let blob = picked.blob;
-
-  if (!blob && picked.data) {
-    const byteString = atob(picked.data);
-    const bytes = new Uint8Array(byteString.length);
-    for (let index = 0; index < byteString.length; index += 1) {
-      bytes[index] = byteString.charCodeAt(index);
-    }
-    blob = new Blob([bytes], { type: picked.mimeType });
-  }
-
-  if (!blob && picked.webPath) {
-    const response = await fetch(picked.webPath);
-    if (!response.ok) throw new Error(`Unable to read ${picked.name}`);
-    blob = await response.blob();
-  }
-
-  if (!blob) throw new Error(`Unable to read ${picked.name}`);
-
-  return new File([blob], picked.name, {
-    type: picked.mimeType || blob.type || 'application/octet-stream',
-    lastModified: picked.modifiedAt ?? Date.now(),
-  });
-};
-
 interface MessageComposerProps {
   onSend: (text: string, files: File[]) => Promise<void> | void;
   disabled?: boolean;
