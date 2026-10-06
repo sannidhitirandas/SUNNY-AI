@@ -1658,12 +1658,19 @@ app.post(
                   ? 'Sunny’s AI provider is temporarily unavailable. Please try again in a moment.'
                   : error?.message || String(error);
 
-      const lowerError =
-        errorMessage.toLowerCase();
+      const lowerError = errorMessage.toLowerCase();
 
       // --------------------------------------------------
-      // Rate limit / quota
+      // Provider / request error mapping
       // --------------------------------------------------
+
+      if (status === 413) {
+        return res.status(413).json({
+          success: false,
+          error:
+            'That request is too large. Please attach a smaller file or fewer files.',
+        });
+      }
 
       if (
         status === 429 ||
@@ -1678,12 +1685,26 @@ app.post(
         });
       }
 
-      // --------------------------------------------------
-      // Temporarily unavailable
-      // --------------------------------------------------
+      if (status === 401 || status === 403) {
+        return res.status(status).json({
+          success: false,
+          error:
+            'There is a problem authenticating with the AI provider. Please check the server API configuration.',
+        });
+      }
+
+      if (status === 404) {
+        return res.status(503).json({
+          success: false,
+          error:
+            'Sunny could not access the configured AI model. Please try again while Sunny switches models.',
+        });
+      }
 
       if (
+        status === 502 ||
         status === 503 ||
+        status === 504 ||
         lowerError.includes('unavailable') ||
         lowerError.includes('high demand') ||
         lowerError.includes('timed out') ||
@@ -1693,21 +1714,6 @@ app.post(
           success: false,
           error:
             "Sunny's AI connection is temporarily busy. Please try again in a moment.",
-        });
-      }
-
-      // --------------------------------------------------
-      // Invalid credentials
-      // --------------------------------------------------
-
-      if (
-        status === 401 ||
-        status === 403
-      ) {
-        return res.status(status).json({
-          success: false,
-          error:
-            'There is a problem authenticating with the AI provider. Please check the server API configuration.',
         });
       }
 
