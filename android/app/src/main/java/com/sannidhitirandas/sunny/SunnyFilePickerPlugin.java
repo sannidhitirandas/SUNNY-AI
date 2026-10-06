@@ -22,7 +22,7 @@ import java.io.InputStream;
 @CapacitorPlugin(name = "SunnyFilePicker")
 public class SunnyFilePickerPlugin extends Plugin {
 
-    private static final long MAX_FILE_SIZE = 5L * 1024L * 1024L;
+    private static final long MAX_FILE_SIZE = 50L * 1024L * 1024L;
 
     @PluginMethod
     public void pickFile(PluginCall call) {
@@ -46,7 +46,7 @@ public class SunnyFilePickerPlugin extends Plugin {
             String mimeType = getMimeType(uri, name);
             long size = getSize(uri);
             if (size > MAX_FILE_SIZE) {
-                call.reject("File is larger than 5 MB");
+                call.reject("File is larger than 50 MB");
                 return;
             }
             byte[] bytes = readBytes(uri);
