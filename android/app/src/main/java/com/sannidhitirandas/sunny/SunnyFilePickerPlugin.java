@@ -77,7 +77,7 @@ public class SunnyFilePickerPlugin extends Plugin {
             file.put("name", name);
             file.put("mimeType", mimeType);
             file.put("size", size > 0 ? size : cachedSize);
-            file.put("path", cachedFile.getAbsolutePath());
+            file.put("path", Uri.fromFile(cachedFile).toString());
 
             JSArray files = new JSArray();
             files.put(file);
