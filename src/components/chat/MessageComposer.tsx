@@ -10,7 +10,8 @@ interface SunnyNativeFile {
   name: string;
   mimeType: string;
   size: number;
-  path: string;
+  path?: string;
+  data?: string;
 }
 
 interface SunnyFilePickerPlugin {
@@ -30,6 +31,24 @@ const formatSize = (bytes: number) => {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+};
+
+const base64ToBlob = (base64Data: string, contentType: string = ''): Blob => {
+  const byteCharacters = atob(base64Data);
+  const byteArrays: Uint8Array[] = [];
+  const sliceSize = 512 * 1024;
+
+  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+    const slice = byteCharacters.slice(offset, offset + sliceSize);
+    const byteNumbers = new Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
+  }
+
+  return new Blob(byteArrays as unknown as BlobPart[], { type: contentType });
 };
 
 export const MessageComposer: React.FC<MessageComposerProps> = ({
@@ -78,7 +97,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
       if (Capacitor.isNativePlatform()) {
         const result = await SunnyFilePicker.pickFile();
         if (!result?.files?.length) {
-          setFileError('Native picker returned no file.');
+          // User cancelled or picked 0 files
           return;
         }
 
@@ -87,15 +106,21 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
 
         for (const item of result.files.slice(0, remaining)) {
           try {
-            if (!item.path) throw new Error('Unable to read selected file.');
+            let blob: Blob;
 
-            const webPath = Capacitor.convertFileSrc(item.path);
-            const response = await fetch(webPath);
-            if (!response.ok) {
+            if (item.data) {
+              blob = base64ToBlob(item.data, item.mimeType);
+            } else if (item.path) {
+              const webPath = Capacitor.convertFileSrc(item.path);
+              const response = await fetch(webPath);
+              if (!response.ok) {
+                throw new Error('Unable to read selected file.');
+              }
+              blob = await response.blob();
+            } else {
               throw new Error('Unable to read selected file.');
             }
 
-            const blob = await response.blob();
             converted.push(new File([blob], item.name, {
               type: item.mimeType || blob.type || 'application/octet-stream',
             }));
