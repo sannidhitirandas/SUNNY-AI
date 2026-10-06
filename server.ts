@@ -1229,9 +1229,8 @@ app.post(
       // --------------------------------------------------
 
       if (
-        !message ||
         typeof message !== 'string' ||
-        !message.trim()
+        (!message.trim() && !Array.isArray(rawAttachments))
       ) {
         return res.status(400).json({
           success: false,
