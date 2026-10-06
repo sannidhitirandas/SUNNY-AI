@@ -10,11 +10,12 @@ interface SunnyNativeFile {
   name: string;
   mimeType: string;
   size: number;
-  data: string;
+  path: string;
 }
 
 interface SunnyFilePickerPlugin {
   pickFile(): Promise<{ files: SunnyNativeFile[] }>;
+  releaseFile(options: { path: string }): Promise<void>;
 }
 
 const SunnyFilePicker = registerPlugin<SunnyFilePickerPlugin>('SunnyFilePicker');
@@ -75,32 +76,35 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
 
     try {
       if (Capacitor.isNativePlatform()) {
-        console.log('[Sunny] Native picker returned:', result);
-        console.log('[Sunny] Native picker file count:', result?.files?.length ?? 0);
         if (!result?.files?.length) {
           setFileError('Native picker returned no file.');
           return;
         }
 
         const remaining = MAX_FILES - files.length;
-        const converted = result.files.slice(0, remaining).map((item) => {
-          console.log('[Sunny] Converting native file:', {
-            name: item.name,
-            mimeType: item.mimeType,
-            size: item.size,
-            dataLength: item.data?.length ?? 0,
-          });
-          const byteString = atob(item.data);
-          const bytes = new Uint8Array(byteString.length);
-          for (let index = 0; index < byteString.length; index += 1) {
-            bytes[index] = byteString.charCodeAt(index);
-          }
-          return new File([new Blob([bytes], { type: item.mimeType })], item.name, {
-            type: item.mimeType || 'application/octet-stream',
-          });
-        });
+        const converted: File[] = [];
 
-        console.log('[Sunny] Converted native files:', converted);
+        for (const item of result.files.slice(0, remaining)) {
+          try {
+            if (!item.path) throw new Error('Unable to read selected file.');
+
+            const webPath = Capacitor.convertFileSrc(item.path);
+            const response = await fetch(webPath);
+            if (!response.ok) {
+              throw new Error('Unable to read selected file.');
+            }
+
+            const blob = await response.blob();
+            converted.push(new File([blob], item.name, {
+              type: item.mimeType || blob.type || 'application/octet-stream',
+            }));
+          } finally {
+            if (item.path) {
+              await SunnyFilePicker.releaseFile({ path: item.path }).catch(() => undefined);
+            }
+          }
+        }
+
         addFiles(converted);
         return;
       }
