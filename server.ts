@@ -66,7 +66,7 @@ function getConfiguredModel(envName: string, fallback: string): string {
   // Google has restricted older Gemini 2.x models for new users/projects.
   // Ignore a stale local setting rather than letting one unavailable model
   // prevent the newer fallback models from being attempted.
-  if (envName === 'GEMINI_MODEL' && /^gemini-2\\./i.test(configured)) {
+  if (envName === 'GEMINI_MODEL' && /^gemini-2\./i.test(configured)) {
     console.warn(
       `[Gemini] Ignoring legacy GEMINI_MODEL=${configured}. Using ${fallback} first.`
     );
