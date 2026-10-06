@@ -110,7 +110,8 @@ export async function processAttachments(input: unknown): Promise<ProcessedAttac
     const item = raw as Partial<UploadedAttachment>;
     const name = typeof item.name === 'string' ? safeName(item.name) : 'attachment';
     const ext = path.extname(name).toLowerCase();
-    if (!allowedExtensions.has(ext) || (typeof item.type === 'string' && item.type && !allowedMimeTypes.has(item.type.toLowerCase()))) {
+    const imageExtension = ['.png', '.jpg', '.jpeg', '.webp'].includes(ext);
+    if (!allowedExtensions.has(ext)) {
       throw new Error(`Unsupported file type: ${ext || 'unknown'}.`);
     }
     if (typeof item.data !== 'string') throw new Error(`${name} is missing file data.`);
@@ -124,15 +125,22 @@ export async function processAttachments(input: unknown): Promise<ProcessedAttac
 
     const declaredType = typeof item.type === 'string' ? item.type.toLowerCase() : '';
     const detectedImageMime = detectImageMime(decoded.buffer);
-    if (declaredType && !allowedMimeTypes.has(declaredType)) throw new Error(`${name} has an unsupported MIME type.`);
+    const unknownClientMime = !declaredType || declaredType === 'application/octet-stream';
+
+    if (declaredType && !allowedMimeTypes.has(declaredType) && !unknownClientMime) {
+      throw new Error(`${name} has an unsupported MIME type.`);
+    }
     if (!hasMagic(decoded.buffer, ext)) throw new Error(`${name} failed file validation.`);
 
     if (detectedImageMime) {
+      if (!imageExtension) throw new Error(`${name} failed file validation.`);
       processed.push({ name, kind: 'image', mimeType: detectedImageMime, data: decoded.buffer.toString('base64') });
       continue;
     }
 
-    if (declaredType && decoded.mimeType !== declaredType) throw new Error(`${name} has an invalid MIME type.`);
+    if (declaredType && !unknownClientMime && decoded.mimeType !== 'application/octet-stream' && decoded.mimeType !== declaredType) {
+      throw new Error(`${name} has an invalid MIME type.`);
+    }
 
     const text = await extractText(decoded.buffer, ext);
     if (!text) throw new Error(`${name} does not contain readable content.`);
