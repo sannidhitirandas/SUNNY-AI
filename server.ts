@@ -72,7 +72,7 @@ const PORT = process.env.PORT
   ? parseInt(process.env.PORT, 10)
   : 3000;
 
-app.use(express.json({ limit: '1mb' }));
+app.use(express.json({ limit: '16mb' }));
 
 // Allow the Capacitor Android WebView to call the hosted API.
 app.use((req: Request, res: Response, next: NextFunction) => {
