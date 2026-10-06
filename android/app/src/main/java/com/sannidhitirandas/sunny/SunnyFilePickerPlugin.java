@@ -8,6 +8,8 @@ import android.provider.OpenableColumns;
 import android.util.Base64;
 import android.webkit.MimeTypeMap;
 
+import androidx.activity.result.ActivityResult;
+
 import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
@@ -34,12 +36,18 @@ public class SunnyFilePickerPlugin extends Plugin {
     }
 
     @ActivityCallback
-    private void handlePickerResult(PluginCall call, int resultCode, Intent data) {
-        if (resultCode != Activity.RESULT_OK || data == null || data.getData() == null) {
-            call.resolve(new JSObject().put("files", new JSArray()));
+    private void handlePickerResult(PluginCall call, ActivityResult result) {
+        if (call == null || result == null ||
+                result.getResultCode() != Activity.RESULT_OK ||
+                result.getData() == null ||
+                result.getData().getData() == null) {
+            if (call != null) {
+                call.resolve(new JSObject().put("files", new JSArray()));
+            }
             return;
         }
 
+        Intent data = result.getData();
         Uri uri = data.getData();
         try {
             String name = getDisplayName(uri);
