@@ -986,7 +986,9 @@ async function generateAIResponse(
 
   throw Object.assign(
     new Error(
-      'No AI provider is configured. Add GROQ_API_KEY or GEMINI_API_KEY.'
+      forceGemini
+        ? 'Image attachments require GEMINI_API_KEY to be configured on the server.'
+        : 'No AI provider is configured. Add GROQ_API_KEY or GEMINI_API_KEY.'
     ),
     { status: 503 }
   );
