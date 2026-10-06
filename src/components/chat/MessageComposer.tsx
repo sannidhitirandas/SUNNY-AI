@@ -30,6 +30,7 @@ const pickedFileToFile = async (picked: {
   blob?: Blob;
   webPath?: string;
   data?: string;
+  path?: string;
 }) => {
   let blob = picked.blob;
 
@@ -114,7 +115,10 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
       const result = await FilePicker.pickFiles({
         limit: 0,
         types: PICKER_TYPES,
-        readData: false,
+        // Android can return a content URI that is not fetchable from every WebView.
+        // These attachments are capped at 5 MB each, so reading the data here is safe
+        // and gives us a reliable native-to-web handoff.
+        readData: true,
       });
 
       const remaining = MAX_FILES - files.length;
