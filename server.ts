@@ -59,6 +59,23 @@ for (const envFile of ['.env.local', '.env']) {
   }
 }
 
+function getConfiguredModel(envName: string, fallback: string): string {
+  const configured = process.env[envName]?.trim();
+  if (!configured) return fallback;
+
+  // Google has restricted older Gemini 2.x models for new users/projects.
+  // Ignore a stale local setting rather than letting one unavailable model
+  // prevent the newer fallback models from being attempted.
+  if (envName === 'GEMINI_MODEL' && /^gemini-2\\./i.test(configured)) {
+    console.warn(
+      `[Gemini] Ignoring legacy GEMINI_MODEL=${configured}. Using ${fallback} first.`
+    );
+    return fallback;
+  }
+
+  return configured;
+}
+
 // --------------------------------------------------
 // Express
 // --------------------------------------------------
@@ -164,16 +181,16 @@ function rateLimiter(
 
 const GROQ_MODELS = Array.from(
   new Set([
-    process.env.GROQ_MODEL || 'openai/gpt-oss-120b',
+    getConfiguredModel('GROQ_MODEL', 'openai/gpt-oss-120b'),
     'openai/gpt-oss-20b',
   ])
 );
 
-const GROQ_TIMEOUT_MS = 5000;
+const GROQ_TIMEOUT_MS = 25000;
 
 const GEMINI_MODELS = Array.from(
   new Set([
-    process.env.GEMINI_MODEL || 'gemini-3.8-flash',
+    getConfiguredModel('GEMINI_MODEL', 'gemini-3.8-flash'),
     'gemini-3.7-flash',
     'gemini-3.5-flash-lite',
   ])
@@ -837,6 +854,7 @@ async function generateWithFastFallback(
 
         lastError = error;
 
+        const retryableModelError = response.status === 404;
         const temporaryError =
           response.status === 429 ||
           response.status === 500 ||
@@ -844,7 +862,7 @@ async function generateWithFastFallback(
           response.status === 503 ||
           response.status === 504;
 
-        if (temporaryError) {
+        if (retryableModelError || temporaryError) {
           console.warn(
             `[Gemini] ${model} returned ${response.status}. Trying next model immediately...`
           );
@@ -892,6 +910,7 @@ async function generateWithFastFallback(
       const status = error?.status;
 
       const temporaryError =
+        status === 404 ||
         status === 429 ||
         status === 500 ||
         status === 502 ||
