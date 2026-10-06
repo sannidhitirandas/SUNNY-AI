@@ -6,8 +6,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
-import android.util.Base64;
 import android.util.Log;
+import java.io.File;
+import java.io.FileOutputStream;
 import android.webkit.MimeTypeMap;
 
 import androidx.activity.result.ActivityResult;
@@ -20,7 +21,6 @@ import com.getcapacitor.annotation.ActivityCallback;
 import com.getcapacitor.annotation.CapacitorPlugin;
 import com.getcapacitor.PluginMethod;
 
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
 @CapacitorPlugin(name = "SunnyFilePicker")
@@ -52,19 +52,23 @@ public class SunnyFilePickerPlugin extends Plugin {
             return;
         }
 
-        Intent data = result.getData();
-        Uri uri = data.getData();
-        Log.e("SunnyFilePicker", "selected uri=" + uri);
+        Uri uri = result.getData().getData();
         try {
             String name = getDisplayName(uri);
             String mimeType = getMimeType(uri, name);
             long size = getSize(uri);
+
             if (size > MAX_FILE_SIZE) {
                 call.reject("File is larger than 50 MB");
                 return;
             }
-            byte[] bytes = readBytes(uri);
-            if (bytes.length > MAX_FILE_SIZE) {
+
+            File cachedFile = copyToCache(uri, name);
+            long cachedSize = cachedFile.length();
+
+            if (cachedSize > MAX_FILE_SIZE) {
+                //noinspection ResultOfMethodCallIgnored
+                cachedFile.delete();
                 call.reject("File is larger than 50 MB");
                 return;
             }
@@ -72,15 +76,16 @@ public class SunnyFilePickerPlugin extends Plugin {
             JSObject file = new JSObject();
             file.put("name", name);
             file.put("mimeType", mimeType);
-            file.put("size", size > 0 ? size : bytes.length);
-            file.put("data", Base64.encodeToString(bytes, Base64.NO_WRAP));
+            file.put("size", size > 0 ? size : cachedSize);
+            file.put("path", cachedFile.getAbsolutePath());
 
             JSArray files = new JSArray();
             files.put(file);
 
             JSObject response = new JSObject();
             response.put("files", files);
-            Log.e("SunnyFilePicker", "file read complete; bytes=" + bytes.length + ", mime=" + mimeType + ", name=" + name);
+
+            Log.e("SunnyFilePicker", "file cached; bytes=" + cachedSize + ", mime=" + mimeType + ", name=" + name);
             call.resolve(response);
         } catch (Exception e) {
             Log.e("SunnyFilePicker", "picker callback failed", e);
@@ -91,26 +96,29 @@ public class SunnyFilePickerPlugin extends Plugin {
         }
     }
 
-    private String getDisplayName(Uri uri) {
-        Cursor cursor = getContext().getContentResolver().query(
-                uri,
-                new String[]{OpenableColumns.DISPLAY_NAME},
-                null,
-                null,
-                null
-        );
-        if (cursor != null) {
-            try {
-                if (cursor.moveToFirst()) {
-                    int index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                    if (index >= 0) return cursor.getString(index);
-                }
-            } finally {
-                cursor.close();
-            }
+    @PluginMethod
+    public void releaseFile(PluginCall call) {
+        String rawPath = call.getString("path");
+        if (rawPath == null || rawPath.trim().isEmpty()) {
+            call.reject("File path is required");
+            return;
         }
-        String path = uri.getPath();
-        return path == null ? "attachment" : path.substring(path.lastIndexOf('/') + 1);
+
+        File file = new File(rawPath);
+        File cacheDir = getContext().getCacheDir();
+        String cachePrefix = new File(cacheDir, "sunny-picker-").getAbsolutePath();
+
+        if (!file.getAbsolutePath().startsWith(cachePrefix)) {
+            call.reject("Invalid cached file path");
+            return;
+        }
+
+        if (file.exists() && !file.delete()) {
+            call.reject("Could not remove cached file");
+            return;
+        }
+
+        call.resolve();
     }
 
     private long getSize(Uri uri) {
@@ -171,16 +179,37 @@ public class SunnyFilePickerPlugin extends Plugin {
         return new Bundle();
     }
 
-    private byte[] readBytes(Uri uri) throws Exception {
+    private File copyToCache(Uri uri, String name) throws Exception {
+        String extension = "";
+        int dot = name.lastIndexOf('.');
+        if (dot >= 0 && dot < name.length() - 1) {
+            extension = name.substring(dot);
+        }
+
+        File cacheFile = File.createTempFile("sunny-picker-", extension, getContext().getCacheDir());
+
         try (InputStream input = getContext().getContentResolver().openInputStream(uri);
-             ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+             FileOutputStream output = new FileOutputStream(cacheFile)) {
             if (input == null) throw new IllegalStateException("Could not open selected file");
+
             byte[] buffer = new byte[8192];
+            long total = 0;
             int read;
             while ((read = input.read(buffer)) != -1) {
+                total += read;
+                if (total > MAX_FILE_SIZE) {
+                    //noinspection ResultOfMethodCallIgnored
+                    cacheFile.delete();
+                    throw new IllegalStateException("File is larger than 50 MB");
+                }
                 output.write(buffer, 0, read);
             }
-            return output.toByteArray();
+        } catch (Exception error) {
+            //noinspection ResultOfMethodCallIgnored
+            cacheFile.delete();
+            throw error;
         }
+
+        return cacheFile;
     }
 }
