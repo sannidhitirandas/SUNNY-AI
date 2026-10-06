@@ -3,8 +3,8 @@ import { Capacitor, registerPlugin } from '@capacitor/core';
 import { ArrowUp, FileText, Paperclip, X } from 'lucide-react';
 
 const MAX_FILES = 3;
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
-const MAX_TOTAL_SIZE = 10 * 1024 * 1024;
+const MAX_FILE_SIZE = 50 * 1024 * 1024;
+const MAX_TOTAL_SIZE = 50 * 1024 * 1024;
 
 interface SunnyNativeFile {
   name: string;
@@ -88,12 +88,12 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
         break;
       }
       if (file.size > MAX_FILE_SIZE) {
-        setFileError(`${file.name} is larger than 5 MB.`);
+        setFileError(`${file.name} is larger than 50 MB.`);
         continue;
       }
       const totalSize = next.reduce((sum, item) => sum + item.size, 0) + file.size;
       if (totalSize > MAX_TOTAL_SIZE) {
-        setFileError('Attachments must be 10 MB or smaller in total.');
+        setFileError('Attachments must be 50 MB or smaller in total.');
         break;
       }
       next.push(file);
