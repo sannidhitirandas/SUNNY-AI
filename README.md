@@ -73,6 +73,10 @@ Sunny uses a bespoke dark theme designed to feel calm, warm, and welcoming:
 - Friendly retry/error states when AI providers are temporarily unavailable.
 - Crisis-safety routing for supported safety keywords and emergency resources.
 - **Chat Options** for clearing conversations, accessing memories, and viewing safety information.
+- **File Attachments** for PDF, DOC/DOCX, TXT, CSV, XLS/XLSX, JSON, Markdown, PNG, JPG/JPEG, and WebP files.
+- Attachments are validated server-side, parsed into AI context, and displayed in chat history as file metadata.
+- Images use Gemini vision; text/document attachments can use the existing Groq → Gemini fallback.
+- Attachment limits: up to 3 files per message, 5 MB per file, and 10 MB combined.
 
 ### 5. Memories Management
 
