@@ -104,11 +104,11 @@ public class SunnyFilePickerPlugin extends Plugin {
             return;
         }
 
-        File file = new File(rawPath);
+        File file;\n        try {\n            file = new File(Uri.parse(rawPath).getPath());\n        } catch (Exception error) {\n            call.reject("Invalid cached file path");\n            return;\n        }
         File cacheDir = getContext().getCacheDir();
         String cachePrefix = new File(cacheDir, "sunny-picker-").getAbsolutePath();
 
-        if (!file.getAbsolutePath().startsWith(cachePrefix)) {
+        if (file.getAbsolutePath() == null || !file.getAbsolutePath().startsWith(cachePrefix)) {
             call.reject("Invalid cached file path");
             return;
         }
