@@ -40,7 +40,9 @@ export const cloudStorageService = {
     const userId = await getUserId();
     if (messages.length === 0) return;
 
-    const rows = messages.map((message) => ({
+    // The legacy welcome message used a global fixed ID. Exclude it from persistence
+    // so an old row owned by another account can never trigger an RLS UPDATE conflict.
+    const rows = messages.filter((message) => message.id !== 'welcome-msg-1').map((message) => ({
       id: message.id,
       user_id: userId,
       session_id: sessionId,
