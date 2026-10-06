@@ -15,8 +15,8 @@ export interface ProcessedAttachment {
   data?: string;
 }
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024;
-const MAX_TOTAL_SIZE = 10 * 1024 * 1024;
+const MAX_FILE_SIZE = 50 * 1024 * 1024;
+const MAX_TOTAL_SIZE = 50 * 1024 * 1024;
 const MAX_EXTRACTED_PER_FILE = 30000;
 const MAX_EXTRACTED_TOTAL = 80000;
 
