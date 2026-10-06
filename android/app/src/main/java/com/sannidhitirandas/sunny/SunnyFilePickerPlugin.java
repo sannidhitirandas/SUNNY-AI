@@ -51,7 +51,7 @@ public class SunnyFilePickerPlugin extends Plugin {
             }
             byte[] bytes = readBytes(uri);
             if (bytes.length > MAX_FILE_SIZE) {
-                call.reject("File is larger than 5 MB");
+                call.reject("File is larger than 50 MB");
                 return;
             }
 
@@ -120,10 +120,30 @@ public class SunnyFilePickerPlugin extends Plugin {
 
     private String getMimeType(Uri uri, String name) {
         String mimeType = getContext().getContentResolver().getType(uri);
-        if (mimeType != null && !mimeType.isEmpty()) return mimeType;
-        String extension = MimeTypeMap.getFileExtensionFromUrl(name);
-        String mapped = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-        return mapped == null ? "application/octet-stream" : mapped;
+        if (mimeType != null && !mimeType.isEmpty() && !"application/octet-stream".equalsIgnoreCase(mimeType)) {
+            return mimeType;
+        }
+
+        int dot = name.lastIndexOf('.');
+        String extension = dot >= 0 ? name.substring(dot + 1).toLowerCase() : "";
+        switch (extension) {
+            case "pdf": return "application/pdf";
+            case "doc": return "application/msword";
+            case "docx": return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+            case "txt": return "text/plain";
+            case "csv": return "text/csv";
+            case "json": return "application/json";
+            case "md": return "text/markdown";
+            case "xls": return "application/vnd.ms-excel";
+            case "xlsx": return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            case "png": return "image/png";
+            case "jpg":
+            case "jpeg": return "image/jpeg";
+            case "webp": return "image/webp";
+            default:
+                String mapped = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+                return mapped == null ? "application/octet-stream" : mapped;
+        }
     }
 
     private byte[] readBytes(Uri uri) throws Exception {
