@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.util.Base64;
 import android.webkit.MimeTypeMap;
@@ -152,6 +153,15 @@ public class SunnyFilePickerPlugin extends Plugin {
                 String mapped = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
                 return mapped == null ? "application/octet-stream" : mapped;
         }
+    }
+
+    @Override
+    protected Bundle saveInstanceState() {
+        // pickFile has no meaningful options to persist. Returning a non-null
+        // bundle lets Capacitor persist the pending activity callback across
+        // the Android document-picker lifecycle without trying to serialize
+        // the original call from a recreated plugin instance.
+        return new Bundle();
     }
 
     private byte[] readBytes(Uri uri) throws Exception {
