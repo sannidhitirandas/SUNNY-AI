@@ -34,12 +34,9 @@ const pickedFileToFile = async (picked: {
 }) => {
   let blob = picked.blob;
 
-  if (!blob && picked.webPath) {
-    const response = await fetch(picked.webPath);
-    if (!response.ok) throw new Error(`Unable to read ${picked.name}`);
-    blob = await response.blob();
-  }
-
+  // Native Android can provide both webPath and Base64 data. Prefer the
+  // native data because some Android document providers expose a webPath
+  // that the WebView cannot fetch reliably.
   if (!blob && picked.data) {
     const byteString = atob(picked.data);
     const bytes = new Uint8Array(byteString.length);
@@ -47,6 +44,12 @@ const pickedFileToFile = async (picked: {
       bytes[index] = byteString.charCodeAt(index);
     }
     blob = new Blob([bytes], { type: picked.mimeType });
+  }
+
+  if (!blob && picked.webPath) {
+    const response = await fetch(picked.webPath);
+    if (!response.ok) throw new Error(`Unable to read ${picked.name}`);
+    blob = await response.blob();
   }
 
   if (!blob) throw new Error(`Unable to read ${picked.name}`);
