@@ -6,22 +6,6 @@ const MAX_FILES = 3;
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const MAX_TOTAL_SIZE = 10 * 1024 * 1024;
 
-const PICKER_TYPES = [
-  'application/pdf',
-  'application/msword',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  'text/plain',
-  'text/csv',
-  'application/csv',
-  'application/json',
-  'text/markdown',
-  'application/vnd.ms-excel',
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  'image/png',
-  'image/jpeg',
-  'image/webp',
-  'application/octet-stream',
-];
 
 const pickedFileToFile = async (picked: {
   name: string;
@@ -116,13 +100,19 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
 
     try {
       const result = await FilePicker.pickFiles({
-        limit: 0,
-        types: PICKER_TYPES,
-        // Android can return a content URI that is not fetchable from every WebView.
-        // These attachments are capped at 5 MB each, so reading the data here is safe
-        // and gives us a reliable native-to-web handoff.
+        // Android is most reliable with a single selection. The user can tap
+        // the attachment button again for additional files.
+        limit: 1,
+        // Do not filter MIME types in the native picker. Android document
+        // providers often report extensions with inconsistent MIME types.
+        // The server still performs the final file-type validation.
         readData: true,
       });
+
+      if (!result.files?.length) {
+        setFileError('No file was returned by the Android file picker.');
+        return;
+      }
 
       const remaining = MAX_FILES - files.length;
       const picked = result.files.slice(0, remaining);
