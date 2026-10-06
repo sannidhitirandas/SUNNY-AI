@@ -262,6 +262,13 @@ async function getChatMemoryAuth(req: Request): Promise<ChatMemoryAuth> {
   }
 }
 
+function shouldExtractAutomaticMemories(message: string): boolean {
+  const text = message.trim();
+  if (text.length < 12) return false;
+
+  return /\\b(?:my|our|i'm|i am|i've|i have|i like|i love|i hate|i prefer|i want|i need|i work|i study|i live|call me|remember that|from now on)\\b/i.test(text);
+}
+
 async function extractAutomaticMemories(
   message: string,
   recentHistory: ChatHistoryItem[],
@@ -1561,7 +1568,11 @@ app.post(
 
       let memoryUpdates: ReturnType<typeof parseAutomaticMemoryCandidates> = [];
       let memoriesUpdated = false;
-      if (safeMemoryEnabled && memoryAuth.kind !== 'unavailable') {
+      if (
+        safeMemoryEnabled &&
+        memoryAuth.kind !== 'unavailable' &&
+        shouldExtractAutomaticMemories(message)
+      ) {
         try {
           const candidates = await extractAutomaticMemories(
             message.trim(),
@@ -1635,7 +1646,17 @@ app.post(
         error?.status || error?.code;
 
       const errorMessage =
-        error?.message || String(error);
+        status === 401 || status === 403
+          ? 'Sunny AI provider authentication failed. Please check the server API key configuration.'
+          : status === 413
+            ? 'That request is too large. Please attach a smaller file or fewer files.'
+            : status === 429
+              ? 'Sunny is temporarily rate-limited by the AI provider. Please try again in a moment.'
+              : status === 404
+                ? 'Sunny could not access the requested AI model. Please try again while it switches models.'
+                : status === 502 || status === 503 || status === 504
+                  ? 'Sunny’s AI provider is temporarily unavailable. Please try again in a moment.'
+                  : error?.message || String(error);
 
       const lowerError =
         errorMessage.toLowerCase();
