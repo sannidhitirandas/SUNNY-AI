@@ -1,9 +1,60 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { FilePicker } from '@capawesome/capacitor-file-picker';
 import { ArrowUp, FileText, Paperclip, X } from 'lucide-react';
 
 const MAX_FILES = 3;
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const MAX_TOTAL_SIZE = 10 * 1024 * 1024;
+
+const PICKER_TYPES = [
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'text/plain',
+  'text/csv',
+  'application/csv',
+  'application/json',
+  'text/markdown',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'image/png',
+  'image/jpeg',
+  'image/webp',
+  'application/octet-stream',
+];
+
+const pickedFileToFile = async (picked: {
+  name: string;
+  mimeType: string;
+  modifiedAt?: number;
+  blob?: Blob;
+  webPath?: string;
+  data?: string;
+}) => {
+  let blob = picked.blob;
+
+  if (!blob && picked.webPath) {
+    const response = await fetch(picked.webPath);
+    if (!response.ok) throw new Error(`Unable to read ${picked.name}`);
+    blob = await response.blob();
+  }
+
+  if (!blob && picked.data) {
+    const byteString = atob(picked.data);
+    const bytes = new Uint8Array(byteString.length);
+    for (let index = 0; index < byteString.length; index += 1) {
+      bytes[index] = byteString.charCodeAt(index);
+    }
+    blob = new Blob([bytes], { type: picked.mimeType });
+  }
+
+  if (!blob) throw new Error(`Unable to read ${picked.name}`);
+
+  return new File([blob], picked.name, {
+    type: picked.mimeType || blob.type || 'application/octet-stream',
+    lastModified: picked.modifiedAt ?? Date.now(),
+  });
+};
 
 interface MessageComposerProps {
   onSend: (text: string, files: File[]) => Promise<void> | void;
@@ -27,14 +78,13 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
   const [fileError, setFileError] = useState<string | null>(null);
   const [preparing, setPreparing] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
 
-  const addFiles = (selected: FileList | null) => {
-    if (!selected) return;
+  const addFiles = (selected: File[]) => {
+    if (selected.length === 0) return;
     setFileError(null);
 
     const next = [...files];
-    for (const file of Array.from(selected)) {
+    for (const file of selected) {
       if (next.some((item) => item.name === file.name && item.size === file.size)) continue;
       if (next.length >= MAX_FILES) {
         setFileError(`You can attach up to ${MAX_FILES} files per message.`);
@@ -52,7 +102,42 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
       next.push(file);
     }
     setFiles(next);
-    if (inputRef.current) inputRef.current.value = '';
+  };
+
+  const handleAttach = async () => {
+    if (disabled || preparing || files.length >= MAX_FILES) return;
+
+    setFileError(null);
+    setPreparing(true);
+
+    try {
+      const result = await FilePicker.pickFiles({
+        limit: 0,
+        types: PICKER_TYPES,
+        readData: false,
+      });
+
+      const remaining = MAX_FILES - files.length;
+      const picked = result.files.slice(0, remaining);
+      const converted: File[] = [];
+
+      for (const item of picked) {
+        converted.push(await pickedFileToFile(item));
+      }
+
+      addFiles(converted);
+
+      if (result.files.length > remaining) {
+        setFileError(`You can attach up to ${MAX_FILES} files per message.`);
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      if (!/cancel|dismiss/i.test(message)) {
+        setFileError('Could not attach the selected file. Please try again.');
+      }
+    } finally {
+      setPreparing(false);
+    }
   };
 
   const removeFile = (index: number) => {
@@ -122,18 +207,9 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
       )}
 
       <div className="flex items-end gap-2 bg-[#1B1430] border border-[#392858] focus-within:border-[#FFD84D] rounded-2xl px-2.5 py-1.5 transition-colors">
-        <input
-          ref={inputRef}
-          type="file"
-          multiple
-          className="absolute w-px h-px opacity-0 pointer-events-none"
-          accept=".pdf,.docx,.txt,.csv,.xls,.xlsx,.json,.md,.markdown,.png,.jpg,.jpeg,.webp"
-          onChange={(e) => addFiles(e.currentTarget.files)}
-          onInput={(e) => addFiles((e.currentTarget as HTMLInputElement).files)}
-        />
         <button
           type="button"
-          onClick={() => inputRef.current?.click()}
+          onClick={() => void handleAttach()}
           disabled={disabled || preparing || files.length >= MAX_FILES}
           className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 text-[#C6B8E5] hover:text-[#FFD84D] hover:bg-[#302149] disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
           aria-label="Attach files"
