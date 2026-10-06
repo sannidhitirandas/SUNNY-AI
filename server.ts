@@ -935,7 +935,8 @@ async function generateAIResponse(
     content: string;
   }>,
   systemInstruction: string,
-  temperature: number
+  temperature: number,
+  forceGemini = false
 ): Promise<{
   text: string;
   model: string;
