@@ -760,7 +760,8 @@ async function generateWithFastFallback(
     parts: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }>;
   }>,
   systemInstruction: string,
-  temperature: number
+  temperature: number,
+  forceGemini = false
 ): Promise<{
   text: string;
   model: string;
@@ -927,7 +928,7 @@ async function generateWithFastFallback(
 async function generateAIResponse(
   contents: Array<{
     role: 'user' | 'model';
-    parts: Array<{ text: string }>;
+    parts: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }>;
   }>,
   groqMessages: Array<{
     role: 'system' | 'user' | 'assistant';
