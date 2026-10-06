@@ -1403,7 +1403,7 @@ app.post(
 
       const contents: Array<{
         role: 'user' | 'model';
-        parts: Array<{ text: string }>;
+        parts: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }>;
       }> = [];
 
       for (const item of recentHistory) {
