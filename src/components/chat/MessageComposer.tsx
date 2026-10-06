@@ -1,10 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { FilePicker } from '@capawesome/capacitor-file-picker';
+import { Capacitor, registerPlugin } from '@capacitor/core';
 import { ArrowUp, FileText, Paperclip, X } from 'lucide-react';
 
 const MAX_FILES = 3;
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const MAX_TOTAL_SIZE = 10 * 1024 * 1024;
+
+interface SunnyNativeFile {
+  name: string;
+  mimeType: string;
+  size: number;
+  data: string;
+}
+
+interface SunnyFilePickerPlugin {
+  pickFile(): Promise<{ files: SunnyNativeFile[] }>;
+}
+
+const SunnyFilePicker = registerPlugin<SunnyFilePickerPlugin>('SunnyFilePicker');
 
 const pickedFileToFile = async (picked: {
   name: string;
@@ -95,37 +108,39 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
     setPreparing(true);
 
     try {
-      const result = await FilePicker.pickFiles({
-        limit: 1,
-        readData: true,
-      });
+      if (Capacitor.isNativePlatform()) {
+        const result = await SunnyFilePicker.pickFile();
+        if (!result.files?.length) {
+          setFileError('No file selected.');
+          return;
+        }
 
-      console.log('[Sunny] Android picker result:', result);
+        const remaining = MAX_FILES - files.length;
+        const converted = result.files.slice(0, remaining).map((item) => {
+          const byteString = atob(item.data);
+          const bytes = new Uint8Array(byteString.length);
+          for (let index = 0; index < byteString.length; index += 1) {
+            bytes[index] = byteString.charCodeAt(index);
+          }
+          return new File([new Blob([bytes], { type: item.mimeType })], item.name, {
+            type: item.mimeType || 'application/octet-stream',
+          });
+        });
 
-      if (!result.files?.length) {
-        setFileError('Picker returned no file.');
+        addFiles(converted);
         return;
       }
 
-      const remaining = MAX_FILES - files.length;
-      const picked = result.files.slice(0, remaining);
-      const converted: File[] = [];
-
-      for (const item of picked) {
-        console.log('[Sunny] Picked file:', {
-          name: item.name,
-          mimeType: item.mimeType,
-          size: item.size,
-          hasData: Boolean(item.data),
-          hasWebPath: Boolean(item.webPath),
-          hasPath: Boolean(item.path),
-        });
-        converted.push(await pickedFileToFile(item));
-      }
-
-      addFiles(converted);
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.pdf,.doc,.docx,.txt,.csv,.xls,.xlsx,.json,.md,.png,.jpg,.jpeg,.webp';
+      input.multiple = false;
+      input.onchange = () => {
+        if (input.files) addFiles(Array.from(input.files));
+      };
+      input.click();
     } catch (error) {
-      console.error('[Sunny] Android file picker error:', error);
+      console.error('[Sunny] File picker error:', error);
       const message = error instanceof Error ? error.message : String(error);
       if (!/cancel|dismiss/i.test(message)) {
         setFileError(`Could not attach: ${message}`);
