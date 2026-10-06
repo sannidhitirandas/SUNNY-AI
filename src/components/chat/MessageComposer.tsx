@@ -76,6 +76,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
 
     try {
       if (Capacitor.isNativePlatform()) {
+        const result = await SunnyFilePicker.pickFile();
         if (!result?.files?.length) {
           setFileError('Native picker returned no file.');
           return;
