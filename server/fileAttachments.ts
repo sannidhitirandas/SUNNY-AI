@@ -21,7 +21,7 @@ const MAX_EXTRACTED_PER_FILE = 30000;
 const MAX_EXTRACTED_TOTAL = 80000;
 
 const allowedExtensions = new Set([
-  '.pdf', '.doc', '.docx', '.txt', '.csv', '.xls', '.xlsx',
+  '.pdf', '.docx', '.txt', '.csv', '.xls', '.xlsx',
   '.json', '.md', '.markdown', '.png', '.jpg', '.jpeg', '.webp',
 ]);
 
@@ -55,7 +55,7 @@ function hasMagic(buffer: Buffer, ext: string) {
 }
 
 async function extractText(buffer: Buffer, ext: string): Promise<string> {
-  if (['.txt', '.csv', '.json', '.md', '.markdown', '.doc'].includes(ext)) {
+  if (['.txt', '.csv', '.json', '.md', '.markdown'].includes(ext)) {
     const raw = buffer.toString('utf8').replace(/^\uFEFF/, '').trim();
     if (ext === '.json') {
       try { return JSON.stringify(JSON.parse(raw), null, 2); } catch { return raw; }
