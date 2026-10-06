@@ -72,9 +72,9 @@ public class SunnyFilePickerPlugin extends Plugin {
             JSArray files = new JSArray();
             files.put(file);
 
-            JSObject result = new JSObject();
-            result.put("files", files);
-            call.resolve(result);
+            JSObject response = new JSObject();
+            response.put("files", files);
+            call.resolve(response);
         } catch (Exception e) {
             String detail = e.getMessage();
             call.reject(detail == null || detail.isEmpty()
