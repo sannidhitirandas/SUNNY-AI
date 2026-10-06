@@ -45,11 +45,16 @@ function decodeDataUrl(data: string) {
   return { mimeType: match[1].toLowerCase(), buffer: Buffer.from(match[2], 'base64') };
 }
 
+function detectImageMime(buffer: Buffer): string | null {
+  if (buffer.subarray(0, 8).equals(Buffer.from([137,80,78,71,13,10,26,10]))) return 'image/png';
+  if (buffer.subarray(0, 3).equals(Buffer.from([255,216,255]))) return 'image/jpeg';
+  if (buffer.subarray(0, 4).toString('ascii') === 'RIFF' && buffer.subarray(8, 12).toString('ascii') === 'WEBP') return 'image/webp';
+  return null;
+}
+
 function hasMagic(buffer: Buffer, ext: string) {
   if (ext === '.pdf') return buffer.subarray(0, 4).toString('ascii') === '%PDF';
-  if (['.png'].includes(ext)) return buffer.subarray(0, 8).equals(Buffer.from([137,80,78,71,13,10,26,10]));
-  if (['.jpg', '.jpeg'].includes(ext)) return buffer.subarray(0, 3).equals(Buffer.from([255,216,255]));
-  if (ext === '.webp') return buffer.subarray(0, 4).toString('ascii') === 'RIFF' && buffer.subarray(8, 12).toString('ascii') === 'WEBP';
+  if (['.png', '.jpg', '.jpeg', '.webp'].includes(ext)) return detectImageMime(buffer) !== null;
   if (['.docx', '.xlsx'].includes(ext)) return buffer.subarray(0, 2).toString('hex') === '504b';
   return true;
 }
@@ -113,18 +118,21 @@ export async function processAttachments(input: unknown): Promise<ProcessedAttac
     const decoded = decodeDataUrl(item.data);
     const size = decoded.buffer.length;
     if (size === 0) throw new Error(`${name} is empty.`);
-    if (size > MAX_FILE_SIZE) throw new Error(`${name} is larger than 5 MB.`);
+    if (size > MAX_FILE_SIZE) throw new Error(`${name} is larger than 50 MB.`);
     totalSize += size;
-    if (totalSize > MAX_TOTAL_SIZE) throw new Error('Attachments must be 10 MB or smaller in total.');
+    if (totalSize > MAX_TOTAL_SIZE) throw new Error('Attachments must be 50 MB or smaller in total.');
 
     const declaredType = typeof item.type === 'string' ? item.type.toLowerCase() : '';
-    if (declaredType && decoded.mimeType !== declaredType) throw new Error(`${name} has an invalid MIME type.`);
+    const detectedImageMime = detectImageMime(decoded.buffer);
+    if (declaredType && !allowedMimeTypes.has(declaredType)) throw new Error(`${name} has an unsupported MIME type.`);
     if (!hasMagic(decoded.buffer, ext)) throw new Error(`${name} failed file validation.`);
 
-    if (['.png', '.jpg', '.jpeg', '.webp'].includes(ext)) {
-      processed.push({ name, kind: 'image', mimeType: decoded.mimeType, data: decoded.buffer.toString('base64') });
+    if (detectedImageMime) {
+      processed.push({ name, kind: 'image', mimeType: detectedImageMime, data: decoded.buffer.toString('base64') });
       continue;
     }
+
+    if (declaredType && decoded.mimeType !== declaredType) throw new Error(`${name} has an invalid MIME type.`);
 
     const text = await extractText(decoded.buffer, ext);
     if (!text) throw new Error(`${name} does not contain readable content.`);
