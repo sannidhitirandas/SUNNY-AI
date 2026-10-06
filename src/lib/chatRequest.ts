@@ -1,7 +1,7 @@
 import type { StarterIntent } from '@/types/chat';
 import type { PersonalityTone } from '@/types/user';
 
-interface ChatRequestBodyOptions<HistoryItem, MemoryItem> {
+interface ChatRequestBodyOptions<HistoryItem, MemoryItem, AttachmentItem> {
   message: string;
   history: HistoryItem[];
   tone: PersonalityTone;
@@ -10,10 +10,11 @@ interface ChatRequestBodyOptions<HistoryItem, MemoryItem> {
   memoryEnabled: boolean;
   memories: MemoryItem[];
   sessionId: string;
+  attachments?: AttachmentItem[];
 }
 
-export function createChatRequestBody<HistoryItem, MemoryItem>(
-  options: ChatRequestBodyOptions<HistoryItem, MemoryItem>
+export function createChatRequestBody<HistoryItem, MemoryItem, AttachmentItem>(
+  options: ChatRequestBodyOptions<HistoryItem, MemoryItem, AttachmentItem>
 ) {
   return {
     message: options.message,
@@ -24,5 +25,6 @@ export function createChatRequestBody<HistoryItem, MemoryItem>(
     memoryEnabled: options.memoryEnabled,
     memories: options.memories,
     sessionId: options.sessionId,
+    ...(options.attachments?.length ? { attachments: options.attachments } : {}),
   };
 }
