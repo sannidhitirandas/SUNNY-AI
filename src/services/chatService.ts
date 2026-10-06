@@ -10,8 +10,8 @@ import { getVibeStarterText } from '@/lib/vibeStarterMessages';
 import { NORMAL_CHAT_GREETING } from '@/lib/chatEntry';
 import { createChatRequestBody } from '@/lib/chatRequest';
 
-const INITIAL_MESSAGES: ChatMessage[] = [{
-  id: 'welcome-msg-1', sessionId: 'default-session', role: 'assistant',
+const createInitialMessages = (): ChatMessage[] => [{
+  id: `welcome-msg-${crypto.randomUUID()}`, sessionId: 'default-session', role: 'assistant',
   content: NORMAL_CHAT_GREETING, createdAt: new Date().toISOString(),
   deliveryStatus: 'sent', isDemoResponse: false,
 }];
@@ -41,10 +41,10 @@ export const chatService = {
     const { data } = await supabase.auth.getSession();
     if (data.session?.user) {
       const saved = await cloudStorageService.getChatMessages(sessionId);
-      return saved.length > 0 ? saved : INITIAL_MESSAGES;
+      return saved.length > 0 ? saved : createInitialMessages();
     }
     const local = await storageService.getItem<ChatMessage[]>(`@sunny_guest_chat_messages_${sessionId}`, []);
-    return local.length > 0 ? local : INITIAL_MESSAGES;
+    return local.length > 0 ? local : createInitialMessages();
   },
 
   async saveMessages(sessionId: string, messages: ChatMessage[]): Promise<void> {
