@@ -1,6 +1,13 @@
 export type MessageRole = 'user' | 'assistant' | 'system';
 export type DeliveryStatus = 'sending' | 'sent' | 'failed';
 
+export interface ChatAttachment {
+  id: string;
+  name: string;
+  type: string;
+  size: number;
+}
+
 export interface ChatMessage {
   id: string;
   sessionId: string;
@@ -11,6 +18,7 @@ export interface ChatMessage {
   isDemoResponse?: boolean;
   model?: string;
   errorMessage?: string;
+  attachments?: ChatAttachment[];
 }
 
 export interface ChatSession {
