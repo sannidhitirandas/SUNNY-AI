@@ -21,7 +21,7 @@ interface ChatContextType {
   isThinking: boolean;
   lastError: string | null;
   activeIntent: StarterIntent | null;
-  sendMessage: (content: string) => Promise<void>;
+  sendMessage: (content: string, files?: File[]) => Promise<void>;
   retryMessage: (id: string) => Promise<void>;
   clearChat: () => Promise<void>;
   enterChat: (entry: ChatEntrySource) => Promise<void>;
@@ -139,8 +139,8 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await starterPersistenceRef.current;
   };
 
-  const sendMessage = async (content: string) => {
-    if (!content.trim()) return;
+  const sendMessage = async (content: string, files: File[] = []) => {
+    if (!content.trim() && files.length === 0) return;
 
     setLastError(null);
     void audioService.play('send');
@@ -152,6 +152,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       content: content.trim(),
       createdAt: new Date().toISOString(),
       deliveryStatus: 'sent',
+      attachments: files.map((file, index) => ({ id: `attachment-${Date.now()}-${index}`, name: file.name, type: file.type || 'application/octet-stream', size: file.size })),
     };
 
     const updatedWithUser = [...messages, userMessage];
@@ -163,6 +164,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       const aiResult = await chatService.sendMessageToAI({
         message: content.trim(),
+        files,
         history: updatedWithUser,
         tone: preferences.preferredTone,
         intent: activeIntent,
