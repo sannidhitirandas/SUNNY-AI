@@ -121,6 +121,34 @@ public class SunnyFilePickerPlugin extends Plugin {
         call.resolve();
     }
 
+    private String getDisplayName(Uri uri) {
+        Cursor cursor = getContext().getContentResolver().query(
+                uri,
+                new String[]{OpenableColumns.DISPLAY_NAME},
+                null,
+                null,
+                null
+        );
+        if (cursor != null) {
+            try {
+                if (cursor.moveToFirst()) {
+                    int index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    if (index >= 0) {
+                        String value = cursor.getString(index);
+                        if (value != null && !value.trim().isEmpty()) return value;
+                    }
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+
+        String rawPath = uri.getPath();
+        if (rawPath == null || rawPath.isEmpty()) return "attachment";
+        int slash = rawPath.lastIndexOf('/');
+        return slash >= 0 ? rawPath.substring(slash + 1) : rawPath;
+    }
+
     private long getSize(Uri uri) {
         Cursor cursor = getContext().getContentResolver().query(
                 uri,
