@@ -22,6 +22,8 @@ import java.io.InputStream;
 @CapacitorPlugin(name = "SunnyFilePicker")
 public class SunnyFilePickerPlugin extends Plugin {
 
+    private static final long MAX_FILE_SIZE = 5L * 1024L * 1024L;
+
     @PluginMethod
     public void pickFile(PluginCall call) {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -43,7 +45,15 @@ public class SunnyFilePickerPlugin extends Plugin {
             String name = getDisplayName(uri);
             String mimeType = getMimeType(uri, name);
             long size = getSize(uri);
+            if (size > MAX_FILE_SIZE) {
+                call.reject("File is larger than 5 MB");
+                return;
+            }
             byte[] bytes = readBytes(uri);
+            if (bytes.length > MAX_FILE_SIZE) {
+                call.reject("File is larger than 5 MB");
+                return;
+            }
 
             JSObject file = new JSObject();
             file.put("name", name);
@@ -58,7 +68,10 @@ public class SunnyFilePickerPlugin extends Plugin {
             result.put("files", files);
             call.resolve(result);
         } catch (Exception e) {
-            call.reject("Unable to read selected file", e);
+            String detail = e.getMessage();
+            call.reject(detail == null || detail.isEmpty()
+                    ? "Unable to read selected file"
+                    : "Unable to read selected file: " + detail);
         }
     }
 
