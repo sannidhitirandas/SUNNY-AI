@@ -126,9 +126,10 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
           ref={inputRef}
           type="file"
           multiple
-          hidden
-          accept=".pdf,.docx,.txt,.csv,.xls,.xlsx,.json,.md,.markdown,.png,.jpg,.jpeg,.webp,application/pdf,text/plain,text/csv,application/json,image/png,image/jpeg,image/webp"
-          onChange={(e) => addFiles(e.target.files)}
+          className="absolute w-px h-px opacity-0 pointer-events-none"
+          accept=".pdf,.docx,.txt,.csv,.xls,.xlsx,.json,.md,.markdown,.png,.jpg,.jpeg,.webp"
+          onChange={(e) => addFiles(e.currentTarget.files)}
+          onInput={(e) => addFiles((e.currentTarget as HTMLInputElement).files)}
         />
         <button
           type="button"
