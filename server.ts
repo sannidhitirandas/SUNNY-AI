@@ -173,8 +173,9 @@ const GROQ_TIMEOUT_MS = 5000;
 
 const GEMINI_MODELS = Array.from(
   new Set([
-    process.env.GEMINI_MODEL || 'gemini-2.5-flash',
-    'gemini-2.5-flash',
+    process.env.GEMINI_MODEL || 'gemini-3.8-flash',
+    'gemini-3.7-flash',
+    'gemini-3.5-flash-lite',
   ])
 );
 
