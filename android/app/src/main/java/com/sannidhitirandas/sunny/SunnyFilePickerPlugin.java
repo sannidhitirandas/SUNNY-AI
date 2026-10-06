@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.util.Base64;
+import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import androidx.activity.result.ActivityResult;
@@ -29,15 +30,18 @@ public class SunnyFilePickerPlugin extends Plugin {
 
     @PluginMethod
     public void pickFile(PluginCall call) {
+        Log.e("SunnyFilePicker", "pickFile() called");
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("*/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+        Log.e("SunnyFilePicker", "launching ACTION_OPEN_DOCUMENT");
         startActivityForResult(call, intent, "handlePickerResult");
     }
 
     @ActivityCallback
     private void handlePickerResult(PluginCall call, ActivityResult result) {
+        Log.e("SunnyFilePicker", "handlePickerResult() called; call=" + (call != null) + ", result=" + (result != null));
         if (call == null || result == null ||
                 result.getResultCode() != Activity.RESULT_OK ||
                 result.getData() == null ||
@@ -50,6 +54,7 @@ public class SunnyFilePickerPlugin extends Plugin {
 
         Intent data = result.getData();
         Uri uri = data.getData();
+        Log.e("SunnyFilePicker", "selected uri=" + uri);
         try {
             String name = getDisplayName(uri);
             String mimeType = getMimeType(uri, name);
@@ -75,8 +80,10 @@ public class SunnyFilePickerPlugin extends Plugin {
 
             JSObject response = new JSObject();
             response.put("files", files);
+            Log.e("SunnyFilePicker", "file read complete; bytes=" + bytes.length + ", mime=" + mimeType + ", name=" + name);
             call.resolve(response);
         } catch (Exception e) {
+            Log.e("SunnyFilePicker", "picker callback failed", e);
             String detail = e.getMessage();
             call.reject(detail == null || detail.isEmpty()
                     ? "Unable to read selected file"
