@@ -6,7 +6,6 @@ const MAX_FILES = 3;
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const MAX_TOTAL_SIZE = 10 * 1024 * 1024;
 
-
 const pickedFileToFile = async (picked: {
   name: string;
   mimeType: string;
@@ -18,9 +17,6 @@ const pickedFileToFile = async (picked: {
 }) => {
   let blob = picked.blob;
 
-  // Native Android can provide both webPath and Base64 data. Prefer the
-  // native data because some Android document providers expose a webPath
-  // that the WebView cannot fetch reliably.
   if (!blob && picked.data) {
     const byteString = atob(picked.data);
     const bytes = new Uint8Array(byteString.length);
@@ -100,17 +96,14 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
 
     try {
       const result = await FilePicker.pickFiles({
-        // Android is most reliable with a single selection. The user can tap
-        // the attachment button again for additional files.
         limit: 1,
-        // Do not filter MIME types in the native picker. Android document
-        // providers often report extensions with inconsistent MIME types.
-        // The server still performs the final file-type validation.
         readData: true,
       });
 
+      console.log('[Sunny] Android picker result:', result);
+
       if (!result.files?.length) {
-        setFileError('No file was returned by the Android file picker.');
+        setFileError('Picker returned no file.');
         return;
       }
 
@@ -119,18 +112,23 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
       const converted: File[] = [];
 
       for (const item of picked) {
+        console.log('[Sunny] Picked file:', {
+          name: item.name,
+          mimeType: item.mimeType,
+          size: item.size,
+          hasData: Boolean(item.data),
+          hasWebPath: Boolean(item.webPath),
+          hasPath: Boolean(item.path),
+        });
         converted.push(await pickedFileToFile(item));
       }
 
       addFiles(converted);
-
-      if (result.files.length > remaining) {
-        setFileError(`You can attach up to ${MAX_FILES} files per message.`);
-      }
     } catch (error) {
+      console.error('[Sunny] Android file picker error:', error);
       const message = error instanceof Error ? error.message : String(error);
       if (!/cancel|dismiss/i.test(message)) {
-        setFileError('Could not attach the selected file. Please try again.');
+        setFileError(`Could not attach: ${message}`);
       }
     } finally {
       setPreparing(false);
