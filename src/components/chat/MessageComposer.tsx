@@ -75,14 +75,21 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
 
     try {
       if (Capacitor.isNativePlatform()) {
-        const result = await SunnyFilePicker.pickFile();
-        if (!result.files?.length) {
-          setFileError('No file selected.');
+        console.log('[Sunny] Native picker returned:', result);
+        console.log('[Sunny] Native picker file count:', result?.files?.length ?? 0);
+        if (!result?.files?.length) {
+          setFileError('Native picker returned no file.');
           return;
         }
 
         const remaining = MAX_FILES - files.length;
         const converted = result.files.slice(0, remaining).map((item) => {
+          console.log('[Sunny] Converting native file:', {
+            name: item.name,
+            mimeType: item.mimeType,
+            size: item.size,
+            dataLength: item.data?.length ?? 0,
+          });
           const byteString = atob(item.data);
           const bytes = new Uint8Array(byteString.length);
           for (let index = 0; index < byteString.length; index += 1) {
@@ -93,6 +100,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
           });
         });
 
+        console.log('[Sunny] Converted native files:', converted);
         addFiles(converted);
         return;
       }
