@@ -72,7 +72,7 @@ const PORT = process.env.PORT
   ? parseInt(process.env.PORT, 10)
   : 3000;
 
-app.use(express.json({ limit: '16mb' }));
+app.use(express.json({ limit: '80mb' }));
 
 // Allow the Capacitor Android WebView to call the hosted API.
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -173,13 +173,12 @@ const GROQ_TIMEOUT_MS = 5000;
 
 const GEMINI_MODELS = Array.from(
   new Set([
-    process.env.GEMINI_MODEL || 'gemini-3.8-flash',
-    'gemini-3.7-flash',
-    'gemini-3.6-flash',
+    process.env.GEMINI_MODEL || 'gemini-2.5-flash',
+    'gemini-2.5-flash',
   ])
 );
 
-const GEMINI_TIMEOUT_MS = 5000;
+const GEMINI_TIMEOUT_MS = 30000;
 
 // --------------------------------------------------
 // Types
@@ -957,7 +956,7 @@ async function generateAIResponse(
         error?.message || error
       );
     }
-  } else {
+  } else if (!forceGemini) {
     console.warn(
       '[AI] GROQ_API_KEY is not configured. Skipping Groq.'
     );
