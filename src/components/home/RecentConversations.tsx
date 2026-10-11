@@ -8,7 +8,7 @@ interface RecentConversationsProps {
   onResume: () => void;
 }
 
-export const RecentConversations: React.FC<RecentConversationsProps> = ({
+const toPreviewText = (content: string) => content\n  .replace(/```[\\s\\S]*?```/g, ' ')\n  .replace(/`([^`]+)`/g, '$1')\n  .replace(/!\\[([^\\]]*)\\]\\([^)]*\\)/g, '$1')\n  .replace(/\\[([^\\]]+)\\]\\([^)]*\\)/g, '$1')\n  .replace(/<[^>]+>/g, ' ')\n  .replace(/[*_~>#]/g, '')\n  .replace(/\\s+/g, ' ')\n  .trim();\n\nexport const RecentConversations: React.FC<RecentConversationsProps> = ({
   lastMessage,
   onResume,
 }) => {
@@ -27,8 +27,8 @@ export const RecentConversations: React.FC<RecentConversationsProps> = ({
               <span className="text-xs text-[#9B8AB9] block font-medium">
                 {lastMessage.role === 'user' ? 'You said:' : 'Sunny said:'}
               </span>
-              <p className="text-xs sm:text-sm text-white truncate font-normal">
-                {lastMessage.content}
+              <p className="text-xs sm:text-sm text-white truncate font-normal max-w-full">
+                {toPreviewText(lastMessage.content)}
               </p>
             </div>
             <ArrowRight size={16} className="text-[#FFD84D] shrink-0" />
