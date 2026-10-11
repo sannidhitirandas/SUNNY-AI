@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { App as CapacitorApp } from '@capacitor/app';
 import { Capacitor, type PluginListenerHandle } from '@capacitor/core';
 import { Keyboard } from '@capacitor/keyboard';
-
+import { Browser } from '@capacitor/browser';
+import { authService } from '@/services/authService';
 import { useAuth } from '@/context/AuthContext';
 import { usePreferences } from '@/context/PreferencesContext';
 import { useChat } from '@/context/ChatContext';
@@ -190,6 +191,44 @@ export function App() {
   };
 
   const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Local Time';
+  
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+
+    let mounted = true;
+    let listener: PluginListenerHandle | undefined;
+
+    void CapacitorApp.addListener('appUrlOpen', async ({ url }) => {
+      if (!url.startsWith('sunnyai://auth/callback')) return;
+
+      try {
+        await Browser.close();
+
+        const result = await authService.completeAuthRedirect(url);
+
+        if (!mounted) return;
+
+        if (result.error) {
+          console.error('[Google Auth] Callback failed:', result.error);
+          return;
+        }
+
+        if (result.recovery) {
+          console.info('[Google Auth] Password recovery callback received.');
+        }
+      } catch (error) {
+        console.error('[Google Auth] Could not complete callback:', error);
+      }
+    }).then((handle) => {
+      if (mounted) listener = handle;
+      else void handle.remove();
+    });
+
+    return () => {
+      mounted = false;
+      void listener?.remove();
+    };
+  }, []);
 
   useEffect(() => {
     if (prefsLoading || preferences.notificationPreferences.timezone === deviceTimezone) return;
@@ -363,8 +402,8 @@ export function App() {
   const hideNavBar = activeTab === 'chat' && isKeyboardVisible;
 
   return (
-    <div className="min-h-screen bg-[#100B22] flex flex-col justify-between relative selection:bg-[#FFD84D] selection:text-[#100B22]">
-      <main className="flex-1 flex flex-col overflow-hidden">
+    <div className="h-dvh min-h-0 overflow-hidden bg-[#100B22] flex flex-col relative selection:bg-[#FFD84D] selection:text-[#100B22]">
+      <main className="flex-1 min-h-0 flex flex-col overflow-hidden pb-16">
         {activeTab === 'home' && (
           <HomeScreen
             onNavigateToTab={(tab) => handleTabChange(tab)}
