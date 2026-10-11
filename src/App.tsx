@@ -85,28 +85,36 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    // visualViewport shrinks when the on-screen keyboard opens in mobile browsers/WebView.
+    // Capture the app's full available height before the Android keyboard opens.
+    // Android WebView can resize innerHeight and visualViewport together, so
+    // comparing those two values (or screen.height) is unreliable.
     const viewport = window.visualViewport;
-    if (!viewport) return;
+    let fullHeight = Math.max(window.innerHeight, viewport?.height ?? 0);
 
     const updateKeyboardVisibility = () => {
-      // Android WebView may resize innerHeight along with visualViewport, making
-      // their difference stay near zero. Compare against the stable screen height.
-      const visibleHeight = viewport.height;
-      const screenHeight = window.screen.height;
-      const keyboardHeight = screenHeight - visibleHeight;
-      setKeyboardVisible(keyboardHeight > 150);
+      const visibleHeight = Math.min(window.innerHeight, viewport?.height ?? window.innerHeight);
+      const keyboardHeight = fullHeight - visibleHeight;
+      setKeyboardVisible(keyboardHeight > 120);
     };
 
-    updateKeyboardVisibility();
-    viewport.addEventListener('resize', updateKeyboardVisibility);
-    viewport.addEventListener('scroll', updateKeyboardVisibility);
-    window.addEventListener('resize', updateKeyboardVisibility);
+    const refreshFullHeightWhenKeyboardClosed = () => {
+      const visibleHeight = Math.min(window.innerHeight, viewport?.height ?? window.innerHeight);
+      if (visibleHeight > fullHeight - 120) {
+        fullHeight = Math.max(window.innerHeight, viewport?.height ?? 0);
+        setKeyboardVisible(false);
+      } else {
+        updateKeyboardVisibility();
+      }
+    };
+
+    window.addEventListener('resize', refreshFullHeightWhenKeyboardClosed);
+    viewport?.addEventListener('resize', refreshFullHeightWhenKeyboardClosed);
+    viewport?.addEventListener('scroll', updateKeyboardVisibility);
 
     return () => {
-      viewport.removeEventListener('resize', updateKeyboardVisibility);
-      viewport.removeEventListener('scroll', updateKeyboardVisibility);
-      window.removeEventListener('resize', updateKeyboardVisibility);
+      window.removeEventListener('resize', refreshFullHeightWhenKeyboardClosed);
+      viewport?.removeEventListener('resize', refreshFullHeightWhenKeyboardClosed);
+      viewport?.removeEventListener('scroll', updateKeyboardVisibility);
     };
   }, []);
 
