@@ -13,14 +13,14 @@ export const RecentConversations: React.FC<RecentConversationsProps> = ({
   onResume,
 }) => {
   return (
-    <div className="my-5">
-      <h3 className="text-sm font-semibold text-white mb-2.5">
+    <div className="my-6 sm:my-8">
+      <h3 className="text-lg font-medium tracking-tight text-white mb-3">
         Recent conversation
       </h3>
       {lastMessage ? (
-        <AppCard onPress={onResume} className="p-3.5 hover:border-[#FFD84D]/40">
+        <AppCard onPress={onResume} className="rounded-2xl border border-[#392858]/70 bg-[#17102C] p-3.5 transition-colors hover:border-[#FFD84D]/40 sm:p-4">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-[#FFD84D]/15 flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-[#302149] flex items-center justify-center shrink-0">
               <MessageSquareText size={18} className="text-[#FFD84D]" />
             </div>
             <div className="flex-1 min-w-0">
