@@ -88,7 +88,6 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
           {message.content && <p className="whitespace-pre-wrap text-sm font-medium leading-6">{message.content}</p>}
           <div className="mt-1.5 flex items-center justify-end gap-1.5 text-[10px] font-medium text-[#100B22]/65">
             <span>{formatTime(message.createdAt)}</span>
-            <Check size={13} className="opacity-80" />
           </div>
         </div>
       </div>
