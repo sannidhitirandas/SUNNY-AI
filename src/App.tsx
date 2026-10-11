@@ -138,6 +138,44 @@ export function App() {
   };
 
   const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Local Time';
+  
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+
+    let mounted = true;
+    let listener: PluginListenerHandle | undefined;
+
+    void CapacitorApp.addListener('appUrlOpen', async ({ url }) => {
+      if (!url.startsWith('sunnyai://auth/callback')) return;
+
+      try {
+        await Browser.close();
+
+        const result = await authService.completeAuthRedirect(url);
+
+        if (!mounted) return;
+
+        if (result.error) {
+          console.error('[Google Auth] Callback failed:', result.error);
+          return;
+        }
+
+        if (result.recovery) {
+          console.info('[Google Auth] Password recovery callback received.');
+        }
+      } catch (error) {
+        console.error('[Google Auth] Could not complete callback:', error);
+      }
+    }).then((handle) => {
+      if (mounted) listener = handle;
+      else void handle.remove();
+    });
+
+    return () => {
+      mounted = false;
+      void listener?.remove();
+    };
+  }, []);
 
   useEffect(() => {
     if (prefsLoading || preferences.notificationPreferences.timezone === deviceTimezone) return;
