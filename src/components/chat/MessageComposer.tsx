@@ -53,7 +53,8 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
   const [text, setText] = useState('');
   const [files, setFiles] = useState<File[]>([]);
   const [fileError, setFileError] = useState<string | null>(null);
-  const [preparing, setPreparing] = useState(false);
+  const [preparingAttachment, setPreparingAttachment] = useState(false);
+  const [sending, setSending] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const addFiles = (selected: File[]) => {
@@ -102,10 +103,10 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
   };
 
   const handleAttach = async () => {
-    if (disabled || preparing || files.length >= MAX_FILES) return;
+    if (disabled || preparingAttachment || sending || files.length >= MAX_FILES) return;
 
     setFileError(null);
-    setPreparing(true);
+    setPreparingAttachment(true);
 
     try {
       if (Capacitor.isNativePlatform()) {
@@ -179,7 +180,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
         setFileError(`Could not attach file: ${message}`);
       }
     } finally {
-      setPreparing(false);
+      setPreparingAttachment(false);
     }
   };
 
@@ -189,7 +190,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
   };
 
   const handleSend = async () => {
-    if ((!text.trim() && files.length === 0) || disabled || preparing) return;
+    if ((!text.trim() && files.length === 0) || disabled || preparingAttachment || sending) return;
     const content = text.trim();
     const attachments = [...files];
     setText('');
@@ -221,10 +222,10 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
   };
 
   useEffect(() => {
-    if (!disabled && !preparing && textareaRef.current) textareaRef.current.focus();
-  }, [disabled, preparing]);
+    if (!disabled && !preparingAttachment && !sending && textareaRef.current) textareaRef.current.focus();
+  }, [disabled, preparingAttachment, sending]);
 
-  const isSendDisabled = disabled || preparing || (!text.trim() && files.length === 0);
+  const isSendDisabled = disabled || preparingAttachment || sending || (!text.trim() && files.length === 0);
 
   return (
     <div className="border-t border-white/[0.04] bg-gradient-to-t from-[#100B22] via-[#100B22]/[0.98] to-[#100B22]/90 px-3 pb-3 pt-4 sm:px-5">
@@ -242,7 +243,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
                 <p className="text-xs text-white truncate max-w-[180px]">{file.name}</p>
                 <p className="text-[10px] text-[#9B8AB9]">{formatSize(file.size)}</p>
               </div>
-              <button type="button" onClick={() => removeFile(index)} disabled={preparing} className="p-1 text-[#9B8AB9] hover:text-white cursor-pointer" aria-label={`Remove ${file.name}`}>
+              <button type="button" onClick={() => removeFile(index)} disabled={preparingAttachment || sending} className="p-1 text-[#9B8AB9] hover:text-white cursor-pointer" aria-label={`Remove ${file.name}`}>
                 <X size={14} />
               </button>
             </div>
@@ -254,7 +255,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
         <button
           type="button"
           onClick={() => void handleAttach()}
-          disabled={disabled || preparing || files.length >= MAX_FILES}
+          disabled={disabled || preparingAttachment || sending || files.length >= MAX_FILES}
           className="mb-0.5 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full text-[#C6B8E5] transition-colors duration-200 hover:bg-[#302149] hover:text-[#FFD84D] disabled:cursor-not-allowed disabled:opacity-40"
           aria-label="Attach files"
           title="Attach files"
@@ -268,7 +269,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
           onChange={handleInput}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          disabled={disabled || preparing}
+          disabled={disabled || preparingAttachment || sending}
           rows={1}
           maxLength={1000}
           className="min-h-10 max-h-[120px] flex-1 resize-none bg-transparent px-1 py-2.5 text-[14px] leading-5 text-white outline-none placeholder:text-[#9B8AB9]/90 focus:outline-none disabled:opacity-60"
@@ -288,7 +289,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
           <ArrowUp size={18} strokeWidth={2.5} />
         </button>
       </div>
-      {preparing && <p className="mt-2 px-3 text-[11px] text-[#B6A6CC]">Preparing attachment…</p>}
+      {preparingAttachment && <p className="mt-2 px-3 text-[11px] text-[#B6A6CC]">Preparing attachment…</p>}
       </div>
     </div>
   );
