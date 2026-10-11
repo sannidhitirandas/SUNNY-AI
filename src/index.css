@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @theme {
+  --font-sans: "Gabriola", Georgia, serif;
   --color-sunny-bg: #100B22;
   --color-sunny-secondary: #17102C;
   --color-sunny-card: #21163A;
@@ -18,7 +19,7 @@
 }
 
 body {
-  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-family: 'Gabriola', Georgia, serif;
   background-color: var(--sunny-page-background, #100B22);
   color: var(--sunny-primary-text, #FFFFFF);
 }
