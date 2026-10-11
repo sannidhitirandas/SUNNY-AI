@@ -71,8 +71,10 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
     return normalized;
   };
 
-  const loadForSession = useCallback(async (userIsSignedIn: boolean) => {
-    setIsLoading(true);
+  const loadForSession = useCallback(async (userIsSignedIn: boolean, showLoadingSpinner = true) => {
+    if (showLoadingSpinner) {
+      setIsLoading(true);
+    }
     try {
       if (userIsSignedIn) {
         const saved = await cloudStorageService.getPreferences();
@@ -117,22 +119,33 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
       const cachedPreferences = await loadLocalPreferences(storageService.KEYS.USER_PREFERENCES);
       setPreferences(cachedPreferences);
     } finally {
-      setIsLoading(false);
+      if (showLoadingSpinner) {
+        setIsLoading(false);
+      }
     }
   }, []);
 
   useEffect(() => {
     let mounted = true;
+    let currentUserId: string | undefined = undefined;
+
     const initialize = async () => {
       const { data } = await supabase.auth.getSession();
-      if (mounted) await loadForSession(Boolean(data.session?.user));
+      currentUserId = data.session?.user?.id;
+      if (mounted) await loadForSession(Boolean(data.session?.user), true);
     };
     void initialize();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      const newUserId = session?.user?.id;
+      if (newUserId === currentUserId) {
+        // Same user session; do not reload preferences or set isLoading on app resume!
+        return;
+      }
+      currentUserId = newUserId;
       // Defer Supabase queries until the auth callback releases its internal lock.
       window.setTimeout(() => {
-        if (mounted) void loadForSession(Boolean(session?.user));
+        if (mounted) void loadForSession(Boolean(session?.user), true);
       }, 0);
     });
 

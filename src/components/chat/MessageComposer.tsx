@@ -33,22 +33,16 @@ const formatSize = (bytes: number) => {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 };
 
-const base64ToBlob = (base64Data: string, contentType: string = ''): Blob => {
-  const byteCharacters = atob(base64Data);
-  const byteArrays: Uint8Array[] = [];
-  const sliceSize = 512 * 1024;
-
-  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-    const slice = byteCharacters.slice(offset, offset + sliceSize);
-    const byteNumbers = new Array(slice.length);
-    for (let i = 0; i < slice.length; i++) {
-      byteNumbers[i] = slice.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    byteArrays.push(byteArray);
+const base64ToBlob = async (base64Data: string, contentType: string = 'application/octet-stream'): Promise<Blob> => {
+  const cleanData = base64Data.trim();
+  const dataUrl = cleanData.startsWith('data:')
+    ? cleanData
+    : `data:${contentType};base64,${cleanData}`;
+  const response = await fetch(dataUrl);
+  if (!response.ok) {
+    throw new Error('Failed to process file data.');
   }
-
-  return new Blob(byteArrays as unknown as BlobPart[], { type: contentType });
+  return await response.blob();
 };
 
 export const MessageComposer: React.FC<MessageComposerProps> = ({
@@ -66,25 +60,45 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
     if (selected.length === 0) return;
     setFileError(null);
 
-    const next = [...files];
-    for (const file of selected) {
-      if (next.some((item) => item.name === file.name && item.size === file.size)) continue;
-      if (next.length >= MAX_FILES) {
-        setFileError(`You can attach up to ${MAX_FILES} files per message.`);
-        break;
+    setFiles((currentFiles) => {
+      const next = [...currentFiles];
+      for (const file of selected) {
+        if (next.some((item) => item.name === file.name && item.size === file.size)) continue;
+        if (next.length >= MAX_FILES) {
+          setFileError(`You can attach up to ${MAX_FILES} files per message.`);
+          break;
+        }
+        if (file.size > MAX_FILE_SIZE) {
+          setFileError(`${file.name} is larger than 50 MB.`);
+          continue;
+        }
+        const totalSize = next.reduce((sum, item) => sum + item.size, 0) + file.size;
+        if (totalSize > MAX_TOTAL_SIZE) {
+          setFileError('Attachments must be 50 MB or smaller in total.');
+          break;
+        }
+        next.push(file);
       }
-      if (file.size > MAX_FILE_SIZE) {
-        setFileError(`${file.name} is larger than 50 MB.`);
-        continue;
-      }
-      const totalSize = next.reduce((sum, item) => sum + item.size, 0) + file.size;
-      if (totalSize > MAX_TOTAL_SIZE) {
-        setFileError('Attachments must be 50 MB or smaller in total.');
-        break;
-      }
-      next.push(file);
-    }
-    setFiles(next);
+      console.log('[Sunny] addFiles updated files state:', next.map(f => f.name));
+      return next;
+    });
+  };
+
+  const triggerWebFileInput = (): Promise<File[]> => {
+    return new Promise((resolve) => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.pdf,.doc,.docx,.txt,.csv,.xls,.xlsx,.json,.md,.png,.jpg,.jpeg,.webp';
+      input.multiple = false;
+      input.onchange = () => {
+        if (input.files && input.files.length > 0) {
+          resolve(Array.from(input.files));
+        } else {
+          resolve([]);
+        }
+      };
+      input.click();
+    });
   };
 
   const handleAttach = async () => {
@@ -95,9 +109,27 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
 
     try {
       if (Capacitor.isNativePlatform()) {
-        const result = await SunnyFilePicker.pickFile();
+        console.log('[Sunny] Calling native SunnyFilePicker.pickFile()');
+        let result: { files: SunnyNativeFile[] } | null = null;
+        try {
+          result = await SunnyFilePicker.pickFile();
+          console.log('[Sunny] Native SunnyFilePicker result:', result);
+        } catch (nativeErr) {
+          console.warn('[Sunny] Native file picker failed, falling back to Web file input:', nativeErr);
+          const webSelected = await triggerWebFileInput();
+          if (webSelected.length > 0) {
+            addFiles(webSelected);
+          }
+          return;
+        }
+
         if (!result?.files?.length) {
-          // User cancelled or picked 0 files
+          // If native picker returned 0 files, try web chooser fallback
+          console.log('[Sunny] Native picker returned 0 files, trying web input fallback');
+          const webSelected = await triggerWebFileInput();
+          if (webSelected.length > 0) {
+            addFiles(webSelected);
+          }
           return;
         }
 
@@ -109,7 +141,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
             let blob: Blob;
 
             if (item.data) {
-              blob = base64ToBlob(item.data, item.mimeType);
+              blob = await base64ToBlob(item.data, item.mimeType);
             } else if (item.path) {
               const webPath = Capacitor.convertFileSrc(item.path);
               const response = await fetch(webPath);
@@ -131,23 +163,20 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
           }
         }
 
+        console.log('[Sunny] Converted files:', converted.map(f => ({ name: f.name, size: f.size, type: f.type })));
         addFiles(converted);
         return;
       }
 
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = '.pdf,.doc,.docx,.txt,.csv,.xls,.xlsx,.json,.md,.png,.jpg,.jpeg,.webp';
-      input.multiple = false;
-      input.onchange = () => {
-        if (input.files) addFiles(Array.from(input.files));
-      };
-      input.click();
+      const webSelected = await triggerWebFileInput();
+      if (webSelected.length > 0) {
+        addFiles(webSelected);
+      }
     } catch (error) {
       console.error('[Sunny] File picker error:', error);
       const message = error instanceof Error ? error.message : String(error);
       if (!/cancel|dismiss/i.test(message)) {
-        setFileError(`Could not attach: ${message}`);
+        setFileError(`Could not attach file: ${message}`);
       }
     } finally {
       setPreparing(false);
