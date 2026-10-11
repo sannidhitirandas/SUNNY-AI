@@ -50,7 +50,7 @@ export const ConversationStarter: React.FC<ConversationStarterProps> = ({ onSele
   return (
     <div className="my-6 sm:my-8">
       <h2 className="text-lg font-medium tracking-tight text-white mb-3 sm:text-xl">
-        What do you need tonight?
+        What would feel good right now?
       </h2>
       <div className="grid grid-cols-2 gap-2.5 sm:gap-3 lg:gap-4">
         {STARTER_OPTIONS.map((item) => (
