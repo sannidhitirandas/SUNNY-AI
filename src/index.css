@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Gabriola';
+  src: url('/fonts/Gabriola.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --font-sans: "Gabriola", Georgia, serif;
   --color-sunny-bg: #100B22;
@@ -20,6 +28,7 @@
 
 body {
   font-family: 'Gabriola', Georgia, serif;
+  font-size: 18px;
   background-color: var(--sunny-page-background, #100B22);
   color: var(--sunny-primary-text, #FFFFFF);
 }
