@@ -23,6 +23,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
   const [notice, setNotice] = useState('');
 
@@ -58,6 +59,22 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
       setError('Sunny could not reach the authentication service. Check your connection and try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setError('');
+    setGoogleLoading(true);
+    try {
+      const result = await authService.signInWithGoogle();
+      if (!result.success) {
+        setError(result.error || 'Unable to continue with Google.');
+        setGoogleLoading(false);
+      }
+      // On success Supabase redirects to Google and returns to Sunny after consent.
+    } catch {
+      setError('Sunny could not start Google sign-in. Check your connection and try again.');
+      setGoogleLoading(false);
     }
   };
 
@@ -130,6 +147,33 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             fullWidth
           />
         </div>
+        {!forgotPassword && (
+          <>
+            <div className="flex items-center gap-3 py-3" aria-hidden="true">
+              <div className="h-px flex-1 bg-[#392858]" />
+              <span className="text-[11px] font-medium text-[#9B8AB9]">OR</span>
+              <div className="h-px flex-1 bg-[#392858]" />
+            </div>
+            <button
+              type="button"
+              onClick={() => void handleGoogleSignIn()}
+              disabled={loading || googleLoading}
+              className="w-full min-h-12 flex items-center justify-center gap-3 rounded-xl border border-[#493660] bg-[#21163A] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#302149] disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {googleLoading ? (
+                <span className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" aria-hidden="true" />
+              ) : (
+                <svg viewBox="0 0 48 48" className="h-5 w-5" aria-hidden="true">
+                  <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 3.06 13.22l7.98 6.19C12.93 13.72 18.05 9.5 24 9.5Z" transform="translate(0 4)" />
+                  <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.76 7.18l7.73 6C44.42 38.05 46.98 31.94 46.98 24.55Z" />
+                  <path fill="#FBBC05" d="M10.53 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.87.93 7.52 2.53 10.78l8-6.19Z" transform="translate(1 0)" />
+                  <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.14 1.45-4.88 2.3-8.18 2.3-5.95 0-11.07-4.22-12.96-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48Z" transform="translate(0 -1)" />
+                </svg>
+              )}
+              Continue with Google
+            </button>
+          </>
+        )}
         {!forgotPassword && (
           <button
             type="button"
