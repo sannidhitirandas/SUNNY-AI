@@ -62,10 +62,10 @@ export const GreetingCard: React.FC<GreetingCardProps> = ({
         <span className="hidden items-center gap-2 text-xs text-[#C6B8E5] sm:inline-flex"><Sparkles size={14} className="text-[#FFD84D]"/> A little space just for you</span>
       </div>
       <div className="relative z-20 lg:max-w-[58%]">
-        <h1 className="mt-3 font-serif text-3xl font-normal leading-tight tracking-tight text-[#F8F1FF] sm:text-4xl lg:mt-0 lg:text-5xl">
+        <h1 className="mt-3 text-4xl font-normal leading-tight tracking-tight text-[#F8F1FF] sm:text-5xl lg:mt-0 lg:text-6xl">
           {greeting}, {displayName || 'sunshine'}
         </h1>
-        <p className="mt-2 max-w-lg text-sm leading-relaxed text-[#C6B8E5] sm:text-base">
+        <p className="mt-2 max-w-lg text-base leading-relaxed text-[#C6B8E5] sm:text-lg">
           A little warmth, just for you. Whatever kind of day it’s been, you’re welcome here.
         </p>
         <div className="mt-3 lg:mt-7">

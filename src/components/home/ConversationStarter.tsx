@@ -49,7 +49,7 @@ const STARTER_OPTIONS: StarterOption[] = [
 export const ConversationStarter: React.FC<ConversationStarterProps> = ({ onSelectIntent }) => {
   return (
     <div className="my-6 sm:my-8">
-      <h2 className="text-lg font-medium tracking-tight text-white mb-3 sm:text-xl">
+      <h2 className="text-xl font-medium tracking-tight text-white mb-3 sm:text-2xl">
         What would feel good right now?
       </h2>
       <div className="grid grid-cols-2 gap-2.5 sm:gap-3 lg:gap-4">
@@ -64,10 +64,10 @@ export const ConversationStarter: React.FC<ConversationStarterProps> = ({ onSele
                 {item.icon}
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="text-xs font-semibold leading-snug text-white line-clamp-2 sm:text-sm">
+                <h3 className="text-sm font-semibold leading-snug text-white line-clamp-2 sm:text-base">
                   {item.title}
                 </h3>
-                <p className="mt-1 hidden text-xs leading-relaxed text-[#B6A6CC] sm:block">
+                <p className="mt-1 hidden text-sm leading-relaxed text-[#B6A6CC] sm:block">
                   {item.description}
                 </p>
               </div>

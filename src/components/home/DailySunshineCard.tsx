@@ -33,7 +33,7 @@ export const DailySunshineCard: React.FC = () => {
           <span>Another ☀️</span>
         </button>
       </div>
-      <p className="font-serif text-base leading-relaxed text-[#F5EDFF] sm:text-lg">
+      <p className="text-lg leading-relaxed text-[#F5EDFF] sm:text-xl">
         "{DAILY_REMINDERS[index]}"
       </p>
     </AppCard>

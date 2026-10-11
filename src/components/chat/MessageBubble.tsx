@@ -85,7 +85,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
               ))}
             </div>
           ) : null}
-          {message.content && <p className="whitespace-pre-wrap text-sm font-medium leading-6">{message.content}</p>}
+          {message.content && <p className="whitespace-pre-wrap text-base font-medium leading-6">{message.content}</p>}
           <div className="mt-1.5 flex items-center justify-end gap-1.5 text-[10px] font-medium text-[#100B22]/65">
             <span>{formatTime(message.createdAt)}</span>
           </div>
@@ -108,7 +108,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
           setMenuOpen(true);
         }}
       >
-        <p className="whitespace-pre-wrap text-sm leading-6 text-white/95">{message.content}</p>
+        <p className="whitespace-pre-wrap text-base leading-6 text-white/95">{message.content}</p>
         <div className="mt-2 flex items-center justify-between gap-3 text-[10px] text-[#B6A6CC]">
           <span>{formatTime(message.createdAt)}</span>
           <div className="flex items-center gap-1.5">

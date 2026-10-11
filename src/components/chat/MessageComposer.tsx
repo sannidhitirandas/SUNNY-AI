@@ -278,7 +278,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
           disabled={disabled || preparingAttachment || sending}
           rows={1}
           maxLength={1000}
-          className="min-h-10 max-h-[120px] flex-1 resize-none bg-transparent px-1 py-2.5 text-[14px] leading-5 text-white outline-none placeholder:text-[#9B8AB9]/90 focus:outline-none disabled:opacity-60"
+          className="min-h-10 max-h-[120px] flex-1 resize-none bg-transparent px-1 py-2.5 text-base leading-6 text-white outline-none placeholder:text-[#9B8AB9]/90 focus:outline-none disabled:opacity-60"
         />
 
         <button
