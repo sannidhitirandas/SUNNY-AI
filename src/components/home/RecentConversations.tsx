@@ -8,7 +8,19 @@ interface RecentConversationsProps {
   onResume: () => void;
 }
 
-const toPreviewText = (content: string) => content\n  .replace(/```[\\s\\S]*?```/g, ' ')\n  .replace(/`([^`]+)`/g, '$1')\n  .replace(/!\\[([^\\]]*)\\]\\([^)]*\\)/g, '$1')\n  .replace(/\\[([^\\]]+)\\]\\([^)]*\\)/g, '$1')\n  .replace(/<[^>]+>/g, ' ')\n  .replace(/[*_~>#]/g, '')\n  .replace(/\\s+/g, ' ')\n  .trim();\n\nexport const RecentConversations: React.FC<RecentConversationsProps> = ({
+const toPreviewText = (content: string): string => {
+  return content
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/[*_~>#]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+};
+
+export const RecentConversations: React.FC<RecentConversationsProps> = ({
   lastMessage,
   onResume,
 }) => {
