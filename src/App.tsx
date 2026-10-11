@@ -90,8 +90,12 @@ export function App() {
     if (!viewport) return;
 
     const updateKeyboardVisibility = () => {
-      const heightDifference = window.innerHeight - viewport.height;
-      setKeyboardVisible(heightDifference > 150);
+      // Android WebView may resize innerHeight along with visualViewport, making
+      // their difference stay near zero. Compare against the stable screen height.
+      const visibleHeight = viewport.height;
+      const screenHeight = window.screen.height;
+      const keyboardHeight = screenHeight - visibleHeight;
+      setKeyboardVisible(keyboardHeight > 150);
     };
 
     updateKeyboardVisibility();
