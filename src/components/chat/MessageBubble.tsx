@@ -41,7 +41,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
 
   if (isUser) {
     return (
-      <div className="flex flex-col items-end my-2 px-3 sm:px-4">
+      <div className="flex flex-col items-end my-1.5 px-3 sm:px-4">
         <div className="max-w-[85%] sm:max-w-[75%] px-4 py-2.5 rounded-2xl rounded-br-xs bg-[#FFD84D] text-[#100B22] shadow-[0_2px_8px_rgba(255,216,77,0.2)]">
           {message.attachments?.length ? (
             <div className="mb-2 space-y-1.5">
@@ -65,7 +65,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   }
 
   return (
-    <div className="group flex items-end gap-2.5 my-2 px-3 sm:px-4 max-w-[92%] sm:max-w-[85%]">
+    <div className="group flex items-end gap-2.5 my-1.5 px-3 sm:px-4 max-w-[92%] sm:max-w-[85%]">
       <div className="shrink-0 mb-1"><SunnyLogo size="small" /></div>
       <div className="bg-[#21163A] border border-[#392858] text-white px-4 py-2.5 rounded-2xl rounded-bl-xs relative">
         <p className="text-sm text-white/95 whitespace-pre-wrap leading-relaxed">{message.content}</p>
