@@ -41,7 +41,11 @@ const mapSupabaseUser = (supabaseUser: {
     displayName:
       typeof metadata.displayName === 'string'
         ? metadata.displayName
-        : supabaseUser.email?.split('@')[0] ?? 'Sunny User',
+        : typeof metadata.full_name === 'string'
+          ? metadata.full_name
+          : typeof metadata.name === 'string'
+            ? metadata.name
+            : supabaseUser.email?.split('@')[0] ?? 'Sunny User',
 
     preferredTone:
       typeof metadata.preferredTone === 'string'
