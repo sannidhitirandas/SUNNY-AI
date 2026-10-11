@@ -40,9 +40,10 @@ function safeName(name: string) {
 }
 
 function decodeDataUrl(data: string) {
-  const match = /^data:([^;,]+);base64,([A-Za-z0-9+/=]+)$/.exec(data);
+  const match = /^data:([^;,]+);base64,([\s\S]+)$/.exec(data.trim());
   if (!match) throw new Error('Invalid attachment encoding.');
-  return { mimeType: match[1].toLowerCase(), buffer: Buffer.from(match[2], 'base64') };
+  const base64Str = match[2].replace(/\s+/g, '');
+  return { mimeType: match[1].toLowerCase(), buffer: Buffer.from(base64Str, 'base64') };
 }
 
 function detectImageMime(buffer: Buffer): string | null {

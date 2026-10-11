@@ -73,6 +73,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     let mounted = true;
+    let currentUserId: string | undefined = undefined;
 
     const loadChatMessages = async () => {
       await ensureMessagesHydrated();
@@ -84,6 +85,11 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'TOKEN_REFRESHED') return;
+      const newUserId = session?.user?.id;
+      if (newUserId === currentUserId && hydratedRef.current) {
+        return;
+      }
+      currentUserId = newUserId;
       loadRequestRef.current += 1;
       hydratedRef.current = false;
       hydrationPromiseRef.current = null;

@@ -197,14 +197,14 @@ export function App() {
       if (!isActive) return;
       const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Local Time';
       const currentPreferences = notificationPreferencesRef.current;
-      const updatedPreferences = { ...currentPreferences, timezone: currentTimezone };
-      notificationPreferencesRef.current = updatedPreferences;
-      void (async () => {
-        if (currentPreferences.timezone !== currentTimezone) {
+      if (currentPreferences.timezone !== currentTimezone) {
+        const updatedPreferences = { ...currentPreferences, timezone: currentTimezone };
+        notificationPreferencesRef.current = updatedPreferences;
+        void (async () => {
           await updateNotificationPreferencesRef.current({ timezone: currentTimezone });
-        }
-        await notificationService.syncNotificationSchedule(updatedPreferences);
-      })().catch((error) => console.warn('[App] Could not reconcile notifications on resume:', error));
+          await notificationService.syncNotificationSchedule(updatedPreferences);
+        })().catch((error) => console.warn('[App] Could not reconcile notifications on resume:', error));
+      }
     }).then((handle) => {
       if (mounted) appStateListener = handle;
       else void handle.remove();

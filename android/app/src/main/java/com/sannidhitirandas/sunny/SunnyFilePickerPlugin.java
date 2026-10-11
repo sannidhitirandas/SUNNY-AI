@@ -5,7 +5,6 @@ import android.content.ClipData;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.util.Base64;
 import android.util.Log;
@@ -32,26 +31,58 @@ public class SunnyFilePickerPlugin extends Plugin {
     @PluginMethod
     public void pickFile(PluginCall call) {
         Log.d("SunnyFilePicker", "pickFile() called");
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("*/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        startActivityForResult(call, intent, "handlePickerResult");
+        try {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("*/*");
+            String[] mimeTypes = {
+                "image/*",
+                "application/pdf",
+                "application/msword",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "text/plain",
+                "text/csv",
+                "text/markdown",
+                "application/json",
+                "application/vnd.ms-excel",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            };
+            intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+
+            Intent chooser = Intent.createChooser(intent, "Select Attachment");
+            startActivityForResult(call, chooser, "handlePickerResult");
+        } catch (Exception e) {
+            Log.e("SunnyFilePicker", "Failed to launch file picker intent", e);
+            call.reject("Unable to open Android file picker: " + e.getMessage());
+        }
     }
 
     @ActivityCallback
-    private void handlePickerResult(PluginCall call, ActivityResult result) {
+    public void handlePickerResult(PluginCall call, ActivityResult result) {
         Log.d("SunnyFilePicker", "handlePickerResult() called; call=" + (call != null) + ", result=" + (result != null));
-        if (call == null || result == null ||
-                result.getResultCode() != Activity.RESULT_OK ||
-                result.getData() == null) {
-            if (call != null) {
-                call.resolve(new JSObject().put("files", new JSArray()));
-            }
+        if (call == null) {
+            Log.e("SunnyFilePicker", "Picker callback received no PluginCall");
+            return;
+        }
+        if (result == null) {
+            call.reject("Android did not return a file picker result. Please try again.");
+            return;
+        }
+        if (result.getResultCode() != Activity.RESULT_OK) {
+            // A canceled picker is normal and should not be shown as an error.
+            call.resolve(new JSObject().put("files", new JSArray()));
+            return;
+        }
+        if (result.getData() == null) {
+            Log.e("SunnyFilePicker", "Picker returned RESULT_OK but no Intent data");
+            call.reject("Android opened the picker but returned no file. Please try again.");
             return;
         }
 
         Intent dataIntent = result.getData();
+        Log.d("SunnyFilePicker", "Picker data: clipData=" + (dataIntent.getClipData() != null)
+                + ", dataUri=" + (dataIntent.getData() != null));
         JSArray files = new JSArray();
 
         try {
@@ -77,6 +108,10 @@ public class SunnyFilePickerPlugin extends Plugin {
             JSObject response = new JSObject();
             response.put("files", files);
             Log.d("SunnyFilePicker", "pickFile resolved with " + files.length() + " files");
+            if (files.length() == 0) {
+                call.reject("Android returned no readable file. Try selecting a file from Downloads or another folder.");
+                return;
+            }
             call.resolve(response);
         } catch (Exception e) {
             Log.e("SunnyFilePicker", "picker callback failed", e);
@@ -93,6 +128,7 @@ public class SunnyFilePickerPlugin extends Plugin {
     }
 
     private JSObject processUri(Uri uri) throws Exception {
+        Log.d("SunnyFilePicker", "processUri: uri=" + uri);
         String name = getDisplayName(uri);
         String mimeType = getMimeType(uri, name);
         long size = getSize(uri);
@@ -102,6 +138,9 @@ public class SunnyFilePickerPlugin extends Plugin {
         }
 
         byte[] fileBytes = readFileBytes(uri);
+        if (fileBytes.length == 0) {
+            throw new IllegalStateException("Selected file is empty");
+        }
         if (fileBytes.length > MAX_FILE_SIZE) {
             throw new IllegalStateException("File is larger than 50 MB");
         }
@@ -114,6 +153,7 @@ public class SunnyFilePickerPlugin extends Plugin {
         file.put("size", size > 0 ? size : fileBytes.length);
         file.put("data", base64Data);
         file.put("path", "");
+        Log.d("SunnyFilePicker", "processUri succeeded for name=" + name + ", mimeType=" + mimeType + ", bytes=" + fileBytes.length);
         return file;
     }
 
@@ -192,11 +232,6 @@ public class SunnyFilePickerPlugin extends Plugin {
                 String mapped = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
                 return mapped == null ? "application/octet-stream" : mapped;
         }
-    }
-
-    @Override
-    protected Bundle saveInstanceState() {
-        return new Bundle();
     }
 
     private byte[] readFileBytes(Uri uri) throws Exception {
