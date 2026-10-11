@@ -281,7 +281,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
           className={`mb-0.5 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full transition-all duration-200 active:scale-95 ${
             isSendDisabled
               ? 'bg-white/5 text-[#9B8AB9] cursor-not-allowed opacity-40'
-              : 'bg-[#FFD84D] text-[#100B22] shadow-[0_3px_12px_rgba(255,216,77,0.22)] hover:bg-[#FFE477]'
+              : 'bg-[#302149] text-[#FFD84D] border border-[#604477]/70 hover:bg-[#3A2853] hover:border-[#8C75B5]/70'
           }`}
           aria-label="Send message"
         >
