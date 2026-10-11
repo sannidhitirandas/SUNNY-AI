@@ -305,7 +305,7 @@ export function App() {
 
   return (
     <div className="min-h-screen bg-[#100B22] flex flex-col justify-between relative selection:bg-[#FFD84D] selection:text-[#100B22]">
-      <main className="flex-1 flex flex-col overflow-hidden pb-20 lg:pb-6">
+      <main className="flex-1 flex flex-col overflow-hidden pb-24 lg:pb-24">
         {activeTab === 'home' && (
           <HomeScreen
             onNavigateToTab={(tab) => handleTabChange(tab)}
