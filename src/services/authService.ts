@@ -88,6 +88,36 @@ export const authService = {
     return mapSupabaseUser(user);
   },
 
+  async signInWithGoogle(): Promise<{ success: boolean; error?: string }> {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: getAuthRedirectUrl(),
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'select_account',
+          },
+        },
+      });
+
+      if (error) {
+        return {
+          success: false,
+          error: getFriendlyAuthError(error, 'Unable to continue with Google. Please try again.'),
+        };
+      }
+
+      // Supabase redirects to Google; the authenticated session is restored by AuthContext.
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: getFriendlyAuthError(error, 'Unable to continue with Google. Please try again.'),
+      };
+    }
+  },
+
   async login(
     email: string,
     password: string
