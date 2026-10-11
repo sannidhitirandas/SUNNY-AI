@@ -305,7 +305,7 @@ export function App() {
 
   return (
     <div className="min-h-screen bg-[#100B22] flex flex-col justify-between relative selection:bg-[#FFD84D] selection:text-[#100B22]">
-      <main className="flex-1 flex flex-col overflow-hidden">
+      <main className="flex-1 flex flex-col overflow-hidden pb-20 lg:pb-6">
         {activeTab === 'home' && (
           <HomeScreen
             onNavigateToTab={(tab) => handleTabChange(tab)}
@@ -340,7 +340,7 @@ export function App() {
         )}
       </main>
 
-      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-[#17102C]/95 backdrop-blur-md border-t border-[#392858] max-w-xl mx-auto w-full">
+      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-[#17102C]/95 backdrop-blur-md border-t border-[#392858] max-w-xl mx-auto w-full pb-[env(safe-area-inset-bottom)] lg:bottom-4 lg:rounded-2xl lg:border lg:shadow-[0_12px_40px_rgba(0,0,0,0.35)]">
         <div className="flex items-center justify-around h-16 px-2">
           <button
             type="button"
