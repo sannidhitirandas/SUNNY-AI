@@ -378,6 +378,8 @@ export function App() {
             onNavigateToSafety={() =>
               setActiveSubScreen('safety')
             }
+            onFocus={() => setIsKeyboardVisible(true)}
+            onBlur={() => setIsKeyboardVisible(false)}
           />
         )}
 

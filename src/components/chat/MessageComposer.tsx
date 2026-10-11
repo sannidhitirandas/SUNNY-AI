@@ -25,6 +25,8 @@ interface MessageComposerProps {
   onSend: (text: string, files: File[]) => Promise<void> | void;
   disabled?: boolean;
   placeholder?: string;
+  onFocus?: () => void;
+  onBlur?: () => void;
 }
 
 const formatSize = (bytes: number) => {
@@ -49,6 +51,8 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
   onSend,
   disabled = false,
   placeholder = "Tell Sunny what's on your mind...",
+  onFocus,
+  onBlur,
 }) => {
   const [text, setText] = useState('');
   const [files, setFiles] = useState<File[]>([]);
@@ -268,6 +272,8 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
           value={text}
           onChange={handleInput}
           onKeyDown={handleKeyDown}
+          onFocus={onFocus}
+          onBlur={onBlur}
           placeholder={placeholder}
           disabled={disabled || preparingAttachment || sending}
           rows={1}

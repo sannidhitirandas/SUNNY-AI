@@ -13,11 +13,15 @@ import { Bookmark, HeartHandshake, Trash2, X, AlertTriangle } from 'lucide-react
 interface ChatScreenProps {
   onNavigateToTab: (tab: 'home' | 'chat' | 'memories' | 'settings') => void;
   onNavigateToSafety?: () => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
 }
 
 export const ChatScreen: React.FC<ChatScreenProps> = ({
   onNavigateToTab,
   onNavigateToSafety,
+  onFocus,
+  onBlur,
 }) => {
   const { messages, isThinking, lastError, sendMessage, retryMessage, clearChat } = useChat();
   const { preferences } = usePreferences();
@@ -98,7 +102,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
       </div>
 
       {/* Message Composer */}
-      <MessageComposer onSend={sendMessage} disabled={isThinking} />
+      <MessageComposer onSend={sendMessage} disabled={isThinking} onFocus={onFocus} onBlur={onBlur} />
 
       {/* Options Menu Modal */}
       {optionsVisible && (
