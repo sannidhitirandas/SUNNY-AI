@@ -56,7 +56,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   const formattedTone = preferences.preferredTone.charAt(0).toUpperCase() + preferences.preferredTone.slice(1);
 
   return (
-    <div className="flex-1 flex flex-col h-full max-w-xl mx-auto w-full bg-[#100B22] relative pb-16 sm:pb-20">
+    <div className="flex-1 flex flex-col h-full max-w-5xl mx-auto w-full bg-[#100B22] relative pb-16 sm:pb-20 px-0 sm:px-3 lg:px-6">
       <ChatHeader
         onOptionsPress={() => setOptionsVisible(true)}
         preferredTone={formattedTone}
