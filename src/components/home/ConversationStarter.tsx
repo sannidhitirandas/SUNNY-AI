@@ -1,7 +1,7 @@
 import React from 'react';
 import { StarterIntent } from '@/types/chat';
 import { AppCard } from '../ui/AppCard';
-import { Heart, Smile, Sun, MessageCircle, ChevronRight } from 'lucide-react';
+import { Heart, Smile, Sun, MessageCircle, ArrowUpRight } from 'lucide-react';
 
 interface ConversationStarterProps {
   onSelectIntent: (intent: StarterIntent) => void;
@@ -48,31 +48,31 @@ const STARTER_OPTIONS: StarterOption[] = [
 
 export const ConversationStarter: React.FC<ConversationStarterProps> = ({ onSelectIntent }) => {
   return (
-    <div className="my-5">
-      <h2 className="text-base font-bold text-white mb-3">
-        What's the vibe today?
+    <div className="my-6 sm:my-8">
+      <h2 className="text-lg font-medium tracking-tight text-white mb-3 sm:text-xl">
+        What do you need tonight?
       </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+      <div className="grid grid-cols-2 gap-2.5 sm:gap-3 lg:gap-4">
         {STARTER_OPTIONS.map((item) => (
           <AppCard
             key={item.intent}
             onPress={() => onSelectIntent(item.intent)}
-            className="p-3.5 flex items-center justify-between"
+            className="group min-h-[82px] rounded-2xl border border-[#4A345F]/70 bg-[#211633]/90 p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#FFD84D]/35 hover:bg-[#2A1B40] sm:min-h-[104px] sm:p-4"
           >
-            <div className="flex items-center gap-3.5 flex-1 min-w-0">
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${item.iconBg}`}>
+            <div className="flex min-w-0 items-start gap-2.5 sm:items-center sm:gap-3">
+              <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 sm:w-10 sm:h-10 ${item.iconBg}`}>
                 {item.icon}
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="text-sm font-semibold text-white truncate">
+                <h3 className="text-xs font-semibold leading-snug text-white line-clamp-2 sm:text-sm">
                   {item.title}
                 </h3>
-                <p className="text-xs text-[#C6B8E5] truncate">
+                <p className="mt-1 hidden text-xs leading-relaxed text-[#B6A6CC] sm:block">
                   {item.description}
                 </p>
               </div>
             </div>
-            <ChevronRight size={18} className="text-[#9B8AB9] shrink-0 ml-2" />
+            <ArrowUpRight size={16} className="ml-auto hidden shrink-0 text-[#9B8AB9] transition-colors group-hover:text-[#FFD84D] sm:block" />
           </AppCard>
         ))}
       </div>
