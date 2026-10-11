@@ -196,14 +196,14 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
     setText('');
     setFiles([]);
     setFileError(null);
-    setPreparing(true);
+    setSending(true);
     try {
       await onSend(content, attachments);
     } catch {
       setText(content);
       setFiles(attachments);
     } finally {
-      setPreparing(false);
+      setSending(false);
       if (textareaRef.current) textareaRef.current.style.height = 'auto';
     }
   };
