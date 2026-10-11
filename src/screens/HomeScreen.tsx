@@ -1,56 +1,76 @@
+tsx
 import React from 'react';
+
 import { useAuth } from '@/context/AuthContext';
 import { usePreferences } from '@/context/PreferencesContext';
 import { useChat } from '@/context/ChatContext';
 import type { ChatEntrySource } from '@/lib/chatEntry';
 import { StarterIntent } from '@/types/chat';
-import { SunnyLogo } from '@/components/brand/SunnyLogo';
 
+import { SunnyLogo } from '@/components/brand/SunnyLogo';
 import { GreetingCard } from '@/components/home/GreetingCard';
 import { ConversationStarter } from '@/components/home/ConversationStarter';
 import { DailySunshineCard } from '@/components/home/DailySunshineCard';
 import { RecentConversations } from '@/components/home/RecentConversations';
+
 import { Settings } from 'lucide-react';
 
 interface HomeScreenProps {
-  onNavigateToTab: (tab: 'home' | 'chat' | 'memories' | 'settings') => void;
+  onNavigateToTab: (
+    tab: 'home' | 'chat' | 'memories' | 'settings'
+  ) => void;
   onEnterChat: (entry: ChatEntrySource) => Promise<void>;
 }
 
-export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigateToTab, onEnterChat }) => {
+export const HomeScreen: React.FC<HomeScreenProps> = ({
+  onNavigateToTab,
+  onEnterChat,
+}) => {
   const { user } = useAuth();
   const { preferences } = usePreferences();
   const { messages } = useChat();
 
-  const displayName = preferences.preferredName || user?.displayName || 'sunshine';
+  const displayName =
+    preferences.preferredName || user?.displayName || 'sunshine';
 
   const handleTalkToSunny = () => {
     void onEnterChat({ source: 'normal' });
   };
 
   const handleSelectIntent = async (intent: StarterIntent) => {
-    await onEnterChat({ source: 'vibe', selectedVibe: intent });
+    await onEnterChat({
+      source: 'vibe',
+      selectedVibe: intent,
+    });
   };
 
-  const lastMessage = messages.length > 0 ? messages[messages.length - 1] : undefined;
+  const lastMessage =
+    messages.length > 0 ? messages[messages.length - 1] : undefined;
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-xl mx-auto w-full pb-24">
+    <div className="flex-1 min-h-0 overflow-y-auto overscroll-y-contain px-4 pt-3 pb-4 sm:px-6 w-full max-w-xl mx-auto">
       {/* Top App Header */}
       <div className="flex items-center justify-between py-2 mb-3">
         <div className="flex items-center gap-2.5">
           <SunnyLogo size="small" />
+
           <div>
             <div className="flex items-center gap-1.5">
-              <h1 className="text-lg font-bold text-white tracking-tight">Sunny</h1>
-              <span className="text-sm">☀️</span>
+              <h1 className="text-lg font-bold text-white tracking-tight">
+                Sunny
+              </h1>
+              <span className="text-sm" aria-hidden="true">
+                ☀️
+              </span>
             </div>
-            <p className="text-[11px] text-[#C6B8E5]">Your little corner of sunshine</p>
+
+            <p className="text-[11px] text-[#C6B8E5]">
+              Your little corner of sunshine
+            </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-
           <button
             type="button"
             onClick={() => onNavigateToTab('settings')}
