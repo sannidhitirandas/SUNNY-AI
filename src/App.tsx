@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { App as CapacitorApp } from '@capacitor/app';
 import { Capacitor, type PluginListenerHandle } from '@capacitor/core';
+import { Keyboard } from '@capacitor/keyboard';
 
 import { useAuth } from '@/context/AuthContext';
 import { usePreferences } from '@/context/PreferencesContext';
@@ -57,7 +58,7 @@ export function App() {
 
   const [showSplash, setShowSplash] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>('home');
-  const [keyboardVisible, setKeyboardVisible] = useState(false);
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [activeSubScreen, setActiveSubScreen] =
     useState<SubScreen>('none');
   const [authView, setAuthView] =
@@ -84,41 +85,8 @@ export function App() {
     screenBackHandlerRef.current = handler;
   }, []);
 
-  useEffect(() => {
-    // Capture the app's full available height before the Android keyboard opens.
-    // Android WebView can resize innerHeight and visualViewport together, so
-    // comparing those two values (or screen.height) is unreliable.
-    const viewport = window.visualViewport;
-    let fullHeight = Math.max(window.innerHeight, viewport?.height ?? 0);
-
-    const updateKeyboardVisibility = () => {
-      const visibleHeight = Math.min(window.innerHeight, viewport?.height ?? window.innerHeight);
-      const keyboardHeight = fullHeight - visibleHeight;
-      setKeyboardVisible(keyboardHeight > 120);
-    };
-
-    const refreshFullHeightWhenKeyboardClosed = () => {
-      const visibleHeight = Math.min(window.innerHeight, viewport?.height ?? window.innerHeight);
-      if (visibleHeight > fullHeight - 120) {
-        fullHeight = Math.max(window.innerHeight, viewport?.height ?? 0);
-        setKeyboardVisible(false);
-      } else {
-        updateKeyboardVisibility();
-      }
-    };
-
-    window.addEventListener('resize', refreshFullHeightWhenKeyboardClosed);
-    viewport?.addEventListener('resize', refreshFullHeightWhenKeyboardClosed);
-    viewport?.addEventListener('scroll', updateKeyboardVisibility);
-
-    return () => {
-      window.removeEventListener('resize', refreshFullHeightWhenKeyboardClosed);
-      viewport?.removeEventListener('resize', refreshFullHeightWhenKeyboardClosed);
-      viewport?.removeEventListener('scroll', updateKeyboardVisibility);
-    };
-  }, []);
-
   const handleTabChange = (tab: Tab) => {
+    setIsKeyboardVisible(false);
     if (tab !== 'chat') {
       if (preferences.audioPreferences.musicEnabled) {
         void audioService.playNonChatMusic(preferences.audioPreferences.selectedBackgroundMusic);
@@ -132,6 +100,56 @@ export function App() {
     }
     setActiveTab(tab);
   };
+
+  useEffect(() => {
+    if (activeTab !== 'chat') {
+      setIsKeyboardVisible(false);
+      return;
+    }
+
+    const handleResize = () => {
+      if (window.visualViewport) {
+        const isKbOpen = window.visualViewport.height < window.innerHeight - 150;
+        setIsKeyboardVisible(isKbOpen);
+      }
+    };
+    window.visualViewport?.addEventListener('resize', handleResize);
+
+    if (!Capacitor.isNativePlatform()) {
+      return () => {
+        window.visualViewport?.removeEventListener('resize', handleResize);
+      };
+    }
+
+    let mounted = true;
+    let showSub: any;
+    let hideSub: any;
+
+    Keyboard.addListener('keyboardWillShow', () => {
+      if (mounted && activeTab === 'chat') {
+        setIsKeyboardVisible(true);
+      }
+    }).then((sub) => {
+      if (mounted) showSub = sub;
+      else sub.remove();
+    });
+
+    Keyboard.addListener('keyboardWillHide', () => {
+      if (mounted) {
+        setIsKeyboardVisible(false);
+      }
+    }).then((sub) => {
+      if (mounted) hideSub = sub;
+      else sub.remove();
+    });
+
+    return () => {
+      mounted = false;
+      window.visualViewport?.removeEventListener('resize', handleResize);
+      showSub?.remove?.();
+      hideSub?.remove?.();
+    };
+  }, [activeTab]);
 
   const handleEnterChat = async (entry: Parameters<typeof enterChat>[0]) => {
     await enterChat(entry);
@@ -229,7 +247,11 @@ export function App() {
     });
 
     void CapacitorApp.addListener('appStateChange', ({ isActive }) => {
-      if (!isActive) return;
+      if (!isActive) {
+        setIsKeyboardVisible(false);
+        return;
+      }
+      setIsKeyboardVisible(false);
       const currentTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Local Time';
       const currentPreferences = notificationPreferencesRef.current;
       if (currentPreferences.timezone !== currentTimezone) {
@@ -338,9 +360,11 @@ export function App() {
     );
   }
 
+  const hideNavBar = activeTab === 'chat' && isKeyboardVisible;
+
   return (
     <div className="min-h-screen bg-[#100B22] flex flex-col justify-between relative selection:bg-[#FFD84D] selection:text-[#100B22]">
-      <main className="flex-1 flex flex-col overflow-hidden pb-24 lg:pb-24">
+      <main className="flex-1 flex flex-col overflow-hidden">
         {activeTab === 'home' && (
           <HomeScreen
             onNavigateToTab={(tab) => handleTabChange(tab)}
@@ -375,8 +399,9 @@ export function App() {
         )}
       </main>
 
-      {!(activeTab === 'chat' && keyboardVisible) && (
-      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-[#17102C]/95 backdrop-blur-md border-t border-[#392858] max-w-xl mx-auto w-full pb-[env(safe-area-inset-bottom)] lg:bottom-4 lg:rounded-2xl lg:border lg:shadow-[0_12px_40px_rgba(0,0,0,0.35)]">
+      <nav className={`fixed bottom-0 left-0 right-0 z-40 bg-[#17102C]/95 backdrop-blur-md border-t border-[#392858] max-w-xl mx-auto w-full pb-[env(safe-area-inset-bottom)] lg:bottom-4 lg:rounded-2xl lg:border lg:shadow-[0_12px_40px_rgba(0,0,0,0.35)] transition-transform duration-200 ease-in-out ${
+        hideNavBar ? 'translate-y-full opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'
+      }`}>
         <div className="flex items-center justify-around h-16 px-2">
           <button
             type="button"
@@ -459,7 +484,6 @@ export function App() {
           </button>
         </div>
       </nav>
-      )}
     </div>
   );
 }
