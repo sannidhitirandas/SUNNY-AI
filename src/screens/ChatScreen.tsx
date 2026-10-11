@@ -13,11 +13,15 @@ import { Bookmark, HeartHandshake, Trash2, X, AlertTriangle } from 'lucide-react
 interface ChatScreenProps {
   onNavigateToTab: (tab: 'home' | 'chat' | 'memories' | 'settings') => void;
   onNavigateToSafety?: () => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
 }
 
 export const ChatScreen: React.FC<ChatScreenProps> = ({
   onNavigateToTab,
   onNavigateToSafety,
+  onFocus,
+  onBlur,
 }) => {
   const { messages, isThinking, lastError, sendMessage, retryMessage, clearChat } = useChat();
   const { preferences } = usePreferences();
@@ -56,7 +60,8 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   const formattedTone = preferences.preferredTone.charAt(0).toUpperCase() + preferences.preferredTone.slice(1);
 
   return (
-    <div className="flex-1 min-h-0 flex flex-col h-full max-w-xl mx-auto w-full bg-[#100B22] relative pb-0">
+<div className="relative mx-auto flex h-full min-h-0 w-full max-w-5xl flex-1 flex-col bg-[#100B22] px-0 pb-16 sm:px-3 sm:pb-16 lg:rounded-3xl lg:border lg:border-[#392858]/70 lg:pb-8 lg:shadow-[0_24px_80px_rgba(0,0,0,0.18)]">
+
       <ChatHeader
         onOptionsPress={() => setOptionsVisible(true)}
         preferredTone={formattedTone}
@@ -83,7 +88,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
       )}
 
       {/* Messages Scroll Area */}
-      <div className="flex-1 overflow-y-auto py-3 space-y-1">
+      <div className="min-h-0 flex-1 space-y-1 overflow-y-auto bg-[radial-gradient(ellipse_at_top,rgba(48,33,73,0.18),transparent_55%)] py-4 sm:py-6">
         {messages.map((item) => (
           <MessageBubble
             key={item.id}
@@ -98,7 +103,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
       </div>
 
       {/* Message Composer */}
-      <MessageComposer onSend={sendMessage} disabled={isThinking} />
+      <MessageComposer onSend={sendMessage} disabled={isThinking} onFocus={onFocus} onBlur={onBlur} />
 
       {/* Options Menu Modal */}
       {optionsVisible && (

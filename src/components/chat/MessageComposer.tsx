@@ -25,6 +25,8 @@ interface MessageComposerProps {
   onSend: (text: string, files: File[]) => Promise<void> | void;
   disabled?: boolean;
   placeholder?: string;
+  onFocus?: () => void;
+  onBlur?: () => void;
 }
 
 const formatSize = (bytes: number) => {
@@ -49,11 +51,14 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
   onSend,
   disabled = false,
   placeholder = "Tell Sunny what's on your mind...",
+  onFocus,
+  onBlur,
 }) => {
   const [text, setText] = useState('');
   const [files, setFiles] = useState<File[]>([]);
   const [fileError, setFileError] = useState<string | null>(null);
-  const [preparing, setPreparing] = useState(false);
+  const [preparingAttachment, setPreparingAttachment] = useState(false);
+  const [sending, setSending] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const addFiles = (selected: File[]) => {
@@ -102,10 +107,10 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
   };
 
   const handleAttach = async () => {
-    if (disabled || preparing || files.length >= MAX_FILES) return;
+    if (disabled || preparingAttachment || sending || files.length >= MAX_FILES) return;
 
     setFileError(null);
-    setPreparing(true);
+    setPreparingAttachment(true);
 
     try {
       if (Capacitor.isNativePlatform()) {
@@ -179,7 +184,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
         setFileError(`Could not attach file: ${message}`);
       }
     } finally {
-      setPreparing(false);
+      setPreparingAttachment(false);
     }
   };
 
@@ -189,20 +194,20 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
   };
 
   const handleSend = async () => {
-    if ((!text.trim() && files.length === 0) || disabled || preparing) return;
+    if ((!text.trim() && files.length === 0) || disabled || preparingAttachment || sending) return;
     const content = text.trim();
     const attachments = [...files];
     setText('');
     setFiles([]);
     setFileError(null);
-    setPreparing(true);
+    setSending(true);
     try {
       await onSend(content, attachments);
     } catch {
       setText(content);
       setFiles(attachments);
     } finally {
-      setPreparing(false);
+      setSending(false);
       if (textareaRef.current) textareaRef.current.style.height = 'auto';
     }
   };
@@ -221,27 +226,28 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
   };
 
   useEffect(() => {
-    if (!disabled && !preparing && textareaRef.current) textareaRef.current.focus();
-  }, [disabled, preparing]);
+    if (!disabled && !preparingAttachment && !sending && textareaRef.current) textareaRef.current.focus();
+  }, [disabled, preparingAttachment, sending]);
 
-  const isSendDisabled = disabled || preparing || (!text.trim() && files.length === 0);
+  const isSendDisabled = disabled || preparingAttachment || sending || (!text.trim() && files.length === 0);
 
   return (
-    <div className="p-3 bg-[#17102C] border-t border-[#392858]">
+    <div className="border-t border-white/[0.04] bg-gradient-to-t from-[#100B22] via-[#100B22]/[0.98] to-[#100B22]/90 px-3 pb-3 pt-4 sm:px-5">
+      <div className="mx-auto w-full max-w-3xl">
       {fileError && (
-        <div className="mb-2 px-2 text-xs text-[#FF8D9A]" role="alert">{fileError}</div>
+        <div className="mb-2 px-3 text-xs text-[#FF9DA8]" role="alert">{fileError}</div>
       )}
 
       {files.length > 0 && (
-        <div className="mb-2 flex flex-wrap gap-2" aria-label="Attached files">
+        <div className="mb-3 flex flex-wrap gap-2 px-1" aria-label="Attached files">
           {files.map((file, index) => (
-            <div key={`${file.name}-${file.size}-${index}`} className="flex items-center gap-2 max-w-full rounded-xl bg-[#21163A] border border-[#392858] px-2.5 py-2">
+            <div key={`${file.name}-${file.size}-${index}`} className="flex max-w-full items-center gap-2 rounded-2xl border border-[#604477]/45 bg-[#21163A]/95 px-3 py-2 shadow-sm">
               <FileText size={15} className="text-[#FFD84D] shrink-0" />
               <div className="min-w-0">
                 <p className="text-xs text-white truncate max-w-[180px]">{file.name}</p>
                 <p className="text-[10px] text-[#9B8AB9]">{formatSize(file.size)}</p>
               </div>
-              <button type="button" onClick={() => removeFile(index)} disabled={preparing} className="p-1 text-[#9B8AB9] hover:text-white cursor-pointer" aria-label={`Remove ${file.name}`}>
+              <button type="button" onClick={() => removeFile(index)} disabled={preparingAttachment || sending} className="p-1 text-[#9B8AB9] hover:text-white cursor-pointer" aria-label={`Remove ${file.name}`}>
                 <X size={14} />
               </button>
             </div>
@@ -249,12 +255,12 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
         </div>
       )}
 
-      <div className="flex items-end gap-2 bg-[#1B1430] border border-[#392858] focus-within:border-[#FFD84D] rounded-2xl px-2.5 py-1.5 transition-colors">
+      <div className="flex items-end gap-2 rounded-[26px] border border-[#604477]/55 bg-[#1B1430] px-2.5 py-2 shadow-[0_8px_30px_rgba(0,0,0,0.18)] transition-colors duration-200 focus-within:border-[#604477]/55 focus-within:shadow-[0_8px_30px_rgba(0,0,0,0.18)]">
         <button
           type="button"
           onClick={() => void handleAttach()}
-          disabled={disabled || preparing || files.length >= MAX_FILES}
-          className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 text-[#C6B8E5] hover:text-[#FFD84D] hover:bg-[#302149] disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+          disabled={disabled || preparingAttachment || sending || files.length >= MAX_FILES}
+          className="mb-0.5 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full text-[#C6B8E5] transition-colors duration-200 hover:bg-[#302149] hover:text-[#FFD84D] disabled:cursor-not-allowed disabled:opacity-40"
           aria-label="Attach files"
           title="Attach files"
         >
@@ -266,28 +272,31 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
           value={text}
           onChange={handleInput}
           onKeyDown={handleKeyDown}
+          onFocus={onFocus}
+          onBlur={onBlur}
           placeholder={placeholder}
-          disabled={disabled || preparing}
+          disabled={disabled || preparingAttachment || sending}
           rows={1}
           maxLength={1000}
-          className="flex-1 bg-transparent text-white placeholder-[#9B8AB9] text-sm focus:outline-none resize-none py-2 max-h-[120px] leading-relaxed"
+          className="min-h-10 max-h-[120px] flex-1 resize-none bg-transparent px-1 py-2.5 text-[14px] leading-5 text-white outline-none placeholder:text-[#9B8AB9]/90 focus:outline-none disabled:opacity-60"
         />
 
         <button
           type="button"
           onClick={() => void handleSend()}
           disabled={isSendDisabled}
-          className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 mb-0.5 transition-all cursor-pointer ${
+          className={`mb-0.5 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full transition-all duration-200 active:scale-95 ${
             isSendDisabled
               ? 'bg-white/5 text-[#9B8AB9] cursor-not-allowed opacity-40'
-              : 'bg-[#FFD84D] hover:bg-[#F6BD45] text-[#100B22] shadow-[0_2px_8px_rgba(255,216,77,0.3)] active:scale-95'
+              : 'bg-[#302149] text-[#FFD84D] border border-[#604477]/70 hover:bg-[#3A2853] hover:border-[#8C75B5]/70'
           }`}
           aria-label="Send message"
         >
           <ArrowUp size={18} strokeWidth={2.5} />
         </button>
       </div>
-      {preparing && <p className="mt-1.5 text-[10px] text-[#9B8AB9]">Preparing attachment…</p>}
+      {preparingAttachment && <p className="mt-2 px-3 text-[11px] text-[#B6A6CC]">Preparing attachment…</p>}
+      </div>
     </div>
   );
 };

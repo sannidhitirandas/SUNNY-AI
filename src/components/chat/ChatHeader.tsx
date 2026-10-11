@@ -1,7 +1,7 @@
-import { ArrowLeft, MoreVertical, Sparkles } from 'lucide-react';
+import { ArrowLeft, MoreVertical, Sparkles, Sun } from 'lucide-react';
 import React from 'react';
 import { SunnyLogo } from '../brand/SunnyLogo';
-import { Badge } from '../ui/Badge';
+
 
 interface ChatHeaderProps {
   onBack?: () => void;
@@ -15,7 +15,7 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
   preferredTone = 'Adaptive',
 }) => {
   return (
-    <div className="flex items-center justify-between px-4 py-3 bg-[#17102C] border-b border-[#392858]">
+    <div className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-[#392858]/80 bg-[#17102C]/95 px-4 py-3 backdrop-blur-xl sm:px-6 sm:py-4 lg:rounded-t-3xl lg:border-x">
       <div className="flex items-center gap-3">
         {onBack && (
           <button
@@ -27,14 +27,14 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
             <ArrowLeft size={20} />
           </button>
         )}
-        <SunnyLogo size="small" />
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-[#FFD84D]/20 bg-[#FFD84D]/10 text-[#FFD84D]"><Sun size={21} /></div>
         <div>
-          <h2 className="text-sm font-bold text-white flex items-center gap-1.5">
+          <h2 className="flex items-center gap-1.5 text-sm font-semibold tracking-tight text-white sm:text-base">
             Sunny <span className="text-xs">☀️</span>
           </h2>
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-[#A8D9A0] inline-block animate-pulse" />
-            <span className="text-[11px] text-[#C6B8E5] font-medium flex items-center gap-1">
+            <span className="flex items-center gap-1 text-[11px] font-medium text-[#C6B8E5] sm:text-xs">
               <Sparkles size={11} className="text-[#FFD84D]" />
               <span>{preferredTone} • Here for you</span>
             </span>
@@ -43,7 +43,7 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
       </div>
 
       <div className="flex items-center gap-2">
-        <Badge label="AI Active" variant="green" />
+        <span className="hidden items-center gap-1.5 rounded-full border border-[#A8D9A0]/20 bg-[#A8D9A0]/10 px-2.5 py-1 text-[10px] font-medium text-[#A8D9A0] sm:inline-flex"><span className="h-1.5 w-1.5 rounded-full bg-[#A8D9A0]" /> Here for you</span>
         <button
           type="button"
           onClick={onOptionsPress}

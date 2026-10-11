@@ -1,4 +1,3 @@
-tsx
 import React from 'react';
 
 import { useAuth } from '@/context/AuthContext';
@@ -48,7 +47,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     messages.length > 0 ? messages[messages.length - 1] : undefined;
 
   return (
-    <div className="flex-1 min-h-0 overflow-y-auto overscroll-y-contain px-4 pt-3 pb-4 sm:px-6 w-full max-w-xl mx-auto">
+<div className="flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-7xl mx-auto w-full pb-24 lg:px-10 xl:px-14">
       {/* Top App Header */}
       <div className="flex items-center justify-between py-2 mb-3">
         <div className="flex items-center gap-2.5">

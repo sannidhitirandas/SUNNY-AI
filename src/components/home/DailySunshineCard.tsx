@@ -19,9 +19,9 @@ export const DailySunshineCard: React.FC = () => {
   };
 
   return (
-    <AppCard className="p-4 my-3 bg-[#17102C] border-[#FFD84D]/25">
+    <AppCard className="my-4 rounded-2xl border border-[#4A345F]/70 bg-[#211633]/90 p-4 sm:p-5">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-semibold text-[#FFD84D]">
+        <span className="text-[10px] font-bold uppercase tracking-wider text-[#FFD84D]">
           Little reminder 💛
         </span>
         <button
@@ -33,7 +33,7 @@ export const DailySunshineCard: React.FC = () => {
           <span>Another ☀️</span>
         </button>
       </div>
-      <p className="text-sm italic text-white leading-relaxed">
+      <p className="font-serif text-base leading-relaxed text-[#F5EDFF] sm:text-lg">
         "{DAILY_REMINDERS[index]}"
       </p>
     </AppCard>
