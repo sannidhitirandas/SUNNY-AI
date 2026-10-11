@@ -204,3 +204,90 @@ body {
     transform: none;
   }
 }
+
+
+/* Responsive visual polish — shared by the web app and Capacitor Android. */
+:root {
+  --sunny-radius-card: 1.25rem;
+  --sunny-shadow-soft: 0 16px 40px rgb(0 0 0 / 0.16);
+}
+
+html {
+  min-height: 100%;
+  background: var(--sunny-page-background, #100B22);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overscroll-behavior-y: contain;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+[role="button"]:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline-offset: 3px;
+}
+
+::selection {
+  background: rgb(255 216 77 / 0.32);
+  color: inherit;
+}
+
+/* A little depth and clear interaction feedback, without changing behavior. */
+[class*="rounded-2xl"][class*="border-[#392858]"],
+[class*="rounded-3xl"][class*="border-[#392858]"] {
+  transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  [class*="cursor-pointer"][class*="rounded-2xl"]:hover {
+    box-shadow: var(--sunny-shadow-soft);
+  }
+}
+
+@media (max-width: 639px) {
+  body {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: max(16px, 1em);
+  }
+}
+
+@media (min-width: 768px) {
+  #root {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
