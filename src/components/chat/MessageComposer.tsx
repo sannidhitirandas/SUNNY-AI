@@ -250,7 +250,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
         </div>
       )}
 
-      <div className="flex items-end gap-2 rounded-[26px] border border-[#604477]/55 bg-[#1B1430] px-2.5 py-2 shadow-[0_8px_30px_rgba(0,0,0,0.18)] transition-all duration-200 focus-within:border-[#A58BCB]/80 focus-within:shadow-[0_0_0_3px_rgba(165,139,203,0.10),0_8px_30px_rgba(0,0,0,0.18)]">
+      <div className="flex items-end gap-2 rounded-[26px] border border-[#604477]/55 bg-[#1B1430] px-2.5 py-2 shadow-[0_8px_30px_rgba(0,0,0,0.18)] transition-colors duration-200 focus-within:border-[#604477]/55 focus-within:shadow-[0_8px_30px_rgba(0,0,0,0.18)]">
         <button
           type="button"
           onClick={() => void handleAttach()}
