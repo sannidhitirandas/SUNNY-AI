@@ -249,7 +249,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
         </div>
       )}
 
-      <div className="flex items-end gap-2 bg-[#1B1430] border border-[#392858] focus-within:border-[#FFD84D] rounded-2xl px-2.5 py-1.5 transition-colors">
+      <div className="flex items-end gap-2 bg-[#1B1430] border border-[#392858] focus-within:border-[#8C75B5] focus-within:shadow-[0_0_0_3px_rgba(140,117,181,0.10)] rounded-2xl px-2.5 py-1.5 transition-all">
         <button
           type="button"
           onClick={() => void handleAttach()}
