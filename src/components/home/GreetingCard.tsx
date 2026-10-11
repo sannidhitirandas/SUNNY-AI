@@ -57,7 +57,7 @@ export const GreetingCard: React.FC<GreetingCardProps> = ({
       <div className="pointer-events-none absolute -right-10 -top-16 h-48 w-48 rounded-full bg-[#FFD84D]/[0.06] blur-3xl" />
       <div className="relative z-20 flex items-center justify-between lg:mb-5">
         <span className="inline-flex items-center gap-2 text-sm font-medium tracking-wide text-[#E9DFF8]">
-          <span className="text-xl text-[#FFD84D]">☼</span> YOUR EVENING SPACE
+          <span className="text-xl text-[#FFD84D]">☼</span> YOUR LITTLE CORNER OF SUNSHINE
         </span>
         <span className="hidden items-center gap-2 text-xs text-[#C6B8E5] sm:inline-flex"><Sparkles size={14} className="text-[#FFD84D]"/> A little space just for you</span>
       </div>
