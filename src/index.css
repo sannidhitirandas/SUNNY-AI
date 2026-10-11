@@ -23,9 +23,16 @@ body {
   color: var(--sunny-primary-text, #FFFFFF);
 }
 
-*:focus-visible {
+*:focus-visible:not(textarea) {
   outline: 2px solid #FFD84D;
   outline-offset: 2px;
+}
+
+/* The chat composer has its own focus styling; don't draw the global yellow box around its textarea. */
+textarea:focus,
+textarea:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 :root[data-theme='sunny-light'] *:focus-visible {
