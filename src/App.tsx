@@ -57,6 +57,7 @@ export function App() {
 
   const [showSplash, setShowSplash] = useState(true);
   const [activeTab, setActiveTab] = useState<Tab>('home');
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
   const [activeSubScreen, setActiveSubScreen] =
     useState<SubScreen>('none');
   const [authView, setAuthView] =
@@ -81,6 +82,28 @@ export function App() {
 
   const registerScreenBackHandler = useCallback((handler: (() => boolean) | null) => {
     screenBackHandlerRef.current = handler;
+  }, []);
+
+  useEffect(() => {
+    // visualViewport shrinks when the on-screen keyboard opens in mobile browsers/WebView.
+    const viewport = window.visualViewport;
+    if (!viewport) return;
+
+    const updateKeyboardVisibility = () => {
+      const heightDifference = window.innerHeight - viewport.height;
+      setKeyboardVisible(heightDifference > 150);
+    };
+
+    updateKeyboardVisibility();
+    viewport.addEventListener('resize', updateKeyboardVisibility);
+    viewport.addEventListener('scroll', updateKeyboardVisibility);
+    window.addEventListener('resize', updateKeyboardVisibility);
+
+    return () => {
+      viewport.removeEventListener('resize', updateKeyboardVisibility);
+      viewport.removeEventListener('scroll', updateKeyboardVisibility);
+      window.removeEventListener('resize', updateKeyboardVisibility);
+    };
   }, []);
 
   const handleTabChange = (tab: Tab) => {
@@ -340,6 +363,7 @@ export function App() {
         )}
       </main>
 
+      {!(activeTab === 'chat' && keyboardVisible) && (
       <nav className="fixed bottom-0 left-0 right-0 z-40 bg-[#17102C]/95 backdrop-blur-md border-t border-[#392858] max-w-xl mx-auto w-full pb-[env(safe-area-inset-bottom)] lg:bottom-4 lg:rounded-2xl lg:border lg:shadow-[0_12px_40px_rgba(0,0,0,0.35)]">
         <div className="flex items-center justify-around h-16 px-2">
           <button
@@ -423,6 +447,7 @@ export function App() {
           </button>
         </div>
       </nav>
+      )}
     </div>
   );
 }
