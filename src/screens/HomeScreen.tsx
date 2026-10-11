@@ -35,7 +35,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigateToTab, onEnter
   const lastMessage = messages.length > 0 ? messages[messages.length - 1] : undefined;
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-xl mx-auto w-full pb-24">
+    <div className="flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-3xl mx-auto w-full pb-24">
       {/* Top App Header */}
       <div className="flex items-center justify-between py-2 mb-3">
         <div className="flex items-center gap-2.5">
