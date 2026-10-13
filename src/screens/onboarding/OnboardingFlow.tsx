@@ -46,27 +46,27 @@ interface ToneOption {
 const TONE_OPTIONS: ToneOption[] = [
   {
     tone: 'adaptive',
-    title: 'Adaptive',
+    title: 'The Mix',
     badge: 'Recommended',
-    description: 'A balanced companion that adjusts naturally to your conversation context and tone.',
+    description: 'A natural blend of listening, laughter, and encouragement that adapts to what you need.',
     icon: <Sparkles size={20} className="text-[#FFD84D]" />,
   },
   {
     tone: 'playful',
-    title: 'Playful',
-    description: 'Cheerful, humorous, lighthearted, and ready to share laughs and silly ideas.',
+    title: 'Funny Friend',
+    description: 'Playful banter, silly ideas, and laughs when the moment is right—without joking over real pain.',
     icon: <Smile size={20} className="text-[#FFD84D]" />,
   },
   {
     tone: 'gentle',
-    title: 'Gentle',
-    description: 'Soft, patient, empathetic, and reassuring when you need a quiet listening ear.',
+    title: 'Listener & Supportive',
+    description: 'Listens first, takes your feelings seriously, and asks thoughtful questions before offering advice.',
     icon: <Heart size={20} className="text-[#FF8D9A]" />,
   },
   {
     tone: 'calm',
-    title: 'Calm',
-    description: 'Grounded, thoughtful, and peaceful to help you unwind and reflect without rush.',
+    title: 'Encourager',
+    description: 'Believes in you realistically, celebrates small wins, and helps you find one manageable next step.',
     icon: <Leaf size={20} className="text-[#A8D9A0]" />,
   },
 ];
