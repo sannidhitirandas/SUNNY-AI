@@ -6,7 +6,8 @@ import { Memory, MemoryCategory } from '@/types/memory';
 import { MemoryCard } from '@/components/memories/MemoryCard';
 import { MemoryModal } from '@/components/memories/MemoryModal';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { Plus, Search, X, Lock } from 'lucide-react';
+import { Plus, Search, X, Lock, Sparkles, Brain, ShieldCheck } from 'lucide-react';
+import { SunnyLogo } from '@/components/brand/SunnyLogo';
 
 const FILTER_CATEGORIES: { label: string; value: MemoryCategory | 'all' }[] = [
   { label: 'All', value: 'all' },
@@ -58,27 +59,53 @@ export const MemoriesScreen: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-xl mx-auto w-full pb-24">
-      {/* Header */}
-      <div className="flex items-center justify-between pt-2 pb-1">
-        <div>
-          <h1 className="text-xl font-bold text-white flex items-center gap-1.5">
-            Your little memories 💛
-          </h1>
-          <p className="text-xs text-[#C6B8E5] mt-0.5">
-            The little things Sunny can remember for you, kept safe with your consent.
-          </p>
+    <div className="flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-7xl mx-auto w-full pb-28 lg:px-10 xl:px-14">
+      {/* Shared Sunny website header */}
+      <div className="flex items-center justify-between py-2 mb-4">
+        <div className="flex items-center gap-2.5">
+          <SunnyLogo size="small" />
+          <div>
+            <div className="flex items-center gap-1.5">
+              <h1 className="text-lg font-bold text-white tracking-tight">Sunny</h1>
+              <span className="text-sm" aria-hidden="true">☀️</span>
+            </div>
+            <p className="text-[11px] text-[#C6B8E5]">Your little corner of sunshine</p>
+          </div>
         </div>
-
-        <button
-          type="button"
-          onClick={handleOpenAdd}
-          className="flex items-center gap-1 bg-[#FFD84D] hover:bg-[#F6BD45] text-[#100B22] text-xs font-bold px-3 py-1.5 rounded-full transition-all shrink-0 cursor-pointer shadow-sm active:scale-95 ml-2"
-        >
-          <Plus size={16} />
-          <span>Add</span>
+        <button type="button" onClick={handleOpenAdd} className="inline-flex min-h-10 items-center gap-2 rounded-full bg-[#FFD84D] px-4 py-2 text-sm font-bold text-[#100B22] shadow-[0_8px_28px_rgba(255,216,77,0.12)] transition-all hover:bg-[#F6BD45] active:scale-95 cursor-pointer">
+          <Plus size={17} />
+          <span>Add memory</span>
         </button>
       </div>
+
+      {/* Warm, spacious page intro matching the Home screen */}
+      <section className="relative isolate mb-6 overflow-hidden rounded-[28px] border border-[#604477]/45 bg-gradient-to-br from-[#211536] via-[#17102C] to-[#100B22] p-5 sm:p-7 lg:p-8">
+        <div aria-hidden="true" className="pointer-events-none absolute -right-8 -top-12 h-44 w-44 rounded-full bg-[#FFD84D]/[0.07] blur-3xl" />
+        <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <div className="max-w-2xl">
+            <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.16em] text-[#E9DFF8]">
+              <Sparkles size={15} className="text-[#FFD84D]" /> YOUR LITTLE MEMORY VAULT
+            </span>
+            <h2 className="mt-3 text-3xl font-normal tracking-tight text-[#F8F1FF] sm:text-4xl">The little things that matter 💛</h2>
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#C6B8E5] sm:text-base">
+              A private space for the details you choose to share with Sunny. You’re always in control of what stays.
+            </p>
+          </div>
+          <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 sm:min-w-40">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#FFD84D]/10 text-[#FFD84D]">
+              <Brain size={22} />
+            </div>
+            <div>
+              <p className="text-2xl font-semibold leading-none text-white">{filteredMemories.length}</p>
+              <p className="mt-1 text-xs text-[#C6B8E5]">saved {filteredMemories.length === 1 ? 'memory' : 'memories'}</p>
+            </div>
+          </div>
+        </div>
+        <div className="relative z-10 mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-white/10 pt-4 text-xs text-[#C6B8E5]">
+          <span className="inline-flex items-center gap-1.5"><ShieldCheck size={14} className="text-[#A8D9A0]" /> Consent-first</span>
+          <span className="inline-flex items-center gap-1.5"><Lock size={14} className="text-[#FFD84D]" /> Review or delete anytime</span>
+        </div>
+      </section>
 
       {!preferences.memoryEnabled ? (
         <div className="my-16">
@@ -93,7 +120,7 @@ export const MemoriesScreen: React.FC = () => {
       ) : (
         <>
           {/* Search bar */}
-          <div className="relative flex items-center my-3.5">
+          <div className="relative flex items-center my-4 max-w-2xl">
             <Search size={16} className="absolute left-3.5 text-[#9B8AB9]" />
             <input
               type="text"
@@ -135,15 +162,14 @@ export const MemoriesScreen: React.FC = () => {
           </div>
 
           {/* Memory Count */}
-          <div className="px-1 mb-2">
-            <span className="text-[11px] text-[#9B8AB9]">
-              {filteredMemories.length} saved {filteredMemories.length === 1 ? 'memory' : 'memories'}
-            </span>
+          <div className="mb-3 flex items-center justify-between gap-3 px-1">
+            <span className="text-sm font-medium text-[#C6B8E5]">Your saved details</span>
+            <span className="text-xs text-[#9B8AB9]">Choose a card to edit or remove it</span>
           </div>
 
           {/* Memory List */}
           {filteredMemories.length > 0 ? (
-            <div className="space-y-1">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
               {filteredMemories.map((item) => (
                 <MemoryCard
                   key={item.id}
