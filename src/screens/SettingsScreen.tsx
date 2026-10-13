@@ -8,6 +8,7 @@ import { SettingsSection } from '@/components/settings/SettingsSection';
 import { SettingsRow } from '@/components/settings/SettingsRow';
 import { AppInput } from '@/components/ui/AppInput';
 import { AppButton } from '@/components/ui/AppButton';
+import { SunnyLogo } from '@/components/brand/SunnyLogo';
 
 import {
   Sparkles,
@@ -160,16 +161,48 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   };
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-xl mx-auto w-full pb-24">
-      {/* Header */}
-      <div className="pt-2 pb-4 mb-2">
-        <h1 className="text-2xl font-bold text-white tracking-tight">Settings</h1>
-        <p className="text-xs text-[#C6B8E5] mt-1">Customize your Sunny companion experience</p>
-        <div className="mt-2.5">
-
+    <div className="flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-7xl mx-auto w-full pb-28 lg:px-10 xl:px-14">
+      {/* Shared Sunny website header */}
+      <div className="flex items-center justify-between py-2 mb-4">
+        <div className="flex items-center gap-2.5">
+          <SunnyLogo size="small" />
+          <div>
+            <div className="flex items-center gap-1.5">
+              <h1 className="text-lg font-bold text-white tracking-tight">Sunny</h1>
+              <span className="text-sm" aria-hidden="true">☀️</span>
+            </div>
+            <p className="text-[11px] text-[#C6B8E5]">Your little corner of sunshine</p>
+          </div>
         </div>
       </div>
 
+      {/* Settings hero uses the same soft glow and rounded gradient as Home */}
+      <section className="relative isolate mb-7 overflow-hidden rounded-[28px] border border-[#604477]/45 bg-gradient-to-br from-[#211536] via-[#17102C] to-[#100B22] p-5 sm:p-7 lg:p-8">
+        <div aria-hidden="true" className="pointer-events-none absolute -right-8 -top-12 h-44 w-44 rounded-full bg-[#FFD84D]/[0.07] blur-3xl" />
+        <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="max-w-2xl">
+            <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.16em] text-[#E9DFF8]">
+              <Sparkles size={15} className="text-[#FFD84D]" /> YOUR SUNNY, YOUR WAY
+            </span>
+            <h2 className="mt-3 text-3xl font-normal tracking-tight text-[#F8F1FF] sm:text-4xl">Make this space yours.</h2>
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#C6B8E5] sm:text-base">
+              Fine-tune how Sunny talks, sounds, remembers, and checks in with you. Change anything whenever you need.
+            </p>
+          </div>
+          <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 sm:min-w-56">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FFD84D]/10 text-[#FFD84D]">
+              <UserIcon size={23} />
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs text-[#9B8AB9]">YOUR PROFILE</p>
+              <p className="mt-0.5 truncate text-base font-semibold text-white">{preferences.preferredName || user?.displayName || 'sunshine'}</p>
+              <p className="mt-0.5 text-xs text-[#C6B8E5]">{getPersonalityLabel(preferences.preferredTone)}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="grid grid-cols-1 gap-x-6 xl:grid-cols-2">
       {/* Section A — Your Sunny */}
       <SettingsSection title="YOUR SUNNY">
         <SettingsRow
@@ -385,6 +418,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           />
         )}
       </SettingsSection>
+
+      </div>
 
       {/* Tone Picker Modal */}
       {toneModalVisible && (
