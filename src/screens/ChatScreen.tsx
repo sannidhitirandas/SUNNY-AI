@@ -16,6 +16,7 @@ interface ChatScreenProps {
   onNavigateToSafety?: () => void;
   onFocus?: () => void;
   onBlur?: () => void;
+  isKeyboardVisible?: boolean;
 }
 
 export const ChatScreen: React.FC<ChatScreenProps> = ({
@@ -23,6 +24,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   onNavigateToSafety,
   onFocus,
   onBlur,
+  isKeyboardVisible = false,
 }) => {
   const { messages, isThinking, isLoadingOlderMessages, hasOlderMessages, loadOlderMessages, lastError, sendMessage, retryMessage, clearChat } = useChat();
   const { preferences } = usePreferences();
@@ -129,7 +131,13 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
       </div>
 
       {/* Message Composer */}
-      <MessageComposer onSend={sendMessage} disabled={isThinking} onFocus={onFocus} onBlur={onBlur} />
+      <MessageComposer
+        onSend={sendMessage}
+        disabled={isThinking}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        isKeyboardVisible={isKeyboardVisible}
+      />
 
       {/* Options Menu Modal */}
       {optionsVisible && (

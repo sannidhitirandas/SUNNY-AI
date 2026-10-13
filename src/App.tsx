@@ -419,6 +419,7 @@ export function App() {
             }
             onFocus={() => setIsKeyboardVisible(true)}
             onBlur={() => setIsKeyboardVisible(false)}
+            isKeyboardVisible={isKeyboardVisible}
           />
         )}
 

@@ -27,6 +27,7 @@ interface MessageComposerProps {
   placeholder?: string;
   onFocus?: () => void;
   onBlur?: () => void;
+  isKeyboardVisible?: boolean;
 }
 
 const formatSize = (bytes: number) => {
@@ -53,6 +54,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
   placeholder = "Tell Sunny what's on your mind...",
   onFocus,
   onBlur,
+  isKeyboardVisible = false,
 }) => {
   const [text, setText] = useState('');
   const [files, setFiles] = useState<File[]>([]);
@@ -232,7 +234,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
   const isSendDisabled = disabled || preparingAttachment || sending || (!text.trim() && files.length === 0);
 
   return (
-    <div className="border-t border-white/[0.04] bg-gradient-to-t from-[#100B22] via-[#100B22]/[0.98] to-[#100B22]/90 px-3 pb-3 pt-4 sm:px-5">
+    <div className={`border-t border-white/[0.04] bg-gradient-to-t from-[#100B22] via-[#100B22]/[0.98] to-[#100B22]/90 px-3 pt-3 sm:px-5 ${isKeyboardVisible ? 'pb-1' : 'pb-3'}`}>
       <div className="mx-auto w-full max-w-3xl">
       {fileError && (
         <div className="mb-2 px-3 text-xs text-[#FF9DA8]" role="alert">{fileError}</div>
