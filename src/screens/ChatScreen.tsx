@@ -23,16 +23,25 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   onFocus,
   onBlur,
 }) => {
-  const { messages, isThinking, lastError, sendMessage, retryMessage, clearChat } = useChat();
+  const { messages, isThinking, isLoadingOlderMessages, hasOlderMessages, loadOlderMessages, lastError, sendMessage, retryMessage, clearChat } = useChat();
   const { preferences } = usePreferences();
   const { addMemory } = useMemories();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesScrollRef = useRef<HTMLDivElement>(null);
+  const preserveScrollRef = useRef<{ height: number; top: number } | null>(null);
   const [optionsVisible, setOptionsVisible] = useState(false);
   const [memoryModalVisible, setMemoryModalVisible] = useState(false);
   const [memoryInitialContent, setMemoryInitialContent] = useState('');
 
   useEffect(() => {
+    const scrollArea = messagesScrollRef.current;
+    const previous = preserveScrollRef.current;
+    if (scrollArea && previous) {
+      scrollArea.scrollTop = previous.top + (scrollArea.scrollHeight - previous.height);
+      preserveScrollRef.current = null;
+      return;
+    }
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isThinking]);
 
@@ -88,7 +97,23 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
       )}
 
       {/* Messages Scroll Area */}
-      <div className="min-h-0 flex-1 space-y-1 overflow-y-auto bg-[radial-gradient(ellipse_at_top,rgba(48,33,73,0.18),transparent_55%)] py-4 sm:py-6">
+      <div ref={messagesScrollRef} className="min-h-0 flex-1 space-y-1 overflow-y-auto bg-[radial-gradient(ellipse_at_top,rgba(48,33,73,0.18),transparent_55%)] py-4 sm:py-6">
+        {hasOlderMessages && (
+          <div className="flex justify-center px-4 pb-3">
+            <button
+              type="button"
+              disabled={isLoadingOlderMessages}
+              onClick={() => {
+                const area = messagesScrollRef.current;
+                if (area) preserveScrollRef.current = { height: area.scrollHeight, top: area.scrollTop };
+                void loadOlderMessages();
+              }}
+              className="rounded-full border border-[#392858] bg-[#21163A] px-4 py-2 text-xs font-medium text-[#D7C8F5] transition-colors hover:bg-[#302149] disabled:cursor-wait disabled:opacity-60"
+            >
+              {isLoadingOlderMessages ? 'Loading older messages…' : 'Load older messages'}
+            </button>
+          </div>
+        )}
         {messages.map((item) => (
           <MessageBubble
             key={item.id}
