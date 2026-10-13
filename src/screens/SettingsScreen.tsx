@@ -3,7 +3,7 @@ import { useAuth } from '@/context/AuthContext';
 import { usePreferences } from '@/context/PreferencesContext';
 import { useChat } from '@/context/ChatContext';
 import { audioService } from '@/services/audioService';
-import { PersonalityTone, SunnyTheme } from '@/types/user';
+import { getPersonalityLabel, PersonalityTone, SunnyTheme } from '@/types/user';
 import { SettingsSection } from '@/components/settings/SettingsSection';
 import { SettingsRow } from '@/components/settings/SettingsRow';
 import { AppInput } from '@/components/ui/AppInput';
@@ -94,10 +94,10 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   const [newName, setNewName] = useState(preferences.preferredName || '');
 
   const TONES: { tone: PersonalityTone; label: string; desc: string }[] = [
-    { tone: 'adaptive', label: 'Adaptive', desc: 'Balances tone to your conversations' },
-    { tone: 'playful', label: 'Playful', desc: 'Lighthearted, witty, and fun' },
-    { tone: 'gentle', label: 'Gentle', desc: 'Soft, empathetic, and validating' },
-    { tone: 'calm', label: 'Calm', desc: 'Grounded, mindful, and unhurried' },
+    { tone: 'gentle', label: 'Listener & Supportive', desc: 'Listens first, validates feelings, and avoids rushing into advice' },
+    { tone: 'playful', label: 'Funny Friend', desc: 'Playful banter, silly ideas, and laughs when they fit' },
+    { tone: 'calm', label: 'Encourager', desc: 'Realistic encouragement and small, doable next steps' },
+    { tone: 'adaptive', label: 'The Mix', desc: 'Blends all three styles based on what the moment calls for' },
   ];
 
   const THEMES: { theme: SunnyTheme; label: string; description: string }[] = [
@@ -176,7 +176,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           title="Conversation Personality"
           subtitle="Change how Sunny responds to you"
           icon={<Sparkles size={16} className="text-[#FFD84D]" />}
-          rightText={preferences.preferredTone.charAt(0).toUpperCase() + preferences.preferredTone.slice(1)}
+          rightText={getPersonalityLabel(preferences.preferredTone)}
           onPress={() => setToneModalVisible(true)}
         />
         <SettingsRow
