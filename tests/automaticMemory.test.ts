@@ -51,6 +51,9 @@ test('rejects uncertain, sensitive, malformed, and duplicate candidates', () => 
   const candidates = parseAutomaticMemoryCandidates(JSON.stringify({ memories: [
     { confirmed: false, key: 'job', title: 'Job', content: 'Maybe changing jobs.', category: 'ongoing' },
     { confirmed: true, key: 'password', title: 'Password', content: 'My password is secret.', category: 'personal' },
+    { confirmed: true, key: 'diagnosis', title: 'Health', content: 'I was diagnosed with a serious condition.', category: 'personal' },
+    { confirmed: true, key: 'religion', title: 'Religion', content: 'I am Hindu.', category: 'personal' },
+    { confirmed: true, key: 'address', title: 'Address', content: 'My address is 12 Example Street.', category: 'personal' },
     { confirmed: true, key: 'hobby', title: 'Hobby', content: 'I enjoy hiking.', category: 'preferences' },
     { confirmed: true, key: 'hobby', title: 'Hobby', content: 'I enjoy hiking.', category: 'preferences' },
   ] }));
