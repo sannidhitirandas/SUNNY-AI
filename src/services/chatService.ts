@@ -9,6 +9,7 @@ import type { AutomaticMemoryCandidate } from './automaticMemory';
 import { getVibeStarterText } from '@/lib/vibeStarterMessages';
 import { NORMAL_CHAT_GREETING } from '@/lib/chatEntry';
 import { createChatRequestBody } from '@/lib/chatRequest';
+import { limitConversationHistory } from '@/lib/chatRequest';
 
 const createInitialMessages = (): ChatMessage[] => [{
   id: `welcome-msg-${crypto.randomUUID()}`, sessionId: 'default-session', role: 'assistant',
@@ -110,9 +111,11 @@ export const chatService = {
     const timeoutId = setTimeout(() => controller.abort(), 60000);
 
     try {
-      const formattedHistory = history
-        .filter((m) => m.deliveryStatus !== 'failed')
-        .map((m) => ({ role: m.role, content: m.content }));
+      const formattedHistory = limitConversationHistory(
+        history
+          .filter((m) => m.deliveryStatus !== 'failed')
+          .map((m) => ({ role: m.role, content: m.content })),
+      );
 
       const { data: { session } } = await supabase.auth.getSession();
       const memoryPayloads = memoryEnabled && !session
