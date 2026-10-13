@@ -203,6 +203,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       </section>
 
       <div className="grid grid-cols-1 gap-x-6 xl:grid-cols-2">
+        <div className="min-w-0">
       {/* Section A — Your Sunny */}
       <SettingsSection title="YOUR SUNNY">
         <SettingsRow
@@ -231,6 +232,88 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         />
       </SettingsSection>
 
+      {/* Section B — Memory */}
+      <SettingsSection title="MEMORY & PERSISTENCE">
+        <SettingsRow
+          title="Enable Memory"
+          subtitle="Allow Sunny to remember approved details"
+          icon={<Bookmark size={16} className="text-[#FFD84D]" />}
+          isSwitch
+          switchValue={preferences.memoryEnabled}
+          onSwitchChange={toggleMemory}
+        />
+        <SettingsRow
+          title="Manage Saved Memories"
+          subtitle="View, edit, or delete personal notes"
+          icon={<List size={16} className="text-[#FFD84D]" />}
+          onPress={() => onNavigateToTab('memories')}
+        />
+        <SettingsRow
+          title="Memory Privacy Explanation"
+          subtitle="How memory works with your consent"
+          icon={<ShieldCheck size={16} className="text-[#A8D9A0]" />}
+          onPress={() => onNavigateSubscreen('privacy')}
+        />
+      </SettingsSection>
+
+      {/* Section C — Notifications */}
+      <SettingsSection title="NOTIFICATIONS">
+        <SettingsRow
+          title="Notification Preferences"
+          subtitle={preferences.notificationsEnabled ? 'Preference is on; review Android permission and schedule status' : 'Notification preference is off'}
+          icon={<Bell size={16} className="text-[#FFD84D]" />}
+          rightText={preferences.notificationsEnabled ? 'On' : 'Off'}
+          onPress={() => onNavigateSubscreen('notifications')}
+        />
+        <SettingsRow
+          title="Quiet Hours"
+          subtitle={`${formatTime(preferences.notificationPreferences.quietHoursStart)} – ${formatTime(preferences.notificationPreferences.quietHoursEnd)} local time`}
+          icon={<Moon size={16} className="text-[#C6B8E5]" />}
+          rightText={preferences.notificationPreferences.quietHoursEnabled ? 'On' : 'Off'}
+          onPress={() => onNavigateSubscreen('notifications')}
+        />
+      </SettingsSection>
+
+      {/* Section F — Account */}
+      <SettingsSection title="ACCOUNT">
+        <SettingsRow
+          title="Account Profile"
+          subtitle={user?.email || 'Guest profile saved on this device'}
+          icon={<UserCheck size={16} className="text-[#FFD84D]" />}
+          rightText={user?.displayName || preferences.preferredName || 'Set name'}
+          onPress={() => {
+            setProfileName(user?.displayName || preferences.preferredName || '');
+            setProfileError(null);
+            setProfileModalVisible(true);
+          }}
+        />
+        <SettingsRow
+          title="Replay Onboarding"
+          subtitle="Experience the introductory flow again"
+          icon={<RotateCcw size={16} className="text-[#C6B8E5]" />}
+          onPress={async () => {
+            await resetOnboarding();
+            onReplayOnboarding();
+          }}
+        />
+        <SettingsRow
+          title="Sign Out"
+          icon={<LogOut size={16} className="text-[#FF8D9A]" />}
+          destructive
+          onPress={handleSignOut}
+        />
+        {user && (
+          <SettingsRow
+            title="Delete Account & Data"
+            subtitle="Review account and cloud deletion details"
+            icon={<Trash2 size={16} className="text-[#FF8D9A]" />}
+            destructive
+            onPress={() => onNavigateSubscreen('privacy')}
+          />
+        )}
+      </SettingsSection>
+        </div>
+        <div className="min-w-0">
       {/* Section Audio — Audio & Sounds */}
       <SettingsSection title="AUDIO & SOUNDS">
         <SettingsRow
@@ -305,48 +388,6 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         </div>
       </SettingsSection>
 
-      {/* Section B — Memory */}
-      <SettingsSection title="MEMORY & PERSISTENCE">
-        <SettingsRow
-          title="Enable Memory"
-          subtitle="Allow Sunny to remember approved details"
-          icon={<Bookmark size={16} className="text-[#FFD84D]" />}
-          isSwitch
-          switchValue={preferences.memoryEnabled}
-          onSwitchChange={toggleMemory}
-        />
-        <SettingsRow
-          title="Manage Saved Memories"
-          subtitle="View, edit, or delete personal notes"
-          icon={<List size={16} className="text-[#FFD84D]" />}
-          onPress={() => onNavigateToTab('memories')}
-        />
-        <SettingsRow
-          title="Memory Privacy Explanation"
-          subtitle="How memory works with your consent"
-          icon={<ShieldCheck size={16} className="text-[#A8D9A0]" />}
-          onPress={() => onNavigateSubscreen('privacy')}
-        />
-      </SettingsSection>
-
-      {/* Section C — Notifications */}
-      <SettingsSection title="NOTIFICATIONS">
-        <SettingsRow
-          title="Notification Preferences"
-          subtitle={preferences.notificationsEnabled ? 'Preference is on; review Android permission and schedule status' : 'Notification preference is off'}
-          icon={<Bell size={16} className="text-[#FFD84D]" />}
-          rightText={preferences.notificationsEnabled ? 'On' : 'Off'}
-          onPress={() => onNavigateSubscreen('notifications')}
-        />
-        <SettingsRow
-          title="Quiet Hours"
-          subtitle={`${formatTime(preferences.notificationPreferences.quietHoursStart)} – ${formatTime(preferences.notificationPreferences.quietHoursEnd)} local time`}
-          icon={<Moon size={16} className="text-[#C6B8E5]" />}
-          rightText={preferences.notificationPreferences.quietHoursEnabled ? 'On' : 'Off'}
-          onPress={() => onNavigateSubscreen('notifications')}
-        />
-      </SettingsSection>
-
       {/* Section D — Privacy & Security */}
       <SettingsSection title="PRIVACY & SECURITY">
         <SettingsRow
@@ -379,46 +420,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           onPress={() => onNavigateSubscreen('about')}
         />
       </SettingsSection>
-
-      {/* Section F — Account */}
-      <SettingsSection title="ACCOUNT">
-        <SettingsRow
-          title="Account Profile"
-          subtitle={user?.email || 'Guest profile saved on this device'}
-          icon={<UserCheck size={16} className="text-[#FFD84D]" />}
-          rightText={user?.displayName || preferences.preferredName || 'Set name'}
-          onPress={() => {
-            setProfileName(user?.displayName || preferences.preferredName || '');
-            setProfileError(null);
-            setProfileModalVisible(true);
-          }}
-        />
-        <SettingsRow
-          title="Replay Onboarding"
-          subtitle="Experience the introductory flow again"
-          icon={<RotateCcw size={16} className="text-[#C6B8E5]" />}
-          onPress={async () => {
-            await resetOnboarding();
-            onReplayOnboarding();
-          }}
-        />
-        <SettingsRow
-          title="Sign Out"
-          icon={<LogOut size={16} className="text-[#FF8D9A]" />}
-          destructive
-          onPress={handleSignOut}
-        />
-        {user && (
-          <SettingsRow
-            title="Delete Account & Data"
-            subtitle="Review account and cloud deletion details"
-            icon={<Trash2 size={16} className="text-[#FF8D9A]" />}
-            destructive
-            onPress={() => onNavigateSubscreen('privacy')}
-          />
-        )}
-      </SettingsSection>
-
+        </div>
       </div>
 
       {/* Tone Picker Modal */}
