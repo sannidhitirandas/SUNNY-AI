@@ -1818,6 +1818,28 @@ app.post(
   }
 );
 
+// Normalize JSON parser failures so malformed/oversized requests do not
+// leak Express's default HTML error page to the mobile client.
+app.use((error: any, _req: Request, res: Response, next: NextFunction) => {
+  if (res.headersSent) return next(error);
+
+  if (error?.type === 'entity.too.large' || error?.status === 413) {
+    return res.status(413).json({
+      success: false,
+      error: 'That request is too large. Please attach a smaller file or fewer files.',
+    });
+  }
+
+  if (error instanceof SyntaxError && error?.status === 400 && 'body' in error) {
+    return res.status(400).json({
+      success: false,
+      error: 'Sunny received an invalid request. Please try again.',
+    });
+  }
+
+  return next(error);
+});
+
 // --------------------------------------------------
 // Start server
 // --------------------------------------------------
