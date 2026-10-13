@@ -1469,8 +1469,20 @@ app.post(
         cleanedHistory.pop();
       }
 
-      const recentHistory =
-        cleanedHistory.slice(-20);
+      // Keep model context bounded by both message count and total text size.
+      // This avoids sending large transcripts to providers on every chat turn.
+      const recentHistory: ChatHistoryItem[] = [];
+      let recentHistoryCharacters = 0;
+      for (let index = cleanedHistory.length - 1; index >= 0 && recentHistory.length < 12; index -= 1) {
+        const item = cleanedHistory[index];
+        const remainingCharacters = 12000 - recentHistoryCharacters;
+        if (remainingCharacters <= 0) break;
+        const content = item.content.length > remainingCharacters
+          ? item.content.slice(-remainingCharacters)
+          : item.content;
+        recentHistory.unshift({ ...item, content });
+        recentHistoryCharacters += content.length;
+      }
 
       // --------------------------------------------------
       // Gemini conversation format
