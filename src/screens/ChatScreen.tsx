@@ -8,6 +8,7 @@ import { MessageComposer } from '@/components/chat/MessageComposer';
 import { TypingIndicator } from '@/components/chat/TypingIndicator';
 import { MemoryModal } from '@/components/memories/MemoryModal';
 import { MemoryCategory } from '@/types/memory';
+import { getPersonalityLabel } from '@/types/user';
 import { Bookmark, HeartHandshake, Trash2, X, AlertTriangle } from 'lucide-react';
 
 interface ChatScreenProps {
@@ -66,7 +67,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
     await addMemory(data);
   };
 
-  const formattedTone = preferences.preferredTone.charAt(0).toUpperCase() + preferences.preferredTone.slice(1);
+  const formattedTone = getPersonalityLabel(preferences.preferredTone);
 
   return (
 <div className="relative mx-auto flex h-full min-h-0 w-full max-w-5xl flex-1 flex-col bg-[#100B22] px-0 pb-16 sm:px-3 sm:pb-16 lg:rounded-3xl lg:border lg:border-[#392858]/70 lg:pb-8 lg:shadow-[0_24px_80px_rgba(0,0,0,0.18)]">
