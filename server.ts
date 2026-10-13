@@ -89,7 +89,9 @@ const PORT = process.env.PORT
   ? parseInt(process.env.PORT, 10)
   : 3000;
 
-app.use(express.json({ limit: '80mb' }));
+// Attachments are capped at 50 MB decoded; 70 MB leaves room for base64
+// expansion and JSON overhead without accepting unnecessarily huge bodies.
+app.use(express.json({ limit: '70mb' }));
 
 // Allow the Capacitor Android WebView to call the hosted API.
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -136,7 +138,9 @@ const rateLimitMap = new Map<
 >();
 
 const RATE_LIMIT_WINDOW_MS = 60 * 1000;
-const MAX_REQUESTS_PER_WINDOW = 40;
+// Chat requests invoke paid/limited AI providers; keep abuse bounded while
+// still allowing normal conversational use (about one message every 3 seconds).
+const MAX_REQUESTS_PER_WINDOW = 20;
 
 function rateLimiter(
   req: Request,
