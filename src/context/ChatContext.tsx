@@ -161,12 +161,14 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       attachments: files.map((file, index) => ({ id: `attachment-${Date.now()}-${index}`, name: file.name, type: file.type || 'application/octet-stream', size: file.size })),
     };
 
-    const updatedWithUser = [...messages, userMessage];
+    const updatedWithUser = [...messagesRef.current, userMessage];
     updateMessages(updatedWithUser);
     setIsThinking(true);
+    let userMessagePersisted = false;
 
     try {
-      await chatService.saveMessages('default-session', updatedWithUser);
+      await chatService.appendMessage('default-session', userMessage, updatedWithUser);
+      userMessagePersisted = true;
 
       const aiResult = await chatService.sendMessageToAI({
         message: content.trim(),
@@ -206,7 +208,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       const finalMessages = [...updatedWithUser, aiMessage];
       updateMessages(finalMessages);
-      await chatService.saveMessages('default-session', finalMessages);
+      await chatService.appendMessage('default-session', aiMessage, finalMessages);
       void audioService.play('receive');
     } catch (err: any) {
       console.error('[ChatContext] Error sending message:', err);
@@ -215,10 +217,12 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       void audioService.play('error');
       updateMessages(updatedWithUser);
 
-      try {
-        await chatService.saveMessages('default-session', updatedWithUser);
-      } catch (saveError) {
-        console.error('[ChatContext] Error saving user message:', saveError);
+      if (!userMessagePersisted) {
+        try {
+          await chatService.saveMessages('default-session', updatedWithUser);
+        } catch (saveError) {
+          console.error('[ChatContext] Error saving user message:', saveError);
+        }
       }
     } finally {
       setIsThinking(false);
