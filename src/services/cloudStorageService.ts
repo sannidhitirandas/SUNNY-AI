@@ -36,6 +36,24 @@ export const cloudStorageService = {
     }));
   },
 
+  async appendChatMessage(sessionId: string, message: ChatMessage): Promise<void> {
+    if (message.id === 'welcome-msg-1') return;
+    const userId = await getUserId();
+    const { error } = await supabase.from('sunny_chat_messages').insert({
+      id: message.id,
+      user_id: userId,
+      session_id: sessionId,
+      role: message.role,
+      content: message.content,
+      created_at: message.createdAt,
+      delivery_status: message.deliveryStatus,
+      is_demo_response: message.isDemoResponse ?? false,
+      model: message.model ?? null,
+      error_message: message.errorMessage ?? null,
+    });
+    if (error) throw error;
+  },
+
   async saveChatMessages(sessionId: string, messages: ChatMessage[]): Promise<void> {
     const userId = await getUserId();
     if (messages.length === 0) return;
