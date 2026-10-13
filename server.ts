@@ -186,7 +186,7 @@ const GROQ_MODELS = Array.from(
   ])
 );
 
-const GROQ_TIMEOUT_MS = 25000;
+const GROQ_TIMEOUT_MS = 12000;
 
 const GEMINI_MODELS = Array.from(
   new Set([
@@ -196,7 +196,7 @@ const GEMINI_MODELS = Array.from(
   ])
 );
 
-const GEMINI_TIMEOUT_MS = 30000;
+const GEMINI_TIMEOUT_MS = 15000;
 
 // --------------------------------------------------
 // Types
@@ -683,9 +683,11 @@ async function generateWithGroq(
 
         lastError = error;
 
+        // A provider-wide quota/rate limit is unlikely to improve by trying
+        // another model on the same provider. Fall back to Gemini instead.
         const retryable =
           response.status === 400 ||
-          response.status === 429 ||
+          response.status === 404 ||
           response.status === 500 ||
           response.status === 502 ||
           response.status === 503 ||
@@ -750,6 +752,8 @@ async function generateWithGroq(
 
       if (
         temporary &&
+        status !== 429 &&
+        error?.name !== 'AbortError' &&
         model !== GROQ_MODELS[GROQ_MODELS.length - 1]
       ) {
         console.warn(
@@ -869,7 +873,7 @@ async function generateWithFastFallback(
           response.status === 503 ||
           response.status === 504;
 
-        if (retryableModelError || temporaryError) {
+        if (retryableModelError || (temporaryError && response.status !== 429)) {
           console.warn(
             `[Gemini] ${model} returned ${response.status}. Trying next model immediately...`
           );
@@ -926,7 +930,9 @@ async function generateWithFastFallback(
         error?.name === 'TimeoutError' ||
         error?.name === 'AbortError';
 
-      if (temporaryError) {
+      // Quota exhaustion and timeouts should switch providers/return promptly,
+      // rather than spending another full timeout on the same provider.
+      if (temporaryError && status !== 429 && error?.name !== 'AbortError') {
         console.warn(
           `[Gemini] ${model} temporarily unavailable. Trying next model...`
         );
@@ -1568,9 +1574,80 @@ app.post(
 
       let memoryUpdates: ReturnType<typeof parseAutomaticMemoryCandidates> = [];
       let memoriesUpdated = false;
+
+      // Do not make signed-in users wait for a second AI call just to extract
+      // memories. Return the chat reply first, then safely persist memory work
+      // in the background. Guest memory updates remain synchronous because the
+      // client needs those candidates in the response to store them locally.
       if (
         safeMemoryEnabled &&
-        memoryAuth.kind !== 'unavailable' &&
+        memoryAuth.kind === 'user' &&
+        shouldExtractAutomaticMemories(message)
+      ) {
+        const memoryClient = memoryAuth.client;
+        const memoryUserId = memoryAuth.userId;
+        const memorySessionId = safeSessionId;
+        const memorySnapshot = [...allMemories];
+        const memoryMessage = message.trim();
+        const memoryHistory = [...recentHistory];
+
+        void (async () => {
+          const candidates = await extractAutomaticMemories(
+            memoryMessage,
+            memoryHistory,
+            memorySnapshot
+          );
+          if (candidates.length === 0) return;
+
+          const mergedMemories = mergeAutomaticMemories(
+            memorySnapshot,
+            candidates,
+            memoryUserId,
+            memorySessionId
+          );
+          const changedMemories = candidates
+            .map((candidate) =>
+              mergedMemories.find(
+                (memory) => memory.memoryKey === `${candidate.category}:${candidate.key}`
+              )
+            )
+            .filter((memory): memory is Memory => Boolean(memory));
+
+          const rows = changedMemories.map((memory) => ({
+            id: memory.id,
+            user_id: memoryUserId,
+            title: memory.title,
+            content: memory.content,
+            category: memory.category,
+            created_at: memory.createdAt,
+            updated_at: memory.updatedAt,
+            user_confirmed: memory.userConfirmed,
+            source_session_id: memory.sourceSessionId ?? null,
+            is_demo_data: false,
+            memory_key: memory.memoryKey,
+            expires_at: memory.expiresAt ?? null,
+          }));
+          const { error } = await memoryClient
+            .from('sunny_memories')
+            .upsert(rows, { onConflict: 'user_id,memory_key' });
+          if (error) throw error;
+        })().catch((error) => {
+          console.warn('[memory] Background automatic memory processing failed:', error);
+        });
+
+        return res.json({
+          success: true,
+          text: result.text.trim(),
+          model: result.model,
+          memoriesUpdated: false,
+          memoryUpdates: [],
+          timestamp: new Date().toISOString(),
+        });
+      }
+
+      if (
+        safeMemoryEnabled &&
+        memoryAuth.kind === 'guest' &&
         shouldExtractAutomaticMemories(message)
       ) {
         try {
