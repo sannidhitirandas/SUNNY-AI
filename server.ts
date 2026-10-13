@@ -1256,6 +1256,30 @@ app.post(
   '/api/chat',
   rateLimiter,
   async (req: Request, res: Response) => {
+    const requestStartedAt = Date.now();
+    let attachmentMs = 0;
+    let memoryMs = 0;
+    let generationMs = 0;
+    let guestMemoryMs = 0;
+    let historyMessageCount = 0;
+    let historyCharacterCount = 0;
+    const reportChatTiming = (status: 'success' | 'error') => {
+      const totalMs = Date.now() - requestStartedAt;
+      res.setHeader(
+        'Server-Timing',
+        `attachments;dur=${attachmentMs}, memories;dur=${memoryMs}, generation;dur=${generationMs}, guest-memory;dur=${guestMemoryMs}, total;dur=${totalMs}`
+      );
+      console.info('[chat-timing]', JSON.stringify({
+        status,
+        totalMs,
+        attachmentMs,
+        memoryMs,
+        generationMs,
+        guestMemoryMs,
+        historyMessageCount,
+        historyCharacterCount,
+      }));
+    };
     try {
       const {
         message,
@@ -1317,8 +1341,10 @@ app.post(
       // --------------------------------------------------
 
       let processedAttachments: Awaited<ReturnType<typeof processAttachments>>;
+      const attachmentStartedAt = Date.now();
       try {
         processedAttachments = await processAttachments(rawAttachments);
+        attachmentMs = Date.now() - attachmentStartedAt;
       } catch (attachmentError) {
         const message = attachmentError instanceof Error
           ? attachmentError.message.slice(0, 240)
@@ -1397,6 +1423,7 @@ app.post(
           }))
         : [];
 
+      const memoryStartedAt = Date.now();
       const memoryAuth = safeMemoryEnabled
         ? await getChatMemoryAuth(req)
         : { kind: 'unavailable' as const };
@@ -1432,6 +1459,7 @@ app.post(
       const relevantMemories = safeMemoryEnabled
         ? selectRelevantMemories(allMemories, message.trim())
         : [];
+      memoryMs = Date.now() - memoryStartedAt;
 
       const systemInstruction = buildSystemInstruction(
         safeIntent,
@@ -1483,6 +1511,8 @@ app.post(
         recentHistory.unshift({ ...item, content });
         recentHistoryCharacters += content.length;
       }
+      historyMessageCount = recentHistory.length;
+      historyCharacterCount = recentHistoryCharacters;
 
       // --------------------------------------------------
       // Gemini conversation format
@@ -1603,6 +1633,7 @@ app.post(
       // Gemini SECOND
       // --------------------------------------------------
 
+      const generationStartedAt = Date.now();
       const result = await generateAIResponse(
         contents,
         groqMessages,
@@ -1610,6 +1641,7 @@ app.post(
         temperature,
         hasImageAttachment
       );
+      generationMs = Date.now() - generationStartedAt;
 
       // --------------------------------------------------
       // Validate response
@@ -1690,6 +1722,7 @@ app.post(
           console.warn('[memory] Background automatic memory processing failed:', error);
         });
 
+        reportChatTiming('success');
         return res.json({
           success: true,
           text: result.text.trim(),
@@ -1705,12 +1738,14 @@ app.post(
         memoryAuth.kind === 'guest' &&
         shouldExtractAutomaticMemories(message)
       ) {
+        const guestMemoryStartedAt = Date.now();
         try {
           const candidates = await extractAutomaticMemories(
             message.trim(),
             recentHistory,
             allMemories
           );
+          guestMemoryMs = Date.now() - guestMemoryStartedAt;
           if (candidates.length > 0) {
             const ownerId = memoryAuth.kind === 'user' ? memoryAuth.userId : 'guest';
             const mergedMemories = mergeAutomaticMemories(
@@ -1760,6 +1795,7 @@ app.post(
       // Success
       // --------------------------------------------------
 
+      reportChatTiming('success');
       return res.json({
         success: true,
         text: result.text.trim(),
@@ -1769,6 +1805,7 @@ app.post(
         timestamp: new Date().toISOString(),
       });
     } catch (error: any) {
+      reportChatTiming('error');
       console.error(
         '[server /api/chat] Error during AI chat completion:',
         error
