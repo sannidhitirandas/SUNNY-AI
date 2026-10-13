@@ -6,8 +6,6 @@ import { MessageSquareText, ArrowRight } from 'lucide-react';
 interface RecentConversationsProps {
   lastMessage?: ChatMessage;
   onResume: () => void;
-  lastMessage?: ChatMessage;
-  onResume: () => void;
 }
 
 const toPreviewText = (content: string): string => {
@@ -23,8 +21,6 @@ const toPreviewText = (content: string): string => {
 };
 
 export const RecentConversations: React.FC<RecentConversationsProps> = ({
-  lastMessage,
-  onResume,
   lastMessage,
   onResume,
 }) => {
