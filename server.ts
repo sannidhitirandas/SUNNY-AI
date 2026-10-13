@@ -117,6 +117,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     'Access-Control-Allow-Headers',
     'Content-Type, Authorization'
   );
+  // Let the web client read server-side chat timing diagnostics in development.
+  res.setHeader('Access-Control-Expose-Headers', 'Server-Timing');
 
   if (req.method === 'OPTIONS') {
     return res.sendStatus(204);
