@@ -56,6 +56,20 @@ export const chatService = {
     await storageService.setItem(`@sunny_guest_chat_messages_${sessionId}`, messages);
   },
 
+  async appendMessage(
+    sessionId: string,
+    message: ChatMessage,
+    currentMessages: ChatMessage[]
+  ): Promise<void> {
+    const { data } = await supabase.auth.getSession();
+    if (data.session?.user) {
+      await cloudStorageService.appendChatMessage(sessionId, message);
+      return;
+    }
+    // Guest chat is stored as one local JSON array, so keep that behavior.
+    await storageService.setItem(`@sunny_guest_chat_messages_${sessionId}`, currentMessages);
+  },
+
   async clearMessages(sessionId: string = 'default-session'): Promise<void> {
     const { data } = await supabase.auth.getSession();
     if (data.session?.user) {
