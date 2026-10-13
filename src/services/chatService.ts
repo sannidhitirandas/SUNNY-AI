@@ -132,6 +132,7 @@ export const chatService = {
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (session?.access_token) headers.Authorization = `Bearer ${session.access_token}`;
 
+      const requestStartedAt = Date.now();
       const response = await fetch(apiUrl('/api/chat'), {
         method: 'POST',
         headers,
@@ -142,6 +143,15 @@ export const chatService = {
         })),
         signal: controller.signal,
       });
+      const networkDurationMs = Date.now() - requestStartedAt;
+      if (import.meta.env.DEV) {
+        console.info('[chat-timing] client request received', {
+          networkDurationMs,
+          serverTiming: response.headers.get('Server-Timing'),
+          historyMessagesSent: formattedHistory.length,
+          attachmentCount: attachments.length,
+        });
+      }
 
       clearTimeout(timeoutId);
       const data = await response.json().catch(() => null);
