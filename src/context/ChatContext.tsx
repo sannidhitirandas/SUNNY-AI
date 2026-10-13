@@ -19,6 +19,9 @@ import {
 interface ChatContextType {
   messages: ChatMessage[];
   isThinking: boolean;
+  isLoadingOlderMessages: boolean;
+  hasOlderMessages: boolean;
+  loadOlderMessages: () => Promise<void>;
   lastError: string | null;
   activeIntent: StarterIntent | null;
   sendMessage: (content: string, files?: File[]) => Promise<void>;
@@ -35,6 +38,9 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isThinking, setIsThinking] = useState<boolean>(false);
+  const [isLoadingOlderMessages, setIsLoadingOlderMessages] = useState(false);
+  const [hasOlderMessages, setHasOlderMessages] = useState(false);
+  const olderMessagesCursorRef = useRef<string | undefined>(undefined);
   const [lastError, setLastError] = useState<string | null>(null);
   const [activeIntent, setActiveIntent] = useState<StarterIntent | null>(null);
   const loadRequestRef = useRef(0);
@@ -53,11 +59,13 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (hydrationPromiseRef.current) return hydrationPromiseRef.current;
 
     const requestId = ++loadRequestRef.current;
-    const loading = chatService.getMessages('default-session')
-      .then((loaded) => {
+    const loading = chatService.getMessagesPage('default-session', { limit: 50 })
+      .then((page) => {
         if (requestId !== loadRequestRef.current) return;
-        const hydratedMessages = normalizeHydratedVibeStarters(loaded);
+        const hydratedMessages = normalizeHydratedVibeStarters(page.messages);
         updateMessages(hydratedMessages);
+        olderMessagesCursorRef.current = page.messages[0]?.createdAt;
+        setHasOlderMessages(page.hasMore);
         hydratedRef.current = true;
       })
       .catch((error) => {
@@ -93,6 +101,8 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       loadRequestRef.current += 1;
       hydratedRef.current = false;
       hydrationPromiseRef.current = null;
+      olderMessagesCursorRef.current = undefined;
+      setHasOlderMessages(false);
       if (mounted) updateMessages([]);
       if (session?.user) {
         window.setTimeout(() => {
@@ -109,6 +119,32 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       subscription.unsubscribe();
     };
   }, []);
+
+  const loadOlderMessages = async () => {
+    const cursor = olderMessagesCursorRef.current;
+    if (!cursor || !hasOlderMessages || isLoadingOlderMessages) return;
+
+    setIsLoadingOlderMessages(true);
+    try {
+      const page = await chatService.getMessagesPage('default-session', { before: cursor, limit: 50 });
+      if (page.messages.length === 0) {
+        setHasOlderMessages(false);
+        return;
+      }
+
+      const existingIds = new Set(messagesRef.current.map((message) => message.id));
+      const older = page.messages.filter((message) => !existingIds.has(message.id));
+      if (older.length > 0) {
+        updateMessages([...older, ...messagesRef.current]);
+        olderMessagesCursorRef.current = page.messages[0].createdAt;
+      }
+      setHasOlderMessages(page.hasMore);
+    } catch (error) {
+      console.warn('[ChatContext] Could not load older messages:', error);
+    } finally {
+      setIsLoadingOlderMessages(false);
+    }
+  };
 
   const enterChat = async (entry: ChatEntrySource) => {
     await ensureMessagesHydrated();
@@ -240,8 +276,10 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const clearChat = async () => {
     await chatService.clearMessages('default-session');
-    const fresh = await chatService.getMessages('default-session');
-    updateMessages(normalizeHydratedVibeStarters(fresh));
+    const fresh = await chatService.getMessagesPage('default-session', { limit: 50 });
+    updateMessages(normalizeHydratedVibeStarters(fresh.messages));
+    olderMessagesCursorRef.current = fresh.messages[0]?.createdAt;
+    setHasOlderMessages(fresh.hasMore);
     setActiveIntent(null);
     setLastError(null);
   };
@@ -251,6 +289,9 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       value={{
         messages,
         isThinking,
+        isLoadingOlderMessages,
+        hasOlderMessages,
+        loadOlderMessages,
         lastError,
         activeIntent,
         sendMessage,
