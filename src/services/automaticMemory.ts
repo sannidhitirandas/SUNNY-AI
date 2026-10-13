@@ -8,7 +8,7 @@ const MEMORY_CATEGORIES: MemoryCategory[] = [
   'preferences',
 ];
 
-const SENSITIVE_PATTERN = /\b(password|passphrase|api key|secret key|private key|credit card|social security|ssn|bank account|seed phrase|recovery phrase|one[- ]time code|verification code|\botp\b)\b/i;
+const SENSITIVE_PATTERN = /\b(password|passphrase|api key|secret key|private key|credit card|social security|ssn|bank account|routing number|passport number|driver'?s license|tax id|seed phrase|recovery phrase|one[- ]time code|verification code|\botp\b|medical diagnosis|diagnosed with|prescription medication|my medication|medical treatment|my religion|religious affiliation|political affiliation|political party|sexual orientation|home address|street address|my address is|latitude|longitude|i am hindu|i am muslim|i am christian|i am jewish|i am buddhist|i am atheist|i am gay|i am lesbian|i am bisexual|i am transgender)\b/i;
 
 export interface AutomaticMemoryCandidate {
   key: string;
