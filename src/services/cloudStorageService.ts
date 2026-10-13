@@ -36,6 +36,44 @@ export const cloudStorageService = {
     }));
   },
 
+  async getChatMessagesPage(
+    sessionId = 'default-session',
+    options: { before?: string; limit?: number } = {}
+  ): Promise<{ messages: ChatMessage[]; hasMore: boolean }> {
+    const userId = await getUserId();
+    const limit = Math.max(1, Math.min(options.limit ?? 50, 100));
+    let query = supabase
+      .from('sunny_chat_messages')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('session_id', sessionId)
+      .order('created_at', { ascending: false })
+      .limit(limit + 1);
+
+    if (options.before) query = query.lt('created_at', options.before);
+
+    const { data, error } = await query;
+    if (error) throw error;
+
+    const rows = data ?? [];
+    const hasMore = rows.length > limit;
+    const page = rows.slice(0, limit).reverse();
+    return {
+      messages: page.map((row) => ({
+        id: row.id,
+        sessionId: row.session_id,
+        role: row.role,
+        content: row.content,
+        createdAt: row.created_at,
+        deliveryStatus: row.delivery_status,
+        isDemoResponse: row.is_demo_response,
+        model: row.model ?? undefined,
+        errorMessage: row.error_message ?? undefined,
+      })),
+      hasMore,
+    };
+  },
+
   async appendChatMessage(sessionId: string, message: ChatMessage): Promise<void> {
     if (message.id === 'welcome-msg-1') return;
     const userId = await getUserId();
