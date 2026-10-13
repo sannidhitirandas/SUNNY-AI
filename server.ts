@@ -750,10 +750,13 @@ async function generateWithGroq(
         error?.name === 'TimeoutError' ||
         error?.name === 'AbortError';
 
+      // Immediately switch providers on quota exhaustion or a timed-out call.
+      if (status === 429 || error?.name === 'AbortError' || error?.name === 'TimeoutError') {
+        throw error;
+      }
+
       if (
         temporary &&
-        status !== 429 &&
-        error?.name !== 'AbortError' &&
         model !== GROQ_MODELS[GROQ_MODELS.length - 1]
       ) {
         console.warn(
@@ -932,7 +935,11 @@ async function generateWithFastFallback(
 
       // Quota exhaustion and timeouts should switch providers/return promptly,
       // rather than spending another full timeout on the same provider.
-      if (temporaryError && status !== 429 && error?.name !== 'AbortError') {
+      if (status === 429 || error?.name === 'AbortError' || error?.name === 'TimeoutError') {
+        throw error;
+      }
+
+      if (temporaryError) {
         console.warn(
           `[Gemini] ${model} temporarily unavailable. Trying next model...`
         );
