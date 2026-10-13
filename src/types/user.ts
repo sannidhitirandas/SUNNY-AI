@@ -1,6 +1,20 @@
 import { NotificationPreferences, normalizeNotificationPreferences } from './notifications';
 
+/**
+ * Stable stored IDs kept for compatibility with existing user preferences.
+ * The UI presents these as Sunny's four companion personalities.
+ */
 export type PersonalityTone = 'adaptive' | 'playful' | 'gentle' | 'calm';
+
+export const PERSONALITY_LABELS: Record<PersonalityTone, string> = {
+  gentle: 'Listener & Supportive',
+  playful: 'Funny Friend',
+  calm: 'Encourager',
+  adaptive: 'The Mix',
+};
+
+export const getPersonalityLabel = (tone: PersonalityTone | string): string =>
+  PERSONALITY_LABELS[tone as PersonalityTone] ?? PERSONALITY_LABELS.adaptive;
 export type SunnyTheme = 'sunny-dark' | 'sunny-light';
 export type BackgroundMusicOption = 'ambient' | 'midnight-notes' | 'blossoms' | 'dust' | 'after-school-rain';
 
