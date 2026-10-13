@@ -1275,7 +1275,7 @@ app.post(
 
       if (
         typeof message !== 'string' ||
-        (!message.trim() && !Array.isArray(rawAttachments))
+        (!message.trim() && (!Array.isArray(rawAttachments) || rawAttachments.length === 0))
       ) {
         return res.status(400).json({
           success: false,
@@ -1291,11 +1291,43 @@ app.post(
         });
       }
 
+      // Reject malformed or unbounded collection inputs before doing any
+      // expensive file parsing or AI-provider work.
+      if (history !== undefined && (!Array.isArray(history) || history.length > 100)) {
+        return res.status(400).json({
+          success: false,
+          error: 'Conversation history is invalid or too large. Please start a new chat or try again.',
+        });
+      }
+      if (memories !== undefined && (!Array.isArray(memories) || memories.length > 100)) {
+        return res.status(400).json({
+          success: false,
+          error: 'Saved memories are invalid or too large. Please try again.',
+        });
+      }
+      if (rawAttachments !== undefined && !Array.isArray(rawAttachments)) {
+        return res.status(400).json({
+          success: false,
+          error: 'Attachments must be sent as a list of files.',
+        });
+      }
+
       // --------------------------------------------------
       // Validate and process attachments
       // --------------------------------------------------
 
-      const processedAttachments = await processAttachments(rawAttachments);
+      let processedAttachments: Awaited<ReturnType<typeof processAttachments>>;
+      try {
+        processedAttachments = await processAttachments(rawAttachments);
+      } catch (attachmentError) {
+        const message = attachmentError instanceof Error
+          ? attachmentError.message.slice(0, 240)
+          : 'One of the attachments could not be processed.';
+        return res.status(400).json({
+          success: false,
+          error: message,
+        });
+      }
       const hasImageAttachment = processedAttachments.some((attachment) => attachment.kind === 'image');
 
       // --------------------------------------------------
