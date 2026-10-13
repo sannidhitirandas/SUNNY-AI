@@ -1755,7 +1755,7 @@ app.post(
           );
           guestMemoryMs = Date.now() - guestMemoryStartedAt;
           if (candidates.length > 0) {
-            const ownerId = memoryAuth.kind === 'user' ? memoryAuth.userId : 'guest';
+            const ownerId = 'guest';
             const mergedMemories = mergeAutomaticMemories(
               allMemories,
               candidates,
@@ -1770,29 +1770,7 @@ app.post(
               )
               .filter((memory): memory is Memory => Boolean(memory));
 
-            if (memoryAuth.kind === 'user') {
-              const rows = changedMemories.map((memory) => ({
-                id: memory.id,
-                user_id: memoryAuth.userId,
-                title: memory.title,
-                content: memory.content,
-                category: memory.category,
-                created_at: memory.createdAt,
-                updated_at: memory.updatedAt,
-                user_confirmed: memory.userConfirmed,
-                source_session_id: memory.sourceSessionId ?? null,
-                is_demo_data: false,
-                memory_key: memory.memoryKey,
-                expires_at: memory.expiresAt ?? null,
-              }));
-              const { error } = await memoryAuth.client
-                .from('sunny_memories')
-                .upsert(rows, { onConflict: 'user_id,memory_key' });
-              if (error) throw error;
-              memoriesUpdated = true;
-            } else {
-              memoryUpdates = candidates;
-            }
+          memoryUpdates = candidates;
           }
         } catch (error) {
           console.warn('[memory] Automatic memory processing failed:', error);
@@ -1919,7 +1897,11 @@ app.use((error: any, _req: Request, res: Response, next: NextFunction) => {
     });
   }
 
-  if (error instanceof SyntaxError && error?.status === 400 && 'body' in error) {
+ if (
+  error instanceof SyntaxError &&
+  (error as SyntaxError & { status?: number }).status === 400 &&
+  'body' in error
+) {
     return res.status(400).json({
       success: false,
       error: 'Sunny received an invalid request. Please try again.',
