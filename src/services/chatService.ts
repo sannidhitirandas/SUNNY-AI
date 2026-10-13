@@ -37,14 +37,27 @@ const fileToDataUrl = (file: File): Promise<string> =>
   });
 
 export const chatService = {
-  async getMessages(sessionId: string = 'default-session'): Promise<ChatMessage[]> {
+  async getMessagesPage(
+    sessionId: string = 'default-session',
+    options: { before?: string; limit?: number } = {}
+  ): Promise<{ messages: ChatMessage[]; hasMore: boolean }> {
     const { data } = await supabase.auth.getSession();
     if (data.session?.user) {
-      const saved = await cloudStorageService.getChatMessages(sessionId);
-      return saved.length > 0 ? saved : createInitialMessages();
+      const page = await cloudStorageService.getChatMessagesPage(sessionId, options);
+      return {
+        messages: page.messages.length > 0 || options.before ? page.messages : createInitialMessages(),
+        hasMore: page.hasMore,
+      };
     }
+
+    // Guest history remains local and small enough to read as a single stored array.
     const local = await storageService.getItem<ChatMessage[]>(`@sunny_guest_chat_messages_${sessionId}`, []);
-    return local.length > 0 ? local : createInitialMessages();
+    return { messages: local.length > 0 ? local : createInitialMessages(), hasMore: false };
+  },
+
+  async getMessages(sessionId: string = 'default-session'): Promise<ChatMessage[]> {
+    const page = await this.getMessagesPage(sessionId, { limit: 100 });
+    return page.messages;
   },
 
   async saveMessages(sessionId: string, messages: ChatMessage[]): Promise<void> {
