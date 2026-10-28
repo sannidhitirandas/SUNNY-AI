@@ -19,6 +19,17 @@ export interface AutomaticMemoryCandidate {
   expiresAt?: string;
 }
 
+/**
+ * Avoid running the extra AI memory-extraction request for messages that are
+ * unlikely to contain an explicit, potentially useful personal fact.
+ */
+export function shouldExtractAutomaticMemories(message: string): boolean {
+  const text = message.trim();
+  if (text.length < 12) return false;
+
+  return /\b(?:my|our|i'm|i am|i've|i have|i like|i love|i hate|i prefer|i want|i need|i work|i study|i live|call me|remember that|from now on)\b/i.test(text);
+}
+
 export function normalizeMemoryKey(value: string): string {
   return value
     .toLowerCase()
