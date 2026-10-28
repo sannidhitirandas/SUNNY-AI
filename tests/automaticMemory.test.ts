@@ -9,8 +9,32 @@ import {
   removeMemoryById,
   selectGuestMemoriesToImport,
   selectRelevantMemories,
+  shouldExtractAutomaticMemories,
 } from '../src/services/automaticMemory';
 import { storageService } from '../src/services/storageService';
+
+test('automatic-memory trigger matches explicit personal facts using word boundaries', () => {
+  for (const message of [
+    'I love drawing and sketching.',
+    'I live in Hyderabad.',
+    'My favorite subject is biology.',
+    'Remember that I prefer quiet places.',
+    'From now on, call me Sunny.',
+  ]) {
+    assert.equal(shouldExtractAutomaticMemories(message), true, message);
+  }
+});
+
+test('automatic-memory trigger skips short or unrelated messages', () => {
+  for (const message of [
+    'Hi there!',
+    'That sounds interesting, tell me more about it.',
+    'The word myopic is unrelated to a personal fact.',
+    'I love',
+  ]) {
+    assert.equal(shouldExtractAutomaticMemories(message), false, message);
+  }
+});
 
 const existingMemory: Memory = {
   id: 'memory-1',
