@@ -10,7 +10,7 @@ interface GreetingCardProps {
 
 function SunshineIllustration() {
   return (
-    <div aria-hidden="true" className="sunny-hero-art relative mx-auto flex h-32 w-full max-w-[310px] items-end justify-center sm:h-40 lg:absolute lg:bottom-0 lg:right-5 lg:h-full lg:w-[42%] lg:max-w-none">
+    <div aria-hidden="true" className="sunny-hero-art relative mx-auto flex h-32 w-full max-w-[260px] sm:max-w-[310px] items-end justify-center sm:h-40 lg:absolute lg:bottom-0 lg:right-5 lg:h-full lg:w-[42%] lg:max-w-none">
       <div className="absolute bottom-3 h-12 w-56 rounded-[50%] bg-[#6C4A87]/35 blur-xl sm:bottom-5 sm:h-16 sm:w-64" />
       <svg viewBox="0 0 280 150" className="relative z-10 h-full w-full overflow-visible" role="presentation">
         <defs>

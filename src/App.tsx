@@ -403,7 +403,7 @@ export function App() {
 
   return (
     <div className="h-dvh min-h-0 overflow-hidden bg-[#100B22] flex flex-col relative selection:bg-[#FFD84D] selection:text-[#100B22]">
-      <main className="flex-1 min-h-0 flex flex-col overflow-hidden pb-16">
+      <main className={`flex-1 min-h-0 flex flex-col overflow-hidden ${activeTab === 'chat' && isKeyboardVisible ? 'pb-0' : 'pb-16'}`}>
         {activeTab === 'home' && (
           <HomeScreen
             onNavigateToTab={(tab) => handleTabChange(tab)}

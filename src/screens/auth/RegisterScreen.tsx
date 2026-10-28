@@ -69,7 +69,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center max-w-sm mx-auto w-full px-6 py-12 bg-[#100B22]">
+    <div className="min-h-[100dvh] overflow-y-auto flex flex-col justify-center max-w-sm mx-auto w-full px-6 py-12 bg-[#100B22]">
       <div className="flex flex-col items-center text-center mb-6">
         <SunnyLogo size="medium" />
         <h1 className="text-2xl font-bold text-white mt-4 mb-1">Join Sunny</h1>
