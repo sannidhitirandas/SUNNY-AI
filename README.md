@@ -76,7 +76,7 @@ Sunny uses a bespoke dark theme designed to feel calm, warm, and welcoming:
 - **File Attachments** for PDF, DOCX, TXT, CSV, XLS/XLSX, JSON, Markdown, PNG, JPG/JPEG, and WebP files.
 - Attachments are validated server-side, parsed into AI context, and displayed in chat history as file metadata.
 - Images use Gemini vision; text/document attachments can use the existing Groq → Gemini fallback.
-- Attachment limits: up to 3 files per message, 5 MB per file, and 10 MB combined.
+- Attachment limits: up to 3 files per message, 50 MB per file, and 50 MB combined (measured after base64 decoding). Extracted text is capped at 30,000 characters per file and 80,000 characters combined.
 
 ### 5. Memories Management
 
