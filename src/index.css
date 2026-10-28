@@ -1,7 +1,15 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Gabriola';
+  src: url('/fonts/Gabriola.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
-  --font-sans: "Gabriela", Georgia, serif;
+  --font-sans: "Gabriola", Georgia, serif;
   --color-sunny-bg: #100B22;
   --color-sunny-secondary: #17102C;
   --color-sunny-card: #21163A;
@@ -19,7 +27,7 @@
 }
 
 body {
-  font-family: "Gabriela", Georgia, serif;
+  font-family: "Gabriola", Georgia, serif;
   font-size: 18px;
   background-color: var(--sunny-page-background, #100B22);
   color: var(--sunny-primary-text, #FFFFFF);
@@ -211,7 +219,7 @@ html {
 }
 
 body {
-  font-family: "Gabriela", Georgia, serif;
+  font-family: "Gabriola", Georgia, serif;
   font-size: 16px;
   line-height: 1.5;
 }

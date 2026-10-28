@@ -27,6 +27,7 @@ import { AboutScreen } from '@/screens/settings/AboutScreen';
 import { OnboardingFlow } from '@/screens/onboarding/OnboardingFlow';
 import { resolveAppRoute } from '@/lib/authRouting';
 import { resolveAndroidBackAction, type AndroidBackState } from '@/lib/androidBackNavigation';
+import { apiUrl } from '@/lib/api';
 
 import {
   Home,
@@ -58,6 +59,18 @@ export function App() {
   } = usePreferences();
 
   const [showSplash, setShowSplash] = useState(true);
+
+  // Silent background warm-up ping to wake up the Render backend server on app launch
+  useEffect(() => {
+    const warmUpServer = async () => {
+      try {
+        await fetch(apiUrl('/api/health'), { method: 'GET' }).catch(() => {});
+      } catch {
+        // Ignore warm-up network errors
+      }
+    };
+    void warmUpServer();
+  }, []);
   const [activeTab, setActiveTab] = useState<Tab>('home');
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [activeSubScreen, setActiveSubScreen] =
