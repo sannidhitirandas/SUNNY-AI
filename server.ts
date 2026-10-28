@@ -63,17 +63,6 @@ for (const envFile of ['.env.local', '.env']) {
 function getConfiguredModel(envName: string, fallback: string): string {
   const configured = process.env[envName]?.trim();
   if (!configured) return fallback;
-
-  // Google has restricted older Gemini 2.x models for new users/projects.
-  // Ignore a stale local setting rather than letting one unavailable model
-  // prevent the newer fallback models from being attempted.
-  if (envName === 'GEMINI_MODEL' && /^gemini-2\./i.test(configured)) {
-    console.warn(
-      `[Gemini] Ignoring legacy GEMINI_MODEL=${configured}. Using ${fallback} first.`
-    );
-    return fallback;
-  }
-
   return configured;
 }
 
@@ -197,9 +186,12 @@ const GROQ_TIMEOUT_MS = 12000;
 
 const GEMINI_MODELS = Array.from(
   new Set([
-    getConfiguredModel('GEMINI_MODEL', 'gemini-3.8-flash'),
-    'gemini-3.7-flash',
-    'gemini-3.5-flash-lite',
+    getConfiguredModel('GEMINI_MODEL', 'gemini-2.5-flash'),
+    'gemini-2.0-flash',
+    'gemini-1.5-flash',
+    'gemini-2.5-pro',
+    'gemini-flash-latest',
+    'gemini-3.5-flash',
   ])
 );
 
@@ -992,54 +984,69 @@ async function generateAIResponse(
   model: string;
 }> {
   // --------------------------------------------------
-  // 1. GROQ FIRST (text-only attachments). Images require Gemini vision.
+  // 1. GEMINI FIRST FOR IMAGES, GROQ FIRST FOR TEXT
   // --------------------------------------------------
 
-  if (!forceGemini && process.env.GROQ_API_KEY) {
-    try {
-      return await generateWithGroq(
-        groqMessages,
-        temperature
-      );
-    } catch (error: any) {
-      console.warn(
-        '[AI] Groq failed. Falling back to Gemini...',
-        error?.message || error
-      );
+  if (forceGemini) {
+    if (process.env.GEMINI_API_KEY) {
+      try {
+        return await generateWithFastFallback(
+          contents,
+          systemInstruction,
+          temperature
+        );
+      } catch (geminiError: any) {
+        console.warn(
+          '[AI] Gemini failed for image response. Trying Groq fallback...',
+          geminiError?.message || geminiError
+        );
+      }
     }
-  } else if (!forceGemini) {
-    console.warn(
-      '[AI] GROQ_API_KEY is not configured. Skipping Groq.'
-    );
-  }
-
-  // --------------------------------------------------
-  // 2. GEMINI FALLBACK
-  // --------------------------------------------------
-
-  if (process.env.GEMINI_API_KEY) {
-    try {
-      return await generateWithFastFallback(
-        contents,
-        systemInstruction,
-        temperature
-      );
-    } catch (error: any) {
-      console.warn(
-        '[AI] Gemini fallback failed.',
-        error?.message || error
-      );
-
-      throw error;
+    if (process.env.GROQ_API_KEY) {
+      try {
+        return await generateWithGroq(
+          groqMessages,
+          temperature
+        );
+      } catch (groqError: any) {
+        console.warn(
+          '[AI] Groq fallback failed for image response:',
+          groqError?.message || groqError
+        );
+      }
+    }
+  } else {
+    if (process.env.GROQ_API_KEY) {
+      try {
+        return await generateWithGroq(
+          groqMessages,
+          temperature
+        );
+      } catch (groqError: any) {
+        console.warn(
+          '[AI] Groq failed. Trying Gemini fallback...',
+          groqError?.message || groqError
+        );
+      }
+    }
+    if (process.env.GEMINI_API_KEY) {
+      try {
+        return await generateWithFastFallback(
+          contents,
+          systemInstruction,
+          temperature
+        );
+      } catch (geminiError: any) {
+        console.warn(
+          '[AI] Gemini fallback failed:',
+          geminiError?.message || geminiError
+        );
+      }
     }
   }
 
   throw Object.assign(
-    new Error(
-      forceGemini
-        ? 'Image attachments require GEMINI_API_KEY to be configured on the server.'
-        : 'No AI provider is configured. Add GROQ_API_KEY or GEMINI_API_KEY.'
-    ),
+    new Error('No AI provider responded successfully. Please try again in a moment.'),
     { status: 503 }
   );
 }

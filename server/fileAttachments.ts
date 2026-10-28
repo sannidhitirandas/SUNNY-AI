@@ -40,10 +40,25 @@ function safeName(name: string) {
 }
 
 function decodeDataUrl(data: string) {
-  const match = /^data:([^;,]+);base64,([\s\S]+)$/.exec(data.trim());
-  if (!match) throw new Error('Invalid attachment encoding.');
-  const base64Str = match[2].replace(/\s+/g, '');
-  return { mimeType: match[1].toLowerCase(), buffer: Buffer.from(base64Str, 'base64') };
+  const trimmed = data.trim();
+  let mimeType = 'application/octet-stream';
+  let base64Str = trimmed;
+
+  if (trimmed.startsWith('data:')) {
+    const match = /^data:([^;,]*);base64,([\s\S]+)$/.exec(trimmed);
+    if (match) {
+      if (match[1] && match[1].trim()) {
+        mimeType = match[1].toLowerCase().trim();
+      }
+      base64Str = match[2].replace(/\s+/g, '');
+    } else {
+      throw new Error('Invalid attachment encoding.');
+    }
+  } else {
+    base64Str = trimmed.replace(/\s+/g, '');
+  }
+
+  return { mimeType, buffer: Buffer.from(base64Str, 'base64') };
 }
 
 function detectImageMime(buffer: Buffer): string | null {

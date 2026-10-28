@@ -32,7 +32,20 @@ export interface SendMessageOptions {
 const fileToDataUrl = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload = () => typeof reader.result === 'string' ? resolve(reader.result) : reject(new Error('Could not read attachment.'));
+    reader.onload = () => {
+      if (typeof reader.result !== 'string') {
+        return reject(new Error(`Could not read ${file.name}.`));
+      }
+      let dataUrl = reader.result.trim();
+      if (!dataUrl.startsWith('data:')) {
+        const mime = file.type || 'application/octet-stream';
+        dataUrl = `data:${mime};base64,${dataUrl}`;
+      } else if (dataUrl.startsWith('data:;base64,')) {
+        const mime = file.type || 'application/octet-stream';
+        dataUrl = `data:${mime};base64,${dataUrl.slice('data:;base64,'.length)}`;
+      }
+      resolve(dataUrl);
+    };
     reader.onerror = () => reject(new Error(`Could not read ${file.name}.`));
     reader.readAsDataURL(file);
   });
@@ -108,7 +121,8 @@ export const chatService = {
     } = options;
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 60000);
+    const timeoutMs = files.length > 0 ? 120000 : 60000;
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
     try {
       const formattedHistory = limitConversationHistory(
@@ -170,8 +184,13 @@ export const chatService = {
       return { text: data.text, memoriesUpdated: data.memoriesUpdated === true, memoryUpdates };
     } catch (err: unknown) {
       clearTimeout(timeoutId);
-      if (err instanceof DOMException && err.name === 'AbortError') throw new Error('Sunny took a bit too long to respond. Please tap Retry to try again.');
-      if (err instanceof Error) throw err;
+      console.error('[sendMessageToAI] Error during AI chat completion:', err);
+      if (err instanceof DOMException && err.name === 'AbortError') {
+        throw new Error('Sunny took a bit too long to process your message and attachment. Please tap Retry to try again.');
+      }
+      if (err instanceof Error && err.message) {
+        throw err;
+      }
       throw new Error('Sunny had a brief connection stumble. Please tap Retry to try again.');
     }
   },

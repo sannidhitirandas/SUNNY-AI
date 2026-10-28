@@ -48,6 +48,55 @@ const base64ToBlob = async (base64Data: string, contentType: string = 'applicati
   return await response.blob();
 };
 
+const compressImageIfNeeded = async (file: File): Promise<File> => {
+  if (!file.type.startsWith('image/') || file.size < 400 * 1024) {
+    return file;
+  }
+
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const MAX_DIM = 1600;
+      let width = img.width;
+      let height = img.height;
+
+      if (width > MAX_DIM || height > MAX_DIM) {
+        if (width > height) {
+          height = Math.round((height * MAX_DIM) / width);
+          width = MAX_DIM;
+        } else {
+          width = Math.round((width * MAX_DIM) / height);
+          height = MAX_DIM;
+        }
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return resolve(file);
+
+      ctx.drawImage(img, 0, 0, width, height);
+      canvas.toBlob(
+        (blob) => {
+          if (!blob || blob.size >= file.size) return resolve(file);
+          const compressedName = file.name.replace(/\.[^/.]+$/, '') + '.jpg';
+          resolve(new File([blob], compressedName, { type: 'image/jpeg' }));
+        },
+        'image/jpeg',
+        0.85
+      );
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve(file);
+    };
+    img.src = url;
+  });
+};
+
 export const MessageComposer: React.FC<MessageComposerProps> = ({
   onSend,
   disabled = false,
@@ -63,13 +112,23 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
   const [sending, setSending] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const addFiles = (selected: File[]) => {
+  const addFiles = async (selected: File[]) => {
     if (selected.length === 0) return;
     setFileError(null);
 
+    const compressedList: File[] = [];
+    for (const f of selected) {
+      try {
+        const compressed = await compressImageIfNeeded(f);
+        compressedList.push(compressed);
+      } catch {
+        compressedList.push(f);
+      }
+    }
+
     setFiles((currentFiles) => {
       const next = [...currentFiles];
-      for (const file of selected) {
+      for (const file of compressedList) {
         if (next.some((item) => item.name === file.name && item.size === file.size)) continue;
         if (next.length >= MAX_FILES) {
           setFileError(`You can attach up to ${MAX_FILES} files per message.`);
@@ -93,17 +152,40 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
 
   const triggerWebFileInput = (): Promise<File[]> => {
     return new Promise((resolve) => {
+      let resolved = false;
+      const finish = (resultFiles: File[]) => {
+        if (resolved) return;
+        resolved = true;
+        window.removeEventListener('focus', onFocusCheck);
+        resolve(resultFiles);
+      };
+
       const input = document.createElement('input');
       input.type = 'file';
       input.accept = '.pdf,.doc,.docx,.txt,.csv,.xls,.xlsx,.json,.md,.png,.jpg,.jpeg,.webp';
       input.multiple = false;
+
       input.onchange = () => {
         if (input.files && input.files.length > 0) {
-          resolve(Array.from(input.files));
+          finish(Array.from(input.files));
         } else {
-          resolve([]);
+          finish([]);
         }
       };
+
+      if ('oncancel' in input) {
+        (input as unknown as { oncancel: () => void }).oncancel = () => finish([]);
+      }
+
+      const onFocusCheck = () => {
+        setTimeout(() => {
+          if (!resolved) {
+            finish(input.files && input.files.length > 0 ? Array.from(input.files) : []);
+          }
+        }, 500);
+      };
+
+      window.addEventListener('focus', onFocusCheck, { once: true });
       input.click();
     });
   };
@@ -131,12 +213,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
         }
 
         if (!result?.files?.length) {
-          // If native picker returned 0 files, try web chooser fallback
-          console.log('[Sunny] Native picker returned 0 files, trying web input fallback');
-          const webSelected = await triggerWebFileInput();
-          if (webSelected.length > 0) {
-            addFiles(webSelected);
-          }
+          console.log('[Sunny] Native picker returned 0 files or user cancelled');
           return;
         }
 
@@ -145,19 +222,30 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
 
         for (const item of result.files.slice(0, remaining)) {
           try {
-            let blob: Blob;
+            let blob: Blob | null = null;
 
-            if (item.data) {
-              blob = await base64ToBlob(item.data, item.mimeType);
-            } else if (item.path) {
-              const webPath = Capacitor.convertFileSrc(item.path);
-              const response = await fetch(webPath);
-              if (!response.ok) {
-                throw new Error('Unable to read selected file.');
+            if (item.path) {
+              try {
+                const webPath = Capacitor.convertFileSrc(item.path);
+                const response = await fetch(webPath);
+                if (response.ok) {
+                  blob = await response.blob();
+                }
+              } catch (err) {
+                console.warn('[Sunny] Failed to fetch converted file src path:', err);
               }
-              blob = await response.blob();
-            } else {
-              throw new Error('Unable to read selected file.');
+            }
+
+            if (!blob && item.data) {
+              try {
+                blob = await base64ToBlob(item.data, item.mimeType);
+              } catch (err) {
+                console.warn('[Sunny] Failed to convert base64 to blob:', err);
+              }
+            }
+
+            if (!blob) {
+              throw new Error(`Unable to read selected file: ${item.name}`);
             }
 
             converted.push(new File([blob], item.name, {
@@ -171,13 +259,13 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
         }
 
         console.log('[Sunny] Converted files:', converted.map(f => ({ name: f.name, size: f.size, type: f.type })));
-        addFiles(converted);
+        await addFiles(converted);
         return;
       }
 
       const webSelected = await triggerWebFileInput();
       if (webSelected.length > 0) {
-        addFiles(webSelected);
+        await addFiles(webSelected);
       }
     } catch (error) {
       console.error('[Sunny] File picker error:', error);

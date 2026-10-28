@@ -21,68 +21,69 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 import com.getcapacitor.PluginMethod;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 @CapacitorPlugin(name = "SunnyFilePicker")
 public class SunnyFilePickerPlugin extends Plugin {
 
-    private static final long MAX_FILE_SIZE = 50L * 1024L * 1024L;
+    private static final String TAG = "SunnyFilePicker";
+    private static final long MAX_FILE_SIZE = 50L * 1024L * 1024L; // 50 MB
 
     @PluginMethod
     public void pickFile(PluginCall call) {
-        Log.d("SunnyFilePicker", "pickFile() called");
+        Log.d(TAG, "pickFile() called");
         try {
+            cleanupTempFiles();
+
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.setType("*/*");
-            String[] mimeTypes = {
-                "image/*",
-                "application/pdf",
-                "application/msword",
-                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                "text/plain",
-                "text/csv",
-                "text/markdown",
-                "application/json",
-                "application/vnd.ms-excel",
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            };
-            intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            intent.putExtra(Intent.EXTRA_LOCAL_ONLY, false);
 
-            Intent chooser = Intent.createChooser(intent, "Select Attachment");
+            Intent chooser = Intent.createChooser(intent, "Select File");
             startActivityForResult(call, chooser, "handlePickerResult");
         } catch (Exception e) {
-            Log.e("SunnyFilePicker", "Failed to launch file picker intent", e);
-            call.reject("Unable to open Android file picker: " + e.getMessage());
+            Log.e(TAG, "Failed to launch ACTION_GET_CONTENT file picker intent, trying ACTION_OPEN_DOCUMENT", e);
+            try {
+                Intent docIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                docIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                docIntent.setType("*/*");
+                docIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                startActivityForResult(call, docIntent, "handlePickerResult");
+            } catch (Exception ex) {
+                Log.e(TAG, "Failed to launch fallback file picker intent", ex);
+                call.reject("Unable to open Android file picker: " + ex.getMessage());
+            }
         }
     }
 
     @ActivityCallback
     public void handlePickerResult(PluginCall call, ActivityResult result) {
-        Log.d("SunnyFilePicker", "handlePickerResult() called; call=" + (call != null) + ", result=" + (result != null));
+        Log.d(TAG, "handlePickerResult() called; call=" + (call != null) + ", result=" + (result != null));
         if (call == null) {
-            Log.e("SunnyFilePicker", "Picker callback received no PluginCall");
+            Log.e(TAG, "Picker callback received no PluginCall");
             return;
         }
         if (result == null) {
-            call.reject("Android did not return a file picker result. Please try again.");
+            call.resolve(new JSObject().put("files", new JSArray()));
             return;
         }
         if (result.getResultCode() != Activity.RESULT_OK) {
-            // A canceled picker is normal and should not be shown as an error.
+            Log.d(TAG, "Picker result not OK (user likely cancelled)");
             call.resolve(new JSObject().put("files", new JSArray()));
             return;
         }
         if (result.getData() == null) {
-            Log.e("SunnyFilePicker", "Picker returned RESULT_OK but no Intent data");
-            call.reject("Android opened the picker but returned no file. Please try again.");
+            Log.w(TAG, "Picker returned RESULT_OK but no Intent data");
+            call.resolve(new JSObject().put("files", new JSArray()));
             return;
         }
 
         Intent dataIntent = result.getData();
-        Log.d("SunnyFilePicker", "Picker data: clipData=" + (dataIntent.getClipData() != null)
-                + ", dataUri=" + (dataIntent.getData() != null));
         JSArray files = new JSArray();
 
         try {
@@ -91,9 +92,13 @@ public class SunnyFilePickerPlugin extends Plugin {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     Uri uri = clipData.getItemAt(i).getUri();
                     if (uri != null) {
-                        JSObject fileObj = processUri(uri);
-                        if (fileObj != null) {
-                            files.put(fileObj);
+                        try {
+                            JSObject fileObj = processUri(uri);
+                            if (fileObj != null) {
+                                files.put(fileObj);
+                            }
+                        } catch (Exception ex) {
+                            Log.e(TAG, "Failed to process clip item uri: " + uri, ex);
                         }
                     }
                 }
@@ -107,14 +112,10 @@ public class SunnyFilePickerPlugin extends Plugin {
 
             JSObject response = new JSObject();
             response.put("files", files);
-            Log.d("SunnyFilePicker", "pickFile resolved with " + files.length() + " files");
-            if (files.length() == 0) {
-                call.reject("Android returned no readable file. Try selecting a file from Downloads or another folder.");
-                return;
-            }
+            Log.d(TAG, "pickFile resolved with " + files.length() + " files");
             call.resolve(response);
         } catch (Exception e) {
-            Log.e("SunnyFilePicker", "picker callback failed", e);
+            Log.e(TAG, "picker callback failed", e);
             String detail = e.getMessage();
             call.reject(detail == null || detail.isEmpty()
                     ? "Unable to read selected file"
@@ -124,11 +125,25 @@ public class SunnyFilePickerPlugin extends Plugin {
 
     @PluginMethod
     public void releaseFile(PluginCall call) {
+        String path = call.getString("path");
+        if (path != null && !path.isEmpty()) {
+            try {
+                File file = new File(path);
+                File cacheDir = getContext().getCacheDir();
+                if (file.exists() && file.getAbsolutePath().startsWith(cacheDir.getAbsolutePath())) {
+                    boolean deleted = file.delete();
+                    Log.d(TAG, "releaseFile deleted " + path + ": " + deleted);
+                }
+            } catch (Exception e) {
+                Log.w(TAG, "Failed to release file: " + path, e);
+            }
+        }
         call.resolve();
     }
 
     private JSObject processUri(Uri uri) throws Exception {
-        Log.d("SunnyFilePicker", "processUri: uri=" + uri);
+        Log.d(TAG, "processUri: uri=" + uri);
+
         String name = getDisplayName(uri);
         String mimeType = getMimeType(uri, name);
         long size = getSize(uri);
@@ -137,46 +152,89 @@ public class SunnyFilePickerPlugin extends Plugin {
             throw new IllegalStateException("File is larger than 50 MB");
         }
 
-        byte[] fileBytes = readFileBytes(uri);
-        if (fileBytes.length == 0) {
-            throw new IllegalStateException("Selected file is empty");
-        }
-        if (fileBytes.length > MAX_FILE_SIZE) {
-            throw new IllegalStateException("File is larger than 50 MB");
+        File cacheDir = getContext().getCacheDir();
+        String safeName = name.replaceAll("[^a-zA-Z0-9._-]", "_");
+        File tempFile = new File(cacheDir, "sunny_picker_" + System.currentTimeMillis() + "_" + safeName);
+
+        long writtenBytes = 0;
+        ByteArrayOutputStream base64Buffer = new ByteArrayOutputStream();
+
+        try (InputStream input = getContext().getContentResolver().openInputStream(uri);
+             OutputStream output = new FileOutputStream(tempFile)) {
+            if (input == null) throw new IllegalStateException("Could not open selected file");
+
+            byte[] buffer = new byte[16384];
+            int nRead;
+            while ((nRead = input.read(buffer, 0, buffer.length)) != -1) {
+                writtenBytes += nRead;
+                if (writtenBytes > MAX_FILE_SIZE) {
+                    if (tempFile.exists()) {
+                        boolean deleted = tempFile.delete();
+                        Log.d(TAG, "Exceeded max file size, deleted temp file: " + deleted);
+                    }
+                    throw new IllegalStateException("File is larger than 50 MB");
+                }
+                output.write(buffer, 0, nRead);
+                base64Buffer.write(buffer, 0, nRead);
+            }
+            output.flush();
         }
 
-        String base64Data = Base64.encodeToString(fileBytes, Base64.NO_WRAP);
+        if (writtenBytes == 0) {
+            if (tempFile.exists()) {
+                boolean deleted = tempFile.delete();
+                Log.d(TAG, "Empty file, deleted temp file: " + deleted);
+            }
+            throw new IllegalStateException("Selected file is empty");
+        }
+
+        String base64Data = Base64.encodeToString(base64Buffer.toByteArray(), Base64.NO_WRAP);
 
         JSObject file = new JSObject();
         file.put("name", name);
         file.put("mimeType", mimeType);
-        file.put("size", size > 0 ? size : fileBytes.length);
+        file.put("size", size > 0 ? size : writtenBytes);
+        file.put("path", tempFile.getAbsolutePath());
         file.put("data", base64Data);
-        file.put("path", "");
-        Log.d("SunnyFilePicker", "processUri succeeded for name=" + name + ", mimeType=" + mimeType + ", bytes=" + fileBytes.length);
+        Log.d(TAG, "processUri succeeded: name=" + name + ", mimeType=" + mimeType + ", bytes=" + writtenBytes + ", path=" + tempFile.getAbsolutePath());
         return file;
     }
 
+    private void cleanupTempFiles() {
+        try {
+            File cacheDir = getContext().getCacheDir();
+            File[] files = cacheDir.listFiles((dir, filename) -> filename.startsWith("sunny_picker_"));
+            if (files != null) {
+                long now = System.currentTimeMillis();
+                for (File f : files) {
+                    if (now - f.lastModified() > 3600000) {
+                        boolean deleted = f.delete();
+                        Log.d(TAG, "Cleaned up old temp file: " + f.getName() + " -> " + deleted);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "cleanupTempFiles error", e);
+        }
+    }
+
     private String getDisplayName(Uri uri) {
-        Cursor cursor = getContext().getContentResolver().query(
+        try (Cursor cursor = getContext().getContentResolver().query(
                 uri,
                 new String[]{OpenableColumns.DISPLAY_NAME},
                 null,
                 null,
                 null
-        );
-        if (cursor != null) {
-            try {
-                if (cursor.moveToFirst()) {
-                    int index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                    if (index >= 0) {
-                        String value = cursor.getString(index);
-                        if (value != null && !value.trim().isEmpty()) return value;
-                    }
+        )) {
+            if (cursor != null && cursor.moveToFirst()) {
+                int index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                if (index >= 0) {
+                    String value = cursor.getString(index);
+                    if (value != null && !value.trim().isEmpty()) return value;
                 }
-            } finally {
-                cursor.close();
             }
+        } catch (Exception e) {
+            Log.w(TAG, "Failed to query DISPLAY_NAME for uri: " + uri, e);
         }
 
         String rawPath = uri.getPath();
@@ -186,30 +244,31 @@ public class SunnyFilePickerPlugin extends Plugin {
     }
 
     private long getSize(Uri uri) {
-        Cursor cursor = getContext().getContentResolver().query(
+        try (Cursor cursor = getContext().getContentResolver().query(
                 uri,
                 new String[]{OpenableColumns.SIZE},
                 null,
                 null,
                 null
-        );
-        if (cursor != null) {
-            try {
-                if (cursor.moveToFirst()) {
-                    int index = cursor.getColumnIndex(OpenableColumns.SIZE);
-                    if (index >= 0 && !cursor.isNull(index)) return cursor.getLong(index);
-                }
-            } finally {
-                cursor.close();
+        )) {
+            if (cursor != null && cursor.moveToFirst()) {
+                int index = cursor.getColumnIndex(OpenableColumns.SIZE);
+                if (index >= 0 && !cursor.isNull(index)) return cursor.getLong(index);
             }
+        } catch (Exception e) {
+            Log.w(TAG, "Failed to query SIZE for uri: " + uri, e);
         }
         return -1;
     }
 
     private String getMimeType(Uri uri, String name) {
-        String mimeType = getContext().getContentResolver().getType(uri);
-        if (mimeType != null && !mimeType.isEmpty() && !"application/octet-stream".equalsIgnoreCase(mimeType)) {
-            return mimeType;
+        try {
+            String mimeType = getContext().getContentResolver().getType(uri);
+            if (mimeType != null && !mimeType.isEmpty() && !"application/octet-stream".equalsIgnoreCase(mimeType)) {
+                return mimeType;
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "Failed to get type from ContentResolver: " + uri, e);
         }
 
         int dot = name.lastIndexOf('.');
@@ -233,24 +292,5 @@ public class SunnyFilePickerPlugin extends Plugin {
                 return mapped == null ? "application/octet-stream" : mapped;
         }
     }
-
-    private byte[] readFileBytes(Uri uri) throws Exception {
-        try (InputStream input = getContext().getContentResolver().openInputStream(uri);
-             ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
-            if (input == null) throw new IllegalStateException("Could not open selected file");
-
-            byte[] data = new byte[16384];
-            int nRead;
-            long total = 0;
-            while ((nRead = input.read(data, 0, data.length)) != -1) {
-                total += nRead;
-                if (total > MAX_FILE_SIZE) {
-                    throw new IllegalStateException("File is larger than 50 MB");
-                }
-                buffer.write(data, 0, nRead);
-            }
-            buffer.flush();
-            return buffer.toByteArray();
-        }
-    }
 }
+
