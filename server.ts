@@ -863,6 +863,23 @@ async function generateWithGroqStreaming(
       }
 
       buffer += decoder.decode();
+      const trailingData = buffer.split(/\\r?\\n/).find((line) => line.startsWith('data:'));
+      if (trailingData) {
+        const payloadText = trailingData.slice(5).trim();
+        if (payloadText && payloadText !== '[DONE]') {
+          try {
+            const payload: any = JSON.parse(payloadText);
+            const piece = payload?.choices?.[0]?.delta?.content;
+            if (typeof piece === 'string' && piece.length > 0) {
+              emitted = true;
+              fullText += piece;
+              onChunk(piece);
+            }
+          } catch {
+            // Ignore an incomplete trailing SSE frame.
+          }
+        }
+      }
       if (!emitted || !fullText.trim()) {
         throw Object.assign(new Error('Groq returned an empty response.'), { status: 502, model });
       }
