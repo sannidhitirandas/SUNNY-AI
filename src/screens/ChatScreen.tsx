@@ -9,6 +9,7 @@ import { TypingIndicator } from '@/components/chat/TypingIndicator';
 import { MemoryModal } from '@/components/memories/MemoryModal';
 import { MemoryCategory } from '@/types/memory';
 import { getPersonalityLabel } from '@/types/user';
+import { useChatBackground } from '@/lib/chatBackground';
 import { Bookmark, HeartHandshake, Trash2, X, AlertTriangle } from 'lucide-react';
 
 interface ChatScreenProps {
@@ -29,6 +30,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   const { messages, isThinking, isLoadingOlderMessages, hasOlderMessages, loadOlderMessages, lastError, sendMessage, retryMessage, clearChat } = useChat();
   const { preferences } = usePreferences();
   const { addMemory } = useMemories();
+  const { background } = useChatBackground();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesScrollRef = useRef<HTMLDivElement>(null);
@@ -45,9 +47,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
       preserveScrollRef.current = null;
       return;
     }
-    if (scrollArea) {
-      scrollArea.scrollTo({ top: scrollArea.scrollHeight, behavior: 'smooth' });
-    }
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isThinking]);
 
   const handleClearConfirm = async () => {
@@ -74,7 +74,32 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   const formattedTone = getPersonalityLabel(preferences.preferredTone);
 
   return (
-<div className="relative mx-auto flex h-full min-h-0 w-full max-w-5xl flex-1 flex-col bg-[#100B22] px-0 pb-16 sm:px-3 sm:pb-16 lg:rounded-3xl lg:border lg:border-[#392858]/70 lg:pb-8 lg:shadow-[0_24px_80px_rgba(0,0,0,0.18)]">
+<div className="relative isolate mx-auto flex h-full min-h-0 w-full max-w-5xl flex-1 flex-col overflow-hidden bg-[#100B22] px-0 pb-16 sm:px-3 sm:pb-16 lg:rounded-3xl lg:border lg:border-[#392858]/70 lg:pb-8 lg:shadow-[0_24px_80px_rgba(0,0,0,0.18)]">
+
+      {/* Chat wallpaper: image + theme-aware veil so message text stays readable */}
+      {background.pc && (
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden lg:rounded-3xl">
+          {/* Phones in portrait get the tall wallpaper; PCs and landscape get the wide one */}
+          <picture>
+            {background.mobile && <source media="(orientation: portrait)" srcSet={background.mobile} />}
+            <img
+              src={background.pc ?? undefined}
+              alt=""
+              draggable={false}
+              className="absolute inset-0 h-full w-full object-cover object-center"
+            />
+          </picture>
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                preferences.theme === 'sunny-light'
+                  ? 'linear-gradient(to bottom, rgba(248,246,252,0.72), rgba(248,246,252,0.82))'
+                  : 'linear-gradient(to bottom, rgba(16,11,34,0.45), rgba(16,11,34,0.70))',
+            }}
+          />
+        </div>
+      )}
 
       <ChatHeader
         onOptionsPress={() => setOptionsVisible(true)}
@@ -102,8 +127,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
       )}
 
       {/* Messages Scroll Area */}
-      <div ref={messagesScrollRef} className="min-h-0 flex-1 overscroll-contain overflow-y-auto bg-[radial-gradient(ellipse_at_top,rgba(48,33,73,0.18),transparent_55%)] px-1 py-4 sm:px-2 sm:py-6">
-        <div className="flex min-h-full flex-col justify-end gap-2 pb-2">
+      <div ref={messagesScrollRef} className="min-h-0 flex-1 space-y-1 overflow-y-auto bg-[radial-gradient(ellipse_at_top,rgba(48,33,73,0.18),transparent_55%)] py-4 sm:py-6">
         {hasOlderMessages && (
           <div className="flex justify-center px-4 pb-3">
             <button
@@ -131,7 +155,6 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
 
         {isThinking && <TypingIndicator />}
         <div ref={messagesEndRef} />
-        </div>
       </div>
 
       {/* Message Composer */}

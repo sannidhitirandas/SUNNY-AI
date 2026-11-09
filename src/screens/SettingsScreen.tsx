@@ -4,6 +4,7 @@ import { usePreferences } from '@/context/PreferencesContext';
 import { useChat } from '@/context/ChatContext';
 import { audioService } from '@/services/audioService';
 import { getPersonalityLabel, PersonalityTone, SunnyTheme } from '@/types/user';
+import { CHAT_BACKGROUNDS, useChatBackground } from '@/lib/chatBackground';
 import { SettingsSection } from '@/components/settings/SettingsSection';
 import { SettingsRow } from '@/components/settings/SettingsRow';
 import { AppInput } from '@/components/ui/AppInput';
@@ -14,6 +15,7 @@ import {
   Sparkles,
   User as UserIcon,
   Palette,
+  Image as ImageIcon,
   Bookmark,
   List,
   ShieldCheck,
@@ -84,9 +86,11 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
     resetOnboarding,
   } = usePreferences();
   const { clearChat } = useChat();
+  const { background, setChatBackground } = useChatBackground();
 
   const [toneModalVisible, setToneModalVisible] = useState(false);
   const [themeModalVisible, setThemeModalVisible] = useState(false);
+  const [backgroundModalVisible, setBackgroundModalVisible] = useState(false);
   const [nameModalVisible, setNameModalVisible] = useState(false);
   const [profileModalVisible, setProfileModalVisible] = useState(false);
   const [profileName, setProfileName] = useState('');
@@ -229,6 +233,13 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           icon={<Palette size={16} className="text-[#FFD84D]" />}
           rightText={preferences.theme === 'sunny-light' ? 'Sunny Day' : 'Sunny Night'}
           onPress={() => setThemeModalVisible(true)}
+        />
+        <SettingsRow
+          title="Chat background"
+          subtitle="Pick a wallpaper for your chat with Sunny"
+          icon={<ImageIcon size={16} className="text-[#FFD84D]" />}
+          rightText={background.label}
+          onPress={() => setBackgroundModalVisible(true)}
         />
       </SettingsSection>
 
@@ -501,6 +512,40 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               })}
             </div>
             <AppButton title="Close" onPress={() => setThemeModalVisible(false)} variant="ghost" fullWidth />
+          </div>
+        </div>
+      )}
+
+      {backgroundModalVisible && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
+          <div role="dialog" aria-modal="true" aria-labelledby="chat-bg-picker-title" className="w-full max-w-md max-h-[90vh] overflow-y-auto bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+            <h3 id="chat-bg-picker-title" className="text-base font-bold text-white mb-3">Chat background</h3>
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              {CHAT_BACKGROUNDS.map((item) => {
+                const isSelected = background.id === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    aria-pressed={isSelected}
+                    onClick={() => setChatBackground(item.id)}
+                    className={`relative overflow-hidden rounded-2xl border text-left transition-colors cursor-pointer ${
+                      isSelected ? 'border-[#FFD84D] ring-2 ring-[#FFD84D]/60' : 'border-[#392858] hover:border-white/30'
+                    }`}
+                  >
+                    <div
+                      className="h-24 w-full bg-[#100B22] bg-cover bg-center"
+                      style={item.thumb ? { backgroundImage: `url(${item.thumb})` } : undefined}
+                    />
+                    <div className="flex items-center justify-between bg-[#302149] px-3 py-2">
+                      <span className={`text-sm font-semibold ${isSelected ? 'text-[#FFD84D]' : 'text-white'}`}>{item.label}</span>
+                      {isSelected && <CheckCircle2 size={16} className="text-[#FFD84D] shrink-0 ml-2" />}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+            <AppButton title="Done" onPress={() => setBackgroundModalVisible(false)} variant="ghost" fullWidth />
           </div>
         </div>
       )}
