@@ -146,7 +146,7 @@ export async function processAttachments(input: unknown): Promise<ProcessedAttac
     if ('buffer' in raw && Buffer.isBuffer(raw.buffer)) {
       const multipart = raw as MultipartAttachment;
       decoded = {
-        buffer: multipart.buffer,
+        buffer: Buffer.from(multipart.buffer),
         mimeType: multipart.mimetype || 'application/octet-stream',
       };
       name = safeName(multipart.originalname);
