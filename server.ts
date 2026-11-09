@@ -8,7 +8,7 @@ import multer from 'multer';
 import type { Memory } from './src/types/memory';
 import { getIntentInstructions, resolveStarterIntent } from './src/lib/chatIntent';
 import type { StarterIntent } from './src/types/chat';
-import { processAttachments, type UploadedAttachment } from './server/fileAttachments';
+import { processAttachments, type MultipartAttachment, type UploadedAttachment } from './server/fileAttachments';
 import {
   mergeAutomaticMemories,
   loadMemoriesSafely,
@@ -1501,9 +1501,10 @@ app.post(
       // --------------------------------------------------
 
       let finalAttachmentsInput: any = rawAttachments;
-      if (req.files) {
+      const uploadedFiles = (req as Request & { files?: MultipartAttachment[] }).files;
+      if (uploadedFiles?.length) {
         // Merge multer files into the input for processAttachments
-        finalAttachmentsInput = req.files;
+        finalAttachmentsInput = uploadedFiles;
       }
 
       let processedAttachments: Awaited<ReturnType<typeof processAttachments>>;
