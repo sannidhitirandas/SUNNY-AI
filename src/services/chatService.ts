@@ -110,7 +110,7 @@ export const chatService = {
     return getVibeStarterText(intent);
   },
 
-  async sendMessageToAI(options: SendMessageOptions): Promise<{
+  async sendMessageToAI(options: SendMessageOptions, onChunk?: (chunk: string) => void): Promise<{
     text: string;
     memoriesUpdated: boolean;
     memoryUpdates: AutomaticMemoryCandidate[];
@@ -143,7 +143,9 @@ export const chatService = {
         data: await fileToDataUrl(file),
       })));
 
+      const canStream = files.length === 0;
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (canStream) headers.Accept = 'text/event-stream';
       if (session?.access_token) headers.Authorization = `Bearer ${session.access_token}`;
 
       const requestStartedAt = Date.now();
@@ -167,10 +169,61 @@ export const chatService = {
         });
       }
 
+      let data: any = null;
+      if (response.headers.get('content-type')?.includes('text/event-stream')) {
+        if (!response.ok || !response.body) {
+          throw new Error(`Server responded with status ${response.status}`);
+        }
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        let streamedText = '';
+        let completed = false;
+        const handleEvent = (block: string) => {
+          let eventName = 'message';
+          const dataLines: string[] = [];
+          for (const line of block.split(/\\r?\\n/)) {
+            if (line.startsWith('event:')) eventName = line.slice(6).trim();
+            else if (line.startsWith('data:')) dataLines.push(line.slice(5).trim());
+          }
+          if (dataLines.length === 0) return;
+          let payload: any;
+          try { payload = JSON.parse(dataLines.join('\\n')); } catch { return; }
+          if (eventName === 'chunk' && typeof payload.text === 'string') {
+            streamedText += payload.text;
+            onChunk?.(payload.text);
+          } else if (eventName === 'complete') {
+            data = payload;
+            completed = true;
+          } else if (eventName === 'error') {
+            throw new Error(payload.error || 'Sunny’s reply was interrupted. Please tap Retry to try again.');
+          }
+        };
+        try {
+          while (true) {
+            const { value, done } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+            const blocks = buffer.split(/\\r?\\n\\r?\\n/);
+            buffer = blocks.pop() || '';
+            for (const block of blocks) handleEvent(block);
+          }
+          buffer += decoder.decode();
+          if (buffer.trim()) handleEvent(buffer);
+        } finally {
+          reader.releaseLock();
+        }
+        if (!completed || !data || !data.success || typeof data.text !== 'string') {
+          throw new Error(streamedText
+            ? 'Sunny’s reply was interrupted. Please tap Retry to try again.'
+            : 'Received an incomplete response from Sunny AI.');
+        }
+      } else {
+        data = await response.json().catch(() => null);
+        if (!response.ok) throw new Error(data?.error || `Server responded with status ${response.status}`);
+        if (!data || !data.success || typeof data.text !== 'string') throw new Error(data?.error || 'Received an invalid response format from Sunny AI.');
+      }
       clearTimeout(timeoutId);
-      const data = await response.json().catch(() => null);
-      if (!response.ok) throw new Error(data?.error || `Server responded with status ${response.status}`);
-      if (!data || !data.success || typeof data.text !== 'string') throw new Error(data?.error || 'Received an invalid response format from Sunny AI.');
 
       const memoryUpdates = Array.isArray(data.memoryUpdates)
         ? data.memoryUpdates.filter((item: unknown): item is AutomaticMemoryCandidate =>
