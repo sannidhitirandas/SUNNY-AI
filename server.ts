@@ -863,7 +863,7 @@ async function generateWithGroqStreaming(
       }
 
       buffer += decoder.decode();
-      const trailingData = buffer.split(/\\r?\\n/).find((line) => line.startsWith('data:'));
+      const trailingData = buffer.split(/\r?\n/).find((line) => line.startsWith('data:'));
       if (trailingData) {
         const payloadText = trailingData.slice(5).trim();
         if (payloadText && payloadText !== '[DONE]') {
