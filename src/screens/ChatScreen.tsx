@@ -45,7 +45,9 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
       preserveScrollRef.current = null;
       return;
     }
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (scrollArea) {
+      scrollArea.scrollTo({ top: scrollArea.scrollHeight, behavior: 'smooth' });
+    }
   }, [messages, isThinking]);
 
   const handleClearConfirm = async () => {
@@ -100,7 +102,8 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
       )}
 
       {/* Messages Scroll Area */}
-      <div ref={messagesScrollRef} className="min-h-0 flex-1 space-y-1 overflow-y-auto bg-[radial-gradient(ellipse_at_top,rgba(48,33,73,0.18),transparent_55%)] py-4 sm:py-6">
+      <div ref={messagesScrollRef} className="min-h-0 flex-1 overscroll-contain overflow-y-auto bg-[radial-gradient(ellipse_at_top,rgba(48,33,73,0.18),transparent_55%)] px-1 py-4 sm:px-2 sm:py-6">
+        <div className="flex min-h-full flex-col justify-end gap-2 pb-2">
         {hasOlderMessages && (
           <div className="flex justify-center px-4 pb-3">
             <button
@@ -128,6 +131,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
 
         {isThinking && <TypingIndicator />}
         <div ref={messagesEndRef} />
+        </div>
       </div>
 
       {/* Message Composer */}
