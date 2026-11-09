@@ -9,8 +9,8 @@ import { TypingIndicator } from '@/components/chat/TypingIndicator';
 import { MemoryModal } from '@/components/memories/MemoryModal';
 import { MemoryCategory } from '@/types/memory';
 import { getPersonalityLabel } from '@/types/user';
-import { useChatBackground } from '@/lib/chatBackground';
-import { Bookmark, HeartHandshake, Trash2, X, AlertTriangle } from 'lucide-react';
+import { CHAT_BACKGROUNDS, useChatBackground } from '@/lib/chatBackground';
+import { Bookmark, HeartHandshake, Trash2, X, AlertTriangle, Image as ImageIcon, CheckCircle2 } from 'lucide-react';
 
 interface ChatScreenProps {
   onNavigateToTab: (tab: 'home' | 'chat' | 'memories' | 'settings') => void;
@@ -30,12 +30,13 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   const { messages, isThinking, isLoadingOlderMessages, hasOlderMessages, loadOlderMessages, lastError, sendMessage, retryMessage, clearChat } = useChat();
   const { preferences } = usePreferences();
   const { addMemory } = useMemories();
-  const { background } = useChatBackground();
+  const { background, setChatBackground } = useChatBackground();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesScrollRef = useRef<HTMLDivElement>(null);
   const preserveScrollRef = useRef<{ height: number; top: number } | null>(null);
   const [optionsVisible, setOptionsVisible] = useState(false);
+  const [wallpaperPickerVisible, setWallpaperPickerVisible] = useState(false);
   const [memoryModalVisible, setMemoryModalVisible] = useState(false);
   const [memoryInitialContent, setMemoryInitialContent] = useState('');
 
@@ -198,6 +199,19 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                 type="button"
                 onClick={() => {
                   setOptionsVisible(false);
+                  setWallpaperPickerVisible(true);
+                }}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#302149] text-white text-sm font-medium transition-colors text-left cursor-pointer"
+              >
+                <ImageIcon size={18} className="text-[#FFD84D]" />
+                <span>Change Chat Wallpaper</span>
+                <span className="ml-auto text-xs text-[#C6B8E5]">{background.label}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setOptionsVisible(false);
                   if (onNavigateToSafety) {
                     onNavigateToSafety();
                   } else {
@@ -221,6 +235,58 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Chat wallpaper picker */}
+      {wallpaperPickerVisible && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
+          <div role="dialog" aria-modal="true" aria-labelledby="chat-wallpaper-title" className="w-full max-w-md max-h-[90vh] overflow-y-auto bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between mb-3">
+              <h3 id="chat-wallpaper-title" className="text-base font-bold text-white">Chat wallpaper</h3>
+              <button
+                type="button"
+                onClick={() => setWallpaperPickerVisible(false)}
+                aria-label="Close wallpaper picker"
+                className="p-1 rounded-lg text-[#C6B8E5] hover:text-white transition-colors cursor-pointer"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <p className="text-xs text-[#C6B8E5] mb-4">Give your conversation a little change of scenery.</p>
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              {CHAT_BACKGROUNDS.map((item) => {
+                const isSelected = background.id === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    aria-pressed={isSelected}
+                    onClick={() => setChatBackground(item.id)}
+                    className={`relative overflow-hidden rounded-2xl border text-left transition-colors cursor-pointer ${
+                      isSelected ? 'border-[#FFD84D] ring-2 ring-[#FFD84D]/60' : 'border-[#392858] hover:border-white/30'
+                    }`}
+                  >
+                    <div
+                      className="h-24 w-full bg-[#100B22] bg-cover bg-center"
+                      style={item.thumb ? { backgroundImage: `url(${item.thumb})` } : undefined}
+                    />
+                    <div className="flex items-center justify-between bg-[#302149] px-3 py-2">
+                      <span className={`text-sm font-semibold ${isSelected ? 'text-[#FFD84D]' : 'text-white'}`}>{item.label}</span>
+                      {isSelected && <CheckCircle2 size={16} className="text-[#FFD84D] shrink-0 ml-2" />}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+            <button
+              type="button"
+              onClick={() => setWallpaperPickerVisible(false)}
+              className="w-full rounded-xl px-4 py-2.5 text-sm font-semibold text-[#FFD84D] hover:bg-[#FFD84D]/10 transition-colors cursor-pointer"
+            >
+              Done
+            </button>
           </div>
         </div>
       )}
