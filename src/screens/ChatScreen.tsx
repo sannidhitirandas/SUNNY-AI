@@ -278,9 +278,6 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
           </div>
         </div>
       )}
-          </div>
-        </div>
-      )}
 
       {/* Save memory modal */}
       <MemoryModal
