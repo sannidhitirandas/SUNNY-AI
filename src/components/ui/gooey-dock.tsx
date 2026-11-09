@@ -4,7 +4,7 @@ import * as React from "react";
 import "./gooey-dock.css";
 
 export interface GooeyDockItem {
-  icon: React.ComponentType<{
+  icon: React.ElementType<{
     size?: number;
     strokeWidth?: number;
     className?: string;
