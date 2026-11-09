@@ -28,6 +28,7 @@ import { OnboardingFlow } from '@/screens/onboarding/OnboardingFlow';
 import { resolveAppRoute } from '@/lib/authRouting';
 import { resolveAndroidBackAction, type AndroidBackState } from '@/lib/androidBackNavigation';
 import { apiUrl } from '@/lib/api';
+import GooeyDock from '@/components/ui/gooey-dock';
 
 import {
   Home,
@@ -454,91 +455,35 @@ export function App() {
         )}
       </main>
 
-      <nav className={`fixed bottom-0 left-0 right-0 z-40 bg-[#17102C]/95 backdrop-blur-md border-t border-[#392858] max-w-xl mx-auto w-full pb-[env(safe-area-inset-bottom)] lg:bottom-4 lg:rounded-2xl lg:border lg:shadow-[0_12px_40px_rgba(0,0,0,0.35)] transition-transform duration-200 ease-in-out ${
-        hideNavBar ? 'translate-y-full opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'
-      }`}>
-        <div className="flex items-center justify-around h-16 px-2">
-          <button
-            type="button"
-            onClick={() => handleTabChange('home')}
-            className={`flex flex-col items-center justify-center w-16 h-full transition-all cursor-pointer ${
-              activeTab === 'home'
-                ? 'text-[#FFD84D]'
-                : 'text-[#9B8AB9] hover:text-[#C6B8E5]'
-            }`}
-          >
-            <Home
-              size={20}
-              strokeWidth={
-                activeTab === 'home' ? 2.5 : 2
-              }
-            />
-            <span className="text-[10px] font-semibold mt-1">
-              Home
-            </span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => void handleEnterChat({ source: 'normal' })}
-            className={`flex flex-col items-center justify-center w-16 h-full transition-all cursor-pointer ${
-              activeTab === 'chat'
-                ? 'text-[#FFD84D]'
-                : 'text-[#9B8AB9] hover:text-[#C6B8E5]'
-            }`}
-          >
-            <MessageSquare
-              size={20}
-              strokeWidth={
-                activeTab === 'chat' ? 2.5 : 2
-              }
-            />
-            <span className="text-[10px] font-semibold mt-1">
-              Chat
-            </span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => handleTabChange('memories')}
-            className={`flex flex-col items-center justify-center w-16 h-full transition-all cursor-pointer ${
-              activeTab === 'memories'
-                ? 'text-[#FFD84D]'
-                : 'text-[#9B8AB9] hover:text-[#C6B8E5]'
-            }`}
-          >
-            <Bookmark
-              size={20}
-              strokeWidth={
-                activeTab === 'memories' ? 2.5 : 2
-              }
-            />
-            <span className="text-[10px] font-semibold mt-1">
-              Memories
-            </span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => handleTabChange('settings')}
-            className={`flex flex-col items-center justify-center w-16 h-full transition-all cursor-pointer ${
-              activeTab === 'settings'
-                ? 'text-[#FFD84D]'
-                : 'text-[#9B8AB9] hover:text-[#C6B8E5]'
-            }`}
-          >
-            <Settings
-              size={20}
-              strokeWidth={
-                activeTab === 'settings' ? 2.5 : 2
-              }
-            />
-            <span className="text-[10px] font-semibold mt-1">
-              Settings
-            </span>
-          </button>
-        </div>
-      </nav>
+      <GooeyDock
+        hidden={hideNavBar}
+        items={[
+          {
+            icon: Home,
+            label: 'Home',
+            active: activeTab === 'home',
+            onClick: () => handleTabChange('home'),
+          },
+          {
+            icon: MessageSquare,
+            label: 'Chat',
+            active: activeTab === 'chat',
+            onClick: () => void handleEnterChat({ source: 'normal' }),
+          },
+          {
+            icon: Bookmark,
+            label: 'Memories',
+            active: activeTab === 'memories',
+            onClick: () => handleTabChange('memories'),
+          },
+          {
+            icon: Settings,
+            label: 'Settings',
+            active: activeTab === 'settings',
+            onClick: () => handleTabChange('settings'),
+          },
+        ]}
+      /></nav>
     </div>
   );
 }
