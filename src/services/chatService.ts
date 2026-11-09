@@ -143,7 +143,7 @@ export const chatService = {
         data: await fileToDataUrl(file),
       })));
 
-      const canStream = files.length === 0;
+      const canStream = !files.some((file) => file.type.startsWith('image/'));
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (canStream) headers.Accept = 'text/event-stream';
       if (session?.access_token) headers.Authorization = `Bearer ${session.access_token}`;
