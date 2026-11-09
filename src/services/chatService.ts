@@ -182,13 +182,13 @@ export const chatService = {
         const handleEvent = (block: string) => {
           let eventName = 'message';
           const dataLines: string[] = [];
-          for (const line of block.split(/\\r?\\n/)) {
+          for (const line of block.split(/\r?\n/)) {
             if (line.startsWith('event:')) eventName = line.slice(6).trim();
             else if (line.startsWith('data:')) dataLines.push(line.slice(5).trim());
           }
           if (dataLines.length === 0) return;
           let payload: any;
-          try { payload = JSON.parse(dataLines.join('\\n')); } catch { return; }
+          try { payload = JSON.parse(dataLines.join('\n')); } catch { return; }
           if (eventName === 'chunk' && typeof payload.text === 'string') {
             streamedText += payload.text;
             onChunk?.(payload.text);
@@ -204,7 +204,7 @@ export const chatService = {
             const { value, done } = await reader.read();
             if (done) break;
             buffer += decoder.decode(value, { stream: true });
-            const blocks = buffer.split(/\\r?\\n\\r?\\n/);
+            const blocks = buffer.split(/\r?\n\r?\n/);
             buffer = blocks.pop() || '';
             for (const block of blocks) handleEvent(block);
           }
