@@ -1781,7 +1781,7 @@ app.post(
             groqMessages,
             temperature,
             (chunk) => sendStreamEvent('chunk', { text: chunk }),
-            () => generateAIResponse(contents, groqMessages, systemInstruction, temperature, false)
+            () => generateWithFastFallback(contents, systemInstruction, temperature)
           )
         : await generateAIResponse(contents, groqMessages, systemInstruction, temperature, hasImageAttachment);
       generationMs = Date.now() - generationStartedAt;
