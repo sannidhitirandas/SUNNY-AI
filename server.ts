@@ -1380,10 +1380,12 @@ app.post(
     let historyCharacterCount = 0;
     const reportChatTiming = (status: 'success' | 'error') => {
       const totalMs = Date.now() - requestStartedAt;
-      res.setHeader(
-        'Server-Timing',
-        `attachments;dur=${attachmentMs}, memories;dur=${memoryMs}, generation;dur=${generationMs}, guest-memory;dur=${guestMemoryMs}, total;dur=${totalMs}`
-      );
+      if (!res.headersSent) {
+        res.setHeader(
+          'Server-Timing',
+          `attachments;dur=${attachmentMs}, memories;dur=${memoryMs}, generation;dur=${generationMs}, guest-memory;dur=${guestMemoryMs}, total;dur=${totalMs}`
+        );
+      }
       console.info('[chat-timing]', JSON.stringify({
         status,
         totalMs,
