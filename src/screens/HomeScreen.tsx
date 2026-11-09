@@ -47,7 +47,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     messages.length > 0 ? messages[messages.length - 1] : undefined;
 
   return (
-<div className="flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-7xl mx-auto w-full pb-24 lg:px-10 xl:px-14">
+<div className="flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-7xl mx-auto w-full pb-6 sm:pb-8 lg:px-10 xl:px-14">
       {/* Top App Header */}
       <div className="flex items-center justify-between py-2 mb-3">
         <div className="flex items-center gap-2.5">

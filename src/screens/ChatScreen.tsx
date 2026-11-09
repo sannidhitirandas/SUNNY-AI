@@ -10,7 +10,7 @@ import { MemoryModal } from '@/components/memories/MemoryModal';
 import { MemoryCategory } from '@/types/memory';
 import { getPersonalityLabel } from '@/types/user';
 import { CHAT_BACKGROUNDS, useChatBackground } from '@/lib/chatBackground';
-import { Bookmark, HeartHandshake, Trash2, X, AlertTriangle, Image as ImageIcon, CheckCircle2 } from 'lucide-react';
+import { Bookmark, HeartHandshake, Trash2, X, AlertTriangle, ImageIcon, CheckCircle2 } from 'lucide-react';
 
 interface ChatScreenProps {
   onNavigateToTab: (tab: 'home' | 'chat' | 'memories' | 'settings') => void;
@@ -36,7 +36,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   const messagesScrollRef = useRef<HTMLDivElement>(null);
   const preserveScrollRef = useRef<{ height: number; top: number } | null>(null);
   const [optionsVisible, setOptionsVisible] = useState(false);
-  const [wallpaperPickerVisible, setWallpaperPickerVisible] = useState(false);
+  const [backgroundModalVisible, setBackgroundModalVisible] = useState(false);
   const [memoryModalVisible, setMemoryModalVisible] = useState(false);
   const [memoryInitialContent, setMemoryInitialContent] = useState('');
 
@@ -199,7 +199,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                 type="button"
                 onClick={() => {
                   setOptionsVisible(false);
-                  setWallpaperPickerVisible(true);
+                  setBackgroundModalVisible(true);
                 }}
                 className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#302149] text-white text-sm font-medium transition-colors text-left cursor-pointer"
               >
@@ -239,22 +239,10 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
         </div>
       )}
 
-      {/* Chat wallpaper picker */}
-      {wallpaperPickerVisible && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
-          <div role="dialog" aria-modal="true" aria-labelledby="chat-wallpaper-title" className="w-full max-w-md max-h-[90vh] overflow-y-auto bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between mb-3">
-              <h3 id="chat-wallpaper-title" className="text-base font-bold text-white">Chat wallpaper</h3>
-              <button
-                type="button"
-                onClick={() => setWallpaperPickerVisible(false)}
-                aria-label="Close wallpaper picker"
-                className="p-1 rounded-lg text-[#C6B8E5] hover:text-white transition-colors cursor-pointer"
-              >
-                <X size={18} />
-              </button>
-            </div>
-            <p className="text-xs text-[#C6B8E5] mb-4">Give your conversation a little change of scenery.</p>
+      {backgroundModalVisible && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
+          <div role="dialog" aria-modal="true" aria-labelledby="chat-bg-picker-title" className="w-full max-w-md max-h-[90vh] overflow-y-auto bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+            <h3 id="chat-bg-picker-title" className="text-base font-bold text-white mb-3">Chat background</h3>
             <div className="grid grid-cols-2 gap-3 mb-4">
               {CHAT_BACKGROUNDS.map((item) => {
                 const isSelected = background.id === item.id;
@@ -282,11 +270,14 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
             </div>
             <button
               type="button"
-              onClick={() => setWallpaperPickerVisible(false)}
+              onClick={() => setBackgroundModalVisible(false)}
               className="w-full rounded-xl px-4 py-2.5 text-sm font-semibold text-[#FFD84D] hover:bg-[#FFD84D]/10 transition-colors cursor-pointer"
             >
               Done
             </button>
+          </div>
+        </div>
+      )}
           </div>
         </div>
       )}

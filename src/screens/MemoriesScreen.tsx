@@ -59,7 +59,7 @@ export const MemoriesScreen: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-7xl mx-auto w-full pb-28 lg:px-10 xl:px-14">
+    <div className="flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-7xl mx-auto w-full pb-6 sm:pb-8 lg:px-10 xl:px-14">
       {/* Shared Sunny website header */}
       <div className="flex items-center justify-between py-2 mb-4">
         <div className="flex items-center gap-2.5">

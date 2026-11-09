@@ -236,14 +236,6 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
               }
             }
 
-            if (!blob && item.data) {
-              try {
-                blob = await base64ToBlob(item.data, item.mimeType);
-              } catch (err) {
-                console.warn('[Sunny] Failed to convert base64 to blob:', err);
-              }
-            }
-
             if (!blob) {
               throw new Error(`Unable to read selected file: ${item.name}`);
             }

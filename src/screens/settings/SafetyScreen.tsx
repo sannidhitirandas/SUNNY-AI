@@ -47,7 +47,7 @@ export const SafetyScreen: React.FC<SafetyScreenProps> = ({ onBack }) => {
   ];
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-xl mx-auto w-full pb-24">
+    <div className="flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-xl mx-auto w-full pb-6 sm:pb-8">
       {/* Top Bar */}
       <div className="flex items-center gap-3 py-2 mb-4">
         <button

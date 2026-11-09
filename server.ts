@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { createServer as createViteServer } from 'vite';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import multer from 'multer';
 import type { Memory } from './src/types/memory';
 import { getIntentInstructions, resolveStarterIntent } from './src/lib/chatIntent';
 import type { StarterIntent } from './src/types/chat';
@@ -82,6 +83,14 @@ const PORT = process.env.PORT
 // Attachments are capped at 50 MB decoded; 70 MB leaves room for base64
 // expansion and JSON overhead without accepting unnecessarily huge bodies.
 app.use(express.json({ limit: '70mb' }));
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 50 * 1024 * 1024, // 50 MB
+    files: 3,
+  },
+});
 
 // Allow the Capacitor Android WebView to call the hosted API.
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -1386,6 +1395,7 @@ app.delete(
 app.post(
   '/api/chat',
   rateLimiter,
+  upload.any(),
   async (req: Request, res: Response) => {
     const requestStartedAt = Date.now();
     const wantsStream = req.headers.accept?.includes('text/event-stream') === true;
@@ -1415,6 +1425,22 @@ app.post(
       }));
     };
     try {
+      let body = req.body;
+
+      // Support Multipart requests: the JSON payload is in the 'request' field
+      if (req.headers['content-type']?.includes('multipart/form-data')) {
+        const requestJson = req.body.request;
+        if (typeof requestJson === 'string') {
+          try {
+            body = JSON.parse(requestJson);
+          } catch (e) {
+            return res.status(400).json({ success: false, error: 'Invalid JSON in request field.' });
+          }
+        } else {
+          return res.status(400).json({ success: false, error: 'Missing request field in multipart upload.' });
+        }
+      }
+
       const {
         message,
         history = [],
@@ -1425,7 +1451,7 @@ app.post(
         memories = [],
         sessionId,
         attachments: rawAttachments,
-      } = req.body as ChatRequestBody;
+      } = body as ChatRequestBody;
 
       // --------------------------------------------------
       // Validate message
@@ -1474,10 +1500,16 @@ app.post(
       // Validate and process attachments
       // --------------------------------------------------
 
+      let finalAttachmentsInput: any = rawAttachments;
+      if (req.files) {
+        // Merge multer files into the input for processAttachments
+        finalAttachmentsInput = req.files;
+      }
+
       let processedAttachments: Awaited<ReturnType<typeof processAttachments>>;
       const attachmentStartedAt = Date.now();
       try {
-        processedAttachments = await processAttachments(rawAttachments);
+        processedAttachments = await processAttachments(finalAttachmentsInput);
         attachmentMs = Date.now() - attachmentStartedAt;
       } catch (attachmentError) {
         const message = attachmentError instanceof Error

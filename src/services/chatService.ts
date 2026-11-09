@@ -136,27 +136,36 @@ export const chatService = {
         ? memories.map((m) => ({ id: m.id, memoryKey: m.memoryKey, title: m.title, content: m.content, category: m.category, expiresAt: m.expiresAt }))
         : [];
 
-      const attachments = await Promise.all(files.map(async (file) => ({
-        name: file.name,
-        type: file.type || 'application/octet-stream',
-        size: file.size,
-        data: await fileToDataUrl(file),
-      })));
+      const formData = new FormData();
 
-      const canStream = !files.some((file) => file.type.startsWith('image/'));
-      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-      if (canStream) headers.Accept = 'text/event-stream';
+      // 1. Add the main request payload as a JSON string in a field
+      const requestBody = createChatRequestBody({
+        message: message.trim(),
+        history: formattedHistory,
+        tone,
+        intent,
+        preferredName: preferredName?.trim() || undefined,
+        memoryEnabled,
+        memories: memoryPayloads,
+        sessionId,
+      });
+      formData.append('request', JSON.stringify(requestBody));
+
+      // 2. Append files as binary blobs
+      files.forEach((file) => {
+        formData.append('attachments', file, file.name);
+      });
+
+      const headers: Record<string, string> = {};
       if (session?.access_token) headers.Authorization = `Bearer ${session.access_token}`;
+      // Note: Do NOT set 'Content-Type' header manually when using FormData;
+      // the browser will automatically set it to 'multipart/form-data' with the correct boundary.
 
       const requestStartedAt = Date.now();
       const response = await fetch(apiUrl('/api/chat'), {
         method: 'POST',
         headers,
-        body: JSON.stringify(createChatRequestBody({
-          message: message.trim(), history: formattedHistory, tone, intent,
-          preferredName: preferredName?.trim() || undefined, memoryEnabled,
-          memories: memoryPayloads, sessionId, attachments,
-        })),
+        body: formData,
         signal: controller.signal,
       });
       const networkDurationMs = Date.now() - requestStartedAt;
@@ -165,7 +174,7 @@ export const chatService = {
           networkDurationMs,
           serverTiming: response.headers.get('Server-Timing'),
           historyMessagesSent: formattedHistory.length,
-          attachmentCount: attachments.length,
+          attachmentCount: files.length,
         });
       }
 

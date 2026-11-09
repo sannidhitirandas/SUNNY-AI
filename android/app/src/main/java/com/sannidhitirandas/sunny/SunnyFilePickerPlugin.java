@@ -157,8 +157,6 @@ public class SunnyFilePickerPlugin extends Plugin {
         File tempFile = new File(cacheDir, "sunny_picker_" + System.currentTimeMillis() + "_" + safeName);
 
         long writtenBytes = 0;
-        ByteArrayOutputStream base64Buffer = new ByteArrayOutputStream();
-
         try (InputStream input = getContext().getContentResolver().openInputStream(uri);
              OutputStream output = new FileOutputStream(tempFile)) {
             if (input == null) throw new IllegalStateException("Could not open selected file");
@@ -175,7 +173,6 @@ public class SunnyFilePickerPlugin extends Plugin {
                     throw new IllegalStateException("File is larger than 50 MB");
                 }
                 output.write(buffer, 0, nRead);
-                base64Buffer.write(buffer, 0, nRead);
             }
             output.flush();
         }
@@ -188,14 +185,11 @@ public class SunnyFilePickerPlugin extends Plugin {
             throw new IllegalStateException("Selected file is empty");
         }
 
-        String base64Data = Base64.encodeToString(base64Buffer.toByteArray(), Base64.NO_WRAP);
-
         JSObject file = new JSObject();
         file.put("name", name);
         file.put("mimeType", mimeType);
         file.put("size", size > 0 ? size : writtenBytes);
         file.put("path", tempFile.getAbsolutePath());
-        file.put("data", base64Data);
         Log.d(TAG, "processUri succeeded: name=" + name + ", mimeType=" + mimeType + ", bytes=" + writtenBytes + ", path=" + tempFile.getAbsolutePath());
         return file;
     }
@@ -219,6 +213,7 @@ public class SunnyFilePickerPlugin extends Plugin {
     }
 
     private String getDisplayName(Uri uri) {
+        String displayName = null;
         try (Cursor cursor = getContext().getContentResolver().query(
                 uri,
                 new String[]{OpenableColumns.DISPLAY_NAME},
@@ -229,18 +224,39 @@ public class SunnyFilePickerPlugin extends Plugin {
             if (cursor != null && cursor.moveToFirst()) {
                 int index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
                 if (index >= 0) {
-                    String value = cursor.getString(index);
-                    if (value != null && !value.trim().isEmpty()) return value;
+                    displayName = cursor.getString(index);
                 }
             }
         } catch (Exception e) {
             Log.w(TAG, "Failed to query DISPLAY_NAME for uri: " + uri, e);
         }
 
-        String rawPath = uri.getPath();
-        if (rawPath == null || rawPath.isEmpty()) return "attachment";
-        int slash = rawPath.lastIndexOf('/');
-        return slash >= 0 ? rawPath.substring(slash + 1) : rawPath;
+        if (displayName == null || displayName.trim().isEmpty()) {
+            String rawPath = uri.getPath();
+            if (rawPath != null && !rawPath.isEmpty()) {
+                int slash = rawPath.lastIndexOf('/');
+                displayName = slash >= 0 ? rawPath.substring(slash + 1) : rawPath;
+            }
+        }
+
+        if (displayName == null || displayName.trim().isEmpty()) {
+            displayName = "image_" + System.currentTimeMillis() + ".jpg";
+        }
+
+        String resolvedType = null;
+        try {
+            resolvedType = getContext().getContentResolver().getType(uri);
+        } catch (Exception ignored) {}
+
+        if (!displayName.contains(".") && resolvedType != null && resolvedType.startsWith("image/")) {
+            String ext = resolvedType.substring(resolvedType.indexOf('/') + 1);
+            if ("jpeg".equalsIgnoreCase(ext)) ext = "jpg";
+            displayName = displayName + "." + ext;
+        } else if (!displayName.contains(".") && (uri.toString().contains("image") || uri.toString().contains("photo"))) {
+            displayName = displayName + ".jpg";
+        }
+
+        return displayName;
     }
 
     private long getSize(Uri uri) {
@@ -262,35 +278,39 @@ public class SunnyFilePickerPlugin extends Plugin {
     }
 
     private String getMimeType(Uri uri, String name) {
+        String mimeType = null;
         try {
-            String mimeType = getContext().getContentResolver().getType(uri);
-            if (mimeType != null && !mimeType.isEmpty() && !"application/octet-stream".equalsIgnoreCase(mimeType)) {
-                return mimeType;
-            }
+            mimeType = getContext().getContentResolver().getType(uri);
         } catch (Exception e) {
             Log.w(TAG, "Failed to get type from ContentResolver: " + uri, e);
         }
 
-        int dot = name.lastIndexOf('.');
-        String extension = dot >= 0 ? name.substring(dot + 1).toLowerCase() : "";
-        switch (extension) {
-            case "pdf": return "application/pdf";
-            case "doc": return "application/msword";
-            case "docx": return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-            case "txt": return "text/plain";
-            case "csv": return "text/csv";
-            case "json": return "application/json";
-            case "md": return "text/markdown";
-            case "xls": return "application/vnd.ms-excel";
-            case "xlsx": return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-            case "png": return "image/png";
-            case "jpg":
-            case "jpeg": return "image/jpeg";
-            case "webp": return "image/webp";
-            default:
-                String mapped = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-                return mapped == null ? "application/octet-stream" : mapped;
+        if (mimeType == null || mimeType.isEmpty() || "application/octet-stream".equalsIgnoreCase(mimeType) || "image/*".equalsIgnoreCase(mimeType)) {
+            int dot = name.lastIndexOf('.');
+            String extension = dot >= 0 ? name.substring(dot + 1).toLowerCase() : "";
+            switch (extension) {
+                case "pdf": mimeType = "application/pdf"; break;
+                case "doc": mimeType = "application/msword"; break;
+                case "docx": mimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"; break;
+                case "txt": mimeType = "text/plain"; break;
+                case "csv": mimeType = "text/csv"; break;
+                case "json": mimeType = "application/json"; break;
+                case "md": mimeType = "text/markdown"; break;
+                case "xls": mimeType = "application/vnd.ms-excel"; break;
+                case "xlsx": mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"; break;
+                case "png": mimeType = "image/png"; break;
+                case "jpg":
+                case "jpeg": mimeType = "image/jpeg"; break;
+                case "webp": mimeType = "image/webp"; break;
+                default:
+                    String mapped = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+                    mimeType = mapped == null ? "image/jpeg" : mapped;
+            }
         }
+        if ("image/*".equalsIgnoreCase(mimeType)) {
+            mimeType = "image/jpeg";
+        }
+        return mimeType;
     }
 }
 

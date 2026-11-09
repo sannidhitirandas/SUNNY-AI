@@ -7,6 +7,14 @@ export interface UploadedAttachment {
   data: string;
 }
 
+export interface MultipartAttachment {
+  fieldname: string;
+  originalname: string;
+  mimetype: string;
+  buffer: Buffer;
+  size: number;
+}
+
 export interface ProcessedAttachment {
   name: string;
   kind: 'text' | 'image';
@@ -129,30 +137,40 @@ export async function processAttachments(input: unknown): Promise<ProcessedAttac
 
   for (const raw of input) {
     if (!raw || typeof raw !== 'object') throw new Error('Invalid attachment.');
-    const item = raw as Partial<UploadedAttachment>;
-    const name = typeof item.name === 'string' ? safeName(item.name) : 'attachment';
+
+    let buffer: Buffer;
+    let name: string;
+    let mimeType: string;
+
+    // Support both Base64 JSON (legacy) and Multipart binary (new)
+    if ('buffer' in raw && Buffer.isBuffer(raw.buffer)) {
+      // MultipartAttachment
+      const multipart = raw as any;
+      buffer = multipart.buffer;
+      name = safeName(multipart.originalname);
+      mimeType = multipart.mimetype;
+    } else {
+      // UploadedAttachment (Base64)
+      const item = raw as Partial<UploadedAttachment>;
+      name = typeof item.name === 'string' ? safeName(item.name) : 'attachment';
+      const decoded = decodeDataUrl(item.data || '');
+      buffer = decoded.buffer;
+      mimeType = decoded.mimeType;
+    }
+
     const ext = path.extname(name).toLowerCase();
     const imageExtension = ['.png', '.jpg', '.jpeg', '.webp'].includes(ext);
     if (!allowedExtensions.has(ext)) {
       throw new Error(`Unsupported file type: ${ext || 'unknown'}.`);
     }
-    if (typeof item.data !== 'string') throw new Error(`${name} is missing file data.`);
 
-    const decoded = decodeDataUrl(item.data);
-    const size = decoded.buffer.length;
+    const size = buffer.length;
     if (size === 0) throw new Error(`${name} is empty.`);
     if (size > MAX_FILE_SIZE) throw new Error(`${name} is larger than 50 MB.`);
     totalSize += size;
     if (totalSize > MAX_TOTAL_SIZE) throw new Error('Attachments must be 50 MB or smaller in total.');
 
-    const declaredType = typeof item.type === 'string' ? item.type.toLowerCase() : '';
-    const detectedImageMime = detectImageMime(decoded.buffer);
-    const unknownClientMime = !declaredType || declaredType === 'application/octet-stream';
-
-    if (declaredType && !allowedMimeTypes.has(declaredType) && !unknownClientMime) {
-      throw new Error(`${name} has an unsupported MIME type.`);
-    }
-    if (!hasMagic(decoded.buffer, ext)) throw new Error(`${name} failed file validation.`);
+    const detectedImageMime = detectImageMime(buffer);
 
     if (detectedImageMime && !imageExtension) {
       throw new Error(`${name} failed file validation.`);
@@ -193,6 +211,7 @@ export async function processAttachments(input: unknown): Promise<ProcessedAttac
   );
   if (extractedTotal > MAX_EXTRACTED_TOTAL) {
     throw new Error('The combined extracted file content is too large. Please attach fewer or smaller files.');
+  }
   }
 
   return processed;
