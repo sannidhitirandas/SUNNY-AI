@@ -786,6 +786,104 @@ async function generateWithGroq(
 }
 
 // --------------------------------------------------
+// Groq token streaming with safe pre-stream provider fallback
+// --------------------------------------------------
+
+async function generateWithGroqStreaming(
+  messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }>,
+  temperature: number,
+  onChunk: (chunk: string) => void,
+  fallback: () => Promise<{ text: string; model: string }>
+): Promise<{ text: string; model: string }> {
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) {
+    const result = await fallback();
+    onChunk(result.text);
+    return result;
+  }
+
+  let lastError: any = null;
+  for (const model of GROQ_MODELS) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 90000);
+    let emitted = false;
+    try {
+      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model, messages, temperature, max_tokens: 1024, stream: true,
+          ...(model.startsWith('openai/gpt-oss-') ? { reasoning_effort: 'low' } : {}),
+        }),
+        signal: controller.signal,
+      });
+
+      if (!response.ok) {
+        const payload: any = await response.json().catch(() => ({}));
+        const error = Object.assign(
+          new Error(payload?.error?.message || `Groq request failed (${response.status})`),
+          { status: response.status, model }
+        );
+        lastError = error;
+        if ([400, 404, 500, 502, 503, 504].includes(response.status) &&
+            model !== GROQ_MODELS[GROQ_MODELS.length - 1]) continue;
+        break;
+      }
+
+      if (!response.body) throw new Error('Groq returned an empty streaming response.');
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let fullText = '';
+      let finished = false;
+
+      while (!finished) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split(/\r?\n/);
+        buffer = lines.pop() || '';
+        for (const line of lines) {
+          if (!line.startsWith('data:')) continue;
+          const payloadText = line.slice(5).trim();
+          if (!payloadText) continue;
+          if (payloadText === '[DONE]') { finished = true; break; }
+          let payload: any;
+          try { payload = JSON.parse(payloadText); } catch { continue; }
+          const piece = payload?.choices?.[0]?.delta?.content;
+          if (typeof piece === 'string' && piece.length > 0) {
+            emitted = true;
+            fullText += piece;
+            onChunk(piece);
+          }
+        }
+      }
+
+      buffer += decoder.decode();
+      if (!emitted || !fullText.trim()) {
+        throw Object.assign(new Error('Groq returned an empty response.'), { status: 502, model });
+      }
+      console.info(`[Groq] Stream completed from ${model}`);
+      return { text: fullText.trim(), model };
+    } catch (error: any) {
+      lastError = error;
+      if (emitted) throw error; // Never restart another provider after visible text.
+      if (error?.status && ![400, 404, 429, 500, 502, 503, 504].includes(error.status)) break;
+    } finally {
+      clearTimeout(timeoutId);
+    }
+  }
+
+  console.warn('[AI] Groq streaming unavailable before first token; using Gemini fallback.', lastError);
+  const result = await fallback();
+  onChunk(result.text);
+  return result;
+}
+
+// --------------------------------------------------
 // Gemini request
 // FALLBACK AI
 // --------------------------------------------------
@@ -1273,6 +1371,7 @@ app.post(
   rateLimiter,
   async (req: Request, res: Response) => {
     const requestStartedAt = Date.now();
+    const wantsStream = req.headers.accept?.includes('text/event-stream') === true;
     let attachmentMs = 0;
     let memoryMs = 0;
     let generationMs = 0;
@@ -1645,13 +1744,27 @@ app.post(
       // --------------------------------------------------
 
       const generationStartedAt = Date.now();
-      const result = await generateAIResponse(
-        contents,
-        groqMessages,
-        systemInstruction,
-        temperature,
-        hasImageAttachment
-      );
+      let streamHeadersSent = false;
+      const sendStreamEvent = (event: string, payload: unknown) => {
+        if (!streamHeadersSent) {
+          res.status(200);
+          res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+          res.setHeader('Cache-Control', 'no-cache, no-transform');
+          res.setHeader('Connection', 'keep-alive');
+          res.setHeader('X-Accel-Buffering', 'no');
+          streamHeadersSent = true;
+          res.flushHeaders?.();
+        }
+        res.write(`event: ${event}\ndata: ${JSON.stringify(payload)}\n\n`);
+      };
+      const result = wantsStream && !hasImageAttachment
+        ? await generateWithGroqStreaming(
+            groqMessages,
+            temperature,
+            (chunk) => sendStreamEvent('chunk', { text: chunk }),
+            () => generateAIResponse(contents, groqMessages, systemInstruction, temperature, false)
+          )
+        : await generateAIResponse(contents, groqMessages, systemInstruction, temperature, hasImageAttachment);
       generationMs = Date.now() - generationStartedAt;
 
       // --------------------------------------------------
@@ -1734,14 +1847,15 @@ app.post(
         });
 
         reportChatTiming('success');
-        return res.json({
-          success: true,
-          text: result.text.trim(),
-          model: result.model,
-          memoriesUpdated: false,
-          memoryUpdates: [],
-          timestamp: new Date().toISOString(),
-        });
+        const completion = {
+          success: true, text: result.text.trim(), model: result.model,
+          memoriesUpdated: false, memoryUpdates: [], timestamp: new Date().toISOString(),
+        };
+        if (wantsStream && streamHeadersSent) {
+          sendStreamEvent('complete', completion);
+          return res.end();
+        }
+        return res.json(completion);
       }
 
       if (
@@ -1785,20 +1899,25 @@ app.post(
       // --------------------------------------------------
 
       reportChatTiming('success');
-      return res.json({
-        success: true,
-        text: result.text.trim(),
-        model: result.model,
-        memoriesUpdated,
-        memoryUpdates,
-        timestamp: new Date().toISOString(),
-      });
+      const completion = {
+        success: true, text: result.text.trim(), model: result.model,
+        memoriesUpdated, memoryUpdates, timestamp: new Date().toISOString(),
+      };
+      if (wantsStream && streamHeadersSent) {
+        sendStreamEvent('complete', completion);
+        return res.end();
+      }
+      return res.json(completion);
     } catch (error: any) {
       reportChatTiming('error');
       console.error(
         '[server /api/chat] Error during AI chat completion:',
         error
       );
+      if (res.headersSent) {
+        res.write(`event: error\ndata: ${JSON.stringify({ success: false, error: 'Sunny’s reply was interrupted. Please tap Retry to try again.' })}\n\n`);
+        return res.end();
+      }
 
       const status =
         error?.status || error?.code;
