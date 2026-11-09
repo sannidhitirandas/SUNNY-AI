@@ -121,7 +121,7 @@ export const chatService = {
     } = options;
 
     const controller = new AbortController();
-    const timeoutMs = files.length > 0 ? 120000 : 60000;
+    const timeoutMs = 120000;
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
     try {
