@@ -65,30 +65,69 @@ textarea:focus-visible {
   --sunny-scroll-thumb: #C8BDD8;
 }
 
+:root[data-theme='sunny-light'] body {
+  background-color: #F8F6FC !important;
+  color: #251A35 !important;
+}
+
+/* Background overrides */
 :root[data-theme='sunny-light'] [class*="bg-[#100B22]"] { background-color: #F8F6FC !important; }
 :root[data-theme='sunny-light'] [class*="bg-[#17102C]"] { background-color: #F0EDF6 !important; }
 :root[data-theme='sunny-light'] [class*="bg-[#1B1430]"] { background-color: #FFFFFF !important; }
 :root[data-theme='sunny-light'] [class*="bg-[#21163A]"] { background-color: #FFFFFF !important; }
-:root[data-theme='sunny-light'] [class*="bg-[#261A42]"] { background-color: #F0EDF6 !important; }
-:root[data-theme='sunny-light'] [class*="bg-[#2B1D4A]"] { background-color: #E8E1F0 !important; }
-:root[data-theme='sunny-light'] [class*="bg-[#302149]"] { background-color: #E8E1F0 !important; }
-:root[data-theme='sunny-light'] [class*="bg-[#3D2A5C]"] { background-color: #DED5E9 !important; }
+:root[data-theme='sunny-light'] [class*="bg-[#261A42]"] { background-color: #F5EFFB !important; }
+:root[data-theme='sunny-light'] [class*="bg-[#261a3d]"] { background-color: #F5EFFB !important; }
+:root[data-theme='sunny-light'] [class*="bg-[#2B1D4A]"] { background-color: #EFEAF5 !important; }
+:root[data-theme='sunny-light'] [class*="bg-[#302149]"] { background-color: #EAE3F2 !important; }
+:root[data-theme='sunny-light'] [class*="bg-[#3D2A5C]"] { background-color: #E2DAED !important; }
 :root[data-theme='sunny-light'] [class*="bg-[#3A1722]"] { background-color: #F8E8EB !important; }
 :root[data-theme='sunny-light'] [class*="bg-[#7A3045]"] { background-color: #EBCBD2 !important; }
+
+/* Gradient overrides for Light Theme */
+:root[data-theme='sunny-light'] [class*="from-[#100B22]"] { --tw-gradient-from: #F8F6FC var(--tw-gradient-from-position) !important; }
+:root[data-theme='sunny-light'] [class*="via-[#100B22]"] { --tw-gradient-to: rgb(248 246 252 / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) 0%, #F8F6FC 50%, var(--tw-gradient-to) 100%) !important; }
+:root[data-theme='sunny-light'] [class*="to-[#100B22]"] { --tw-gradient-to: #F8F6FC var(--tw-gradient-to-position) !important; }
+:root[data-theme='sunny-light'] [class*="from-[#261a3d]"] { --tw-gradient-from: #FFFFFF var(--tw-gradient-from-position) !important; }
+:root[data-theme='sunny-light'] [class*="to-[#21163A]"] { --tw-gradient-to: #F5EFFB var(--tw-gradient-to-position) !important; }
+:root[data-theme='sunny-light'] [class*="from-[#21163A]"] { --tw-gradient-from: #FFFFFF var(--tw-gradient-from-position) !important; }
+:root[data-theme='sunny-light'] [class*="to-[#302149]"] { --tw-gradient-to: #EAE3F2 var(--tw-gradient-to-position) !important; }
+
+/* Text overrides */
 :root[data-theme='sunny-light'] [class*="text-white"] { color: #251A35 !important; }
 :root[data-theme='sunny-light'] [class*="text-[#FFFFFF]"] { color: #251A35 !important; }
 :root[data-theme='sunny-light'] [class*="text-[#C6B8E5]"] { color: #594B6E !important; }
-:root[data-theme='sunny-light'] [class*="text-[#9B8AB9]"] { color: #756789 !important; }
-:root[data-theme='sunny-light'] [class*="text-[#FFD84D]"] { color: #795900 !important; }
-:root[data-theme='sunny-light'] [class*="text-[#F6BD45]"] { color: #785300 !important; }
+:root[data-theme='sunny-light'] [class*="text-[#B6A6CC]"] { color: #594B6E !important; }
+:root[data-theme='sunny-light'] [class*="text-[#9B8AB9]"] { color: #6E5F85 !important; }
+:root[data-theme='sunny-light'] [class*="text-[#FFD84D]"] { color: #8A6200 !important; }
+:root[data-theme='sunny-light'] [class*="text-[#F6BD45]"] { color: #855C00 !important; }
 :root[data-theme='sunny-light'] [class*="text-[#FF8D9A]"] { color: #A13B4B !important; }
-:root[data-theme='sunny-light'] [class*="text-[#A8D9A0]"] { color: #347447 !important; }
+:root[data-theme='sunny-light'] [class*="text-[#A8D9A0]"] { color: #2E6B3F !important; }
+:root[data-theme='sunny-light'] [class*="placeholder:text-[#9B8AB9]"]::placeholder { color: #8C7CA5 !important; }
+
+/* Preserve user message bubble styling: dark text on yellow bubble */
+:root[data-theme='sunny-light'] [class*="bg-[#FFD84D]"] {
+  background-color: #FFD84D !important;
+  color: #100B22 !important;
+}
+:root[data-theme='sunny-light'] [class*="bg-[#FFD84D]"] * {
+  color: #100B22 !important;
+}
+
+/* Border overrides */
 :root[data-theme='sunny-light'] [class*="border-[#392858]"] { border-color: #D6CCE3 !important; }
 :root[data-theme='sunny-light'] [class*="border-[#3E2C60]"] { border-color: #D6CCE3 !important; }
+:root[data-theme='sunny-light'] [class*="border-[#604477]"] { border-color: #D4C7E3 !important; }
+:root[data-theme='sunny-light'] [class*="border-white"] { border-color: rgba(37, 26, 53, 0.12) !important; }
 :root[data-theme='sunny-light'] [class*="border-[#FFD84D]"] { border-color: #C99A16 !important; }
-:root[data-theme='sunny-light'] [class*="divide-[#392858]"] { --tw-divide-opacity: 0.7; }
-:root[data-theme='sunny-light'] input[type='time'],
-:root[data-theme='sunny-light'] select { color-scheme: light; }
+
+/* Dividers & Form elements */
+:root[data-theme='sunny-light'] [class*="divide-[#392858]"] { --tw-divide-opacity: 0.7; border-color: #D6CCE3 !important; }
+:root[data-theme='sunny-light'] input,
+:root[data-theme='sunny-light'] textarea,
+:root[data-theme='sunny-light'] select {
+  color: #251A35 !important;
+  color-scheme: light;
+}
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
