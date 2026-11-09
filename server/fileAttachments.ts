@@ -138,25 +138,27 @@ export async function processAttachments(input: unknown): Promise<ProcessedAttac
   for (const raw of input) {
     if (!raw || typeof raw !== 'object') throw new Error('Invalid attachment.');
 
-    let buffer: Buffer;
     let name: string;
-    let mimeType: string;
+    let decoded: ReturnType<typeof decodeDataUrl>;
 
-    // Support both Base64 JSON (legacy) and Multipart binary (new)
+    // Support both Base64 JSON (legacy) and Multipart binary (new).
+    // Keep the decoded payload shape identical for both upload paths.
     if ('buffer' in raw && Buffer.isBuffer(raw.buffer)) {
-      // MultipartAttachment
-      const multipart = raw as any;
-      buffer = multipart.buffer;
+      const multipart = raw as MultipartAttachment;
+      decoded = {
+        buffer: multipart.buffer,
+        mimeType: multipart.mimetype || 'application/octet-stream',
+      };
       name = safeName(multipart.originalname);
-      mimeType = multipart.mimetype;
     } else {
-      // UploadedAttachment (Base64)
       const item = raw as Partial<UploadedAttachment>;
       name = typeof item.name === 'string' ? safeName(item.name) : 'attachment';
-      const decoded = decodeDataUrl(item.data || '');
-      buffer = decoded.buffer;
-      mimeType = decoded.mimeType;
+      decoded = decodeDataUrl(item.data || '');
     }
+
+    const buffer = decoded.buffer;
+    const declaredType = decoded.mimeType.toLowerCase().trim();
+    const unknownClientMime = !declaredType || declaredType === 'application/octet-stream';
 
     const ext = path.extname(name).toLowerCase();
     const imageExtension = ['.png', '.jpg', '.jpeg', '.webp'].includes(ext);
@@ -175,9 +177,8 @@ export async function processAttachments(input: unknown): Promise<ProcessedAttac
     if (detectedImageMime && !imageExtension) {
       throw new Error(`${name} failed file validation.`);
     }
-    if (!detectedImageMime && declaredType && !unknownClientMime &&
-      decoded.mimeType !== 'application/octet-stream' && decoded.mimeType !== declaredType) {
-      throw new Error(`${name} has an invalid MIME type.`);
+    if (!unknownClientMime && !allowedMimeTypes.has(declaredType)) {
+      throw new Error(`${name} has an unsupported MIME type.`);
     }
 
     decodedItems.push({ name, ext, decoded, detectedImageMime });
