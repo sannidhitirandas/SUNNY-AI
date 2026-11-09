@@ -206,6 +206,9 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await chatService.appendMessage('default-session', userMessage, updatedWithUser);
       userMessagePersisted = true;
 
+      const assistantMessageId = `ai-${Date.now()}`;
+      const assistantCreatedAt = new Date().toISOString();
+      let streamedContent = '';
       const aiResult = await chatService.sendMessageToAI({
         message: content.trim(),
         files,
@@ -216,6 +219,18 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         memoryEnabled: preferences.memoryEnabled,
         memories: preferences.memoryEnabled ? memories : [],
         sessionId: 'default-session',
+      }, (chunk) => {
+        streamedContent += chunk;
+        const streamingMessage: ChatMessage = {
+          id: assistantMessageId,
+          sessionId: 'default-session',
+          role: 'assistant',
+          content: streamedContent,
+          createdAt: assistantCreatedAt,
+          deliveryStatus: 'sent',
+          isDemoResponse: false,
+        };
+        updateMessages([...updatedWithUser, streamingMessage]);
       });
 
       if (aiResult.memoriesUpdated) {
@@ -233,11 +248,11 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       const aiMessage: ChatMessage = {
-        id: `ai-${Date.now()}`,
+        id: assistantMessageId,
         sessionId: 'default-session',
         role: 'assistant',
         content: aiResult.text,
-        createdAt: new Date().toISOString(),
+        createdAt: assistantCreatedAt,
         deliveryStatus: 'sent',
         isDemoResponse: false,
       };
