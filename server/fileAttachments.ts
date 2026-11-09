@@ -212,7 +212,6 @@ export async function processAttachments(input: unknown): Promise<ProcessedAttac
   if (extractedTotal > MAX_EXTRACTED_TOTAL) {
     throw new Error('The combined extracted file content is too large. Please attach fewer or smaller files.');
   }
-  }
 
   return processed;
 }
