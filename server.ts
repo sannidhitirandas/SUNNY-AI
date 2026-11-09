@@ -175,10 +175,12 @@ function rateLimiter(
 // AI configuration
 // --------------------------------------------------
 
+// Use the smaller, faster model for normal chat. Keep the configured
+// model as a fallback so deployments can retain a preferred alternative.
 const GROQ_MODELS = Array.from(
   new Set([
-    getConfiguredModel('GROQ_MODEL', 'openai/gpt-oss-120b'),
     'openai/gpt-oss-20b',
+    getConfiguredModel('GROQ_MODEL', 'openai/gpt-oss-120b'),
   ])
 );
 
