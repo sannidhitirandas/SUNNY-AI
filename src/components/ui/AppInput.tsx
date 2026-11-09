@@ -37,7 +37,7 @@ export const AppInput: React.FC<AppInputProps> = ({
   return (
     <div className={`flex flex-col mb-3 ${containerStyle}`}>
       {label && (
-          <label htmlFor={inputId} className="text-xs font-medium text-[#C6B8E5] mb-1.5 ml-0.5">
+        <label htmlFor={inputId} className="text-xs font-medium text-white/90 mb-1.5 ml-0.5">
           {label}
         </label>
       )}
@@ -52,7 +52,7 @@ export const AppInput: React.FC<AppInputProps> = ({
             autoFocus={autoFocus}
             maxLength={maxLength}
             disabled={disabled}
-            className="w-full bg-[#1B1430] border border-[#392858] focus:border-[#FFD84D] focus:outline-none text-white placeholder-[#9B8AB9] text-sm rounded-xl px-3.5 py-2.5 transition-colors resize-none"
+            className="w-full bg-[#1B1430] border border-[#392858] focus:border-[#FFD84D] focus:outline-none text-white placeholder-white/60 text-sm rounded-xl px-3.5 py-2.5 transition-colors resize-none"
           />
         ) : (
           <>
@@ -66,7 +66,7 @@ export const AppInput: React.FC<AppInputProps> = ({
               autoFocus={autoFocus}
               maxLength={maxLength}
               disabled={disabled}
-              className="w-full bg-[#1B1430] border border-[#392858] focus:border-[#FFD84D] focus:outline-none text-white placeholder-[#9B8AB9] text-sm rounded-xl px-3.5 py-2.5 transition-colors pr-10"
+              className="w-full bg-[#1B1430] border border-[#392858] focus:border-[#FFD84D] focus:outline-none text-white placeholder-white/60 text-sm rounded-xl px-3.5 py-2.5 transition-colors pr-10"
             />
             {isPassword && (
               <button

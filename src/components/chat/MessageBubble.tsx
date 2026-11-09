@@ -108,8 +108,8 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
           setMenuOpen(true);
         }}
       >
-        <p className="whitespace-pre-wrap text-base leading-6 text-white/95">{message.content}</p>
-        <div className="mt-2 flex items-center justify-between gap-3 text-[10px] text-[#B6A6CC]">
+        <p className="whitespace-pre-wrap text-base leading-6 text-white">{message.content}</p>
+        <div className="mt-2 flex items-center justify-between gap-3 text-[10px] text-white/85">
           <span>{formatTime(message.createdAt)}</span>
           <div className="flex items-center gap-1.5">
             {copied && <span className="text-[#A8D9A0]">Copied</span>}
@@ -119,7 +119,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
               aria-label="Open message options"
               aria-expanded={menuOpen}
               onClick={() => setMenuOpen((open) => !open)}
-              className="flex h-7 w-7 items-center justify-center rounded-full text-[#C6B8E5] transition-colors hover:bg-[#302149] hover:text-[#FFD84D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFD84D]/70 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+              className="flex h-7 w-7 items-center justify-center rounded-full text-white transition-colors hover:bg-[#302149] hover:text-[#FFD84D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFD84D]/70 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
               title="Message options"
             >
               <MoreHorizontal size={16} />

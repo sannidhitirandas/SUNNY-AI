@@ -55,18 +55,18 @@ export const MemoryCard: React.FC<MemoryCardProps> = ({
             <Badge label="Sample" variant="muted" />
           )}
         </div>
-        <span className="text-xs text-[#9B8AB9]">{formatDate(memory.createdAt)}</span>
+        <span className="text-xs text-white/85">{formatDate(memory.createdAt)}</span>
       </div>
 
       <h3 className="text-base font-semibold text-white mb-1.5">
         {memory.title}
       </h3>
-      <p className="text-sm text-[#C6B8E5] leading-relaxed mb-4">
+      <p className="text-sm text-white leading-relaxed mb-4">
         {memory.content}
       </p>
 
       <div className="flex items-center justify-between pt-3 border-t border-white/5">
-        <div className="flex items-center gap-1.5 text-xs text-[#9B8AB9]">
+        <div className="flex items-center gap-1.5 text-xs text-white/90">
           <ShieldCheck size={14} className="text-[#A8D9A0]" />
           <span>Consent confirmed</span>
         </div>
@@ -75,7 +75,7 @@ export const MemoryCard: React.FC<MemoryCardProps> = ({
           <button
             type="button"
             onClick={() => onEdit(memory)}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#302149] hover:bg-[#3d2a5c] text-xs font-medium text-[#C6B8E5] transition-colors cursor-pointer"
+            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#302149] hover:bg-[#3d2a5c] text-xs font-medium text-white transition-colors cursor-pointer"
           >
             <Pencil size={13} />
             <span>Edit</span>

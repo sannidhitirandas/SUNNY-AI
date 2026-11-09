@@ -40,7 +40,7 @@ export const RecentConversations: React.FC<RecentConversationsProps> = ({
             </div>
 
             <div className="flex-1 min-w-0">
-              <span className="text-xs text-[#9B8AB9] block font-medium">
+              <span className="text-xs text-white/85 block font-medium">
                 {lastMessage.role === 'user' ? 'You said:' : 'Sunny said:'}
               </span>
               <p className="text-xs sm:text-sm text-white truncate font-normal max-w-full">
@@ -56,7 +56,7 @@ export const RecentConversations: React.FC<RecentConversationsProps> = ({
         </AppCard>
       ) : (
         <AppCard className="p-4 text-center">
-          <p className="text-xs text-[#9B8AB9]">
+          <p className="text-xs text-white/85">
             No past conversations yet. Tap "Talk to Sunny" above to get started!
           </p>
         </AppCard>

@@ -342,7 +342,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
           type="button"
           onClick={() => void handleAttach()}
           disabled={disabled || preparingAttachment || sending || files.length >= MAX_FILES}
-          className="mb-0.5 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full text-[#C6B8E5] transition-colors duration-200 hover:bg-[#302149] hover:text-[#FFD84D] disabled:cursor-not-allowed disabled:opacity-40"
+          className="mb-0.5 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full text-white transition-colors duration-200 hover:bg-[#302149] hover:text-[#FFD84D] disabled:cursor-not-allowed disabled:opacity-40"
           aria-label="Attach files"
           title="Attach files"
         >
@@ -360,7 +360,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
           disabled={disabled || preparingAttachment || sending}
           rows={1}
           maxLength={1000}
-          className="min-h-10 max-h-[120px] flex-1 resize-none bg-transparent px-1 py-2.5 text-base leading-6 text-white outline-none placeholder:text-[#9B8AB9]/90 focus:outline-none disabled:opacity-60"
+          className="min-h-10 max-h-[120px] flex-1 resize-none bg-transparent px-1 py-2.5 text-base leading-6 text-white outline-none placeholder:text-white/60 focus:outline-none disabled:opacity-60"
         />
 
         <button

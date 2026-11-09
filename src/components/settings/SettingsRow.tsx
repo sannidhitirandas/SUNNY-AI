@@ -43,7 +43,7 @@ export const SettingsRow: React.FC<SettingsRowProps> = ({
             {title}
           </span>
           {subtitle && (
-            <span id={subtitleId} className="text-xs text-[#9B8AB9] block truncate mt-0.5">
+            <span id={subtitleId} className="text-xs text-white/85 block truncate mt-0.5">
               {subtitle}
             </span>
           )}
@@ -78,7 +78,7 @@ export const SettingsRow: React.FC<SettingsRowProps> = ({
           </button>
         )}
         {!isSwitch && showChevron && onPress && (
-          <ChevronRight aria-hidden="true" size={18} className="text-[#9B8AB9]" />
+          <ChevronRight aria-hidden="true" size={18} className="text-white/80" />
         )}
       </div>
     </>

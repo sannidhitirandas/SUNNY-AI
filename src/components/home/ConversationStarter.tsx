@@ -67,12 +67,12 @@ export const ConversationStarter: React.FC<ConversationStarterProps> = ({ onSele
                 <h3 className="text-sm font-semibold leading-snug text-white line-clamp-2 sm:text-base">
                   {item.title}
                 </h3>
-                <p className="mt-1 hidden text-sm leading-relaxed text-[#B6A6CC] sm:block">
+                <p className="mt-1 hidden text-sm leading-relaxed text-white/90 sm:block">
                   {item.description}
                 </p>
               </div>
             </div>
-            <ArrowUpRight size={16} className="ml-auto hidden shrink-0 text-[#9B8AB9] transition-colors group-hover:text-[#FFD84D] sm:block" />
+            <ArrowUpRight size={16} className="ml-auto hidden shrink-0 text-white/80 transition-colors group-hover:text-[#FFD84D] sm:block" />
           </AppCard>
         ))}
       </div>
