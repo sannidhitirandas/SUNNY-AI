@@ -117,9 +117,15 @@ export async function processAttachments(input: unknown): Promise<ProcessedAttac
   if (!Array.isArray(input) || input.length === 0) return [];
   if (input.length > 3) throw new Error('You can attach up to 3 files per message.');
 
+  // Validate and decode every attachment first. Keep aggregate byte limits
+  // independent of processing order so parallel extraction cannot bypass them.
   let totalSize = 0;
-  let extractedTotal = 0;
-  const processed: ProcessedAttachment[] = [];
+  const decodedItems: Array<{
+    name: string;
+    ext: string;
+    decoded: ReturnType<typeof decodeDataUrl>;
+    detectedImageMime: string | null;
+  }> = [];
 
   for (const raw of input) {
     if (!raw || typeof raw !== 'object') throw new Error('Invalid attachment.');
@@ -148,22 +154,45 @@ export async function processAttachments(input: unknown): Promise<ProcessedAttac
     }
     if (!hasMagic(decoded.buffer, ext)) throw new Error(`${name} failed file validation.`);
 
-    if (detectedImageMime) {
-      if (!imageExtension) throw new Error(`${name} failed file validation.`);
-      processed.push({ name, kind: 'image', mimeType: detectedImageMime, data: decoded.buffer.toString('base64') });
-      continue;
+    if (detectedImageMime && !imageExtension) {
+      throw new Error(`${name} failed file validation.`);
+    }
+    if (!detectedImageMime && declaredType && !unknownClientMime &&
+      decoded.mimeType !== 'application/octet-stream' && decoded.mimeType !== declaredType) {
+      throw new Error(`${name} has an invalid MIME type.`);
     }
 
-    if (declaredType && !unknownClientMime && decoded.mimeType !== 'application/octet-stream' && decoded.mimeType !== declaredType) {
-      throw new Error(`${name} has an invalid MIME type.`);
+    decodedItems.push({ name, ext, decoded, detectedImageMime });
+  }
+
+  // Image preparation and document extraction are independent. Run them
+  // concurrently instead of making each attachment wait for the previous one.
+  const processed = await Promise.all(decodedItems.map(async ({ name, ext, decoded, detectedImageMime }) => {
+    if (detectedImageMime) {
+      return {
+        name,
+        kind: 'image' as const,
+        mimeType: detectedImageMime,
+        data: decoded.buffer.toString('base64'),
+      };
     }
 
     const text = await extractText(decoded.buffer, ext);
     if (!text) throw new Error(`${name} does not contain readable content.`);
-    const clipped = text.slice(0, MAX_EXTRACTED_PER_FILE);
-    extractedTotal += clipped.length;
-    if (extractedTotal > MAX_EXTRACTED_TOTAL) throw new Error('The combined extracted file content is too large. Please attach fewer or smaller files.');
-    processed.push({ name, kind: 'text', mimeType: decoded.mimeType, text: clipped });
+    return {
+      name,
+      kind: 'text' as const,
+      mimeType: decoded.mimeType,
+      text: text.slice(0, MAX_EXTRACTED_PER_FILE),
+    };
+  }));
+
+  const extractedTotal = processed.reduce(
+    (total, item) => total + (item.kind === 'text' ? item.text?.length ?? 0 : 0),
+    0,
+  );
+  if (extractedTotal > MAX_EXTRACTED_TOTAL) {
+    throw new Error('The combined extracted file content is too large. Please attach fewer or smaller files.');
   }
 
   return processed;
