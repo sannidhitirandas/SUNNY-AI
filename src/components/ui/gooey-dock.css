@@ -1,0 +1,137 @@
+.gooey-dock-shell {
+  position: fixed;
+  z-index: 40;
+  left: 50%;
+  bottom: 0;
+  width: min(100%, 32rem);
+  padding: 0.45rem 0.75rem calc(env(safe-area-inset-bottom) + 0.45rem);
+  transform: translateX(-50%);
+  border: 1px solid rgba(89, 62, 125, 0.72);
+  border-bottom: 0;
+  border-radius: 1.35rem 1.35rem 0 0;
+  background: rgba(23, 16, 44, 0.94);
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.18);
+  -webkit-backdrop-filter: blur(22px);
+  backdrop-filter: blur(22px);
+  transition: transform 220ms ease, opacity 220ms ease;
+}
+
+.gooey-dock-shell--hidden {
+  transform: translate(-50%, 110%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.gooey-dock-filter {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.gooey-dock {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+  min-height: 3.7rem;
+  isolation: isolate;
+}
+
+.gooey-dock__goo-layer {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  filter: url("#sunny-goo");
+}
+
+.gooey-dock__blob {
+  position: absolute;
+  top: 50%;
+  width: 3.1rem;
+  height: 3.1rem;
+  border-radius: 9999px;
+  background: rgba(255, 216, 77, 0.16);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.55);
+  transition: opacity 180ms ease, transform 260ms cubic-bezier(0.2, 0.9, 0.25, 1.25);
+}
+
+.gooey-dock__blob--active {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.gooey-dock__item {
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 3.7rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.16rem;
+  border: 0;
+  border-radius: 1rem;
+  padding: 0.25rem 0.15rem;
+  color: #9B8AB9;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 180ms ease, transform 220ms cubic-bezier(0.2, 0.9, 0.25, 1.25);
+}
+
+.gooey-dock__item:hover,
+.gooey-dock__item:focus-visible,
+.gooey-dock__item--active {
+  color: #FFD84D;
+}
+
+.gooey-dock__item--emphasized {
+  transform: translateY(-2px) scale(1.08);
+}
+
+.gooey-dock__item:focus-visible {
+  outline: 2px solid #FFD84D;
+  outline-offset: 2px;
+}
+
+.gooey-dock__icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.55rem;
+}
+
+.gooey-dock__label {
+  max-width: 100%;
+  overflow: hidden;
+  color: currentColor;
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (min-width: 1024px) {
+  .gooey-dock-shell {
+    bottom: 1rem;
+    padding: 0.45rem 0.8rem;
+    border: 1px solid rgba(89, 62, 125, 0.72);
+    border-radius: 1.4rem;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gooey-dock-shell,
+  .gooey-dock__blob,
+  .gooey-dock__item {
+    transition: none;
+  }
+}
