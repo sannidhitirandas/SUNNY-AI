@@ -10,6 +10,7 @@ import { SettingsRow } from '@/components/settings/SettingsRow';
 import { AppInput } from '@/components/ui/AppInput';
 import { AppButton } from '@/components/ui/AppButton';
 import { SunnyLogo } from '@/components/brand/SunnyLogo';
+import { authService } from '@/services/authService';
 
 import {
   Sparkles,
@@ -96,6 +97,12 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   const [profileName, setProfileName] = useState('');
   const [profileError, setProfileError] = useState<string | null>(null);
   const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const [passwordModalVisible, setPasswordModalVisible] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [passwordNotice, setPasswordNotice] = useState<string | null>(null);
+  const [isSavingPassword, setIsSavingPassword] = useState(false);
   const [newName, setNewName] = useState(preferences.preferredName || '');
 
   const TONES: { tone: PersonalityTone; label: string; desc: string }[] = [
@@ -134,6 +141,36 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
     if (window.confirm('Are you sure you want to sign out?')) {
       await logout();
       onSignOut();
+    }
+  };
+
+  const handleSavePassword = async () => {
+    setPasswordError(null);
+    setPasswordNotice(null);
+    if (newPassword.length < 6) {
+      setPasswordError('Choose a password with at least 6 characters.');
+      return;
+    }
+    if (newPassword !== confirmNewPassword) {
+      setPasswordError('The passwords do not match.');
+      return;
+    }
+
+    setIsSavingPassword(true);
+    try {
+      const result = await authService.updatePassword(newPassword);
+      if (!result.success) {
+        setPasswordError(result.error || 'Sunny could not save your password. Please try again.');
+        return;
+      }
+      setNewPassword('');
+      setConfirmNewPassword('');
+      setPasswordNotice('Your password is set. You can now sign in with this email and password, or continue using Google.');
+      setPasswordModalVisible(false);
+    } catch (error) {
+      setPasswordError(error instanceof Error ? error.message : 'Sunny could not save your password. Please try again.');
+    } finally {
+      setIsSavingPassword(false);
     }
   };
 
@@ -287,6 +324,19 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
 
       {/* Section F — Account */}
       <SettingsSection title="ACCOUNT">
+        {user && (
+          <SettingsRow
+            title="Set or change password"
+            subtitle="Add email-and-password sign-in to this same account"
+            icon={<Lock size={16} className="text-[#FFD84D]" />}
+            onPress={() => {
+              setNewPassword('');
+              setConfirmNewPassword('');
+              setPasswordError(null);
+              setPasswordModalVisible(true);
+            }}
+          />
+        )}
         <SettingsRow
           title="Account Profile"
           subtitle={user?.email || 'Guest profile saved on this device'}
@@ -576,6 +626,50 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                 onPress={() => setNameModalVisible(false)}
                 variant="ghost"
                 fullWidth
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {passwordModalVisible && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
+          <div role="dialog" aria-modal="true" aria-labelledby="account-password-title" className="w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+            <h3 id="account-password-title" className="text-base font-bold text-white mb-2">Set an account password</h3>
+            <p className="text-xs text-[#C6B8E5] mb-4">This adds email-and-password sign-in to your existing account. Your Google sign-in, chats, and saved memories stay on the same account.</p>
+            <AppInput
+              label="New password"
+              placeholder="At least 6 characters"
+              value={newPassword}
+              onChangeText={setNewPassword}
+              isPassword
+              autoComplete="new-password"
+              disabled={isSavingPassword}
+            />
+            <AppInput
+              label="Confirm new password"
+              placeholder="Re-enter your password"
+              value={confirmNewPassword}
+              onChangeText={setConfirmNewPassword}
+              isPassword
+              autoComplete="new-password"
+              disabled={isSavingPassword}
+            />
+            {passwordError && <p role="alert" className="mb-3 text-sm text-[#FFD0D8]">{passwordError}</p>}
+            <div className="flex flex-col gap-2 mt-4">
+              <AppButton
+                title="Save password"
+                onPress={handleSavePassword}
+                variant="primary"
+                fullWidth
+                loading={isSavingPassword}
+              />
+              <AppButton
+                title="Cancel"
+                onPress={() => setPasswordModalVisible(false)}
+                variant="ghost"
+                fullWidth
+                disabled={isSavingPassword}
               />
             </div>
           </div>
