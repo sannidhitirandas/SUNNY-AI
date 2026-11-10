@@ -40,6 +40,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
 
   const handleSignIn = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
+    if (loading) return;
     setError('');
     const validationError = validateLoginFields(email, password);
     if (validationError) {
@@ -71,7 +72,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         setError(result.error || 'Unable to continue with Google.');
         setGoogleLoading(false);
       }
-      // On success Supabase redirects to Google and returns to Sunny after consent.
     } catch {
       setError('Sunny could not start Google sign-in. Check your connection and try again.');
       setGoogleLoading(false);
@@ -109,7 +109,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         <p className="text-xs text-[#C6B8E5]">{forgotPassword ? 'We will send a secure reset link if this email has a Sunny account.' : 'Sign in to your corner of sunshine.'}</p>
       </div>
 
-      <form onSubmit={forgotPassword ? handlePasswordReset : handleSignIn} className="space-y-1 mb-6">
+      <form onSubmit={forgotPassword ? handlePasswordReset : handleSignIn} autoComplete="on" className="space-y-1 mb-6">
         <AppInput
           label="Email Address"
           placeholder="sunshine@example.com"
@@ -119,6 +119,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             if (error) setError('');
           }}
           keyboardType="email-address"
+          autoComplete="username"
+          autoCapitalize="none"
         />
 
         {!forgotPassword && <AppInput
@@ -130,6 +132,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             if (error) setError('');
           }}
           isPassword
+          autoComplete="current-password"
+          autoCapitalize="none"
         />}
 
         {error && (
