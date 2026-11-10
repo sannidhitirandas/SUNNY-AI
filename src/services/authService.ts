@@ -187,7 +187,7 @@ export const authService = {
   }> {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
+        email: email.trim().toLowerCase(),
         password,
       });
 
@@ -276,7 +276,7 @@ export const authService = {
   ): Promise<{ success: boolean; error?: string }> {
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(
-        email.trim(),
+        email.trim().toLowerCase(),
         {
           redirectTo: getAuthRedirectUrl(),
         },
