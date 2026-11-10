@@ -101,7 +101,6 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [passwordError, setPasswordError] = useState<string | null>(null);
-  const [passwordNotice, setPasswordNotice] = useState<string | null>(null);
   const [isSavingPassword, setIsSavingPassword] = useState(false);
   const [newName, setNewName] = useState(preferences.preferredName || '');
 
@@ -146,7 +145,6 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
 
   const handleSavePassword = async () => {
     setPasswordError(null);
-    setPasswordNotice(null);
     if (newPassword.length < 6) {
       setPasswordError('Choose a password with at least 6 characters.');
       return;
@@ -165,7 +163,6 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       }
       setNewPassword('');
       setConfirmNewPassword('');
-      setPasswordNotice('Your password is set. You can now sign in with this email and password, or continue using Google.');
       setPasswordModalVisible(false);
     } catch (error) {
       setPasswordError(error instanceof Error ? error.message : 'Sunny could not save your password. Please try again.');
