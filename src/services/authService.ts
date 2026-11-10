@@ -231,7 +231,7 @@ export const authService = {
   }> {
     try {
       const { data, error } = await supabase.auth.signUp({
-        email: email.trim(),
+        email: email.trim().toLowerCase(),
         password,
         options: {
           data: {
