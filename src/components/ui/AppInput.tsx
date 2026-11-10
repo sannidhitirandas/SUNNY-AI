@@ -11,6 +11,7 @@ interface AppInputProps {
   numberOfLines?: number;
   keyboardType?: string;
   autoCapitalize?: string;
+  autoComplete?: string;
   autoFocus?: boolean;
   maxLength?: number;
   disabled?: boolean;
@@ -25,7 +26,9 @@ export const AppInput: React.FC<AppInputProps> = ({
   isPassword = false,
   multiline = false,
   numberOfLines = 3,
-  autoCapitalize,
+  keyboardType,
+  autoCapitalize = 'none',
+  autoComplete,
   autoFocus = false,
   maxLength,
   disabled = false,
@@ -52,20 +55,25 @@ export const AppInput: React.FC<AppInputProps> = ({
             autoFocus={autoFocus}
             maxLength={maxLength}
             disabled={disabled}
+            autoCapitalize={autoCapitalize}
+            autoComplete={autoComplete}
             className="w-full bg-[#1B1430] border border-[#392858] focus:border-[#FFD84D] focus:outline-none text-white placeholder-white/60 text-sm rounded-xl px-3.5 py-2.5 transition-colors resize-none"
           />
         ) : (
           <>
             <input
               id={inputId}
-              type={isPassword && !showPassword ? 'password' : 'text'}
+              type={isPassword ? (showPassword ? 'text' : 'password') : keyboardType === 'email-address' ? 'email' : 'text'}
+              inputMode={keyboardType === 'email-address' ? 'email' : undefined}
               value={value}
               onChange={(e) => onChangeText(e.target.value)}
               placeholder={placeholder}
               autoCapitalize={autoCapitalize}
+              autoComplete={autoComplete}
               autoFocus={autoFocus}
               maxLength={maxLength}
               disabled={disabled}
+              spellCheck={false}
               className="w-full bg-[#1B1430] border border-[#392858] focus:border-[#FFD84D] focus:outline-none text-white placeholder-white/60 text-sm rounded-xl px-3.5 py-2.5 transition-colors pr-10"
             />
             {isPassword && (
