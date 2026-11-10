@@ -11,7 +11,15 @@ export const getAuthRedirectUrl = (): string => {
     return NATIVE_AUTH_CALLBACK_URL;
   }
 
-  return window.location.origin;
+  // Keep local development OAuth on localhost, but always return production
+  // sign-in flows to the deployed app instead of Supabase's default Site URL.
+  const isLocalDevelopment =
+    window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1';
+
+  return isLocalDevelopment
+    ? window.location.origin
+    : 'https://sunny-ai-1.onrender.com';
 };
 
 const getFriendlyAuthError = (
