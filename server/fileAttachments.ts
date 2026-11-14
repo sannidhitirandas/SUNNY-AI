@@ -93,9 +93,12 @@ function hasMagic(buffer: Buffer, ext: string): boolean {
   }
 
   if (ext === '.docx' || ext === '.xlsx') {
-    // ZIP local-file header. The extension and MIME checks below further
-    // constrain this to the document formats Sunny actually supports.
-    return buffer.length >= 4 && buffer.subarray(0, 4).equals(Buffer.from([0x50, 0x4b, 0x03, 0x04]));
+    // Office Open XML files are ZIP containers with format-specific entries.
+    const hasZipHeader = buffer.length >= 4
+      && buffer.subarray(0, 4).equals(Buffer.from([0x50, 0x4b, 0x03, 0x04]));
+    const hasContentTypes = buffer.includes(Buffer.from('[Content_Types].xml'));
+    const requiredEntry = ext === '.docx' ? 'word/document.xml' : 'xl/workbook.xml';
+    return hasZipHeader && hasContentTypes && buffer.includes(Buffer.from(requiredEntry));
   }
 
   if (ext === '.xls') {
