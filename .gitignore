@@ -1,98 +1,45 @@
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
-
-.artifacts/
-
-# dependencies
+# Dependencies
 node_modules/
-.env.local
-.env
+backend/node_modules/
 
-# Expo
-.expo/
+# Build output
 dist/
 web-build/
-expo-env.d.ts
+backend/dist/
+android/**/build/
 
-# Native
-.kotlin/
-*.orig.*
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+backend/.env
+android/local.properties
+android/keystore.properties
+keystore/
 *.jks
 *.p8
 *.p12
 *.key
+*.pem
 *.mobileprovision
 
-# Metro
-.metro-health-check*
+# Native Android: keep the Capacitor project in Git, ignore only local/generated files
+android/.gradle/
+android/.idea/
+.kotlin/
 
-# debug
+# Other local/generated files
+.artifacts/
+.expo/
+expo-env.d.ts
+*.tsbuildinfo
+*.orig.*
+.metro-health-check*
 npm-debug.*
 yarn-debug.*
 yarn-error.*
-
-# macOS
 .DS_Store
-*.pem
+constants.zip
 
-# local env files
-.env
-.env.local
-.env*.local
-backend/.env
-backend/node_modules/
-backend/dist/
-
-# typescript
-*.tsbuildinfo
-
-# generated native folders
+# iOS native project is not currently maintained in this repository
 /ios
-/android
-!/android/
-android/*
-!/android/app/
-android/app/*
-!/android/app/src/
-android/app/src/*
-!/android/app/src/main/
-android/app/src/main/*
-!/android/app/src/main/AndroidManifest.xml
-!/android/app/src/main/res/
-android/app/src/main/res/*
-!/android/app/src/main/res/mipmap-anydpi-v26/
-android/app/src/main/res/mipmap-anydpi-v26/*
-!/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
-!/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml
-!/android/app/src/main/res/mipmap-mdpi/
-android/app/src/main/res/mipmap-mdpi/*
-!/android/app/src/main/res/mipmap-mdpi/ic_launcher*.png
-!/android/app/src/main/res/mipmap-hdpi/
-android/app/src/main/res/mipmap-hdpi/*
-!/android/app/src/main/res/mipmap-hdpi/ic_launcher*.png
-!/android/app/src/main/res/mipmap-xhdpi/
-android/app/src/main/res/mipmap-xhdpi/*
-!/android/app/src/main/res/mipmap-xhdpi/ic_launcher*.png
-!/android/app/src/main/res/mipmap-xxhdpi/
-android/app/src/main/res/mipmap-xxhdpi/*
-!/android/app/src/main/res/mipmap-xxhdpi/ic_launcher*.png
-!/android/app/src/main/res/mipmap-xxxhdpi/
-android/app/src/main/res/mipmap-xxxhdpi/*
-!/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher*.png
-!/android/app/src/main/res/values/
-android/app/src/main/res/values/*
-!/android/app/src/main/res/values/ic_launcher_background.xml
-.env
-.env.*
-!.env.example
-node_modules/
-.expo/
-dist/
-web-build/
-
-constants.zip
-
-constants.zip
-
-keystore/
-
-android/keystore.properties
