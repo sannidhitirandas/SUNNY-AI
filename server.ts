@@ -195,18 +195,13 @@ const GROQ_MODELS = Array.from(
 
 const GROQ_TIMEOUT_MS = 12000;
 
-const GEMINI_MODELS = Array.from(
-  new Set([
-    getConfiguredModel('GEMINI_MODEL', 'gemini-3.8-flash'),
-    'gemini-3.8-flash',
-    'gemini-flash-latest',
-    'gemini-2.5-flash',
-    'gemini-2.0-flash',
-  ])
-);
+// Use one configured vision model per image request. Cycling through several
+// Gemini model aliases can multiply RPM usage without helping when the project
+// has reached its shared free-tier limit.
+const GEMINI_MODELS = [
+  getConfiguredModel('GEMINI_MODEL', 'gemini-3.8-flash'),
+];
 
-// Give image requests more time, and let the fallback list try another model
-// if an individual Gemini request times out.
 const GEMINI_TIMEOUT_MS = 30000;
 
 // --------------------------------------------------
@@ -1115,33 +1110,23 @@ async function generateAIResponse(
   // --------------------------------------------------
 
   if (forceGemini) {
-    if (process.env.GEMINI_API_KEY) {
-      try {
-        return await generateWithFastFallback(
-          contents,
-          systemInstruction,
-          temperature
-        );
-      } catch (geminiError: any) {
-        console.warn(
-          '[AI] Gemini failed for image response. Trying Groq fallback...',
-          geminiError?.message || geminiError
-        );
-      }
+    // Image understanding must only be reported as successful when a vision
+    // model actually processed the image. The configured Groq fallback is
+    // text-only, so sending image prompts there produces misleading replies.
+    if (!process.env.GEMINI_API_KEY) {
+      throw Object.assign(
+        new Error('Image understanding is temporarily unavailable. Please try again shortly.'),
+        { status: 503 }
+      );
     }
-    if (process.env.GROQ_API_KEY) {
-      try {
-        return await generateWithGroq(
-          groqMessages,
-          temperature
-        );
-      } catch (groqError: any) {
-        console.warn(
-          '[AI] Groq fallback failed for image response:',
-          groqError?.message || groqError
-        );
-      }
-    }
+
+    // Preserve the provider error so the API route can return a useful
+    // rate-limit / temporary-unavailability response to the client.
+    return await generateWithFastFallback(
+      contents,
+      systemInstruction,
+      temperature
+    );
   } else {
     if (process.env.GROQ_API_KEY) {
       try {
