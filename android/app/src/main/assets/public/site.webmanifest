@@ -1,0 +1,26 @@
+{
+  "name": "Sunny AI Companion",
+  "short_name": "Sunny",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1F0B37",
+  "theme_color": "#1F0B37",
+  "icons": [
+    {
+      "src": "/icons/sunny-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/sunny-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/sunny-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
