@@ -1,317 +1,288 @@
-# ☀️ Sunny — A Personal AI Companion App
+# ☀️ Sunny — A Personal AI Companion
 
-> *"You don't have to start over every time you come back."*
+> *You don't have to start over every time you come back.*
 
-Sunny is a warm, emotionally supportive AI companion application built with **React 19**, **Vite**, **TypeScript**, **Tailwind CSS**, **Express**, and **Supabase**. It combines a cozy, premium visual identity with real authentication and server-side AI conversations, creating a calm digital space to talk, laugh, reflect, and feel heard.
+Sunny is a warm, emotionally supportive AI companion built for conversations that feel personal, calm, and continuous. It combines a React web app, an Express API, Supabase-backed accounts and cloud data, and a native Android app powered by Capacitor.
 
----
-
-## 🎨 Visual Identity — Dark Purple + Sunshine Yellow
-
-Sunny uses a bespoke dark theme designed to feel calm, warm, and welcoming:
-
-| Element | Hex Color | Usage |
-| :--- | :--- | :--- |
-| **Main Background** | `#100B22` | Deep purple primary canvas |
-| **Secondary Background** | `#17102C` | Headers, tab bars, banners |
-| **Card Background** | `#21163A` | Conversation cards, memory cards |
-| **Elevated Card** | `#302149` | Interactive surfaces & buttons |
-| **Input Background** | `#1B1430` | Text composer & inputs |
-| **Sunshine Yellow** | `#FFD84D` | Primary action buttons, sun rays, highlights |
-| **Warm Gold** | `#F6BD45` | Secondary glows & badges |
-| **Primary Text** | `#FFFFFF` | Clear, readable high contrast body |
-| **Lavender Text** | `#C6B8E5` | Supporting descriptions & subtitles |
-| **Muted Text** | `#9B8AB9` | Captions, placeholders & timestamps |
-| **Borders** | `#392858` | Subtle card & row boundaries |
-| **Success / Warning / Error** | `#A8D9A0` / `#F6BD45` / `#FF8D9A` | Status states |
+**Sunny is designed around a simple idea: listen first, remember what matters (with user control), and make it easier to return to a conversation.**
 
 ---
 
-## 📱 Core Features
+## ✨ What Sunny includes
 
-### 1. Splash & Guided Onboarding
+- **Personalised onboarding** — choose interests and the conversational style that feels right.
+- **Flexible conversation starters** — listening, a little humour, encouragement, or an open-ended chat.
+- **AI chat** — conversational context, recent chat history, typing feedback, retry states, and streamed responses where supported.
+- **Image understanding** — attach an image and ask Sunny about it.
+- **Document and file attachments** — add supported documents and spreadsheets for text extraction and discussion.
+- **Memory controls** — review, add, edit, and delete memories; automatic memory features respect the user's memory settings and consent.
+- **Chat wallpaper** — choose from built-in chat backgrounds; the selection is stored locally on that device.
+- **Notifications** — optional morning, afternoon, and evening check-ins, memory follow-ups, daily limits, and quiet hours.
+- **Audio preferences** — configure supported sound and music preferences.
+- **Privacy and safety tools** — account/data controls, privacy information, grounding support, and safety resources.
+- **Android app** — native Android project, device file picker integration, keyboard handling, deep-link support, and local notifications.
 
-- **Splash Screen**: Glowing animated sun logo with smooth fade-in and automatic routing.
-- **Welcome**: Warm introduction to Sunny's purpose.
-- **Interests**: Select goals such as listening, encouragement, and reflection.
-- **Personality Choice**: Choose Sunny's conversational vibe (**Adaptive**, **Playful**, **Gentle**, or **Calm**).
-- **Memory Consent**: Clear consent flow for memory-related features.
-- **Notification Consent**: Optional check-in notification preferences.
-- **Completion**: Smooth transition into Sunny's main experience.
+## 🎨 Visual identity
 
-### 2. Authentication
+Sunny uses a cosy dark-purple theme with sunshine-yellow accents.
 
-- Email/password authentication through **Supabase Auth**.
-- Login and registration validation.
-- Password visibility toggle.
-- Display name / preferred name support.
-- Persistent authenticated sessions.
-- Optional guest/demo access where enabled by the application.
+| Element | Colour | Purpose |
+| --- | --- | --- |
+| Main background | `#100B22` | Primary app canvas |
+| Secondary background | `#17102C` | Headers and secondary surfaces |
+| Card background | `#21163A` | Cards and grouped content |
+| Elevated surface | `#302149` | Elevated interactive surfaces |
+| Input background | `#1B1430` | Composer and form fields |
+| Sunshine yellow | `#FFD84D` | Primary accent and highlights |
+| Lavender text | `#C6B8E5` | Supporting text |
+| Muted text | `#9B8AB9` | Captions and placeholders |
 
-### 3. Home Screen — The Heart of Sunny
-
-- **Header**: Sunny branding, tagline, and quick settings access.
-- **Greeting Card**: Welcomes the user by their preferred name with a **Talk to Sunny** CTA.
-- **Conversation Starters ("What's the vibe today?")**:
-  1. *I need someone to listen*
-  2. *Distract me and make me laugh*
-  3. *I need a little encouragement*
-  4. *Let's talk about anything*
-- Conversation starters can launch Chat with the selected context.
-- **Daily Sunshine**: Rotating thoughtful reminders and reflections.
-- **Recent Conversation Preview**: Quick access to recent conversation context.
-
-### 4. Chat Screen — The Main Experience
-
-- **Sunny & User Message Bubbles** with timestamps and delivery states.
-- **Typing Indicator** while Sunny generates a response.
-- **Auto-Expanding Composer** for multiline messages.
-- **Real AI Conversations** through the application's server-side AI service.
-- **Groq as the primary AI provider** for fast responses.
-- **Gemini as the fallback provider** when the primary provider is unavailable.
-- Conversational context including recent chat history, selected tone, preferred name, memory setting, and available memories.
-- Friendly retry/error states when AI providers are temporarily unavailable.
-- Crisis-safety routing for supported safety keywords and emergency resources.
-- **Chat Options** for clearing conversations, accessing memories, and viewing safety information.
-- **File Attachments** for PDF, DOCX, TXT, CSV, XLS/XLSX, JSON, Markdown, PNG, JPG/JPEG, and WebP files.
-- Attachments are validated server-side, parsed into AI context, and displayed in chat history as file metadata.
-- Images use Gemini vision; text/document attachments can use the existing Groq → Gemini fallback.
-- Attachment limits: up to 3 files per message, 50 MB per file, and 50 MB combined (measured after base64 decoding). Extracted text is capped at 30,000 characters per file and 80,000 characters combined.
-
-### 5. Memories Management
-
-- Live search and category filtering.
-- Memory categories include **Personal, Relationships, Events, Ongoing, and Preferences**.
-- Add, edit, and delete memory items.
-- Explicit memory consent and memory enable/disable controls.
-- Privacy-focused memory management.
-- Clear controls for removing stored conversation or memory data.
-
-### 6. Settings & Privacy
-
-- **Your Sunny**: Personality and preferred-name controls.
-- **Memory**: Memory enable/disable and memory management.
-- **Notifications**: Notification preferences and quiet-hours settings.
-- **Privacy & Security**: Data export, chat clearing, and data-wipe controls.
-- **Help & Safety**: Crisis resources and a 5-4-3-2-1 grounding tool.
-- **Account**: Profile information, onboarding replay, sign out, and account/data controls.
+The app also includes a light theme preference.
 
 ---
 
-## 🧠 AI Architecture
+## 🧠 AI providers and request flow
 
-Sunny keeps provider credentials on the server and never exposes AI API keys to the browser.
+Provider credentials stay on the server. They are not bundled into the browser or Android client.
 
-```
-React Frontend
-      │
-      ▼
-POST /api/chat
-      │
-      ▼
-Express Server
-      │
-      ├──► Groq (Primary)
-      │       │
-      │       └── openai/gpt-oss-120b
-      │
-      └──► Gemini (Fallback)
-              │
-              ├── gemini-3.8-flash
-              ├── gemini-3.7-flash
-              └── gemini-3.6-flash
+### Normal text conversations
+
+1. The client sends the conversation to `POST /api/chat`.
+2. The Express server tries Groq using `openai/gpt-oss-20b` first.
+3. If needed, it can try the configured `GROQ_MODEL` as an alternative.
+4. Temporary provider errors are returned as friendly retry messages.
+
+### Image attachments
+
+Images use a separate vision path because the normal text model is not an image-understanding model.
+
+1. Sunny sends the image and conversation context to Gemini using `GEMINI_MODEL` (default: `gemini-3.8-flash`).
+2. If Gemini is unavailable or returns an error, Sunny tries the OpenRouter vision fallback.
+3. The current OpenRouter fallback model is `nvidia/nemotron-3.5-super-vl:free`.
+
+The OpenRouter fallback is optional and is enabled by setting `OPENROUTER_API_KEY`. Free-model availability, rate limits, and response times are controlled by the provider and can change; a free model is not a guarantee of unlimited or uninterrupted service. Image responses may take longer when fallback is used.
+
+### Text and document attachments
+
+Supported document files are extracted on the server and added to the chat context. Text/document requests use the text-generation fallback path; image attachments use the vision path above.
+
+```text
+Text chat:
+Client → Express /api/chat → Groq → configured Groq alternative (if needed)
+
+Image chat:
+Client → Express /api/chat → Gemini vision → OpenRouter vision fallback (if needed)
+
+Document chat:
+Client → Express /api/chat → server-side extraction → text AI response path
 ```
 
-The server handles provider selection, timeouts, fallback behavior, and friendly error responses.
+---
+
+## 📎 Attachments
+
+The server accepts up to **3 files per message**, with a maximum of **50 MB per file** and **50 MB combined** after decoding.
+
+| Type | Supported formats |
+| --- | --- |
+| Documents | PDF, DOCX, TXT, Markdown |
+| Data and spreadsheets | CSV, JSON, XLS, XLSX |
+| Images | PNG, JPG/JPEG, WebP |
+
+- Files are validated and processed on the server.
+- PDF, DOCX, and spreadsheet contents are extracted into text for the AI context.
+- Image bytes are sent to the vision provider.
+- Extracted document text is limited to 30,000 characters per file and 80,000 characters combined.
+- The Android app includes a native file-picker integration; the web app can use the browser's file selection.
+
+Do not attach sensitive documents or personal images unless you are comfortable sending their contents to the configured AI provider(s).
 
 ---
 
-## 🔐 Authentication & Data
+## 🔐 Authentication, storage, and privacy
 
-Sunny uses **Supabase** for authentication and application configuration.
+Sunny uses **Supabase Auth** for account authentication and Supabase database tables for cloud-backed preferences, chat messages, and memories. User-scoped Row Level Security (RLS) policies are defined in the SQL migrations.
 
-The browser uses only the Supabase URL and publishable key. Secret provider credentials remain server-side.
+- The frontend uses the Supabase project URL and publishable key.
+- The Supabase service-role key, when configured for server-side administrative operations, must remain server-only.
+- AI provider keys must never use a `VITE_` prefix.
+- Chat wallpaper selection is stored in device-local storage and is not synced between devices.
+- Android reminder delivery is local to the device; notification content is generic and does not include chat or memory details.
 
 ### Environment variables
 
-Required server/client configuration:
+Create a local `.env.local` file based on `.env.example`.
+
+**Required for the corresponding integrations:**
 
 ```env
+# Server-side AI providers
 GROQ_API_KEY=your-groq-api-key
 GEMINI_API_KEY=your-gemini-api-key
-VITE_SUPABASE_URL=your-supabase-project-url
+
+# Supabase client configuration
+VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=your-supabase-publishable-key
 ```
 
-Optional:
+**Optional server configuration:**
 
 ```env
+# Vision fallback when Gemini cannot process an image
+OPENROUTER_API_KEY=your-openrouter-api-key
+
+# Optional preferred Groq alternative and Gemini model
 GROQ_MODEL=openai/gpt-oss-120b
 GEMINI_MODEL=gemini-3.8-flash
+
+# Server-only key for administrative Supabase operations, when required
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+
+# Hosting platform supplies PORT in production; local default is 3000
 PORT=3000
 ```
 
-**Never commit `.env.local`, API keys, service-role keys, private keys, or other secrets to GitHub.**
+Never commit real credentials, `.env.local`, service-role keys, or provider API keys to Git. If a secret is exposed, rotate it immediately.
 
-Do not place `GROQ_API_KEY` or `GEMINI_API_KEY` in `VITE_` variables. Vite variables are exposed to the frontend.
+### Supabase setup and migrations
 
-### Supabase authentication redirects
+Apply the SQL files in `supabase/migrations/` in numeric order using the Supabase SQL Editor:
 
-Keep the Supabase email-confirmation setting enabled or disabled according to your existing project policy; Sunny handles both responses. In Supabase Authentication URL Configuration, set the deployed web origin as the Site URL and allow that origin plus the local development origin and `sunnyai://auth/callback` as Redirect URLs. The custom URI is used by the Capacitor Android app for email confirmation and password recovery. The native deep-link handler is included in the Android manifest; run `npx cap sync android` after installing dependencies.
+1. `001_cloud_persistence.sql` — preferences, chat messages, memories, indexes, and RLS policies.
+2. `002_automatic_memory.sql` — memory identity and optional expiry metadata.
+3. `003_user_settings.sql` — persisted theme and notification preferences.
+4. `004_audio_preferences.sql` — persisted audio preferences.
 
-### Database migrations
-
-For an existing project, apply any unapplied files in `supabase/migrations/` in numeric order using the Supabase SQL Editor before deploying. New database setups should apply migrations `001`, `002`, and `003` in order. Migration `003` adds persisted theme and notification preference fields; existing user-scoped Row Level Security policies remain enabled.
-
-Automatic extraction and authenticated memory retrieval run through the Express `/api/chat` endpoint, so deploy the updated backend as well as the Android/web client.
-
-### Android local notifications
-
-Sunny uses Capacitor Local Notifications 8 for device-local reminders. No notification server or push service is used. Guest and signed-in notification preferences continue through the existing Preferences context; the schedule, Android permission markers, and daily delivery ledger stay on the device.
-
-- New notification preferences default to off. Enabling them in onboarding or Settings is user-driven. On Android 13+, Sunny checks `POST_NOTIFICATIONS` and requests it only from that opt-in action. If permission is denied or already denied, Sunny does not repeat the prompt on launch; enable notification access in Android app settings, then return to Sunny. The saved preference and Android permission are shown separately.
-- Sunny checks and reconciles schedules after preferences load, after notification-setting changes, and when the Android app resumes. It schedules one-shot native alarms for the next 30 local calendar days. The Capacitor plugin restores pending alarms after device reboot. Open Sunny at least once within that horizon to extend it.
-- Scheduled occurrences are calculated using the device's local date, clock, and timezone. Quiet hours use a start-inclusive/end-exclusive range; an equal start and end means no quiet period. A slot falling inside quiet hours is deferred to the quiet-hours end; a late-night slot may roll over to the next local date. The configured daily cap is reserved per delivery date and persisted before native scheduling, so relaunching or changing settings cannot refill a day's quota. A slot whose scheduled time has passed is treated as used for that local day, even if its time is edited. Identical slot times are coalesced.
-- Sunny rechecks the device timezone whenever Android resumes and rebuilds the schedule. If a device changes timezone or daylight-saving offset while Sunny remains closed, already-registered one-shot alarms may be shifted or deferred until the app next resumes and reconciles them.
-- Sunny uses inexact alarms and does not request Android's separate exact-alarm access. `allowWhileIdle` helps alarms run during Doze, subject to Android's per-app idle-alarm throttling; battery-saving modes may still defer reminders. The user can adjust or disable the notification channel in Android settings.
-- Notification titles and bodies are generic and contain no chat, memory, or profile details. Tapping a Sunny reminder opens the existing app and Home screen. On the web, preferences remain editable and persist, but local delivery is a no-op.
-
-To test, run `npm test`, `npm run build`, then `npx cap sync android`; install the Android app, enable notifications, and grant Android permission. Set one check-in a few minutes ahead, background or close Sunny, then verify delivery and tap routing. Repeat after changing a time and after disabling notifications. Emulator/device validation is required to confirm OS-specific delivery and battery behavior.
+For an existing project, apply only migrations that have not already been run. Keep the Supabase Authentication URL Configuration aligned with the deployed web origin and the redirect URLs used by local development and the Android deep link. The app's Android callback scheme is `sunnyai://auth/callback`.
 
 ---
 
-## 🏗️ Project Architecture
+## 🔔 Android notifications
 
-```
+Sunny uses Capacitor Local Notifications for device-local reminders; it does not require a push-notification server.
+
+- Notifications are opt-in and require Android permission where applicable.
+- Morning, afternoon, and evening slots can be enabled or paused independently.
+- Users can configure reminder times, memory follow-ups, a daily cap, and quiet hours.
+- Reminder schedules use the device's local date, time, and timezone.
+- Android may defer inexact alarms because of Doze mode or battery restrictions.
+- The web app can save notification preferences but does not deliver local notifications.
+
+After changing native Android dependencies or plugins, run `npx cap sync android`.
+
+---
+
+## 🏗️ Project structure
+
+```text
 SUNNY-AI/
+├── android/                  # Native Android project and custom file-picker plugin
+├── public/                   # Static assets, wallpapers, and app resources
+├── server/
+│   └── fileAttachments.ts    # Attachment validation and extraction
 ├── src/
-│   ├── main.tsx
+│   ├── components/           # Brand, chat, home, memories, settings, and UI
+│   ├── context/               # Auth, chat, memory, and preferences state
+│   ├── lib/                   # API, auth routing, wallpaper, notifications, helpers
+│   ├── screens/               # Main screens, onboarding, auth, and settings
+│   ├── services/              # Auth, chat, memory, storage, audio, privacy, notifications
+│   ├── types/                 # Shared application types
 │   ├── App.tsx
-│   ├── index.css
-│   │
-│   ├── constants/
-│   │   └── theme.ts
-│   │
-│   ├── types/
-│   │   ├── chat.ts
-│   │   ├── memory.ts
-│   │   ├── user.ts
-│   │   └── notifications.ts
-│   │
-│   ├── services/
-│   │   ├── storageService.ts
-│   │   ├── authService.ts
-│   │   ├── chatService.ts
-│   │   ├── memoryService.ts
-│   │   ├── notificationService.ts
-│   │   └── privacyService.ts
-│   │
-│   ├── context/
-│   │   ├── AuthContext.tsx
-│   │   ├── PreferencesContext.tsx
-│   │   ├── ChatContext.tsx
-│   │   └── MemoryContext.tsx
-│   │
-│   ├── screens/
-│   │   ├── SplashScreen.tsx
-│   │   ├── HomeScreen.tsx
-│   │   ├── ChatScreen.tsx
-│   │   ├── MemoriesScreen.tsx
-│   │   ├── SettingsScreen.tsx
-│   │   ├── onboarding/
-│   │   ├── auth/
-│   │   └── settings/
-│   │
-│   └── components/
-│       ├── brand/
-│       ├── ui/
-│       ├── home/
-│       ├── chat/
-│       ├── memories/
-│       └── settings/
-│
-├── server.ts
-├── index.html
+│   ├── main.tsx
+│   └── index.css
+├── supabase/
+│   └── migrations/            # Ordered database migrations
+├── tests/                     # Node test-runner tests
+├── server.ts                  # Express API and Vite/production server
+├── capacitor.config.ts        # Capacitor app configuration
 ├── package.json
-├── vite.config.ts
-├── tsconfig.json
-└── .env.example
+└── README.md
 ```
-
-### Service responsibilities
-
-| Service | Responsibility |
-| :--- | :--- |
-| `authService.ts` | Supabase authentication and user sessions |
-| `chatService.ts` | Chat requests, conversation context, and AI response handling |
-| `memoryService.ts` | Memory operations and consent handling |
-| `notificationService.ts` | Notification preferences and schedules |
-| `privacyService.ts` | Data export and privacy controls |
-| `storageService.ts` | Local application persistence and fallback storage |
-| `server.ts` | Express API, AI providers, rate limiting, and production serving |
 
 ---
 
-## 🚀 Running Sunny Locally
+## 🚀 Run locally
 
-### 1. Install dependencies
+### 1. Requirements
+
+- Node.js (use a current supported LTS release)
+- npm
+- A Supabase project for authentication and cloud persistence
+- API credentials for the AI providers you want to use
+
+### 2. Install dependencies
 
 ```bash
 npm install
 ```
 
-### 2. Configure environment variables
+### 3. Configure environment
 
-Create a local `.env.local` file using `.env.example` as a reference.
+Copy `.env.example` to `.env.local` and add your own credentials. Keep this file out of version control.
 
-Add your own credentials locally:
-
-```env
-GROQ_API_KEY=your-groq-api-key
-GEMINI_API_KEY=your-gemini-api-key
-VITE_SUPABASE_URL=your-supabase-project-url
-VITE_SUPABASE_PUBLISHABLE_KEY=your-supabase-publishable-key
-```
-
-### 3. Start the development server
+### 4. Start the development server
 
 ```bash
 npm run dev
 ```
 
-Sunny runs on:
+Open [http://localhost:3000](http://localhost:3000).
 
-```
-http://localhost:3000
-```
-
-The Express server binds to `0.0.0.0` so it can also run correctly in cloud hosting environments.
+The development command starts the Express server with Vite middleware.
 
 ---
 
-## 🏭 Production Build
+## 🧪 Quality checks
 
-Build the frontend and TypeScript server:
+Run the TypeScript check:
+
+```bash
+npm run lint
+```
+
+Run the automated tests:
+
+```bash
+npm test
+```
+
+Create a production build:
 
 ```bash
 npm run build
 ```
 
-Start the production server:
+The build runs TypeScript compilation followed by the Vite production build.
+
+---
+
+## 📱 Android development
+
+The repository includes a Capacitor Android project.
+
+After installing dependencies and configuring the environment:
 
 ```bash
-npm start
+npm run build
+npx cap sync android
+npx cap open android
 ```
 
-The server uses the `PORT` environment variable when provided by the hosting platform.
+Use Android Studio to build, install, and test the app on an emulator or physical device. Test native functionality on a real device where possible, especially the file picker, keyboard behaviour, deep links, and notification delivery.
+
+The Capacitor app configuration uses:
+
+- App name: `Sunny`
+- App ID: `com.sannidhitirandas.sunny`
+- Web assets directory: `dist`
 
 ---
 
 ## ☁️ Deployment
 
-Sunny can be deployed as a Node/Express web service on platforms such as Render.
+Sunny can run as a Node.js web service on a host such as Render.
 
-Typical configuration:
+Typical service commands:
 
 **Build command**
 
@@ -325,46 +296,49 @@ npm install && npm run build
 npm start
 ```
 
-Configure the required environment variables in the hosting provider's dashboard rather than committing them to the repository.
+Set the environment variables in the hosting provider's dashboard. Do not put server secrets in frontend build variables. The server listens on the hosting platform's `PORT` value and serves the production assets from `dist/`.
+
+Useful health check endpoint:
+
+```text
+GET /api/health
+```
+
+The health endpoint reports server and provider configuration status; it does not guarantee that an external provider is currently available.
 
 ---
 
-## 🔒 Security Notes
+## 🛡️ Security notes
 
-- AI provider API keys are server-side only.
-- Never expose `GROQ_API_KEY` or `GEMINI_API_KEY` through `VITE_` environment variables.
-- Never commit `.env.local`.
-- Never commit Supabase service-role or other secret keys.
-- The Supabase publishable key is intended for client-side use and should still be protected by correct Supabase Row Level Security policies.
-- Keep authentication and database authorization enforced by Supabase rather than trusting client-side state.
-- Rotate any credential immediately if it is accidentally committed or exposed.
+- Keep Groq, Gemini, OpenRouter, and Supabase service-role credentials on the server.
+- Only the Supabase publishable key belongs in the frontend.
+- Keep `.env.local` and all real secret files out of Git.
+- Maintain Supabase RLS policies and test access using separate user accounts.
+- Validate uploaded files and avoid sending sensitive content to external AI services.
+- Provider availability, model names, free-tier quotas, and terms can change. Review provider documentation before changing production configuration.
 
 ---
 
-## 🛠️ Tech Stack
+## 🧰 Tech stack
 
-- **React 19**
-- **TypeScript**
-- **Vite**
-- **Tailwind CSS**
-- **Express**
-- **Supabase**
-- **Groq API**
-- **Google Gemini API**
-- **Node.js**
+- **Frontend:** React 19, TypeScript, Vite, Tailwind CSS 4
+- **Backend:** Node.js, Express 5
+- **Mobile:** Capacitor 8, Android
+- **Authentication and cloud data:** Supabase
+- **AI:** Groq, Google Gemini, OpenRouter (vision fallback)
+- **File processing:** pdf-parse, Mammoth, SheetJS
+- **Testing:** Node.js test runner with `tsx`
 
 ---
 
 ## 💛 Philosophy
 
-Sunny is built around a simple idea:
+Sunny is more than a chat box. It is a small, supportive space where users can talk in their own way, shape the experience around their needs, and stay in control of what gets remembered.
 
-> *You shouldn't have to start over every time you come back.*
-
-The goal is to make conversations feel warm and natural while giving users control over their preferences, memories, privacy, and data.
+> *You don't have to start over every time you come back.*
 
 ---
 
 ## 📄 License
 
-See the [LICENSE](LICENSE) file for license information.
+See [LICENSE](LICENSE) for license information.
