@@ -33,15 +33,7 @@ const allowedExtensions = new Set([
   '.json', '.md', '.markdown', '.png', '.jpg', '.jpeg', '.webp',
 ]);
 
-const allowedMimeTypes = new Set([
-  'application/pdf',
-  'application/msword',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  'text/plain', 'text/csv', 'application/json', 'text/markdown',
-  'application/vnd.ms-excel',
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  'image/png', 'image/jpeg', 'image/webp',
-]);
+
 
 function safeName(name: string) {
   return path.basename(name).replace(/[^a-zA-Z0-9._ -]/g, '_').slice(0, 120) || 'attachment';
@@ -76,11 +68,53 @@ function detectImageMime(buffer: Buffer): string | null {
   return null;
 }
 
-function hasMagic(buffer: Buffer, ext: string) {
-  if (ext === '.pdf') return buffer.subarray(0, 4).toString('ascii') === '%PDF';
-  if (['.png', '.jpg', '.jpeg', '.webp'].includes(ext)) return detectImageMime(buffer) !== null;
-  if (['.docx', '.xlsx'].includes(ext)) return buffer.subarray(0, 2).toString('hex') === '504b';
-  return true;
+const MIME_TYPES_BY_EXTENSION: Record<string, Set<string>> = {
+  '.pdf': new Set(['application/pdf']),
+  '.docx': new Set(['application/vnd.openxmlformats-officedocument.wordprocessingml.document']),
+  '.txt': new Set(['text/plain']),
+  '.csv': new Set(['text/csv', 'application/csv', 'application/vnd.ms-excel', 'text/plain']),
+  '.xls': new Set(['application/vnd.ms-excel', 'application/x-ole-storage']),
+  '.xlsx': new Set(['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']),
+  '.json': new Set(['application/json', 'text/json', 'text/plain']),
+  '.md': new Set(['text/markdown', 'text/plain']),
+  '.markdown': new Set(['text/markdown', 'text/plain']),
+  '.png': new Set(['image/png']),
+  '.jpg': new Set(['image/jpeg']),
+  '.jpeg': new Set(['image/jpeg']),
+  '.webp': new Set(['image/webp']),
+};
+
+function hasMagic(buffer: Buffer, ext: string): boolean {
+  if (ext === '.pdf') return buffer.subarray(0, 5).toString('ascii') === '%PDF-';
+
+  const imageMime = detectImageMime(buffer);
+  if (['.png', '.jpg', '.jpeg', '.webp'].includes(ext)) {
+    return imageMime === MIME_TYPES_BY_EXTENSION[ext]?.values().next().value;
+  }
+
+  if (ext === '.docx' || ext === '.xlsx') {
+    // ZIP local-file header. The extension and MIME checks below further
+    // constrain this to the document formats Sunny actually supports.
+    return buffer.length >= 4 && buffer.subarray(0, 4).equals(Buffer.from([0x50, 0x4b, 0x03, 0x04]));
+  }
+
+  if (ext === '.xls') {
+    // OLE Compound File signature used by legacy Excel workbooks.
+    return buffer.subarray(0, 8).equals(Buffer.from([0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1]));
+  }
+
+  if (['.txt', '.csv', '.json', '.md', '.markdown'].includes(ext)) {
+    // Reject binary payloads masquerading as text and malformed UTF-8.
+    if (buffer.includes(0)) return false;
+    try {
+      new TextDecoder('utf-8', { fatal: true }).decode(buffer);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  return false;
 }
 
 async function extractText(buffer: Buffer, ext: string): Promise<string> {
@@ -173,12 +207,17 @@ export async function processAttachments(input: unknown): Promise<ProcessedAttac
     if (totalSize > MAX_TOTAL_SIZE) throw new Error('Attachments must be 50 MB or smaller in total.');
 
     const detectedImageMime = detectImageMime(buffer);
+    const expectedMimeTypes = MIME_TYPES_BY_EXTENSION[ext];
 
-    if (detectedImageMime && !imageExtension) {
+    // Validate the actual bytes, not just the filename or browser-provided MIME.
+    if (!hasMagic(buffer, ext)) {
       throw new Error(`${name} failed file validation.`);
     }
-    if (!unknownClientMime && !allowedMimeTypes.has(declaredType)) {
-      throw new Error(`${name} has an unsupported MIME type.`);
+    if (imageExtension && detectedImageMime !== expectedMimeTypes?.values().next().value) {
+      throw new Error(`${name} failed file validation.`);
+    }
+    if (!unknownClientMime && !expectedMimeTypes?.has(declaredType)) {
+      throw new Error(`${name} has a MIME type that does not match its file extension.`);
     }
 
     decodedItems.push({ name, ext, decoded, detectedImageMime });
