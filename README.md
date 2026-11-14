@@ -311,10 +311,12 @@ The health endpoint reports server and provider configuration status; it does no
 ## 🛡️ Security notes
 
 - Keep Groq, Gemini, OpenRouter, and Supabase service-role credentials on the server.
-- Only the Supabase publishable key belongs in the frontend.
+- Only the Supabase publishable key belongs in the frontend. Supabase publishable keys are designed to be public; database access must still be protected by RLS.
 - Keep `.env.local` and all real secret files out of Git.
 - Maintain Supabase RLS policies and test access using separate user accounts.
-- Validate uploaded files and avoid sending sensitive content to external AI services.
+- Uploaded files are checked for allowed extensions, declared MIME types, size limits, and selected file signatures. This is useful validation, not a substitute for malware scanning or a hardened document-processing sandbox.
+- The current API rate limiter is in-memory and per server process. It helps with basic abuse control but is not a distributed production quota system; multiple instances can have separate counters and counters reset on restart.
+- Avoid sending sensitive content to external AI services unless users have been clearly informed and have chosen to do so.
 - Provider availability, model names, free-tier quotas, and terms can change. Review provider documentation before changing production configuration.
 
 ---
@@ -336,6 +338,23 @@ The health endpoint reports server and provider configuration status; it does no
 Sunny is more than a chat box. It is a small, supportive space where users can talk in their own way, shape the experience around their needs, and stay in control of what gets remembered.
 
 > *You don't have to start over every time you come back.*
+
+---
+
+## 🚦 Before a public release
+
+The repository contains the app and deployment foundations, but a successful local build alone does not establish production readiness. Before publishing, verify the following on the deployed service and on real Android devices:
+
+- Email/password sign-up, sign-in, password reset, Google OAuth, and session restoration.
+- Account isolation with two separate test accounts, including chat history, memories, and preferences.
+- Account deletion and confirmation that the user's cloud rows are removed.
+- Image and document attachments, including invalid files, large files, interrupted uploads, and provider outages.
+- Android deep links, keyboard behaviour, back navigation, file picker, wallpaper persistence, and notification permissions.
+- `npm run lint`, `npm test`, and `npm run build` on the exact commit intended for release.
+- A signed Android App Bundle installed and tested through a Play testing track before public rollout.
+- A published privacy policy, terms, support contact, accurate store disclosures, and a process for handling user data requests.
+
+The free AI-provider routes can be rate-limited or unavailable and may respond slowly. Do not promise unlimited service. The `/api/health` endpoint reports server configuration, not live provider health.
 
 ---
 
