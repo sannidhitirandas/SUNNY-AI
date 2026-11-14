@@ -197,16 +197,17 @@ const GROQ_TIMEOUT_MS = 12000;
 
 const GEMINI_MODELS = Array.from(
   new Set([
-    getConfiguredModel('GEMINI_MODEL', 'gemini-2.5-flash'),
-    'gemini-2.0-flash',
-    'gemini-1.5-flash',
-    'gemini-2.5-pro',
+    getConfiguredModel('GEMINI_MODEL', 'gemini-3.8-flash'),
+    'gemini-3.8-flash',
     'gemini-flash-latest',
-    'gemini-3.5-flash',
+    'gemini-2.5-flash',
+    'gemini-2.0-flash',
   ])
 );
 
-const GEMINI_TIMEOUT_MS = 15000;
+// Give image requests more time, and let the fallback list try another model
+// if an individual Gemini request times out.
+const GEMINI_TIMEOUT_MS = 30000;
 
 // --------------------------------------------------
 // Types
@@ -1062,9 +1063,9 @@ async function generateWithFastFallback(
         error?.name === 'TimeoutError' ||
         error?.name === 'AbortError';
 
-      // Quota exhaustion and timeouts should switch providers/return promptly,
-      // rather than spending another full timeout on the same provider.
-      if (status === 429 || error?.name === 'AbortError' || error?.name === 'TimeoutError') {
+      // Quota exhaustion should switch providers immediately. A timeout on
+      // one model should not prevent trying the next configured Gemini model.
+      if (status === 429) {
         throw error;
       }
 
