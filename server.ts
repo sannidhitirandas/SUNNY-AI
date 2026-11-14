@@ -1083,6 +1083,87 @@ async function generateWithFastFallback(
 }
 
 // --------------------------------------------------
+// OpenRouter vision fallback for image attachments
+// --------------------------------------------------
+
+async function generateWithOpenRouterVision(
+  contents: Array<{
+    role: 'user' | 'model';
+    parts: Array<{ text?: string; inlineData?: { mimeType: string; data: string } }>;
+  }>,
+  systemInstruction: string,
+  temperature: number
+): Promise<{ text: string; model: string }> {
+  const apiKey = process.env.OPENROUTER_API_KEY;
+  if (!apiKey) {
+    throw Object.assign(new Error('OpenRouter API key is not configured.'), { status: 503 });
+  }
+
+  const model = 'nvidia/nemotron-3.5-super-vl:free';
+  type OpenRouterPart =
+    | { type: 'text'; text: string }
+    | { type: 'image_url'; image_url: { url: string } };
+  const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string | OpenRouterPart[] }> = [
+    { role: 'system', content: systemInstruction },
+  ];
+
+  for (const item of contents) {
+    const content: OpenRouterPart[] = [];
+    for (const part of item.parts) {
+      if (typeof part.text === 'string' && part.text.trim()) {
+        content.push({ type: 'text', text: part.text });
+      }
+      if (part.inlineData?.data && part.inlineData.mimeType) {
+        content.push({
+          type: 'image_url',
+          image_url: { url: 'data:' + part.inlineData.mimeType + ';base64,' + part.inlineData.data },
+        });
+      }
+    }
+    if (content.length > 0) {
+      messages.push({ role: item.role === 'model' ? 'assistant' : 'user', content });
+    }
+  }
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 45000);
+  try {
+    console.log('[OpenRouter] Trying ' + model + ' for image understanding...');
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + apiKey,
+        'HTTP-Referer': 'https://sunny-ai-1.onrender.com',
+        'X-Title': 'Sunny AI',
+      },
+      body: JSON.stringify({ model, messages, temperature, max_tokens: 1024 }),
+      signal: controller.signal,
+    });
+    const payload: any = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      throw Object.assign(
+        new Error(payload?.error?.message || 'OpenRouter request failed (' + response.status + ')'),
+        { status: response.status, model }
+      );
+    }
+    const replyText = payload?.choices?.[0]?.message?.content;
+    const text = typeof replyText === 'string'
+      ? replyText.trim()
+      : Array.isArray(replyText)
+        ? replyText.map((part: any) => typeof part?.text === 'string' ? part.text : '').join('').trim()
+        : '';
+    if (!text) {
+      throw Object.assign(new Error('OpenRouter returned an empty vision response.'), { status: 502, model });
+    }
+    console.log('[OpenRouter] Response received from ' + model);
+    return { text, model: 'openrouter/' + model };
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+// --------------------------------------------------
 // AI provider fallback
 //
 // Groq = PRIMARY
@@ -1110,22 +1191,28 @@ async function generateAIResponse(
   // --------------------------------------------------
 
   if (forceGemini) {
-    // Image understanding must only be reported as successful when a vision
-    // model actually processed the image. The configured Groq fallback is
-    // text-only, so sending image prompts there produces misleading replies.
-    if (!process.env.GEMINI_API_KEY) {
-      throw Object.assign(
-        new Error('Image understanding is temporarily unavailable. Please try again shortly.'),
-        { status: 503 }
-      );
+    // Image requests must be handled by a vision model. Try Gemini first,
+    // then use the free OpenRouter vision model if Gemini is unavailable.
+    let geminiError: any = null;
+    if (process.env.GEMINI_API_KEY) {
+      try {
+        return await generateWithFastFallback(contents, systemInstruction, temperature);
+      } catch (error: any) {
+        geminiError = error;
+        console.warn('[AI] Gemini vision failed. Trying OpenRouter vision fallback...', error?.message || error);
+      }
     }
-
-    // Preserve the provider error so the API route can return a useful
-    // rate-limit / temporary-unavailability response to the client.
-    return await generateWithFastFallback(
-      contents,
-      systemInstruction,
-      temperature
+    if (process.env.OPENROUTER_API_KEY) {
+      try {
+        return await generateWithOpenRouterVision(contents, systemInstruction, temperature);
+      } catch (openRouterError: any) {
+        console.error('[AI] OpenRouter vision fallback failed:', openRouterError?.message || openRouterError);
+        throw openRouterError;
+      }
+    }
+    throw geminiError || Object.assign(
+      new Error('Image understanding is temporarily unavailable. Please try again shortly.'),
+      { status: 503 }
     );
   } else {
     if (process.env.GROQ_API_KEY) {
@@ -1183,10 +1270,10 @@ app.get(
       },
 
       fallbackAI: {
-        provider: 'Gemini',
-        models: GEMINI_MODELS,
+        provider: 'Gemini + OpenRouter vision',
+        models: [...GEMINI_MODELS, 'nvidia/nemotron-3.5-super-vl:free'],
         configured: Boolean(
-          process.env.GEMINI_API_KEY
+          process.env.GEMINI_API_KEY || process.env.OPENROUTER_API_KEY
         ),
       },
 
