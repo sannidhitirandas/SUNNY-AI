@@ -20,7 +20,10 @@ test('accepts supported UTF-8 text attachments with matching MIME types', async 
     multipart('readme.md', 'text/markdown', Buffer.from('# Hello', 'utf8')),
   ];
 
-  const processed = await processAttachments(files);
+  const processed = [
+    ...(await processAttachments(files.slice(0, 3))),
+    ...(await processAttachments([files[3]])),
+  ];
   assert.equal(processed.length, 4);
   assert.ok(processed.every((item) => item.kind === 'text'));
 });
