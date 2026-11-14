@@ -43,7 +43,9 @@ test('rejects document extensions when their content signature is missing', asyn
   const invalidDocuments = [
     multipart('report.pdf', 'application/pdf', Buffer.from('not a PDF')),
     multipart('report.docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', Buffer.from('not a ZIP')),
+    multipart('report.docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', Buffer.from([0x50, 0x4b, 0x03, 0x04, ...Buffer.from('random.zip.entry')])),
     multipart('sheet.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', Buffer.from('not a ZIP')),
+    multipart('sheet.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', Buffer.from([0x50, 0x4b, 0x03, 0x04, ...Buffer.from('[Content_Types].xml word/document.xml')])),
     multipart('legacy.xls', 'application/vnd.ms-excel', Buffer.from('not an OLE workbook')),
   ];
 
