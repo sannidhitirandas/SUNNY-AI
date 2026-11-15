@@ -14,8 +14,7 @@ export type SoundName =
   | 'open'
   | 'notification';
 
-export type MusicTheme = 'listen' | 'laugh' | 'encourage' | 'anything';
-export type MusicName = BackgroundMusicOption | MusicTheme | 'ambient';
+export type MusicName = BackgroundMusicOption;
 
 export const SOUND_ASSET_CANDIDATES: Record<SoundName, string[]> = {
   button: ['sounds/button.mp3', '/sounds/button.mp3', '/src/assets/sounds/button.mp3'],
@@ -53,26 +52,7 @@ export const MUSIC_ASSET_CANDIDATES: Record<string, string[]> = {
     '/music/after-school-rain.mp3',
     '/src/assets/music/after-school-rain.mp3',
   ],
-  listen: [
-    'music/midnight-notes-on-the-floor.mp3',
-    '/music/midnight-notes-on-the-floor.mp3',
-    '/src/assets/music/midnight-notes-on-the-floor.mp3',
-  ],
-  laugh: [
-    'music/blossoms-on-the-pavement.mp3',
-    '/music/blossoms-on-the-pavement.mp3',
-    '/src/assets/music/blossoms-on-the-pavement.mp3',
-  ],
-  encourage: [
-    'music/dust-in-the-curtains.mp3',
-    '/music/dust-in-the-curtains.mp3',
-    '/src/assets/music/dust-in-the-curtains.mp3',
-  ],
-  anything: [
-    'music/sunny-app-ambience.mp3',
-    '/music/sunny-app-ambience.mp3',
-    '/src/assets/music/sunny-app-ambience.mp3',
-  ],
+
 };
 
 class AudioService {
