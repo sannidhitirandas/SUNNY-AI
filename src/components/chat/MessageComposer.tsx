@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Capacitor, registerPlugin } from '@capacitor/core';
 import { ArrowUp, FileText, Paperclip, X } from 'lucide-react';
 
@@ -276,12 +276,15 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
   };
 
   const handleSend = async () => {
+    // Sending is blocked here (not by disabling the textarea) so the keyboard
+    // never closes or re-opens on its own while Sunny is replying.
     if ((!text.trim() && files.length === 0) || disabled || preparingAttachment || sending) return;
     const content = text.trim();
     const attachments = [...files];
     setText('');
     setFiles([]);
     setFileError(null);
+    if (textareaRef.current) textareaRef.current.style.height = 'auto';
     setSending(true);
     try {
       await onSend(content, attachments);
@@ -290,7 +293,6 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
       setFiles(attachments);
     } finally {
       setSending(false);
-      if (textareaRef.current) textareaRef.current.style.height = 'auto';
     }
   };
 
@@ -306,10 +308,6 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
     e.target.style.height = 'auto';
     e.target.style.height = `${Math.min(e.target.scrollHeight, 120)}px`;
   };
-
-  useEffect(() => {
-    if (!disabled && !preparingAttachment && !sending && textareaRef.current) textareaRef.current.focus();
-  }, [disabled, preparingAttachment, sending]);
 
   const isSendDisabled = disabled || preparingAttachment || sending || (!text.trim() && files.length === 0);
 
@@ -349,6 +347,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
           <Paperclip size={18} />
         </button>
 
+        {/* Never disabled and never auto-focused: the keyboard stays exactly as the user left it. */}
         <textarea
           ref={textareaRef}
           value={text}
@@ -357,14 +356,15 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
           onFocus={onFocus}
           onBlur={onBlur}
           placeholder={placeholder}
-          disabled={disabled || preparingAttachment || sending}
           rows={1}
           maxLength={1000}
-          className="min-h-10 max-h-[120px] flex-1 resize-none bg-transparent px-1 py-2.5 text-base leading-6 text-white outline-none placeholder:text-white/60 focus:outline-none disabled:opacity-60"
+          className="min-h-10 max-h-[120px] flex-1 resize-none bg-transparent px-1 py-2.5 text-base leading-6 text-white outline-none placeholder:text-white/60 focus:outline-none"
         />
 
+        {/* onPointerDown preventDefault stops the button from stealing focus, so the keyboard stays open. */}
         <button
           type="button"
+          onPointerDown={(e) => e.preventDefault()}
           onClick={() => void handleSend()}
           disabled={isSendDisabled}
           className={`mb-0.5 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full transition-all duration-200 active:scale-95 ${

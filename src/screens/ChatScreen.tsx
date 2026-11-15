@@ -33,24 +33,45 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   const { addMemory } = useMemories();
   const { background, setChatBackground } = useChatBackground();
 
-  const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesScrollRef = useRef<HTMLDivElement>(null);
   const preserveScrollRef = useRef<{ height: number; top: number } | null>(null);
+  // True while the user is at (or near) the bottom. If they scroll up to re-read,
+  // streaming text will no longer yank them back down.
+  const stickToBottomRef = useRef(true);
   const [optionsVisible, setOptionsVisible] = useState(false);
   const [personalityModalVisible, setPersonalityModalVisible] = useState(false);
   const [backgroundModalVisible, setBackgroundModalVisible] = useState(false);
   const [memoryModalVisible, setMemoryModalVisible] = useState(false);
   const [memoryInitialContent, setMemoryInitialContent] = useState('');
 
+  const handleScroll = () => {
+    const el = messagesScrollRef.current;
+    if (!el) return;
+    stickToBottomRef.current = el.scrollHeight - el.scrollTop - el.clientHeight < 120;
+  };
+
   useEffect(() => {
     const scrollArea = messagesScrollRef.current;
+    if (!scrollArea) return;
+
+    // Restore position after "Load older messages".
     const previous = preserveScrollRef.current;
-    if (scrollArea && previous) {
+    if (previous) {
       scrollArea.scrollTop = previous.top + (scrollArea.scrollHeight - previous.height);
       preserveScrollRef.current = null;
       return;
     }
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+
+    const last = messages[messages.length - 1];
+    const justSent = last?.role === 'user';
+    if (justSent) stickToBottomRef.current = true;
+    if (!stickToBottomRef.current) return;
+
+    // Smooth when the user sends, instant while Sunny's reply streams (no jitter).
+    scrollArea.scrollTo({
+      top: scrollArea.scrollHeight,
+      behavior: justSent ? 'smooth' : 'auto',
+    });
   }, [messages, isThinking]);
 
   const handleClearConfirm = async () => {
@@ -75,6 +96,9 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   };
 
   const formattedTone = getPersonalityLabel(preferences.preferredTone);
+
+  // Show the dots only until the first streamed token arrives.
+  const showTyping = isThinking && messages[messages.length - 1]?.role !== 'assistant';
 
   return (
 <div className="relative isolate mx-auto flex h-full min-h-0 w-full max-w-5xl flex-1 flex-col overflow-hidden bg-[#100B22] px-0 pb-16 sm:px-3 sm:pb-16 lg:rounded-3xl lg:border lg:border-[#392858]/70 lg:pb-8 lg:shadow-[0_24px_80px_rgba(0,0,0,0.18)]">
@@ -131,7 +155,11 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
       )}
 
       {/* Messages Scroll Area */}
-      <div ref={messagesScrollRef} className="min-h-0 flex-1 space-y-1 overflow-y-auto bg-[radial-gradient(ellipse_at_top,rgba(48,33,73,0.18),transparent_55%)] py-4 sm:py-6">
+      <div
+        ref={messagesScrollRef}
+        onScroll={handleScroll}
+        className="min-h-0 flex-1 space-y-1 overflow-y-auto bg-[radial-gradient(ellipse_at_top,rgba(48,33,73,0.18),transparent_55%)] py-4 sm:py-6"
+      >
         {hasOlderMessages && (
           <div className="flex justify-center px-4 pb-3">
             <button
@@ -157,14 +185,14 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
           />
         ))}
 
-        {isThinking && <TypingIndicator />}
-        <div ref={messagesEndRef} />
+        {showTyping && <TypingIndicator />}
       </div>
 
       {/* Message Composer */}
       <MessageComposer
         onSend={sendMessage}
         disabled={isThinking}
+        placeholder={isThinking ? 'Sunny is replying…' : undefined}
         onFocus={onFocus}
         onBlur={onBlur}
         isKeyboardVisible={isKeyboardVisible}

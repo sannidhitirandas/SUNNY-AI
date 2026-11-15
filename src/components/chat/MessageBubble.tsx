@@ -15,7 +15,7 @@ const formatSize = (bytes: number) => {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 };
 
-export const MessageBubble: React.FC<MessageBubbleProps> = ({
+const MessageBubbleBase: React.FC<MessageBubbleProps> = ({
   message,
   onSaveAsMemory,
 }) => {
@@ -72,7 +72,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
 
   if (isUser) {
     return (
-      <div className="mx-auto flex w-full max-w-3xl flex-col items-end px-4 py-1.5 sm:px-6">
+      <div className="mx-auto flex w-full max-w-3xl flex-col items-end px-4 py-1.5 sm:px-6 animate-in fade-in slide-in-from-bottom-1 duration-200">
         <div className="max-w-[88%] rounded-[22px] rounded-br-md border border-[#FFD84D]/20 bg-[#FFD84D] px-4 py-3 text-[#100B22] shadow-[0_5px_18px_rgba(255,216,77,0.10)] sm:max-w-[76%] sm:px-5">
           {message.attachments?.length ? (
             <div className="mb-2 space-y-1.5">
@@ -95,7 +95,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   }
 
   return (
-    <div className="group mx-auto flex w-full max-w-3xl items-end gap-3 px-4 py-1.5 sm:px-6">
+    <div className="group mx-auto flex w-full max-w-3xl items-end gap-3 px-4 py-1.5 sm:px-6 animate-in fade-in slide-in-from-bottom-1 duration-200">
       <div className="mb-1 shrink-0"><SunnyLogo size="small" /></div>
       <div
         className="relative max-w-[88%] rounded-[22px] rounded-bl-md border border-[#604477]/55 bg-gradient-to-br from-[#261a3d] to-[#21163A] px-4 py-3 text-white shadow-[0_5px_20px_rgba(0,0,0,0.10)] sm:max-w-[78%] sm:px-5"
@@ -162,3 +162,13 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
     </div>
   );
 };
+
+// Memoized so that streaming updates to the newest reply don't re-render every
+// older bubble. Callback identity is ignored on purpose; only the message
+// itself and whether "save as memory" is available can change the output.
+export const MessageBubble = React.memo(
+  MessageBubbleBase,
+  (prev, next) =>
+    prev.message === next.message &&
+    Boolean(prev.onSaveAsMemory) === Boolean(next.onSaveAsMemory)
+);

@@ -202,18 +202,43 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       attachments: files.map((file, index) => ({ id: `attachment-${Date.now()}-${index}`, name: file.name, type: file.type || 'application/octet-stream', size: file.size })),
     };
 
+    // Show the user's bubble immediately.
     const updatedWithUser = [...messagesRef.current, userMessage];
     updateMessages(updatedWithUser);
     setIsThinking(true);
+
+    // Save the user's message in the background so the AI request starts right
+    // away instead of waiting on a database round trip.
     let userMessagePersisted = false;
+    const userPersist = chatService
+      .appendMessage('default-session', userMessage, updatedWithUser)
+      .then(() => {
+        userMessagePersisted = true;
+      });
+    userPersist.catch(() => undefined); // handled below; avoids unhandled-rejection noise
+
+    let frame: number | null = null;
 
     try {
-      await chatService.appendMessage('default-session', userMessage, updatedWithUser);
-      userMessagePersisted = true;
-
       const assistantMessageId = `ai-${Date.now()}`;
       const assistantCreatedAt = new Date().toISOString();
       let streamedContent = '';
+
+      // Render streamed text at most once per animation frame.
+      const flushStream = () => {
+        frame = null;
+        const streamingMessage: ChatMessage = {
+          id: assistantMessageId,
+          sessionId: 'default-session',
+          role: 'assistant',
+          content: streamedContent,
+          createdAt: assistantCreatedAt,
+          deliveryStatus: 'sent',
+          isDemoResponse: false,
+        };
+        updateMessages([...updatedWithUser, streamingMessage]);
+      };
+
       const aiResult = await chatService.sendMessageToAI({
         message: content.trim(),
         files,
@@ -226,17 +251,16 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         sessionId: 'default-session',
       }, (chunk) => {
         streamedContent += chunk;
-        const streamingMessage: ChatMessage = {
-          id: assistantMessageId,
-          sessionId: 'default-session',
-          role: 'assistant',
-          content: streamedContent,
-          createdAt: assistantCreatedAt,
-          deliveryStatus: 'sent',
-          isDemoResponse: false,
-        };
-        updateMessages([...updatedWithUser, streamingMessage]);
+        if (frame === null) frame = requestAnimationFrame(flushStream);
       });
+
+      if (frame !== null) {
+        cancelAnimationFrame(frame);
+        frame = null;
+      }
+
+      // Keep ordering correct: the user's message must be stored before the reply.
+      await userPersist;
 
       if (aiResult.memoriesUpdated) {
         try {
@@ -264,15 +288,21 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       const finalMessages = [...updatedWithUser, aiMessage];
       updateMessages(finalMessages);
-      await chatService.appendMessage('default-session', aiMessage, finalMessages);
+      setIsThinking(false); // unlock the composer before the final DB write finishes
       void audioService.play('receive');
+      await chatService.appendMessage('default-session', aiMessage, finalMessages);
     } catch (err: any) {
+      if (frame !== null) {
+        cancelAnimationFrame(frame);
+        frame = null;
+      }
       console.error('[ChatContext] Error sending message:', err);
       const errorMsg = err?.message || 'Failed to connect to Sunny. Please check your connection and tap retry.';
       setLastError(errorMsg);
       void audioService.play('error');
       updateMessages(updatedWithUser);
 
+      await userPersist.catch(() => undefined);
       if (!userMessagePersisted) {
         try {
           await chatService.saveMessages('default-session', updatedWithUser);
