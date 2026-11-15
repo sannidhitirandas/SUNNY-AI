@@ -1,5 +1,4 @@
 import { chatService } from '@/services/chatService';
-import { audioService } from '@/services/audioService';
 import { ChatMessage, StarterIntent } from '@/types/chat';
 import { getIntentForPersonalityTone, getPersonalityToneForIntent } from '@/lib/chatIntent';
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
@@ -48,7 +47,6 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const setActiveIntent = async (intent: StarterIntent) => {
     await updateTone(getPersonalityToneForIntent(intent));
-    void audioService.playMusic(intent);
   };
   const loadRequestRef = useRef(0);
   const messagesRef = useRef<ChatMessage[]>([]);
@@ -166,9 +164,6 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         );
     if (entry.source === 'vibe') {
       await setActiveIntent(entry.selectedVibe);
-    }
-    if (entry.source === 'normal') {
-      void audioService.playMusic(activeIntent);
     }
 
     const { messages: updated, changed } = applyChatEntry(
