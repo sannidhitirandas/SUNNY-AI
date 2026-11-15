@@ -176,7 +176,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
             <div className="flex items-center justify-between mb-3">
               <div>
                 <h3 id="personality-picker-title" className="text-base font-bold text-white">Choose Sunny's personality</h3>
-                <p className="mt-1 text-xs text-[#C6B8E5]">Switch anytime. Your conversation stays right here.</p>
+                <p className="mt-1 text-xs text-[#C6B8E5]">Switch whenever you like. Your conversation stays right here.</p>
               </div>
               <button type="button" onClick={() => setPersonalityModalVisible(false)} className="p-1 rounded-lg text-[#C6B8E5] hover:text-white" aria-label="Close personality picker">
                 <X size={18} />
@@ -194,13 +194,12 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                   <button
                     key={item.intent}
                     type="button"
-                    disabled={isThinking}
                     aria-pressed={selected}
                     onClick={async () => {
                       await setActiveIntent(item.intent);
                       setPersonalityModalVisible(false);
                     }}
-                    className={`w-full rounded-2xl border p-3 text-left transition-colors disabled:cursor-wait disabled:opacity-60 ${selected ? 'border-[#FFD84D] bg-[#FFD84D]/10' : 'border-[#392858] bg-[#302149] hover:border-white/25'}`}
+                    className={`w-full rounded-2xl border p-3 text-left transition-colors ${selected ? 'border-[#FFD84D] bg-[#FFD84D]/10' : 'border-[#392858] bg-[#302149] hover:border-white/25'}`}
                   >
                     <span className={`block text-sm font-semibold ${selected ? 'text-[#FFD84D]' : 'text-white'}`}>{item.title}</span>
                     <span className="mt-0.5 block text-xs text-[#C6B8E5]">{item.description}</span>
