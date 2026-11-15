@@ -4,6 +4,8 @@ import {
   getIntentInstructions,
   isStarterIntent,
   resolveStarterIntent,
+  getIntentForPersonalityTone,
+  getPersonalityToneForIntent,
 } from '../src/lib/chatIntent';
 import { createChatRequestBody } from '../src/lib/chatRequest';
 
@@ -77,4 +79,18 @@ test('chat request keeps selected intent distinct from preferred tone', () => {
     getIntentInstructions(resolveStarterIntent(normalChatBody.intent)),
     getIntentInstructions(resolveStarterIntent(anythingCardBody.intent))
   );
+});
+
+test('the four companion choices map one-to-one to the saved personality preference', () => {
+  const pairs = [
+    ['listen', 'gentle'],
+    ['laugh', 'playful'],
+    ['encourage', 'calm'],
+    ['anything', 'adaptive'],
+  ] as const;
+
+  for (const [intent, tone] of pairs) {
+    assert.equal(getPersonalityToneForIntent(intent), tone);
+    assert.equal(getIntentForPersonalityTone(tone), intent);
+  }
 });
