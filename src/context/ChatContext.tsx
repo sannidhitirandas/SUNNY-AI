@@ -1,6 +1,7 @@
 import { chatService } from '@/services/chatService';
 import { audioService } from '@/services/audioService';
 import { ChatMessage, StarterIntent } from '@/types/chat';
+import { getIntentForPersonalityTone, getPersonalityToneForIntent } from '@/lib/chatIntent';
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useMemories } from './MemoryContext';
@@ -23,7 +24,8 @@ interface ChatContextType {
   hasOlderMessages: boolean;
   loadOlderMessages: () => Promise<void>;
   lastError: string | null;
-  activeIntent: StarterIntent | null;
+  activeIntent: StarterIntent;
+  setActiveIntent: (intent: StarterIntent) => Promise<void>;
   sendMessage: (content: string, files?: File[]) => Promise<void>;
   retryMessage: (id: string) => Promise<void>;
   clearChat: () => Promise<void>;
@@ -33,7 +35,7 @@ interface ChatContextType {
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
 export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { preferences } = usePreferences();
+  const { preferences, updateTone } = usePreferences();
   const { memories, refreshMemories, applyAutomaticGuestMemories } = useMemories();
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -42,7 +44,11 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [hasOlderMessages, setHasOlderMessages] = useState(false);
   const olderMessagesCursorRef = useRef<string | undefined>(undefined);
   const [lastError, setLastError] = useState<string | null>(null);
-  const [activeIntent, setActiveIntent] = useState<StarterIntent | null>(null);
+  const activeIntent = getIntentForPersonalityTone(preferences.preferredTone);
+
+  const setActiveIntent = async (intent: StarterIntent) => {
+    await updateTone(getPersonalityToneForIntent(intent));
+  };
   const loadRequestRef = useRef(0);
   const messagesRef = useRef<ChatMessage[]>([]);
   const hydratedRef = useRef(false);
@@ -109,7 +115,6 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
           if (mounted) void loadChatMessages();
         }, 0);
       } else if (mounted) {
-        setActiveIntent(null);
         setLastError(null);
       }
     });
@@ -158,8 +163,10 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
           `starter-normal-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
           nextVibeStarterTimestamp(messagesRef.current)
         );
-    setActiveIntent(entry.source === 'vibe' ? entry.selectedVibe : null);
-    const musicTheme = entry.source === 'vibe' ? entry.selectedVibe : 'anything';
+    if (entry.source === 'vibe') {
+      await setActiveIntent(entry.selectedVibe);
+    }
+    const musicTheme = entry.source === 'vibe' ? entry.selectedVibe : activeIntent;
     void audioService.playMusic(musicTheme);
 
     const { messages: updated, changed } = applyChatEntry(
@@ -295,7 +302,6 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     updateMessages(normalizeHydratedVibeStarters(fresh.messages));
     olderMessagesCursorRef.current = fresh.messages[0]?.createdAt;
     setHasOlderMessages(fresh.hasMore);
-    setActiveIntent(null);
     setLastError(null);
   };
 
@@ -309,6 +315,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         loadOlderMessages,
         lastError,
         activeIntent,
+        setActiveIntent,
         sendMessage,
         retryMessage,
         clearChat,
