@@ -6,13 +6,15 @@ import { SunnyLogo } from '../brand/SunnyLogo';
 interface ChatHeaderProps {
   onBack?: () => void;
   onOptionsPress: () => void;
+  onPersonalityPress: () => void;
   preferredTone?: string;
 }
 
 export const ChatHeader: React.FC<ChatHeaderProps> = ({
   onBack,
   onOptionsPress,
-  preferredTone = 'Adaptive',
+  onPersonalityPress,
+  preferredTone = 'The Mix',
 }) => {
   return (
     <div className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-[#392858]/80 bg-[#17102C]/95 px-4 py-3 backdrop-blur-xl sm:px-6 sm:py-4 lg:rounded-t-3xl lg:border-x">
@@ -32,13 +34,16 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
           <h2 className="flex items-center gap-1.5 text-sm font-semibold tracking-tight text-white sm:text-base">
             Sunny <span className="text-xs">☀️</span>
           </h2>
-          <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-[#A8D9A0] inline-block animate-pulse" />
-            <span className="flex items-center gap-1 text-[11px] font-medium text-[#C6B8E5] sm:text-xs">
-              <Sparkles size={11} className="text-[#FFD84D]" />
-              <span>{preferredTone} • Here for you</span>
-            </span>
-          </div>
+          <button
+            type="button"
+            onClick={onPersonalityPress}
+            className="mt-0.5 inline-flex items-center gap-1.5 rounded-full border border-[#FFD84D]/25 bg-[#FFD84D]/10 px-2 py-1 text-[11px] font-semibold text-[#FFD84D] transition-colors hover:bg-[#FFD84D]/15 sm:text-xs"
+            aria-label={`Change Sunny's personality. Current: ${preferredTone}`}
+          >
+            <Sparkles size={11} />
+            <span>{preferredTone}</span>
+            <span className="text-[#C6B8E5]">· Change</span>
+          </button>
         </div>
       </div>
 
