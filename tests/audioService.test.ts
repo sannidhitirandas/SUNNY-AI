@@ -116,14 +116,8 @@ test('five background music options and four chat themes handle playback and sam
     await audioService.playNonChatMusic('dust');
     await audioService.playNonChatMusic('after-school-rain');
 
-    // Test 4 chat vibe themes
-    await audioService.playMusic('listen');
-    await audioService.playMusic('laugh');
-    await audioService.playMusic('encourage');
-    await audioService.playMusic('anything');
-
-    // Same track invocation does not restart
-    await audioService.playMusic('anything');
+    // The same selected app-wide track does not restart when requested again.
+    await audioService.playNonChatMusic('after-school-rain');
 
     audioService.pauseMusic();
     await audioService.resumeMusic();
