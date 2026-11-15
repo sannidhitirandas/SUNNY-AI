@@ -18,6 +18,10 @@ interface AppInputProps {
   containerStyle?: string;
 }
 
+// 16px (text-base) input text also stops mobile browsers from zooming in on focus.
+const FIELD_CLASSES =
+  'w-full bg-[#1B1430] border border-[#392858] hover:border-[#4b3570] focus:border-[#FFD84D] focus:outline-none focus:ring-2 focus:ring-[#FFD84D]/20 text-white placeholder-white/50 text-base rounded-xl px-4 py-3 transition-all disabled:opacity-60 disabled:cursor-not-allowed';
+
 export const AppInput: React.FC<AppInputProps> = ({
   label,
   placeholder,
@@ -38,9 +42,9 @@ export const AppInput: React.FC<AppInputProps> = ({
   const inputId = React.useId();
 
   return (
-    <div className={`flex flex-col mb-3 ${containerStyle}`}>
+    <div className={`flex flex-col mb-4 ${containerStyle}`}>
       {label && (
-        <label htmlFor={inputId} className="text-xs font-medium text-white/90 mb-1.5 ml-0.5">
+        <label htmlFor={inputId} className="text-sm font-medium text-white/90 mb-2 ml-0.5">
           {label}
         </label>
       )}
@@ -57,7 +61,7 @@ export const AppInput: React.FC<AppInputProps> = ({
             disabled={disabled}
             autoCapitalize={autoCapitalize}
             autoComplete={autoComplete}
-            className="w-full bg-[#1B1430] border border-[#392858] focus:border-[#FFD84D] focus:outline-none text-white placeholder-white/60 text-sm rounded-xl px-3.5 py-2.5 transition-colors resize-none"
+            className={`${FIELD_CLASSES} resize-none`}
           />
         ) : (
           <>
@@ -74,16 +78,16 @@ export const AppInput: React.FC<AppInputProps> = ({
               maxLength={maxLength}
               disabled={disabled}
               spellCheck={false}
-              className="w-full bg-[#1B1430] border border-[#392858] focus:border-[#FFD84D] focus:outline-none text-white placeholder-white/60 text-sm rounded-xl px-3.5 py-2.5 transition-colors pr-10"
+              className={`${FIELD_CLASSES} ${isPassword ? 'pr-12' : ''}`}
             />
             {isPassword && (
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 text-[#9B8AB9] hover:text-[#C6B8E5] transition-colors focus:outline-none p-1 cursor-pointer"
+                className="absolute right-2 flex h-9 w-9 items-center justify-center rounded-full text-[#9B8AB9] hover:text-[#C6B8E5] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFD84D]/40 cursor-pointer"
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             )}
           </>
