@@ -9,6 +9,7 @@ import { TypingIndicator } from '@/components/chat/TypingIndicator';
 import { MemoryModal } from '@/components/memories/MemoryModal';
 import { MemoryCategory } from '@/types/memory';
 import { getPersonalityLabel } from '@/types/user';
+import type { StarterIntent } from '@/types/chat';
 import { CHAT_BACKGROUNDS, useChatBackground } from '@/lib/chatBackground';
 import { Bookmark, HeartHandshake, Trash2, X, AlertTriangle, ImageIcon, CheckCircle2 } from 'lucide-react';
 
@@ -27,7 +28,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   onBlur,
   isKeyboardVisible = false,
 }) => {
-  const { messages, isThinking, isLoadingOlderMessages, hasOlderMessages, loadOlderMessages, lastError, sendMessage, retryMessage, clearChat } = useChat();
+  const { messages, isThinking, isLoadingOlderMessages, hasOlderMessages, loadOlderMessages, lastError, activeIntent, setActiveIntent, sendMessage, retryMessage, clearChat } = useChat();
   const { preferences } = usePreferences();
   const { addMemory } = useMemories();
   const { background, setChatBackground } = useChatBackground();
@@ -36,6 +37,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   const messagesScrollRef = useRef<HTMLDivElement>(null);
   const preserveScrollRef = useRef<{ height: number; top: number } | null>(null);
   const [optionsVisible, setOptionsVisible] = useState(false);
+  const [personalityModalVisible, setPersonalityModalVisible] = useState(false);
   const [backgroundModalVisible, setBackgroundModalVisible] = useState(false);
   const [memoryModalVisible, setMemoryModalVisible] = useState(false);
   const [memoryInitialContent, setMemoryInitialContent] = useState('');
@@ -104,6 +106,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
 
       <ChatHeader
         onOptionsPress={() => setOptionsVisible(true)}
+        onPersonalityPress={() => setPersonalityModalVisible(true)}
         preferredTone={formattedTone}
       />
 
@@ -166,6 +169,48 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
         onBlur={onBlur}
         isKeyboardVisible={isKeyboardVisible}
       />
+
+      {personalityModalVisible && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
+          <div role="dialog" aria-modal="true" aria-labelledby="personality-picker-title" className="w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-3xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <h3 id="personality-picker-title" className="text-base font-bold text-white">Choose Sunny's personality</h3>
+                <p className="mt-1 text-xs text-[#C6B8E5]">Switch anytime. Your conversation stays right here.</p>
+              </div>
+              <button type="button" onClick={() => setPersonalityModalVisible(false)} className="p-1 rounded-lg text-[#C6B8E5] hover:text-white" aria-label="Close personality picker">
+                <X size={18} />
+              </button>
+            </div>
+            <div className="space-y-2">
+              {([
+                { intent: 'listen', title: 'Listen & Support', description: 'A patient space to talk things through.' },
+                { intent: 'laugh', title: 'Make Me Laugh', description: 'Playful chats, silly ideas and fun distractions.' },
+                { intent: 'encourage', title: 'Encouragement', description: 'Gentle confidence and realistic next steps.' },
+                { intent: 'anything', title: 'Anything Goes', description: 'A natural mix of curiosity, warmth and fun.' },
+              ] as { intent: StarterIntent; title: string; description: string }[]).map((item) => {
+                const selected = activeIntent === item.intent;
+                return (
+                  <button
+                    key={item.intent}
+                    type="button"
+                    disabled={isThinking}
+                    aria-pressed={selected}
+                    onClick={async () => {
+                      await setActiveIntent(item.intent);
+                      setPersonalityModalVisible(false);
+                    }}
+                    className={`w-full rounded-2xl border p-3 text-left transition-colors disabled:cursor-wait disabled:opacity-60 ${selected ? 'border-[#FFD84D] bg-[#FFD84D]/10' : 'border-[#392858] bg-[#302149] hover:border-white/25'}`}
+                  >
+                    <span className={`block text-sm font-semibold ${selected ? 'text-[#FFD84D]' : 'text-white'}`}>{item.title}</span>
+                    <span className="mt-0.5 block text-xs text-[#C6B8E5]">{item.description}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Options Menu Modal */}
       {optionsVisible && (
