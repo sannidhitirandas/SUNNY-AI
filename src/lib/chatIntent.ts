@@ -1,4 +1,5 @@
 import type { StarterIntent } from '@/types/chat';
+import type { PersonalityTone } from '@/types/user';
 
 const STARTER_INTENTS: readonly StarterIntent[] = [
   'listen',
@@ -43,5 +44,24 @@ export function getIntentInstructions(intent: StarterIntent): string {
 - Offer genuine encouragement and practical support when they would help.
 - Do not force listening, humor, or encouragement into every response; let casual conversation stay casual.
 - Follow the user's lead, and do not rush into advice when understanding or conversation is more helpful.`;
+  }
+}
+
+/** Keep the four visible companion choices as the single source of truth. */
+export function getIntentForPersonalityTone(tone: PersonalityTone): StarterIntent {
+  switch (tone) {
+    case 'gentle': return 'listen';
+    case 'playful': return 'laugh';
+    case 'calm': return 'encourage';
+    case 'adaptive': return 'anything';
+  }
+}
+
+export function getPersonalityToneForIntent(intent: StarterIntent): PersonalityTone {
+  switch (intent) {
+    case 'listen': return 'gentle';
+    case 'laugh': return 'playful';
+    case 'encourage': return 'calm';
+    case 'anything': return 'adaptive';
   }
 }
