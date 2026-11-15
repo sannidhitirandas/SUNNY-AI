@@ -74,6 +74,18 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
     });
   }, [messages, isThinking]);
 
+  // When the keyboard opens or closes the list is resized; keep the newest
+  // message anchored at the bottom instead of letting it slide under the keyboard.
+  useEffect(() => {
+    const el = messagesScrollRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(() => {
+      if (stickToBottomRef.current) el.scrollTop = el.scrollHeight;
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const handleClearConfirm = async () => {
     setOptionsVisible(false);
     if (window.confirm('Clear Conversation?\nThis will reset your current conversation with Sunny. (Saved memories in your vault remain unaffected.)')) {
@@ -101,7 +113,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   const showTyping = isThinking && messages[messages.length - 1]?.role !== 'assistant';
 
   return (
-<div className="relative isolate mx-auto flex h-full min-h-0 w-full max-w-5xl flex-1 flex-col overflow-hidden bg-[#100B22] px-0 pb-16 sm:px-3 sm:pb-16 lg:rounded-3xl lg:border lg:border-[#392858]/70 lg:pb-8 lg:shadow-[0_24px_80px_rgba(0,0,0,0.18)]">
+<div className={`relative isolate mx-auto flex h-full min-h-0 w-full max-w-5xl flex-1 flex-col overflow-hidden bg-[#100B22] px-0 ${isKeyboardVisible ? 'pb-0' : 'pb-16'} sm:px-3 sm:pb-16 lg:rounded-3xl lg:border lg:border-[#392858]/70 lg:pb-8 lg:shadow-[0_24px_80px_rgba(0,0,0,0.18)]`}>
 
       {/* Chat wallpaper: image + theme-aware veil so message text stays readable */}
       {background.pc && (

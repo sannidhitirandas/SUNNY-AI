@@ -116,53 +116,52 @@ export function App() {
     setActiveTab(tab);
   };
 
+  // Keyboard visibility.
+  // - Web/PWA: infer it from the visual viewport shrinking.
+  // - Native (Capacitor): use the plugin's events only. On native the whole
+  //   WebView resizes, so visualViewport and innerHeight shrink together and the
+  //   web check would wrongly report "keyboard closed", fighting the real events
+  //   and making the layout jump.
   useEffect(() => {
     if (activeTab !== 'chat') {
       setIsKeyboardVisible(false);
       return;
     }
 
-    const handleResize = () => {
-      if (window.visualViewport) {
-        const isKbOpen = window.visualViewport.height < window.innerHeight - 150;
-        setIsKeyboardVisible(isKbOpen);
-      }
-    };
-    window.visualViewport?.addEventListener('resize', handleResize);
-
     if (!Capacitor.isNativePlatform()) {
+      const handleResize = () => {
+        if (window.visualViewport) {
+          setIsKeyboardVisible(window.visualViewport.height < window.innerHeight - 150);
+        }
+      };
+      window.visualViewport?.addEventListener('resize', handleResize);
       return () => {
         window.visualViewport?.removeEventListener('resize', handleResize);
       };
     }
 
     let mounted = true;
-    let showSub: any;
-    let hideSub: any;
+    let showSub: PluginListenerHandle | undefined;
+    let hideSub: PluginListenerHandle | undefined;
 
-    Keyboard.addListener('keyboardWillShow', () => {
-      if (mounted && activeTab === 'chat') {
-        setIsKeyboardVisible(true);
-      }
+    void Keyboard.addListener('keyboardWillShow', () => {
+      if (mounted) setIsKeyboardVisible(true);
     }).then((sub) => {
       if (mounted) showSub = sub;
-      else sub.remove();
+      else void sub.remove();
     });
 
-    Keyboard.addListener('keyboardWillHide', () => {
-      if (mounted) {
-        setIsKeyboardVisible(false);
-      }
+    void Keyboard.addListener('keyboardWillHide', () => {
+      if (mounted) setIsKeyboardVisible(false);
     }).then((sub) => {
       if (mounted) hideSub = sub;
-      else sub.remove();
+      else void sub.remove();
     });
 
     return () => {
       mounted = false;
-      window.visualViewport?.removeEventListener('resize', handleResize);
-      showSub?.remove?.();
-      hideSub?.remove?.();
+      void showSub?.remove();
+      void hideSub?.remove();
     };
   }, [activeTab]);
 
