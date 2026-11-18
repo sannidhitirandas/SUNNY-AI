@@ -366,3 +366,42 @@ button,
     min-height: 100dvh;
   }
 }
+
+
+/* Chat scrolling: keep gestures inside the conversation and avoid browser
+   scroll anchoring fighting the app's explicit streaming/keyboard anchoring. */
+.chat-message-list {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  overflow-anchor: none;
+  scrollbar-gutter: stable;
+}
+
+.chat-message-list > * {
+  overflow-anchor: none;
+}
+
+.chat-message-list p {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 640px) {
+  .chat-message-list {
+    scrollbar-width: none;
+  }
+
+  .chat-message-list::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-message-list *,
+  .chat-message-list *::before,
+  .chat-message-list *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
