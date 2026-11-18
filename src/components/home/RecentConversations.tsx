@@ -32,31 +32,26 @@ export const RecentConversations: React.FC<RecentConversationsProps> = ({
       {lastMessage ? (
         <AppCard
           onPress={onResume}
-          className="sunny-recent-card rounded-[22px] border border-[#5A426F]/45 bg-gradient-to-r from-[#211633] to-[#191229] p-3.5 shadow-[0_8px_24px_rgba(0,0,0,.12)] transition-all hover:-translate-y-0.5 hover:border-[#FFD84D]/35 sm:p-4"
+          className="sunny-recent-card rounded-[22px] border border-[#8B6AC0]/25 bg-gradient-to-r from-[#241936] to-[#191229] p-3.5 shadow-[0_8px_24px_rgba(0,0,0,.12)] transition-all hover:-translate-y-0.5 hover:border-[#B99AFF]/50 sm:p-4"
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#302149] flex items-center justify-center shrink-0">
-              <MessageSquareText size={18} className="text-[#FFD84D]" />
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#8B5CF6]/20">
+              <MessageSquareText size={18} className="text-[#C4A8FF]" />
             </div>
-
-            <div className="flex-1 min-w-0">
-              <span className="text-xs text-white/85 block font-medium">
+            <div className="min-w-0 flex-1">
+              <span className="block text-xs font-medium text-[#D7C8EF]">
                 {lastMessage.role === 'user' ? 'You said:' : 'Sunny said:'}
               </span>
-              <p className="text-xs sm:text-sm text-white truncate font-normal max-w-full">
+              <p className="max-w-full truncate text-xs font-normal text-white sm:text-sm">
                 {toPreviewText(lastMessage.content)}
               </p>
             </div>
-
-            <ArrowRight
-              size={16}
-              className="text-[#FFD84D] shrink-0"
-            />
+            <ArrowRight size={16} className="shrink-0 text-[#B99AFF]" />
           </div>
         </AppCard>
       ) : (
-        <AppCard className="p-4 text-center">
-          <p className="text-xs text-white/85">
+        <AppCard className="border border-[#8B6AC0]/20 bg-[#211832]/80 p-4 text-center">
+          <p className="text-xs text-[#D7C8EF]">
             No past conversations yet. Tap "Talk to Sunny" above to get started!
           </p>
         </AppCard>
