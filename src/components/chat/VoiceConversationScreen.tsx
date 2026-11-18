@@ -37,6 +37,7 @@ export const VoiceConversationScreen: React.FC<VoiceConversationScreenProps> = (
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const baselineAssistantIdRef = useRef(messages.filter((m) => m.role === 'assistant').slice(-1)[0]?.id);
   const submittedRef = useRef(false);
+  const finalSubmissionRef = useRef(false);
   const mountedRef = useRef(true);
 
   const stopSpeaking = useCallback(() => {
@@ -52,6 +53,7 @@ export const VoiceConversationScreen: React.FC<VoiceConversationScreenProps> = (
   const startListening = useCallback(() => {
     setError('');
     setTranscript('');
+    finalSubmissionRef.current = false;
     const speechWindow = window as Window & {
       SpeechRecognition?: SpeechRecognitionConstructor;
       webkitSpeechRecognition?: SpeechRecognitionConstructor;
@@ -75,7 +77,8 @@ export const VoiceConversationScreen: React.FC<VoiceConversationScreenProps> = (
           else interim += result[0].transcript;
         }
         setTranscript(finalText || interim);
-        if (finalText.trim()) {
+        if (finalText.trim() && !finalSubmissionRef.current) {
+          finalSubmissionRef.current = true;
           setListening(false);
           submittedRef.current = true;
           baselineAssistantIdRef.current = messages.filter((m) => m.role === 'assistant').slice(-1)[0]?.id;
