@@ -1357,3 +1357,71 @@ button:disabled { cursor: not-allowed; }
 @media (prefers-reduced-motion: reduce) {
   .sunny-vibe-card:hover { transform: none; }
 }
+
+
+/* Memory Vault: tactile stacked-card deck with a clear active memory. */
+.sunny-memory-deck-stage {
+  position: relative;
+  isolation: isolate;
+  padding: 0 0 1.35rem;
+}
+.sunny-memory-deck-layer {
+  min-width: 0;
+  transform-origin: top center;
+  transition: transform 420ms cubic-bezier(.2,.8,.2,1), opacity 300ms ease;
+  will-change: transform;
+}
+.sunny-memory-deck-layer .sunny-memory-card {
+  border: 1px solid rgba(166,132,204,.24) !important;
+  border-radius: 1.5rem !important;
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(255,216,77,.075), transparent 42%),
+    linear-gradient(145deg, #281d40 0%, #211630 58%, #191229 100%) !important;
+  padding: 1.2rem !important;
+  box-shadow: 0 20px 46px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.055) !important;
+}
+.sunny-memory-deck-layer:first-child .sunny-memory-card { min-height: 15rem; }
+.sunny-memory-deck-control {
+  display: grid;
+  width: 2.65rem;
+  height: 2.65rem;
+  place-items: center;
+  border: 1px solid rgba(166,132,204,.24);
+  border-radius: 999px;
+  color: #FFD84D;
+  background: rgba(48,33,73,.72);
+  font-size: 1.2rem;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+.sunny-memory-deck-control:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255,216,77,.55);
+  background: rgba(65,45,94,.9);
+}
+.sunny-memory-deck-control:active { transform: scale(.94); }
+.sunny-memory-deck-control:focus-visible {
+  outline: 2px solid rgba(255,216,77,.85);
+  outline-offset: 3px;
+}
+:root[data-theme='sunny-light'] .sunny-memory-deck-layer .sunny-memory-card {
+  border-color: rgba(91,67,120,.18) !important;
+  background: linear-gradient(145deg,#fff 0%,#F7F2FC 100%) !important;
+  box-shadow: 0 18px 42px rgba(54,35,76,.13), inset 0 1px 0 rgba(255,255,255,.9) !important;
+}
+:root[data-theme='sunny-light'] .sunny-memory-deck-control {
+  color: #75520A;
+  border-color: rgba(91,67,120,.2);
+  background: #fff;
+}
+@media (max-width: 640px) {
+  .sunny-memory-deck-layer .sunny-memory-card {
+    border-radius: 1.25rem !important;
+    padding: 1rem !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sunny-memory-deck-layer,
+  .sunny-memory-deck-control { transition: none !important; }
+  .sunny-memory-deck-control:hover,
+  .sunny-memory-deck-control:active { transform: none; }
+}
