@@ -114,7 +114,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
   };
 
   return (
-    <div className="login-screen relative min-h-[100dvh] w-full overflow-x-hidden overflow-y-auto">
+    <div className="login-screen sunny-auth-screen relative min-h-[100dvh] w-full overflow-x-hidden overflow-y-auto">
       <style>{`
         .login-screen {
           background:
@@ -212,7 +212,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
 
       {/* Inline width keeps the column narrow on desktop even if global CSS overrides utility classes. */}
       <div
-        className="relative mx-auto flex min-h-[100dvh] flex-col justify-center px-5 py-10"
+        className="sunny-auth-shell relative mx-auto flex min-h-[100dvh] flex-col justify-center px-5 py-10"
         style={{ width: '100%', maxWidth: '26rem' }}
       >
         <div className="login-hero mb-6 flex flex-col items-center text-center">
@@ -232,7 +232,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           </p>
         </div>
 
-        <div className="login-card rounded-3xl p-5 sm:p-6">
+        <div className="login-card sunny-auth-card rounded-3xl p-5 sm:p-6">
           <form
             onSubmit={forgotPassword ? handlePasswordReset : handleSignIn}
             autoComplete="on"
