@@ -731,3 +731,43 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
   .sunny-onboarding .ob-step > div:first-child { animation:none !important; }
   .sunny-onboarding-choice,.sunny-onboarding-interest { transition:none !important; }
 }
+
+/* Shared auth surfaces: consistent with Sunny's dark, cozy app shell. */
+.sunny-auth-screen {
+  isolation:isolate;
+  -webkit-tap-highlight-color:transparent;
+  overscroll-behavior-y:contain;
+}
+.sunny-auth-shell { padding-left:clamp(1.1rem,5vw,1.5rem); padding-right:clamp(1.1rem,5vw,1.5rem); }
+.sunny-auth-card {
+  border-color:rgba(115,83,145,.48);
+  background:linear-gradient(145deg,rgba(39,27,61,.94),rgba(25,17,42,.96));
+  box-shadow:0 24px 65px -32px rgba(0,0,0,.82),inset 0 1px 0 rgba(255,255,255,.035);
+}
+.sunny-auth-screen input {
+  min-height:46px;
+  border-radius:13px;
+}
+.sunny-auth-screen input:focus {
+  border-color:rgba(255,216,77,.72);
+  box-shadow:0 0 0 2px rgba(255,216,77,.10);
+}
+.sunny-auth-screen button { -webkit-tap-highlight-color:transparent; }
+.sunny-auth-screen button:focus-visible {
+  outline:2px solid rgba(255,216,77,.85);
+  outline-offset:3px;
+}
+.sunny-auth-screen .login-cta,.sunny-auth-screen .reg-cta { border-radius:17px; }
+.sunny-auth-screen .login-cta button,.sunny-auth-screen .reg-cta button { min-height:52px; border-radius:16px; }
+.sunny-auth-screen .login-card,.sunny-auth-screen .reg-card { border-radius:26px; }
+@media (max-width:380px) {
+  .sunny-auth-shell { padding-top:1.25rem; padding-bottom:1.25rem; }
+  .sunny-auth-card { padding:1rem; border-radius:22px; }
+  .sunny-auth-screen .login-hero,.sunny-auth-screen .reg-hero { margin-bottom:1.15rem; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .sunny-auth-screen .login-hero,.sunny-auth-screen .login-card,
+  .sunny-auth-screen .reg-hero,.sunny-auth-screen .reg-card {
+    animation:none !important;
+  }
+}
