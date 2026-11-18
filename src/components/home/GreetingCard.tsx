@@ -12,7 +12,6 @@ interface GreetingCardProps {
 function SunnyRobotArtwork() {
   return (
     <div aria-hidden="true" className="sunny-hero-art relative mx-auto flex h-36 w-full max-w-[270px] items-center justify-center sm:h-44 sm:max-w-[320px] lg:absolute lg:bottom-0 lg:right-3 lg:h-full lg:w-[43%] lg:max-w-none">
-      <div className="absolute bottom-2 h-12 w-56 rounded-[50%] bg-[#A78BFA]/30 blur-2xl sm:bottom-4 sm:h-16 sm:w-64" />
       <SunnyRobot3D className="relative z-10 h-full w-full" />
     </div>
   );

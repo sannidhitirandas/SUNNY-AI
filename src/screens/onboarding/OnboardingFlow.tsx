@@ -187,7 +187,6 @@ const OnboardingStyles: React.FC = () => (
 
 const SunnyHero: React.FC = () => (
   <div className="relative flex h-56 w-60 items-center justify-center sm:h-64 sm:w-64">
-    <div className="ob-halo" aria-hidden="true" />
     <SunnyRobot3D className="relative z-10 h-full w-full" />
   </div>
 );

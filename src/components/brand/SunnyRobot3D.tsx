@@ -118,39 +118,7 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
         const pedestalTop = rounded(1.76, 0.055, 1.58, 0.025, purpleGlow);
         pedestalTop.position.y = -1.62;
         scene.add(pedestalTop);
-        const glowRing = new THREE.Mesh(
-          new THREE.TorusGeometry(0.98, 0.022, 16, 160),
-          new THREE.MeshBasicMaterial({ color: 0xe879f9, transparent: true, opacity: 0.9, toneMapped: false }),
-        );
-        glowRing.rotation.x = Math.PI / 2;
-        glowRing.position.y = -1.585;
-        scene.add(glowRing);
 
-        const glowCanvas = document.createElement('canvas');
-        glowCanvas.width = 256;
-        glowCanvas.height = 256;
-        const glowCtx = glowCanvas.getContext('2d');
-        if (glowCtx) {
-          const g = glowCtx.createRadialGradient(128, 128, 0, 128, 128, 128);
-          g.addColorStop(0, 'rgba(217,70,239,0.55)');
-          g.addColorStop(0.45, 'rgba(139,43,226,0.22)');
-          g.addColorStop(1, 'rgba(139,43,226,0)');
-          glowCtx.fillStyle = g;
-          glowCtx.fillRect(0, 0, 256, 256);
-        }
-        const glowTexture = new THREE.CanvasTexture(glowCanvas);
-        glowTexture.colorSpace = THREE.SRGBColorSpace;
-        const backGlow = new THREE.Sprite(new THREE.SpriteMaterial({
-          map: glowTexture, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0.5,
-        }));
-        backGlow.scale.set(7, 7, 1);
-        backGlow.position.set(0, 0.1, -2.2);
-        scene.add(backGlow);
-
-        const ground = new THREE.Mesh(new THREE.CircleGeometry(2.15, 64), new THREE.MeshBasicMaterial({ color: 0xa855f7, transparent: true, opacity: 0.22 }));
-        ground.rotation.x = -Math.PI / 2;
-        ground.position.y = -1.99;
-        scene.add(ground);
 
         const robot = new THREE.Group();
         scene.add(robot);
@@ -351,8 +319,6 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
           pointer.y += (pointer.ty - pointer.y) * smooth;
           const pulse = 0.5 + 0.5 * Math.sin(elapsed * 2.2);
           gold.emissiveIntensity = 0.25 + pulse * 0.45;
-          glowRing.material.opacity = 0.6 + pulse * 0.35;
-          backGlow.material.opacity = 0.4 + pulse * 0.12;
 
           if (!reducedMotion) {
             robot.position.y = Math.sin(elapsed * 1.35) * 0.035;
@@ -413,7 +379,6 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
             }
           });
           ringTexture.dispose();
-          glowTexture.dispose();
           faceTexture.dispose();
           environment.dispose();
           pmrem.dispose();

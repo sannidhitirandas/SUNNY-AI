@@ -228,7 +228,6 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
         {messages.length === 0 && !isThinking && (
           <section className="sunny-chat-welcome mx-auto flex min-h-full w-full max-w-4xl flex-col items-center justify-center px-5 py-7 text-center sm:px-8" aria-label="Start a conversation with Sunny">
             <div className="relative mb-3 h-36 w-40 sm:h-44 sm:w-48">
-              <div className="absolute inset-3 rounded-full bg-[#9B70E8]/20 blur-2xl" />
               <SunnyRobot3D compact className="relative z-10 h-full w-full" />
             </div>
             <span className="mb-2 inline-flex items-center gap-2 rounded-full border border-[#E879F9]/25 bg-[#E879F9]/[0.08] px-3 py-1 text-[10px] font-bold uppercase tracking-[.18em] text-[#E879F9]">
