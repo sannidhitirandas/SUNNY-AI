@@ -30,43 +30,85 @@ export const PasswordRecoveryScreen: React.FC = () => {
   };
 
   return (
-    <div className="sunny-auth-screen min-h-[100dvh] overflow-y-auto flex flex-col justify-center max-w-sm mx-auto w-full px-6 py-12 bg-[#100B22]">
-      <div className="flex flex-col items-center text-center mb-6">
-        <SunnyLogo size="large" />
-        <h1 className="text-2xl font-bold text-white mt-4 mb-1">Choose a new password</h1>
-        <p className="text-xs text-[#C6B8E5]">Your recovery link is ready. Set a new password to continue.</p>
+    <div className="sunny-recovery-screen sunny-auth-screen relative flex min-h-[100dvh] w-full flex-col justify-center overflow-x-hidden overflow-y-auto px-6 py-12">
+      <style>{`
+        .sunny-recovery-screen { isolation:isolate; background:transparent; }
+        .sunny-recovery-video {
+          position:fixed; z-index:0; inset:0; overflow:hidden; pointer-events:none; background:#100B22;
+        }
+        .sunny-recovery-video video {
+          position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center;
+          opacity:1; filter:none;
+        }
+        .sunny-recovery-video::after { content:''; position:absolute; inset:0; background:transparent; }
+        .sunny-recovery-content { position:relative; z-index:1; width:100%; max-width:24rem; margin:0 auto; }
+        .sunny-recovery-card {
+          background:rgba(20,16,35,.48); border:1px solid rgba(255,255,255,.28);
+          box-shadow:0 24px 70px -28px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.16);
+          -webkit-backdrop-filter:blur(22px) saturate(1.15); backdrop-filter:blur(22px) saturate(1.15);
+        }
+        .sunny-recovery-content h1,.sunny-recovery-content p,.sunny-recovery-card label {
+          text-shadow:0 1px 12px rgba(12,8,24,.5);
+        }
+        .sunny-recovery-card label { color:rgba(255,255,255,.96); }
+        .sunny-recovery-card .sunny-app-field {
+          color:#fff; background:rgba(255,255,255,.13); border-color:rgba(255,255,255,.34);
+          box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+          -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+        }
+        .sunny-recovery-card .sunny-app-field::placeholder { color:rgba(255,255,255,.68); }
+        .sunny-recovery-card .sunny-app-field:focus {
+          border-color:rgba(255,255,255,.88); box-shadow:0 0 0 3px rgba(255,255,255,.16);
+        }
+        .sunny-recovery-card input:focus { outline:none; }
+        @media(max-width:640px) {
+          .sunny-recovery-video { width:100vw; height:100dvh; }
+          .sunny-recovery-video video { min-width:100%; min-height:100%; transform:translateZ(0); }
+        }
+      `}</style>
+      <div className="sunny-recovery-video" aria-hidden="true">
+        <video autoPlay muted loop playsInline preload="metadata">
+          <source src="/sunny-home-background.mp4" type="video/mp4" />
+        </video>
       </div>
-      <form onSubmit={handleUpdatePassword} className="sunny-auth-card rounded-3xl border border-[#604477]/45 bg-[#21163A]/85 p-5 shadow-[0_20px_50px_-24px_rgba(0,0,0,.7)] backdrop-blur-xl space-y-1">
-        <AppInput
-          label="New Password"
-          placeholder="At least 6 characters"
-          value={password}
-          onChangeText={setPassword}
-          isPassword
-        />
-        <AppInput
-          label="Confirm New Password"
-          placeholder="Re-enter your password"
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          isPassword
-        />
-        {error && <p className="text-xs text-[#FF8D9A] font-medium py-1">{error}</p>}
-        <AppButton
-          title="Update Password"
-          onPress={handleUpdatePassword}
-          loading={loading}
-          variant="primary"
-          size="large"
-          fullWidth
-        />
-        <AppButton
-          title="Cancel and sign out"
-          onPress={() => void logout()}
-          variant="ghost"
-          fullWidth
-        />
-      </form>
+      <div className="sunny-recovery-content">
+        <div className="mb-6 flex flex-col items-center text-center">
+          <SunnyLogo size="large" />
+          <h1 className="mt-4 mb-1 text-2xl font-bold text-white">Choose a new password</h1>
+          <p className="text-xs text-[#F0EAF8]">Your recovery link is ready. Set a new password to continue.</p>
+        </div>
+        <form onSubmit={handleUpdatePassword} className="sunny-recovery-card space-y-1 rounded-3xl p-5">
+          <AppInput
+            label="New Password"
+            placeholder="At least 6 characters"
+            value={password}
+            onChangeText={setPassword}
+            isPassword
+          />
+          <AppInput
+            label="Confirm New Password"
+            placeholder="Re-enter your password"
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            isPassword
+          />
+          {error && <p className="py-1 text-xs font-medium text-[#FF8D9A]">{error}</p>}
+          <AppButton
+            title="Update Password"
+            onPress={handleUpdatePassword}
+            loading={loading}
+            variant="primary"
+            size="large"
+            fullWidth
+          />
+          <AppButton
+            title="Cancel and sign out"
+            onPress={() => void logout()}
+            variant="ghost"
+            fullWidth
+          />
+        </form>
+      </div>
     </div>
   );
 };
