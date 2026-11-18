@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Capacitor, registerPlugin } from '@capacitor/core';
-import { ArrowUp, FileText, Paperclip, X } from 'lucide-react';
+import { ArrowUp, FileText, Mic, Paperclip, X } from 'lucide-react';
 
 const MAX_FILES = 3;
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
@@ -12,6 +12,7 @@ const SunnyFilePicker = registerPlugin<SunnyFilePickerPlugin>('SunnyFilePicker')
 
 interface MessageComposerProps {
   onSend: (text: string, files: File[]) => Promise<void> | void;
+  onVoicePress?: () => void;
   disabled?: boolean;
   placeholder?: string;
   onFocus?: () => void;
@@ -36,7 +37,7 @@ const compressImageIfNeeded = async (file: File): Promise<File> => {
   });
 };
 
-export const MessageComposer: React.FC<MessageComposerProps> = ({ onSend, disabled = false, placeholder = "Tell Sunny what's on your mind...", onFocus, onBlur, isKeyboardVisible = false }) => {
+export const MessageComposer: React.FC<MessageComposerProps> = ({ onSend, onVoicePress, disabled = false, placeholder = "Tell Sunny what's on your mind...", onFocus, onBlur, isKeyboardVisible = false }) => {
   const [text, setText] = useState('');
   const [files, setFiles] = useState<File[]>([]);
   const [fileError, setFileError] = useState<string | null>(null);
@@ -139,6 +140,11 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({ onSend, disabl
             <Paperclip size={18} />
           </button>
           <textarea ref={textareaRef} value={text} onChange={handleInput} onKeyDown={handleKeyDown} onFocus={onFocus} onBlur={onBlur} placeholder={placeholder} rows={1} maxLength={1000} className="min-h-10 max-h-[120px] flex-1 resize-none bg-transparent px-1 py-2.5 text-base leading-6 text-white outline-none placeholder:text-[#9B8AB9] focus:outline-none" />
+          {onVoicePress && (
+            <button type="button" onPointerDown={(event) => event.preventDefault()} onClick={onVoicePress} disabled={false} className="mb-0.5 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full text-[#C6B8E5] transition-all hover:bg-[#302149] hover:text-[#F5D27A] active:scale-90" aria-label="Start voice conversation" title="Talk to Sunny">
+              <Mic size={19} strokeWidth={2} />
+            </button>
+          )}
           <button type="button" onPointerDown={(event) => event.preventDefault()} onClick={() => void handleSend()} disabled={isSendDisabled} className={`sunny-send-button mb-0.5 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full transition-all duration-200 active:scale-90 ${isSendDisabled ? 'bg-white/[0.06] text-[#9B8AB9] cursor-not-allowed opacity-50' : 'bg-gradient-to-br from-[#F5D27A] to-[#DDAE50] text-[#241735] shadow-[0_4px_16px_rgba(245,210,122,.2)] hover:brightness-105'}`} aria-label="Send message">
             <ArrowUp size={19} strokeWidth={2.7} />
           </button>
