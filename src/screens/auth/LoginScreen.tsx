@@ -117,6 +117,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
     <div className="login-screen sunny-auth-screen relative min-h-[100dvh] w-full overflow-x-hidden overflow-y-auto">
       <style>{`
         .login-screen {
+          isolation: isolate;
           background:
             radial-gradient(ellipse 120% 50% at 50% 108%, rgba(255, 216, 77, 0.22) 0%, rgba(246, 189, 69, 0.10) 40%, rgba(16, 11, 34, 0) 72%),
             linear-gradient(180deg, #100B22 0%, #17102C 55%, #221339 85%, #301a49 100%);
@@ -124,6 +125,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
 
         .login-sparkle {
           position: absolute;
+          z-index: 1;
           border-radius: 9999px;
           background: #FFE9A3;
           box-shadow: 0 0 8px 1px rgba(255, 216, 77, 0.6);
@@ -150,6 +152,29 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           animation: login-fade-up 0.7s ease-out 0.15s both;
         }
 
+        .login-video-backdrop {
+          position: fixed;
+          z-index: 0;
+          inset: 0;
+          overflow: hidden;
+          pointer-events: none;
+          background: #100B22;
+        }
+        .login-background-video {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+          opacity: .58;
+          filter: saturate(.84) brightness(.72);
+        }
+        .login-video-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(180deg,rgba(16,11,34,.55),rgba(16,11,34,.42) 48%,rgba(16,11,34,.78));
+        }
         .login-hero {
           animation: login-fade-up 0.7s ease-out both;
         }
@@ -192,6 +217,20 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         }
       `}</style>
 
+      <div className="login-video-backdrop" aria-hidden="true">
+        <video
+          className="login-background-video"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+        >
+          <source src="/sunny-home-background.mp4" type="video/mp4" />
+        </video>
+        <span className="login-video-overlay" />
+      </div>
+
       {SPARKLES.map((sparkle, index) => (
         <span
           key={index}
@@ -213,7 +252,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
       {/* Inline width keeps the column narrow on desktop even if global CSS overrides utility classes. */}
       <div
         className="sunny-auth-shell relative mx-auto flex min-h-[100dvh] flex-col justify-center px-5 py-10"
-        style={{ width: '100%', maxWidth: '26rem' }}
+        style={{ width: '100%', maxWidth: '26rem', position: 'relative', zIndex: 2 }}
       >
         <div className="login-hero mb-6 flex flex-col items-center text-center">
           <div className="relative">
