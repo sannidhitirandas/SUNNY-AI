@@ -297,7 +297,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
       e.preventDefault();
       void handleSend();
     }
@@ -312,7 +312,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
   const isSendDisabled = disabled || preparingAttachment || sending || (!text.trim() && files.length === 0);
 
   return (
-    <div className={`border-t border-white/[0.04] bg-gradient-to-t from-[#100B22] via-[#100B22]/[0.98] to-[#100B22]/90 px-3 pt-3 sm:px-5 ${isKeyboardVisible ? 'pb-1' : 'pb-3'}`}>
+    <div className={`border-t border-white/[0.04] bg-gradient-to-t from-[#100B22] via-[#100B22]/[0.98] to-[#100B22]/90 px-3 pt-3 transition-[padding] duration-200 ease-out sm:px-5 ${isKeyboardVisible ? 'pb-1' : 'pb-3'}`}>
       <div className="mx-auto w-full max-w-3xl">
       {fileError && (
         <div className="mb-2 px-3 text-xs text-[#FF9DA8]" role="alert">{fileError}</div>
