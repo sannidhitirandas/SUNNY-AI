@@ -113,7 +113,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   const showTyping = isThinking && messages[messages.length - 1]?.role !== 'assistant';
 
   return (
-<div className={`relative isolate flex h-full min-h-0 w-full max-w-none flex-1 flex-col overflow-hidden bg-[#100B22] px-0 ${isKeyboardVisible ? 'pb-0' : 'pb-16'} sm:px-0 sm:pb-16 lg:rounded-none lg:border-0 lg:pb-24 lg:shadow-none`}>
+<div className={`relative isolate flex h-full min-h-0 w-full max-w-none flex-1 flex-col overflow-hidden bg-[#100B22] px-0 ${backgroundModalVisible || personalityModalVisible || optionsVisible || memoryModalVisible ? 'z-[60]' : 'z-0'} ${isKeyboardVisible ? 'pb-0' : 'pb-16'} sm:px-0 sm:pb-16 lg:rounded-none lg:border-0 lg:pb-24 lg:shadow-none`}>
 
       {/* Chat wallpaper: image + theme-aware veil so message text stays readable */}
       {background.pc && (
@@ -338,7 +338,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
 
       {backgroundModalVisible && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
-          <div role="dialog" aria-modal="true" aria-labelledby="chat-bg-picker-title" className="w-full max-w-md max-h-[90vh] overflow-y-auto bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+          <div role="dialog" aria-modal="true" aria-labelledby="chat-bg-picker-title" className="w-full max-w-md max-h-[min(90dvh,48rem)] overflow-y-auto overscroll-contain bg-[#21163A] border border-[#392858] rounded-2xl p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-2xl animate-in fade-in zoom-in-95 duration-150">
             <h3 id="chat-bg-picker-title" className="text-base font-bold text-white mb-3">Chat background</h3>
             <div className="grid grid-cols-2 gap-3 mb-4">
               {CHAT_BACKGROUNDS.map((item) => {
