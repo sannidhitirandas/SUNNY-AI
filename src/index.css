@@ -1829,3 +1829,17 @@ button:disabled { cursor: not-allowed; }
   background: linear-gradient(135deg, #8B2BE2, #D946EF);
   box-shadow: 0 0 22px rgba(217,70,239,.6);
 }
+
+
+/* ---- Sunshine accents: small yellow details with a soft shine ---- */
+.sunny-shine {
+  color: #FFD84D;
+  filter: drop-shadow(0 0 4px rgba(255,216,77,.55));
+  animation: sunny-shine 3.4s ease-in-out infinite;
+}
+@keyframes sunny-shine {
+  0%, 100% { filter: drop-shadow(0 0 3px rgba(255,216,77,.45)) brightness(1); }
+  50%      { filter: drop-shadow(0 0 9px rgba(255,216,77,.95)) brightness(1.18); }
+}
+@media (prefers-reduced-motion: reduce) { .sunny-shine { animation: none; } }
+:root[data-theme='sunny-light'] .sunny-shine { color: #C58A00; filter: none; animation: none; }

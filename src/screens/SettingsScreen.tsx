@@ -220,7 +220,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="max-w-2xl">
             <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.16em] text-[#E9DFF8]">
-              <Sparkles size={15} className="text-[#E879F9]" /> YOUR SUNNY, YOUR WAY
+              <Sparkles size={15} className="sunny-shine" /> YOUR SUNNY, YOUR WAY
             </span>
             <h2 className="mt-3 text-3xl font-semibold leading-tight tracking-tight text-[#F8F1FF] sm:text-4xl">Make this space yours.</h2>
             <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#D6C2F2] sm:text-base">
@@ -256,7 +256,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         <SettingsRow
           title="Conversation Personality"
           subtitle="Change how Sunny responds to you"
-          icon={<Sparkles size={16} className="text-[#E879F9]" />}
+          icon={<Sparkles size={16} className="sunny-shine" />}
           rightText={getPersonalityLabel(preferences.preferredTone)}
           onPress={() => setToneModalVisible(true)}
         />

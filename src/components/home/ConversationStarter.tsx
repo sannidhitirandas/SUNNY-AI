@@ -15,7 +15,7 @@ const STARTER_OPTIONS: {
 }[] = [
   { intent: 'listen', title: 'Listen to me', description: 'A safe space to let it out.', icon: <Heart size={19}/>, accent: 'from-[#A78BFA]/20 to-[#7C3AED]/5' },
   { intent: 'laugh', title: 'Make me laugh', description: 'A little lightness and fun.', icon: <Smile size={19}/>, accent: 'from-[#D946EF]/20 to-[#F59E0B]/5' },
-  { intent: 'encourage', title: 'Encourage me', description: 'Find one small next step.', icon: <Sun size={19}/>, accent: 'from-[#E879F9]/20 to-[#A78BFA]/5' },
+  { intent: 'encourage', title: 'Encourage me', description: 'Find one small next step.', icon: <Sun size={19} className="sunny-shine"/>, accent: 'from-[#E879F9]/20 to-[#A78BFA]/5' },
   { intent: 'anything', title: 'Surprise me', description: 'Let’s see where we go.', icon: <MessageCircle size={19}/>, accent: 'from-[#8B5CF6]/20 to-[#C4B5FD]/5' },
 ];
 

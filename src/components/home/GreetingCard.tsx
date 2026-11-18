@@ -34,9 +34,9 @@ export const GreetingCard: React.FC<GreetingCardProps> = ({
       <div className="sunny-hero-glow pointer-events-none absolute -right-10 -top-16 h-56 w-56 rounded-full bg-[#A78BFA]/20 blur-3xl" />
       <div className="relative z-20 flex items-center justify-between lg:mb-5">
         <span className="inline-flex items-center gap-2 text-sm font-semibold tracking-wide text-[#E9DEFF]">
-          <Sparkles size={16} className="text-[#E879F9]" /> YOUR LITTLE CORNER OF SUNSHINE
+          <Sparkles size={16} className="sunny-shine" /> YOUR LITTLE CORNER OF SUNSHINE
         </span>
-        <span className="hidden items-center gap-2 text-xs text-[#D6C7F2] sm:inline-flex"><Sparkles size={14} className="text-[#E879F9]"/> A little space just for you</span>
+        <span className="hidden items-center gap-2 text-xs text-[#D6C7F2] sm:inline-flex"><Sparkles size={14} className="sunny-shine"/> A little space just for you</span>
       </div>
       <div className="relative z-20 lg:max-w-[58%]">
         <h1 className="mt-3 text-4xl font-semibold leading-[1.08] tracking-tight text-[#FBF8FF] sm:text-5xl lg:mt-0 lg:text-[3.65rem]">

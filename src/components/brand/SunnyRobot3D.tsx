@@ -96,7 +96,7 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
         });
         const dark = new THREE.MeshStandardMaterial({ color: 0x211936, roughness: 0.48, metalness: 0.24 });
         const deep = new THREE.MeshPhysicalMaterial({ color: 0x100b1e, roughness: 0.16, metalness: 0.12, clearcoat: 1 });
-        const gold = new THREE.MeshStandardMaterial({ color: 0xd946ef, roughness: 0.3, metalness: 0.18, emissive: 0x4a0f5a, emissiveIntensity: 0.22 });
+        const gold = new THREE.MeshStandardMaterial({ color: 0xffd84d, roughness: 0.3, metalness: 0.18, emissive: 0x8a6100, emissiveIntensity: 0.3 });
         const purpleGlow = new THREE.MeshStandardMaterial({ color: 0xa855f7, roughness: 0.3, metalness: 0.12, emissive: 0x6d28d9, emissiveIntensity: 0.5 });
 
         const rounded = (w: number, h: number, d: number, r: number, material: any) => {

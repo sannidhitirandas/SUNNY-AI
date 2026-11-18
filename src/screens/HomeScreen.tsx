@@ -121,7 +121,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </div>
           <div className="flex items-center gap-3">
             <span className="hidden items-center gap-1.5 text-[11px] font-medium text-[#C8B7E7] sm:inline-flex">
-              <Sparkles size={13} className="text-[#E879F9]" /> Here for you
+              <Sparkles size={13} className="sunny-shine" /> Here for you
             </span>
             <button
               type="button"
