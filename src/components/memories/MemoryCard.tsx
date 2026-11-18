@@ -44,7 +44,7 @@ export const MemoryCard: React.FC<MemoryCardProps> = ({
   };
 
   return (
-    <AppCard className="sunny-memory-card group mb-0 rounded-[24px] border border-[#5A426F]/45 bg-gradient-to-br from-[#261B3B] to-[#191229] p-4 shadow-[0_10px_28px_rgba(0,0,0,.14)] transition-all duration-200 hover:-translate-y-1 hover:border-[#FFD84D]/35 hover:shadow-[0_16px_34px_rgba(0,0,0,.22)] sm:p-5">
+    <AppCard className="sunny-memory-card group mb-0 rounded-[24px] border border-[#5A426F]/45 bg-gradient-to-br from-[#261B3B] to-[#191229] p-4 shadow-[0_10px_28px_rgba(0,0,0,.14)] transition-all duration-200 hover:-translate-y-1 hover:border-[#F5D27A]/35 hover:shadow-[0_16px_34px_rgba(0,0,0,.22)] sm:p-5">
       <div className="mb-3 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <Badge
@@ -75,7 +75,7 @@ export const MemoryCard: React.FC<MemoryCardProps> = ({
           <button
             type="button"
             onClick={() => onEdit(memory)}
-            className="flex min-h-9 cursor-pointer items-center gap-1.5 rounded-xl border border-white/[0.06] bg-[#302149] px-3 py-2 text-xs font-semibold text-white transition-all hover:border-[#FFD84D]/25 hover:bg-[#3d2a5c] active:scale-95"
+            className="flex min-h-9 cursor-pointer items-center gap-1.5 rounded-xl border border-white/[0.06] bg-[#302149] px-3 py-2 text-xs font-semibold text-white transition-all hover:border-[#F5D27A]/25 hover:bg-[#3d2a5c] active:scale-95"
           >
             <Pencil size={13} />
             <span>Edit</span>
