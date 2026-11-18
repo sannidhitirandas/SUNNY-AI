@@ -45,9 +45,46 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
     >
       <style>{`
         .sunrise-screen {
-          background:
-            radial-gradient(ellipse 120% 55% at 50% 108%, rgba(255, 216, 77, 0.30) 0%, rgba(246, 189, 69, 0.14) 38%, rgba(16, 11, 34, 0) 70%),
-            linear-gradient(180deg, #100B22 0%, #17102C 52%, #261540 82%, #3a1d52 100%);
+          isolation: isolate;
+          background: transparent;
+        }
+        .sunrise-video-backdrop {
+          position: absolute;
+          z-index: 0;
+          inset: 0;
+          overflow: hidden;
+          pointer-events: none;
+          background: #100B22;
+        }
+        .sunrise-background-video {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+          opacity: 1;
+          filter: none;
+        }
+        .sunrise-video-overlay {
+          position: absolute;
+          inset: 0;
+          background: transparent;
+        }
+        .sunrise-screen > .sunrise-sun,
+        .sunrise-screen > .sunrise-eyebrow,
+        .sunrise-screen > .sunrise-wordmark,
+        .sunrise-screen > .sunrise-greeting,
+        .sunrise-screen > .sunrise-tagline,
+        .sunrise-screen > .sunrise-waiting,
+        .sunrise-screen > .sunrise-bar {
+          position: relative;
+          z-index: 2;
+          text-shadow: 0 2px 18px rgba(12, 8, 24, 0.55);
+        }
+        .sunrise-screen > .sunrise-horizon,
+        .sunrise-screen > .sunrise-sparkle {
+          z-index: 1;
         }
 
         /* Horizon glow that rises with the sun */
@@ -211,6 +248,13 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           }
         }
       `}</style>
+
+      <div className="sunrise-video-backdrop" aria-hidden="true">
+        <video className="sunrise-background-video" autoPlay muted loop playsInline preload="metadata">
+          <source src="/sunny-home-background.mp4" type="video/mp4" />
+        </video>
+        <span className="sunrise-video-overlay" />
+      </div>
 
       <div className="sunrise-horizon" aria-hidden="true" />
 
