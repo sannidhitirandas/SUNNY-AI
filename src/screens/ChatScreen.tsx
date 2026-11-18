@@ -31,7 +31,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   const { messages, isThinking, isLoadingOlderMessages, hasOlderMessages, loadOlderMessages, lastError, activeIntent, setActiveIntent, sendMessage, retryMessage, clearChat } = useChat();
   const { preferences } = usePreferences();
   const { addMemory } = useMemories();
-  const { background, setChatBackground, availableBackgrounds, device } = useChatBackground();
+  const { background, wallpaperSrc, setChatBackground, availableBackgrounds, device } = useChatBackground();
 
   const messagesScrollRef = useRef<HTMLDivElement>(null);
   const preserveScrollRef = useRef<{ height: number; top: number } | null>(null);
@@ -116,18 +116,16 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
 <div className={`relative isolate flex h-full min-h-0 w-full max-w-none flex-1 flex-col overflow-hidden bg-[#100B22] px-0 ${backgroundModalVisible || personalityModalVisible || optionsVisible || memoryModalVisible ? 'z-[60]' : 'z-0'} ${isKeyboardVisible ? 'pb-0' : 'pb-16'} sm:px-0 sm:pb-16 lg:rounded-none lg:border-0 lg:pb-24 lg:shadow-none`}>
 
       {/* Chat wallpaper: image + theme-aware veil so message text stays readable */}
-      {background.pc && (
+      {wallpaperSrc && (
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden lg:rounded-3xl">
-          {/* Phones in portrait get the tall wallpaper; PCs and landscape get the wide one */}
-          <picture>
-            {background.mobile && <source media="(orientation: portrait)" srcSet={background.mobile} />}
-            <img
-              src={background.pc ?? undefined}
-              alt=""
-              draggable={false}
-              className="absolute inset-0 h-full w-full object-cover object-center"
-            />
-          </picture>
+          {/* Same `device` rule as the picker: mobile set on phones/tablets, PC set on desktop */}
+          <img
+            key={wallpaperSrc}
+            src={wallpaperSrc}
+            alt=""
+            draggable={false}
+            className="absolute inset-0 h-full w-full object-cover object-center"
+          />
           <div
             className="absolute inset-0"
             style={{

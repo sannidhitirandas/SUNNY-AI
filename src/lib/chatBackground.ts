@@ -56,9 +56,14 @@ export const getDeviceChatBackgrounds = (
     thumb: device === 'pc' ? option.pc : option.mobile,
   }));
 
+// Single rule for "is this a phone/tablet?" used by the picker, storage AND the
+// wallpaper image. Narrow windows, or touch-first devices up to tablet width
+// (so a phone held sideways still counts as mobile).
+const MOBILE_QUERY =
+  '(max-width: 767px), (pointer: coarse) and (max-width: 1024px)';
+
 const getDevice = (): ChatBackgroundDevice =>
-  typeof window !== 'undefined' &&
-  window.matchMedia('(max-width: 767px)').matches
+  typeof window !== 'undefined' && window.matchMedia(MOBILE_QUERY).matches
     ? 'mobile'
     : 'pc';
 
@@ -96,11 +101,12 @@ export const useChatBackground = () => {
   );
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(max-width: 767px)');
+    const mediaQuery = window.matchMedia(MOBILE_QUERY);
     const updateDevice = () => {
       setDevice(mediaQuery.matches ? 'mobile' : 'pc');
     };
 
+    updateDevice();
     mediaQuery.addEventListener('change', updateDevice);
     return () => mediaQuery.removeEventListener('change', updateDevice);
   }, []);
@@ -135,6 +141,11 @@ export const useChatBackground = () => {
   return {
     backgroundId,
     background: getChatBackgroundOption(backgroundId),
+    // The image for THIS device only (null for "Plain"); ChatScreen renders this.
+    wallpaperSrc: (() => {
+      const option = getChatBackgroundOption(backgroundId);
+      return device === 'mobile' ? option.mobile : option.pc;
+    })(),
     setChatBackground,
     device,
     availableBackgrounds: getDeviceChatBackgrounds(device),
