@@ -53,8 +53,8 @@ export const GreetingCard: React.FC<GreetingCardProps> = ({
   })();
 
   return (
-    <AppCard elevated className="relative isolate overflow-hidden rounded-[28px] border border-[#604477]/45 bg-gradient-to-br from-[#211536] via-[#17102C] to-[#100B22] p-5 sm:p-7 lg:min-h-[245px] lg:p-8">
-      <div className="pointer-events-none absolute -right-10 -top-16 h-48 w-48 rounded-full bg-[#FFD84D]/[0.06] blur-3xl" />
+    <AppCard elevated className="sunny-home-hero relative isolate overflow-hidden rounded-[30px] border border-[#8B6AA8]/30 bg-gradient-to-br from-[#302044] via-[#1D1431] to-[#100B22] p-5 sm:p-7 lg:min-h-[270px] lg:p-9">
+      <div className="sunny-hero-glow pointer-events-none absolute -right-10 -top-16 h-56 w-56 rounded-full bg-[#FFD84D]/[0.10] blur-3xl" />
       <div className="relative z-20 flex items-center justify-between lg:mb-5">
         <span className="inline-flex items-center gap-2 text-sm font-medium tracking-wide text-white">
           <span className="text-xl text-[#FFD84D]">☼</span> YOUR LITTLE CORNER OF SUNSHINE
@@ -62,10 +62,10 @@ export const GreetingCard: React.FC<GreetingCardProps> = ({
         <span className="hidden items-center gap-2 text-xs text-white/90 sm:inline-flex"><Sparkles size={14} className="text-[#FFD84D]"/> A little space just for you</span>
       </div>
       <div className="relative z-20 lg:max-w-[58%]">
-        <h1 className="mt-3 text-4xl font-normal leading-tight tracking-tight text-[#F8F1FF] sm:text-5xl lg:mt-0 lg:text-6xl">
+        <h1 className="mt-3 text-4xl font-semibold leading-[1.08] tracking-tight text-[#F8F1FF] sm:text-5xl lg:mt-0 lg:text-[3.65rem]">
           {greeting}, {displayName || 'sunshine'}
         </h1>
-        <p className="mt-2 max-w-lg text-base leading-relaxed text-white sm:text-lg">
+        <p className="mt-3 max-w-lg text-[15px] leading-relaxed text-[#D8CBE8] sm:text-lg">
           A little warmth, just for you. Whatever kind of day it’s been, you’re welcome here.
         </p>
         <div className="mt-3 lg:mt-7">
