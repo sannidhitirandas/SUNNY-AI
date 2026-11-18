@@ -7,6 +7,8 @@ interface MessageBubbleProps {
   message: ChatMessage;
   onRetry?: (id: string) => void;
   onSaveAsMemory?: (content: string) => void;
+  isFirstInGroup?: boolean;
+  isLastInGroup?: boolean;
 }
 
 const formatSize = (bytes: number) => {
@@ -18,6 +20,8 @@ const formatSize = (bytes: number) => {
 const MessageBubbleBase: React.FC<MessageBubbleProps> = ({
   message,
   onSaveAsMemory,
+  isFirstInGroup = true,
+  isLastInGroup = true,
 }) => {
   const isUser = message.role === 'user';
   const [saved, setSaved] = useState(false);
@@ -70,10 +74,13 @@ const MessageBubbleBase: React.FC<MessageBubbleProps> = ({
     }
   };
 
+  const verticalSpacing = isFirstInGroup ? 'pt-1.5' : 'pt-0.5';
+  const bottomSpacing = isLastInGroup ? 'pb-1.5' : 'pb-0.5';
+
   if (isUser) {
     return (
-      <div className="mx-auto flex w-full max-w-3xl flex-col items-end px-4 py-1.5 sm:px-6 animate-in fade-in slide-in-from-bottom-1 duration-200">
-        <div className="max-w-[88%] rounded-[22px] rounded-br-md border border-[#FFD84D]/20 bg-[#FFD84D] px-4 py-3 text-[#100B22] shadow-[0_5px_18px_rgba(255,216,77,0.10)] sm:max-w-[76%] sm:px-5">
+      <div className={`mx-auto flex w-full max-w-3xl flex-col items-end px-4 sm:px-6 ${verticalSpacing} ${bottomSpacing} animate-in fade-in slide-in-from-bottom-1 duration-200`}>
+        <div className={`max-w-[88%] border border-[#FFD84D]/20 bg-[#FFD84D] px-4 py-3 text-[#100B22] shadow-[0_5px_18px_rgba(255,216,77,0.10)] sm:max-w-[76%] sm:px-5 ${isFirstInGroup ? 'rounded-t-[22px]' : 'rounded-t-[15px]'} ${isLastInGroup ? 'rounded-br-md rounded-bl-[22px]' : 'rounded-b-[15px]'}`}>
           {message.attachments?.length ? (
             <div className="mb-2 space-y-1.5">
               {message.attachments.map((file) => (
@@ -85,20 +92,26 @@ const MessageBubbleBase: React.FC<MessageBubbleProps> = ({
               ))}
             </div>
           ) : null}
-          {message.content && <p className="whitespace-pre-wrap text-base font-medium leading-6">{message.content}</p>}
-          <div className="mt-1.5 flex items-center justify-end gap-1.5 text-[10px] font-medium text-[#100B22]/65">
-            <span>{formatTime(message.createdAt)}</span>
-          </div>
+          {message.content && <p className="whitespace-pre-wrap break-words text-base font-medium leading-6">{message.content}</p>}
+          {isLastInGroup && (
+            <div className="mt-1.5 flex items-center justify-end gap-1.5 text-[10px] font-medium text-[#100B22]/65">
+              <span>{formatTime(message.createdAt)}</span>
+            </div>
+          )}
         </div>
       </div>
     );
   }
 
   return (
-    <div className="group mx-auto flex w-full max-w-3xl items-end gap-3 px-4 py-1.5 sm:px-6 animate-in fade-in slide-in-from-bottom-1 duration-200">
-      <div className="mb-1 shrink-0"><SunnyLogo size="small" /></div>
+    <div className={`group mx-auto flex w-full max-w-3xl items-end gap-3 px-4 sm:px-6 ${verticalSpacing} ${bottomSpacing} animate-in fade-in slide-in-from-bottom-1 duration-200`}>
+      {isFirstInGroup ? (
+        <div className="mb-1 shrink-0"><SunnyLogo size="small" /></div>
+      ) : (
+        <div className="w-8 shrink-0" aria-hidden="true" />
+      )}
       <div
-        className="relative max-w-[88%] rounded-[22px] rounded-bl-md border border-[#604477]/55 bg-gradient-to-br from-[#261a3d] to-[#21163A] px-4 py-3 text-white shadow-[0_5px_20px_rgba(0,0,0,0.10)] sm:max-w-[78%] sm:px-5"
+        className={`relative max-w-[88%] border border-[#604477]/55 bg-gradient-to-br from-[#261a3d] to-[#21163A] px-4 py-3 text-white shadow-[0_5px_20px_rgba(0,0,0,0.10)] sm:max-w-[78%] sm:px-5 ${isFirstInGroup ? 'rounded-t-[22px]' : 'rounded-t-[15px]'} ${isLastInGroup ? 'rounded-bl-md rounded-br-[22px]' : 'rounded-b-[15px]'}`}
         onTouchStart={handleTouchStart}
         onTouchEnd={clearLongPress}
         onTouchMove={clearLongPress}
@@ -108,9 +121,9 @@ const MessageBubbleBase: React.FC<MessageBubbleProps> = ({
           setMenuOpen(true);
         }}
       >
-        <p className="whitespace-pre-wrap text-base leading-6 text-white">{message.content}</p>
+        <p className="whitespace-pre-wrap break-words text-base leading-6 text-white">{message.content}</p>
         <div className="mt-2 flex items-center justify-between gap-3 text-[10px] text-white/85">
-          <span>{formatTime(message.createdAt)}</span>
+          {isLastInGroup ? <span>{formatTime(message.createdAt)}</span> : <span />}
           <div className="flex items-center gap-1.5">
             {copied && <span className="text-[#A8D9A0]">Copied</span>}
             {saved && <span className="text-[#A8D9A0]">Saved to memory</span>}
@@ -163,12 +176,12 @@ const MessageBubbleBase: React.FC<MessageBubbleProps> = ({
   );
 };
 
-// Memoized so that streaming updates to the newest reply don't re-render every
-// older bubble. Callback identity is ignored on purpose; only the message
-// itself and whether "save as memory" is available can change the output.
+// Memoization keeps older messages stable while the newest assistant message streams.
 export const MessageBubble = React.memo(
   MessageBubbleBase,
   (prev, next) =>
     prev.message === next.message &&
-    Boolean(prev.onSaveAsMemory) === Boolean(next.onSaveAsMemory)
+    Boolean(prev.onSaveAsMemory) === Boolean(next.onSaveAsMemory) &&
+    prev.isFirstInGroup === next.isFirstInGroup &&
+    prev.isLastInGroup === next.isLastInGroup
 );
