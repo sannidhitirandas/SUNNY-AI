@@ -7,6 +7,7 @@ import { MessageBubble } from '@/components/chat/MessageBubble';
 import { MessageComposer } from '@/components/chat/MessageComposer';
 import { TypingIndicator } from '@/components/chat/TypingIndicator';
 import { MemoryModal } from '@/components/memories/MemoryModal';
+import { VoiceConversationScreen } from '@/components/chat/VoiceConversationScreen';
 import { MemoryCategory } from '@/types/memory';
 import { getPersonalityLabel } from '@/types/user';
 import type { StarterIntent } from '@/types/chat';
@@ -62,6 +63,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   const [backgroundModalVisible, setBackgroundModalVisible] = useState(false);
   const [memoryModalVisible, setMemoryModalVisible] = useState(false);
   const [memoryInitialContent, setMemoryInitialContent] = useState('');
+  const [voiceModeVisible, setVoiceModeVisible] = useState(false);
 
   const handleScroll = () => {
     const el = messagesScrollRef.current;
@@ -190,6 +192,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
       )}
 
       <ChatHeader
+        onVoicePress={() => setVoiceModeVisible(true)}
         onOptionsPress={() => setOptionsVisible(true)}
         onPersonalityPress={() => setPersonalityModalVisible(true)}
         preferredTone={formattedTone}
@@ -424,6 +427,15 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
             </button>
           </div>
         </div>
+      )}
+
+      {voiceModeVisible && (
+        <VoiceConversationScreen
+          messages={messages}
+          isThinking={isThinking}
+          sendMessage={sendMessage}
+          onClose={() => setVoiceModeVisible(false)}
+        />
       )}
 
       {/* Save memory modal */}
