@@ -382,11 +382,12 @@ export function App() {
     return (
       <div className="sunny-prehome-loading min-h-[100dvh] flex items-center justify-center overflow-hidden">
         <style>{`
-          .sunny-prehome-loading { position:relative; isolation:isolate; background:#121417; color:#F2EFE8; }
+          .sunny-prehome-loading { position:relative; isolation:isolate; background:transparent; color:#F2EFE8; }
           .sunny-prehome-video-backdrop { position:absolute; inset:0; z-index:-1; overflow:hidden; background:#121417; }
-          .sunny-prehome-video-backdrop video { width:100%; height:100%; object-fit:cover; filter:brightness(.58) saturate(.88); }
-          .sunny-prehome-video-backdrop::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,rgba(13,15,18,.38),rgba(18,20,24,.64)); }
+          .sunny-prehome-video-backdrop video { width:100%; height:100%; object-fit:cover; filter:none; }
+          .sunny-prehome-video-backdrop::after { content:''; position:absolute; inset:0; background:transparent; }
           .sunny-prehome-loading .border-\\[\\#FFD84D\\] { border-color:#E8E1D5; }
+          .sunny-prehome-loading-content { text-shadow:0 1px 2px rgba(0,0,0,.98),0 3px 10px rgba(0,0,0,.95),0 8px 24px rgba(0,0,0,.88); }
         `}</style>
         <div className="sunny-prehome-video-backdrop" aria-hidden="true">
           <video autoPlay muted loop playsInline preload="metadata">
