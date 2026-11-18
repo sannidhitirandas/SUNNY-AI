@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
 @import "tailwindcss";
 
 @font-face {
@@ -9,7 +10,7 @@
 }
 
 @theme {
-  --font-sans: 'Gabriola', Georgia, serif;
+  --font-sans: var(--sunny-ui-font), system-ui, sans-serif;
   --color-sunny-bg: #100B22;
   --color-sunny-secondary: #17102C;
   --color-sunny-card: #21163A;
@@ -27,7 +28,7 @@
 }
 
 body {
-  font-family: 'Gabriola', Georgia, serif;
+  font-family: var(--sunny-ui-font), system-ui, sans-serif;
   font-size: 16px;
   background-color: var(--sunny-page-background, #100B22);
   color: var(--sunny-primary-text, #FFFFFF);
@@ -258,7 +259,7 @@ html {
 }
 
 body {
-  font-family: 'Gabriola', Georgia, serif;
+  font-family: var(--sunny-ui-font), system-ui, sans-serif;
   font-size: 16px;
   line-height: 1.55;
 }
@@ -442,7 +443,7 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
 .sunny-chat-ui,
 .sunny-chat-ui button,
 .sunny-chat-ui textarea {
-  font-family: 'Gabriola', Georgia, serif;
+  font-family: var(--sunny-ui-font), system-ui, sans-serif;
 }
 .sunny-chat-header { box-shadow: 0 8px 28px rgba(0,0,0,.12); }
 .sunny-chat-avatar { animation: sunny-avatar-breathe 5s ease-in-out infinite; }
@@ -473,7 +474,7 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
 /* Home screen: Voxa-inspired premium dashboard treatment, using Sunny's palette. */
 .sunny-home-screen {
   isolation: isolate;
-  font-family: 'Gabriola', Georgia, serif;
+  font-family: var(--sunny-ui-font), system-ui, sans-serif;
   scrollbar-width: thin;
 }
 .sunny-home-screen::before {
@@ -543,7 +544,7 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
 /* Memories page: a calm, premium memory-vault surface. */
 .sunny-memories-screen {
   isolation:isolate;
-  font-family: 'Gabriola', Georgia, serif;
+  font-family: var(--sunny-ui-font), system-ui, sans-serif;
 }
 .sunny-memories-hero {
   animation:sunny-memory-enter 480ms cubic-bezier(.2,.8,.2,1) both;
@@ -582,7 +583,7 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
 
 
 /* Settings: grouped, tactile controls with a calm premium mobile-first layout. */
-.sunny-settings-screen { isolation:isolate; font-family: 'Gabriola', Georgia, serif; }
+.sunny-settings-screen { isolation:isolate; font-family: var(--sunny-ui-font), system-ui, sans-serif; }
 .sunny-settings-hero { animation:sunny-settings-enter 480ms cubic-bezier(.2,.8,.2,1) both; box-shadow:0 18px 55px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.055); }
 .sunny-settings-glow { animation:sunny-settings-breathe 7s ease-in-out infinite; }
 .sunny-settings-profile { backdrop-filter:blur(16px); }
@@ -622,7 +623,7 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
 /* Notification preferences: warm schedule dashboard and touch-friendly controls. */
 .sunny-notifications-screen {
   isolation:isolate;
-  font-family: 'Gabriola', Georgia, serif;
+  font-family: var(--sunny-ui-font), system-ui, sans-serif;
 }
 .sunny-notifications-header { animation:sunny-notice-enter 420ms cubic-bezier(.2,.8,.2,1) both; }
 .sunny-notifications-status {
@@ -1147,6 +1148,8 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
 
 /* Sunny design system — shared visual language across web, mobile and native Android. */
 :root {
+  --sunny-ui-font: 'Plus Jakarta Sans';
+  --sunny-script-font: 'Gabriola', Georgia, serif;
   --sunny-bg: #100B22;
   --sunny-surface: #17102C;
   --sunny-card: #21163A;
@@ -1165,7 +1168,7 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
 
 html { scroll-behavior: smooth; }
 body {
-  font-family: 'Gabriola', Georgia, serif;
+  font-family: var(--sunny-ui-font), system-ui, sans-serif;
   letter-spacing: -.008em;
   font-feature-settings: "ss01" on;
 }
@@ -1264,4 +1267,17 @@ button:disabled { cursor: not-allowed; }
 }
 @media (prefers-reduced-motion:reduce) {
   .sunny-app-main > * { animation:none !important; }
+}
+
+
+/* Sunny's expressive signature typography: Gabriola stays for brand/display moments;
+   Plus Jakarta Sans handles the everyday interface for clearer reading. */
+.sunny-app-shell :where(h1, h2),
+.sunny-brand-script,
+.sunny-display-script,
+.sunny-chat-greeting-script {
+  font-family: var(--sunny-script-font);
+}
+.sunny-app-shell :where(button, input, textarea, select, label, small, time) {
+  font-family: var(--sunny-ui-font), system-ui, sans-serif;
 }
