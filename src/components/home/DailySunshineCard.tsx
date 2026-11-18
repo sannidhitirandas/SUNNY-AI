@@ -70,7 +70,6 @@ export const DailySunshineCard: React.FC = () => {
   };
 
   const handleMoodSelect = (mood: MoodId) => {
-    const existing = history[today];
     void saveHistory({
       ...history,
       [today]: { mood, note, updatedAt: new Date().toISOString() },
