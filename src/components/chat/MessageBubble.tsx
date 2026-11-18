@@ -82,11 +82,11 @@ const MessageBubbleBase: React.FC<MessageBubbleProps> = ({
   if (isUser) {
     return (
       <div className={`flex w-full flex-col items-end px-4 sm:px-6 lg:px-10 ${verticalSpacing} ${bottomSpacing} animate-in fade-in slide-in-from-bottom-1 duration-200`}>
-        <div className={`sunny-you-bubble max-w-[88%] border border-[#A78BFA]/20 bg-[#A78BFA] px-4 py-2.5 text-[#100B22] shadow-[0_5px_18px_rgba(167,139,250,0.10)] sm:max-w-[min(70%,42rem)] sm:px-5 ${isFirstInGroup ? 'rounded-t-[22px]' : 'rounded-t-[15px]'} ${isLastInGroup ? 'rounded-br-md rounded-bl-[22px]' : 'rounded-b-[15px]'}`}>
+        <div className={`sunny-you-bubble max-w-[88%] border border-white/10 bg-gradient-to-br from-[#8B2BE2] to-[#D946EF] px-4 py-2.5 text-white shadow-[0_8px_24px_rgba(217,70,239,0.28)] sm:max-w-[min(70%,42rem)] sm:px-5 ${isFirstInGroup ? 'rounded-t-[22px]' : 'rounded-t-[15px]'} ${isLastInGroup ? 'rounded-br-md rounded-bl-[22px]' : 'rounded-b-[15px]'}`}>
           {message.attachments?.length ? (
             <div className="mb-2 space-y-1.5">
               {message.attachments.map((file) => (
-                <div key={file.id} className="flex items-center gap-2 rounded-lg bg-[#100B22]/10 px-2 py-1.5">
+                <div key={file.id} className="flex items-center gap-2 rounded-lg bg-white/15 px-2 py-1.5">
                   <FileText size={14} />
                   <span className="truncate text-xs font-semibold">{file.name}</span>
                   <span className="shrink-0 text-[10px] opacity-70">{formatSize(file.size)}</span>
@@ -114,7 +114,7 @@ const MessageBubbleBase: React.FC<MessageBubbleProps> = ({
         <div className="w-8 shrink-0" aria-hidden="true" />
       )}
       <div
-        className={`sunny-bot-bubble relative max-w-[88%] border border-[#7656A5]/55 bg-gradient-to-br from-[#261a3d] to-[#21163A] px-4 py-2.5 text-white shadow-[0_5px_20px_rgba(0,0,0,0.10)] sm:max-w-[min(70%,42rem)] sm:px-5 ${isFirstInGroup ? 'rounded-t-[22px]' : 'rounded-t-[15px]'} ${isLastInGroup ? 'rounded-bl-md rounded-br-[22px]' : 'rounded-b-[15px]'}`}
+        className={`sunny-bot-bubble relative max-w-[88%] border border-[#7656A5]/55 bg-gradient-to-br from-[#2D1450] to-[#25103F] px-4 py-2.5 text-white shadow-[0_5px_20px_rgba(0,0,0,0.10)] sm:max-w-[min(70%,42rem)] sm:px-5 ${isFirstInGroup ? 'rounded-t-[22px]' : 'rounded-t-[15px]'} ${isLastInGroup ? 'rounded-bl-md rounded-br-[22px]' : 'rounded-b-[15px]'}`}
         onTouchStart={handleTouchStart}
         onTouchEnd={clearLongPress}
         onTouchMove={clearLongPress}
@@ -135,7 +135,7 @@ const MessageBubbleBase: React.FC<MessageBubbleProps> = ({
               aria-label="Open message options"
               aria-expanded={menuOpen}
               onClick={() => setMenuOpen((open) => !open)}
-              className="flex h-7 w-7 items-center justify-center rounded-full text-white transition-colors hover:bg-[#302149] hover:text-[#A78BFA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A78BFA]/70 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+              className="flex h-7 w-7 items-center justify-center rounded-full text-white transition-colors hover:bg-[#381A60] hover:text-[#A78BFA] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A78BFA]/70 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
               title="Message options"
             >
               <MoreHorizontal size={16} />
@@ -151,13 +151,13 @@ const MessageBubbleBase: React.FC<MessageBubbleProps> = ({
               className="fixed inset-0 z-20 cursor-default"
               onClick={() => setMenuOpen(false)}
             />
-            <div className="absolute bottom-10 right-2 z-30 min-w-48 rounded-xl border border-[#7656A5] bg-[#17102C] p-1.5 shadow-xl shadow-black/30">
+            <div className="absolute bottom-10 right-2 z-30 min-w-48 rounded-xl border border-[#7656A5] bg-[#1A0A2E] p-1.5 shadow-xl shadow-black/30">
               {onSaveAsMemory && (
                 <button
                   type="button"
                   onClick={handleSaveMemory}
                   disabled={saved}
-                  className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm text-white transition-colors hover:bg-[#302149] hover:text-[#A78BFA] disabled:text-[#B9A6E8]"
+                  className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm text-white transition-colors hover:bg-[#381A60] hover:text-[#A78BFA] disabled:text-[#B9A6E8]"
                 >
                   {saved ? <Check size={15} /> : <BookmarkPlus size={15} />}
                   <span>{saved ? 'Saved to memory' : 'Remember this'}</span>
@@ -166,7 +166,7 @@ const MessageBubbleBase: React.FC<MessageBubbleProps> = ({
               <button
                 type="button"
                 onClick={handleCopy}
-                className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm text-white transition-colors hover:bg-[#302149] hover:text-[#A78BFA]"
+                className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left text-sm text-white transition-colors hover:bg-[#381A60] hover:text-[#A78BFA]"
               >
                 <Copy size={15} />
                 <span>Copy message</span>

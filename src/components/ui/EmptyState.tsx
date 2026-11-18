@@ -18,9 +18,9 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 }) => {
   return (
     <div className="flex flex-col items-center justify-center p-8 text-center max-w-sm mx-auto">
-      {icon && <div className="mb-4 text-[#FFD84D]">{icon}</div>}
+      {icon && <div className="mb-4 text-[#D946EF]">{icon}</div>}
       <h3 className="text-base font-semibold text-white mb-2">{title}</h3>
-      <p className="text-xs text-[#C6B8E5] leading-relaxed mb-5">{description}</p>
+      <p className="text-xs text-[#D6C2F2] leading-relaxed mb-5">{description}</p>
       {actionTitle && onAction && (
         <AppButton
           title={actionTitle}

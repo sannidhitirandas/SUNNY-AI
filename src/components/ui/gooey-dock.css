@@ -76,10 +76,10 @@
 }
 .gooey-dock__item:hover,
 .gooey-dock__item:focus-visible,
-.gooey-dock__item--active { color:#FFD84D; }
+.gooey-dock__item--active { color:#D946EF; }
 .gooey-dock__item--emphasized { transform:translateY(-2px) scale(1.06); }
 .gooey-dock__item:active { transform:translateY(0) scale(.96); }
-.gooey-dock__item:focus-visible { outline:2px solid rgba(255,216,77,.8); outline-offset:2px; }
+.gooey-dock__item:focus-visible { outline:2px solid rgba(217,70,239,.8); outline-offset:2px; }
 .gooey-dock__icon-wrap { display:flex; align-items:center; justify-content:center; min-height:1.55rem; }
 .gooey-dock__label {
   max-width:100%;

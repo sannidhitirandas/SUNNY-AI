@@ -40,7 +40,7 @@ export const NotificationPreferencesScreen: React.FC<NotificationPreferencesScre
       onChange={(event) => {
         if (isValidClockTime(event.target.value)) void updateSetting(key, event.target.value);
       }}
-      className="sunny-notifications-time w-[116px] rounded-xl border border-[#604477]/55 bg-[#1B1430] px-2.5 py-2 text-xs font-semibold text-white shadow-inner [color-scheme:dark] transition-colors focus:border-[#FFD84D]/70 focus:outline-none focus:ring-2 focus:ring-[#FFD84D]/10"
+      className="sunny-notifications-time w-[116px] rounded-xl border border-[#6B3F96]/55 bg-[#1E0B33] px-2.5 py-2 text-xs font-semibold text-white shadow-inner [color-scheme:dark] transition-colors focus:border-[#D946EF]/70 focus:outline-none focus:ring-2 focus:ring-[#D946EF]/10"
     />
   );
 
@@ -121,7 +121,7 @@ export const NotificationPreferencesScreen: React.FC<NotificationPreferencesScre
         <button
           type="button"
           onClick={onBack}
-          className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[#604477]/45 bg-[#21163A] text-[#C6B8E5] shadow-sm transition-all hover:border-[#FFD84D]/35 hover:text-white active:scale-95"
+          className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[#6B3F96]/45 bg-[#25103F] text-[#D6C2F2] shadow-sm transition-all hover:border-[#D946EF]/35 hover:text-white active:scale-95"
           aria-label="Back to settings"
         >
           <ArrowLeft size={18} />
@@ -130,10 +130,10 @@ export const NotificationPreferencesScreen: React.FC<NotificationPreferencesScre
       </div>
 
       {/* Delivery and permission status */}
-      <div className="sunny-notifications-status relative isolate mb-6 overflow-hidden rounded-[26px] border border-[#FFD84D]/25 bg-gradient-to-br from-[#302044] via-[#211633] to-[#17102C] p-4 shadow-[0_16px_40px_rgba(0,0,0,.2)] sm:p-5">
+      <div className="sunny-notifications-status relative isolate mb-6 overflow-hidden rounded-[26px] border border-[#D946EF]/25 bg-gradient-to-br from-[#381A60] via-[#25103F] to-[#1A0A2E] p-4 shadow-[0_16px_40px_rgba(0,0,0,.2)] sm:p-5">
         <div className="relative mb-2 flex items-center gap-2">
-          <Info size={18} className="text-[#FFD84D]" />
-          <h2 className="text-sm font-bold text-[#FFD84D]">Android local notifications</h2>
+          <Info size={18} className="text-[#D946EF]" />
+          <h2 className="text-sm font-bold text-[#D946EF]">Android local notifications</h2>
         </div>
         <p className="relative text-xs leading-relaxed text-[#D0C3E2]">
           {permissionSummary} Scheduled reminders use local Android alarms and contain no chat or memory details. Android may defer inexact alarms, especially in battery-saving modes. The web app saves these preferences but does not deliver local notifications.
@@ -155,7 +155,7 @@ export const NotificationPreferencesScreen: React.FC<NotificationPreferencesScre
         <SettingsRow
           title="Enable Notifications"
           subtitle="Your preference is separate from Android permission"
-          icon={<Bell size={16} className="text-[#FFD84D]" />}
+          icon={<Bell size={16} className="text-[#D946EF]" />}
           isSwitch
           switchValue={preferences.notificationsEnabled}
           onSwitchChange={handleMasterSwitch}
@@ -167,14 +167,14 @@ export const NotificationPreferencesScreen: React.FC<NotificationPreferencesScre
         <SettingsRow
           title="Morning time"
           subtitle={`Morning Sunshine (${formatTime(prefs.morningTime)})`}
-          icon={<Sun size={16} className="text-[#FFD84D]" />}
+          icon={<Sun size={16} className="text-[#D946EF]" />}
           rightContent={timeControl('morningTime')}
           showChevron={false}
         />
         <SettingsRow
           title="Morning Sunshine"
           subtitle="Enable or pause the morning slot"
-          icon={<Sun size={16} className="text-[#FFD84D]" />}
+          icon={<Sun size={16} className="text-[#D946EF]" />}
           isSwitch
           switchValue={prefs.morningEnabled}
           onSwitchChange={(val) => updateSetting('morningEnabled', val)}
@@ -197,14 +197,14 @@ export const NotificationPreferencesScreen: React.FC<NotificationPreferencesScre
         <SettingsRow
           title="Evening time"
           subtitle={`Evening Wind-down (${formatTime(prefs.eveningTime)})`}
-          icon={<Moon size={16} className="text-[#C6B8E5]" />}
+          icon={<Moon size={16} className="text-[#D6C2F2]" />}
           rightContent={timeControl('eveningTime')}
           showChevron={false}
         />
         <SettingsRow
           title="Evening Wind-down"
           subtitle="Enable or pause the evening slot"
-          icon={<Moon size={16} className="text-[#C6B8E5]" />}
+          icon={<Moon size={16} className="text-[#D6C2F2]" />}
           isSwitch
           switchValue={prefs.eveningEnabled}
           onSwitchChange={(val) => updateSetting('eveningEnabled', val)}
@@ -224,13 +224,13 @@ export const NotificationPreferencesScreen: React.FC<NotificationPreferencesScre
         <SettingsRow
           title="Daily Cap"
           subtitle="Maximum notifications per day"
-          icon={<Gauge size={16} className="text-[#FFD84D]" />}
+          icon={<Gauge size={16} className="text-[#D946EF]" />}
           rightContent={(
             <select
               aria-label="Daily notification limit"
               value={prefs.dailyLimit}
               onChange={(event) => updateSetting('dailyLimit', Number(event.target.value))}
-              className="sunny-notifications-select rounded-xl border border-[#604477]/55 bg-[#1B1430] px-2.5 py-2 text-xs font-semibold text-white shadow-inner transition-colors focus:border-[#FFD84D]/70 focus:outline-none focus:ring-2 focus:ring-[#FFD84D]/10"
+              className="sunny-notifications-select rounded-xl border border-[#6B3F96]/55 bg-[#1E0B33] px-2.5 py-2 text-xs font-semibold text-white shadow-inner transition-colors focus:border-[#D946EF]/70 focus:outline-none focus:ring-2 focus:ring-[#D946EF]/10"
             >
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((limit) => <option key={limit} value={limit}>{limit} per day</option>)}
             </select>
@@ -240,7 +240,7 @@ export const NotificationPreferencesScreen: React.FC<NotificationPreferencesScre
         <SettingsRow
           title="Quiet Hours"
           subtitle={`Mute alerts from ${formatTime(prefs.quietHoursStart)} to ${formatTime(prefs.quietHoursEnd)}`}
-          icon={<VolumeX size={16} className="text-[#C6B8E5]" />}
+          icon={<VolumeX size={16} className="text-[#D6C2F2]" />}
           isSwitch
           switchValue={prefs.quietHoursEnabled}
           onSwitchChange={(val) => updateSetting('quietHoursEnabled', val)}
@@ -248,14 +248,14 @@ export const NotificationPreferencesScreen: React.FC<NotificationPreferencesScre
         <SettingsRow
           title="Quiet Hours Start"
           subtitle="Local time"
-          icon={<Moon size={16} className="text-[#C6B8E5]" />}
+          icon={<Moon size={16} className="text-[#D6C2F2]" />}
           rightContent={timeControl('quietHoursStart')}
           showChevron={false}
         />
         <SettingsRow
           title="Quiet Hours End"
           subtitle="Local time"
-          icon={<Moon size={16} className="text-[#C6B8E5]" />}
+          icon={<Moon size={16} className="text-[#D6C2F2]" />}
           rightContent={timeControl('quietHoursEnd')}
           showChevron={false}
         />
@@ -274,13 +274,13 @@ export const NotificationPreferencesScreen: React.FC<NotificationPreferencesScre
           ] satisfies { slot: NotificationSlot; label: string; name: string; time: string }[]).map((item) => {
             const content = getNotificationContent(item.slot, localDateKey(new Date()));
             return (
-              <AppCard key={item.slot} className="sunny-notifications-preview-card border border-[#604477]/40 bg-gradient-to-br from-[#261B3B] to-[#191229] p-4 shadow-[0_10px_26px_rgba(0,0,0,.13)]">
+              <AppCard key={item.slot} className="sunny-notifications-preview-card border border-[#6B3F96]/40 bg-gradient-to-br from-[#261B3B] to-[#1E0B33] p-4 shadow-[0_10px_26px_rgba(0,0,0,.13)]">
                 <div className="mb-2 flex items-center justify-between gap-3">
                   <Badge label={item.label} variant="yellow" />
-                  <span className="text-xs text-[#9B8AB9]">{formatTime(item.time)}</span>
+                  <span className="text-xs text-[#AA92CC]">{formatTime(item.time)}</span>
                 </div>
                 <h4 className="mb-1 text-sm font-semibold tracking-tight text-white">{item.name}</h4>
-                <p className="text-xs italic leading-relaxed text-[#C6B8E5]">{content.body}</p>
+                <p className="text-xs italic leading-relaxed text-[#D6C2F2]">{content.body}</p>
               </AppCard>
             );
           })}

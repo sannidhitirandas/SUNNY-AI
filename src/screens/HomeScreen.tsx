@@ -51,11 +51,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       <style>{`
         .sunny-home-screen {
           --sunny-home-accent: #B99AFF;
-          --sunny-home-accent-bright: #D7C2FF;\n          --sunny-home-sunshine: #F5D27A;
+          --sunny-home-accent-bright: #D7C2FF;\n          --sunny-home-sunshine: #E879F9;
           background:
             radial-gradient(ellipse at 50% -8%, rgba(126,83,190,.30), transparent 48%),
             radial-gradient(ellipse at 100% 38%, rgba(91,54,151,.13), transparent 34%),
-            linear-gradient(155deg,#100B22 0%,#17102C 52%,#120D25 100%) !important;
+            linear-gradient(155deg,#12051F 0%,#1A0A2E 52%,#14061F 100%) !important;
         }
         .sunny-home-screen .sunny-home-content { max-width: 1120px; margin: 0 auto; }
         .sunny-home-screen .sunny-home-hero {
@@ -68,10 +68,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         .sunny-home-screen .sunny-hero-glow { background: rgba(167,139,250,.24) !important; }
         .sunny-home-screen .sunny-purple-cta,
         .sunny-home-screen .sunny-purple-cta button {
-          background: linear-gradient(115deg,#A78BFA,#7C3AED) !important;
+          background: linear-gradient(115deg,#D946EF,#8B2BE2) !important;
           color: #fff !important;
           border-color: rgba(221,205,255,.36) !important;
-          box-shadow: 0 9px 28px rgba(124,58,237,.32) !important;
+          box-shadow: 0 9px 28px rgba(139,43,226,.32) !important;
         }
         .sunny-home-screen .sunny-purple-cta svg { color:#fff !important; }
         .sunny-home-screen .sunny-vibe-card {
@@ -114,19 +114,19 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-xl font-extrabold tracking-tight text-white">Sunny</h1>
-                <span className="rounded-full border border-[#F5D27A]/35 bg-[#F5D27A]/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[.16em] text-[#FFE29A]">AI companion</span>
+                <span className="rounded-full border border-[#E879F9]/35 bg-[#E879F9]/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[.16em] text-[#FFE29A]">AI companion</span>
               </div>
               <p className="text-xs text-[#BFB0D8]">Your little corner of sunshine</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <span className="hidden items-center gap-1.5 text-[11px] font-medium text-[#C8B7E7] sm:inline-flex">
-              <Sparkles size={13} className="text-[#F5D27A]" /> Here for you
+              <Sparkles size={13} className="text-[#E879F9]" /> Here for you
             </span>
             <button
               type="button"
               onClick={() => onNavigateToTab('settings')}
-              className="cursor-pointer rounded-xl border border-[#A78BFA]/20 bg-[#2B1E45]/80 p-2.5 text-[#D7C2FF] transition-colors hover:border-[#B99AFF]/55 hover:bg-[#39265B] hover:text-white"
+              className="cursor-pointer rounded-xl border border-[#A78BFA]/20 bg-[#2D1450]/80 p-2.5 text-[#D7C2FF] transition-colors hover:border-[#B99AFF]/55 hover:bg-[#39265B] hover:text-white"
               aria-label="Open settings"
             >
               <Settings size={18} />
@@ -143,26 +143,26 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           <button
             type="button"
             onClick={handleTalkToSunny}
-            className="group relative flex min-h-[104px] items-center gap-4 overflow-hidden rounded-[24px] border border-[#B99AFF]/25 bg-gradient-to-br from-[#3B2860] to-[#211633] p-4 text-left shadow-[0_12px_30px_rgba(5,2,14,.16)] transition-all hover:-translate-y-1 hover:border-[#F5D27A]/50 hover:shadow-[0_16px_36px_rgba(5,2,14,.24)] active:scale-[.99]"
+            className="group relative flex min-h-[104px] items-center gap-4 overflow-hidden rounded-[24px] border border-[#B99AFF]/25 bg-gradient-to-br from-[#3B2860] to-[#25103F] p-4 text-left shadow-[0_12px_30px_rgba(5,2,14,.16)] transition-all hover:-translate-y-1 hover:border-[#E879F9]/50 hover:shadow-[0_16px_36px_rgba(5,2,14,.24)] active:scale-[.99]"
           >
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#F5D27A] text-[#241735] shadow-[0_6px_20px_rgba(245,210,122,.18)]"><MessageCircle size={22}/></span>
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#E879F9] text-[#2A1347] shadow-[0_6px_20px_rgba(232,121,249,.18)]"><MessageCircle size={22}/></span>
             <span className="min-w-0 flex-1">
               <span className="block text-sm font-bold text-white">Start a new chat</span>
               <span className="mt-1 block text-xs leading-relaxed text-[#CDBEE4]">A fresh conversation with Sunny</span>
             </span>
-            <ArrowUpRight size={17} className="shrink-0 text-[#F5D27A] transition-transform group-hover:-translate-y-1 group-hover:translate-x-1"/>
+            <ArrowUpRight size={17} className="shrink-0 text-[#E879F9] transition-transform group-hover:-translate-y-1 group-hover:translate-x-1"/>
           </button>
           <button
             type="button"
             onClick={() => onNavigateToTab('memories')}
-            className="group relative flex min-h-[104px] items-center gap-4 overflow-hidden rounded-[24px] border border-[#B99AFF]/25 bg-gradient-to-br from-[#30234B] to-[#1B142C] p-4 text-left shadow-[0_12px_30px_rgba(5,2,14,.16)] transition-all hover:-translate-y-1 hover:border-[#F5D27A]/50 hover:shadow-[0_16px_36px_rgba(5,2,14,.24)] active:scale-[.99]"
+            className="group relative flex min-h-[104px] items-center gap-4 overflow-hidden rounded-[24px] border border-[#B99AFF]/25 bg-gradient-to-br from-[#30234B] to-[#1B142C] p-4 text-left shadow-[0_12px_30px_rgba(5,2,14,.16)] transition-all hover:-translate-y-1 hover:border-[#E879F9]/50 hover:shadow-[0_16px_36px_rgba(5,2,14,.24)] active:scale-[.99]"
           >
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-[#F5D27A]/20 bg-[#F5D27A]/10 text-[#F5D27A]"><Bookmark size={21}/></span>
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-[#E879F9]/20 bg-[#E879F9]/10 text-[#E879F9]"><Bookmark size={21}/></span>
             <span className="min-w-0 flex-1">
               <span className="block text-sm font-bold text-white">Memory vault</span>
               <span className="mt-1 block text-xs leading-relaxed text-[#CDBEE4]">Your moments, saved with care</span>
             </span>
-            <ArrowUpRight size={17} className="shrink-0 text-[#F5D27A] transition-transform group-hover:-translate-y-1 group-hover:translate-x-1"/>
+            <ArrowUpRight size={17} className="shrink-0 text-[#E879F9] transition-transform group-hover:-translate-y-1 group-hover:translate-x-1"/>
           </button>
         </section>
 

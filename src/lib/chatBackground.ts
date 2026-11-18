@@ -62,12 +62,12 @@ export const CHAT_BACKGROUNDS: ChatBackgroundOption[] = [
     // PC: indigo night, plum flower field, pink clouds, warm window glow
     pc: {
       dark: { sunny: ['#2A1B52', '#3A2368', '#5A2A6E'], you: ['#8F2E7E', '#B23C8C', '#CC5A6E'], youText: '#FFFFFF' },
-      light: { sunny: ['#FBEFFA', '#F1E6FF', '#FFE9EF'], you: ['#F7C6E3', '#E3CCFF', '#FFD9B8'], youText: '#2A1740' },
+      light: { sunny: ['#FBEFFA', '#F1E6FF', '#FFE9EF'], you: ['#F7C6E3', '#E3CCFF', '#FFD9B8'], youText: '#2D1450' },
     },
     // Mobile: dusk-purple sky, glowing peach moon, blossom tree
     mobile: {
       dark: { sunny: ['#2E2560', '#43306E', '#6B3A6E'], you: ['#8A4DB8', '#BC4F78', '#CC6445'], youText: '#FFFFFF' },
-      light: { sunny: ['#F6EEFA', '#FBE9EE', '#FFEFE3'], you: ['#E3CCF5', '#FAC3CF', '#FFD7B0'], youText: '#2A1740' },
+      light: { sunny: ['#F6EEFA', '#FBE9EE', '#FFEFE3'], you: ['#E3CCF5', '#FAC3CF', '#FFD7B0'], youText: '#2D1450' },
     },
   }),
 
@@ -75,12 +75,12 @@ export const CHAT_BACKGROUNDS: ChatBackgroundOption[] = [
     // PC: deep blue room, neon cyan curtains, violet skyline, magenta glow
     pc: {
       dark: { sunny: ['#12255C', '#2A1A6B', '#5A1A6A'], you: ['#0E7C9A', '#4C3FD0', '#B02A8C'], youText: '#FFFFFF' },
-      light: { sunny: ['#E8F6FB', '#EEE8FF', '#FBE9F5'], you: ['#B8ECF8', '#CFC4FF', '#F7C2E4'], youText: '#2A1740' },
+      light: { sunny: ['#E8F6FB', '#EEE8FF', '#FBE9F5'], you: ['#B8ECF8', '#CFC4FF', '#F7C2E4'], youText: '#2D1450' },
     },
     // Mobile: bright white wall, purple bougainvillea, green leaves
     mobile: {
       dark: { sunny: ['#3A2A6E', '#52358A', '#6E3F96'], you: ['#6A3DB8', '#8A4CC8', '#3F8F86'], youText: '#FFFFFF' },
-      light: { sunny: ['#F4EEFB', '#EFE6FA', '#E6F3EA'], you: ['#DCC9F5', '#E8C8F5', '#BFE6D8'], youText: '#2A1740' },
+      light: { sunny: ['#F4EEFB', '#EFE6FA', '#E6F3EA'], you: ['#DCC9F5', '#E8C8F5', '#BFE6D8'], youText: '#2D1450' },
     },
   }),
 
@@ -88,12 +88,12 @@ export const CHAT_BACKGROUNDS: ChatBackgroundOption[] = [
     // PC: twilight blue, sakura pink and violet clouds
     pc: {
       dark: { sunny: ['#1E2A6A', '#4A2A7A', '#7A2A62'], you: ['#C23A86', '#8A3FC4', '#4A58D8'], youText: '#FFFFFF' },
-      light: { sunny: ['#FDEAF3', '#EAEEFF', '#F5E8FF'], you: ['#FBB9D9', '#C7D2FF', '#E2C3FA'], youText: '#2A1740' },
+      light: { sunny: ['#FDEAF3', '#EAEEFF', '#F5E8FF'], you: ['#FBB9D9', '#C7D2FF', '#E2C3FA'], youText: '#2D1450' },
     },
     // Mobile: purple bougainvillea framing a pink-lilac cloudy sky
     mobile: {
       dark: { sunny: ['#33265E', '#4C2F78', '#6B3A82'], you: ['#7B4CC4', '#A055C0', '#C0609A'], youText: '#FFFFFF' },
-      light: { sunny: ['#F3ECFB', '#F8E9F2', '#F1E8FF'], you: ['#D6C4F2', '#EEC1DD', '#F6C6D2'], youText: '#2A1740' },
+      light: { sunny: ['#F3ECFB', '#F8E9F2', '#F1E8FF'], you: ['#D6C4F2', '#EEC1DD', '#F6C6D2'], youText: '#2D1450' },
     },
   }),
 
@@ -101,12 +101,12 @@ export const CHAT_BACKGROUNDS: ChatBackgroundOption[] = [
     // PC: deep violet sky, magenta clouds, peach horizon
     pc: {
       dark: { sunny: ['#2E1068', '#4A1A82', '#7A1F7A'], you: ['#6A2FD0', '#A02FB8', '#D0507A'], youText: '#FFFFFF' },
-      light: { sunny: ['#F0E8FF', '#F9E8FA', '#FFEFE6'], you: ['#D9C2FF', '#F5BBE9', '#FFD3B8'], youText: '#2A1740' },
+      light: { sunny: ['#F0E8FF', '#F9E8FA', '#FFEFE6'], you: ['#D9C2FF', '#F5BBE9', '#FFD3B8'], youText: '#2D1450' },
     },
     // Mobile: pastel sea sunset, periwinkle sky, pink reflections
     mobile: {
       dark: { sunny: ['#2D2A6E', '#493C86', '#7A4A86'], you: ['#5B58C8', '#9A5AC0', '#CC5F78'], youText: '#FFFFFF' },
-      light: { sunny: ['#ECEBFA', '#F3E9FA', '#FFEDE6'], you: ['#C9C6F2', '#E6C4F0', '#FFCFC0'], youText: '#2A1740' },
+      light: { sunny: ['#ECEBFA', '#F3E9FA', '#FFEDE6'], you: ['#C9C6F2', '#E6C4F0', '#FFCFC0'], youText: '#2D1450' },
     },
   }),
 
@@ -114,12 +114,12 @@ export const CHAT_BACKGROUNDS: ChatBackgroundOption[] = [
     // PC: lavender blooms, pink clouds, golden sunrise
     pc: {
       dark: { sunny: ['#281F63', '#43297C', '#6B3470'], you: ['#6F46D8', '#A83FA8', '#BE6A38'], youText: '#FFFFFF' },
-      light: { sunny: ['#F1EAFF', '#FCEAF3', '#FFF3D6'], you: ['#DCCBFF', '#FAC0DE', '#FFE49A'], youText: '#2A1740' },
+      light: { sunny: ['#F1EAFF', '#FCEAF3', '#FFF3D6'], you: ['#DCCBFF', '#FAC0DE', '#FFE49A'], youText: '#2D1450' },
     },
     // Mobile: sunlit lilac asters with golden centres
     mobile: {
       dark: { sunny: ['#2E2766', '#463A82', '#5E4A92'], you: ['#6F58D0', '#9567CC', '#A8742A'], youText: '#FFFFFF' },
-      light: { sunny: ['#F0ECFB', '#F5EEFB', '#FFF4DA'], you: ['#D8CDF5', '#E6D0F2', '#FFE1A8'], youText: '#2A1740' },
+      light: { sunny: ['#F0ECFB', '#F5EEFB', '#FFF4DA'], you: ['#D8CDF5', '#E6D0F2', '#FFE1A8'], youText: '#2D1450' },
     },
   }),
 ];

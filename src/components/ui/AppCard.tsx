@@ -25,11 +25,11 @@ export const AppCard: React.FC<AppCardProps> = ({
       data-card-interactive={isClickable ? 'true' : undefined}
       className={`sunny-app-card rounded-2xl border transition-all duration-200 ${
         elevated
-          ? 'bg-[#261a42] border-[#3e2c60] shadow-lg'
-          : 'bg-[#21163A] border-[#392858]'
+          ? 'bg-[#2D1450] border-[#4D2C78] shadow-lg'
+          : 'bg-[#25103F] border-[#4A2A73]'
       } ${
         isClickable
-          ? 'cursor-pointer hover:border-[#FFD84D]/50 hover:bg-[#2b1d4a] active:scale-[0.99]'
+          ? 'cursor-pointer hover:border-[#D946EF]/50 hover:bg-[#31175A] active:scale-[0.99]'
           : ''
       } ${className}`}
       {...props}

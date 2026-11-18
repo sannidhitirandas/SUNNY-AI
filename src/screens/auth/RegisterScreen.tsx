@@ -85,9 +85,9 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
       <style>{`
         .reg-screen {
           isolation: isolate;
-          background: radial-gradient(ellipse at 50% 12%, #38235B 0%, #211435 44%, #100B1D 100%);
+          background: radial-gradient(ellipse at 50% 12%, #3E1F68 0%, #25103F 44%, #12051F 100%);
         }
-        .reg-cta .sunny-app-button { background: linear-gradient(135deg,#FFE98A,#FFD84D) !important; color: #21152F !important; box-shadow: 0 10px 28px -12px rgba(255,216,77,.55) !important; }
+        .reg-cta .sunny-app-button { background: linear-gradient(135deg,#F0ABFC,#D946EF) !important; color: #25103F !important; box-shadow: 0 10px 28px -12px rgba(217,70,239,.55) !important; }
         .reg-cta .sunny-app-button:hover { background: linear-gradient(135deg,#FFF0B2,#FFE16A) !important; }
         .reg-screen .sunny-auth-shell { position: relative; z-index: 2; }
         .reg-screen .reg-hero { position: relative; z-index: 3; }
@@ -96,7 +96,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
         .reg-sparkle {
           position: absolute;
           border-radius: 9999px;
-          background: #FFD84D;
+          background: #D946EF;
           box-shadow: 0 0 8px 1px rgba(218, 199, 169, 0.32);
           opacity: 0;
           pointer-events: none;
@@ -129,8 +129,8 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
         }
         .reg-card .sunny-app-field::placeholder { color: rgba(222,207,243,.72); }
         .reg-card .sunny-app-field:focus {
-          border-color: rgba(255,216,77,.9);
-          box-shadow: 0 0 0 3px rgba(255,216,77,.13);
+          border-color: rgba(217,70,239,.9);
+          box-shadow: 0 0 0 3px rgba(217,70,239,.13);
         }
         .reg-card input:focus { outline: none; }
         .reg-hero {
@@ -288,12 +288,12 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
           </form>
         </div>
 
-        <div className="mt-6 text-center text-sm text-[#C6B8E5]">
+        <div className="mt-6 text-center text-sm text-[#D6C2F2]">
           Already have an account?{' '}
           <button
             type="button"
             onClick={onNavigateToLogin}
-            className="ml-1 cursor-pointer font-bold text-[#FFE27A] hover:underline"
+            className="ml-1 cursor-pointer font-bold text-[#F0ABFC] hover:underline"
           >
             Sign In
           </button>

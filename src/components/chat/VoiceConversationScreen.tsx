@@ -142,7 +142,7 @@ export const VoiceConversationScreen: React.FC<VoiceConversationScreenProps> = (
   return (
     <section className="sunny-voice-mode fixed inset-0 z-[100] flex min-h-0 flex-col overflow-hidden text-white" role="dialog" aria-modal="true" aria-label="Voice conversation with Sunny">
       <style>{`
-        .sunny-voice-mode { background:radial-gradient(ellipse at 50% 38%,rgba(139,92,246,.28),transparent 43%),radial-gradient(ellipse at 50% 100%,rgba(91,33,182,.2),transparent 55%),linear-gradient(155deg,#100B22,#1D1237 55%,#100B22); }
+        .sunny-voice-mode { background:radial-gradient(ellipse at 50% 38%,rgba(139,92,246,.28),transparent 43%),radial-gradient(ellipse at 50% 100%,rgba(91,33,182,.2),transparent 55%),linear-gradient(155deg,#12051F,#1D1237 55%,#12051F); }
         .sunny-voice-orb { background:radial-gradient(circle at 34% 28%,#E9D5FF 0%,#C4B5FD 16%,#8B5CF6 48%,#5B21B6 78%,#32105F 100%); box-shadow:0 0 35px rgba(167,139,250,.35),0 0 100px rgba(139,92,246,.22),inset -12px -16px 30px rgba(35,12,76,.4),inset 8px 8px 24px rgba(255,255,255,.35); }
         .sunny-voice-orb::before,.sunny-voice-orb::after { content:''; position:absolute; inset:-18px; border:1px solid rgba(196,181,253,.22); border-radius:9999px; }
         .sunny-voice-orb::after { inset:-36px; border-color:rgba(196,181,253,.11); }
@@ -170,7 +170,7 @@ export const VoiceConversationScreen: React.FC<VoiceConversationScreenProps> = (
           </div>
         </div>
         <p className="max-w-sm text-xl font-semibold tracking-tight text-white">{isThinking ? 'Give me a moment…' : speaking ? 'I’m right here.' : listening ? 'I’m listening.' : 'Talk to me, anytime.'}</p>
-        <p className="mt-2 min-h-6 max-w-sm text-sm leading-relaxed text-[#C6B8E5]">{transcript || (error ? error : 'A quiet space to talk things through, hands-free.')}</p>
+        <p className="mt-2 min-h-6 max-w-sm text-sm leading-relaxed text-[#D6C2F2]">{transcript || (error ? error : 'A quiet space to talk things through, hands-free.')}</p>
         {error && <button type="button" onClick={() => { setError(''); startListening(); }} className="mt-3 text-xs font-semibold text-[#D8B4FE] underline underline-offset-4">Try microphone again</button>}
         <div className="mt-12 flex items-center gap-7">
           <button type="button" onClick={() => { stopListening(); stopSpeaking(); }} className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/[.06] text-[#D8CCF3]" aria-label="Stop audio"><VolumeX size={19}/></button>

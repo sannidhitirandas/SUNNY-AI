@@ -39,15 +39,15 @@ export const PrivacyScreen: React.FC<PrivacyScreenProps> = ({ onBack, onResetToO
   const getIcon = (iconName: string) => {
     switch (iconName) {
       case 'ShieldCheck':
-        return <ShieldCheck size={20} className="text-[#FFD84D]" />;
+        return <ShieldCheck size={20} className="text-[#D946EF]" />;
       case 'Heart':
         return <Heart size={20} className="text-[#FF8D9A]" />;
       case 'Lock':
-        return <Lock size={20} className="text-[#FFD84D]" />;
+        return <Lock size={20} className="text-[#D946EF]" />;
       case 'Trash2':
         return <Trash2 size={20} className="text-[#FF8D9A]" />;
       default:
-        return <ShieldCheck size={20} className="text-[#FFD84D]" />;
+        return <ShieldCheck size={20} className="text-[#D946EF]" />;
     }
   };
 
@@ -88,7 +88,7 @@ export const PrivacyScreen: React.FC<PrivacyScreenProps> = ({ onBack, onResetToO
         <button
           type="button"
           onClick={onBack}
-          className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#21163A] border border-[#392858] text-[#C6B8E5] hover:text-white transition-colors cursor-pointer"
+          className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#25103F] border border-[#4A2A73] text-[#D6C2F2] hover:text-white transition-colors cursor-pointer"
           aria-label="Back to settings"
         >
           <ArrowLeft size={18} />
@@ -97,9 +97,9 @@ export const PrivacyScreen: React.FC<PrivacyScreenProps> = ({ onBack, onResetToO
       </div>
 
       {/* Intro Card */}
-      <AppCard className="sunny-privacy-intro p-5 mb-5 border-[#FFD84D]/25 bg-[#17102C]">
+      <AppCard className="sunny-privacy-intro p-5 mb-5 border-[#D946EF]/25 bg-[#1A0A2E]">
         <h2 className="text-base font-bold text-white mb-1.5">Where Sunny data is stored</h2>
-        <p className="text-xs text-[#C6B8E5] leading-relaxed">
+        <p className="text-xs text-[#D6C2F2] leading-relaxed">
           {user
             ? 'You are signed in. Chat history, memories, and preferences are associated with your Supabase account.'
             : 'You are using Sunny as a guest. Chat history, memories, and preferences are saved on this device.'}
@@ -109,13 +109,13 @@ export const PrivacyScreen: React.FC<PrivacyScreenProps> = ({ onBack, onResetToO
       {/* Highlights */}
       <div className="space-y-3 mb-6">
         {highlights.map((h, i) => (
-          <div key={i} className="sunny-privacy-highlight flex items-start gap-3.5 p-3 rounded-2xl bg-[#21163A] border border-[#392858]">
-            <div className="w-9 h-9 rounded-xl bg-[#302149] flex items-center justify-center shrink-0 mt-0.5">
+          <div key={i} className="sunny-privacy-highlight flex items-start gap-3.5 p-3 rounded-2xl bg-[#25103F] border border-[#4A2A73]">
+            <div className="w-9 h-9 rounded-xl bg-[#381A60] flex items-center justify-center shrink-0 mt-0.5">
               {getIcon(h.icon)}
             </div>
             <div>
               <h3 className="text-sm font-semibold text-white">{h.title}</h3>
-              <p className="text-xs text-[#C6B8E5] leading-relaxed mt-0.5">{h.description}</p>
+              <p className="text-xs text-[#D6C2F2] leading-relaxed mt-0.5">{h.description}</p>
             </div>
           </div>
         ))}
@@ -126,7 +126,7 @@ export const PrivacyScreen: React.FC<PrivacyScreenProps> = ({ onBack, onResetToO
         <SettingsRow
           title="Sunny Memory Active"
           subtitle={`Memory is ${preferences.memoryEnabled ? 'on' : 'off'} for this ${user ? 'account' : 'device'}`}
-          icon={<ShieldCheck size={16} className="text-[#FFD84D]" />}
+          icon={<ShieldCheck size={16} className="text-[#D946EF]" />}
           isSwitch
           switchValue={preferences.memoryEnabled}
           onSwitchChange={toggleMemory}
@@ -162,23 +162,23 @@ export const PrivacyScreen: React.FC<PrivacyScreenProps> = ({ onBack, onResetToO
             }}
           />
         ) : (
-          <p className="px-4 py-3 text-xs text-[#C6B8E5]">
+          <p className="px-4 py-3 text-xs text-[#D6C2F2]">
             Guest data is not linked to an account. Clear guest chats and memories above; guest preferences remain on this device.
           </p>
         )}
       </SettingsSection>
 
       {deleteDialogVisible && (
-        <div className="sunny-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
+        <div className="sunny-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#12051F]/80 backdrop-blur-xs">
           <div
             role="dialog"
             aria-modal="true"
             aria-labelledby="delete-account-title"
             aria-describedby="delete-account-description"
-            className="sunny-modal-surface sunny-privacy-dialog w-full max-w-md bg-[#21163A] border border-[#FF8D9A]/40 rounded-2xl p-5 shadow-2xl"
+            className="sunny-modal-surface sunny-privacy-dialog w-full max-w-md bg-[#25103F] border border-[#FF8D9A]/40 rounded-2xl p-5 shadow-2xl"
           >
             <h2 id="delete-account-title" className="text-lg font-bold text-[#FF8D9A]">Delete your Sunny account?</h2>
-            <p id="delete-account-description" className="mt-2 text-sm text-[#C6B8E5] leading-relaxed">
+            <p id="delete-account-description" className="mt-2 text-sm text-[#D6C2F2] leading-relaxed">
               This permanently deletes your Supabase Auth account and its cloud chat, memory, and preference records. Sunny will sign you out and clear account-associated local caches. Separate guest-only data is kept.
             </p>
             <AppInput

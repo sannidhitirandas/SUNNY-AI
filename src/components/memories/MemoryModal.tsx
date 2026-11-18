@@ -70,23 +70,23 @@ export const MemoryModal: React.FC<MemoryModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
-      <div className="w-full max-w-md bg-[#21163A] border border-[#392858] rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#392858]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#12051F]/80 backdrop-blur-xs">
+      <div className="w-full max-w-md bg-[#25103F] border border-[#4A2A73] rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#4A2A73]">
           <h2 className="text-lg font-bold text-white">
             {editingMemory ? 'Edit Memory' : 'Add New Memory'}
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="p-1 rounded-lg text-[#C6B8E5] hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+            className="p-1 rounded-lg text-[#D6C2F2] hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
           >
             <X size={20} />
           </button>
         </div>
 
         <div className="p-6 max-h-[80vh] overflow-y-auto">
-          <p className="text-xs text-[#C6B8E5] leading-relaxed mb-4">
+          <p className="text-xs text-[#D6C2F2] leading-relaxed mb-4">
             When memory is enabled, Sunny automatically saves useful details from chat. You can review, update, or delete them whenever you wish.
           </p>
 
@@ -101,7 +101,7 @@ export const MemoryModal: React.FC<MemoryModalProps> = ({
           />
 
           <div className="mb-4">
-            <label className="text-xs font-medium text-[#C6B8E5] mb-2 block">Category</label>
+            <label className="text-xs font-medium text-[#D6C2F2] mb-2 block">Category</label>
             <div className="flex flex-wrap gap-2">
               {CATEGORIES.map((cat) => {
                 const isSelected = category === cat.value;
@@ -112,8 +112,8 @@ export const MemoryModal: React.FC<MemoryModalProps> = ({
                     onClick={() => setCategory(cat.value)}
                     className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors cursor-pointer ${
                       isSelected
-                        ? 'bg-[#F5D27A]/15 border-[#F5D27A] text-[#F5D27A] font-bold'
-                        : 'bg-[#302149] border-[#392858] text-[#C6B8E5] hover:border-white/20'
+                        ? 'bg-[#E879F9]/15 border-[#E879F9] text-[#E879F9] font-bold'
+                        : 'bg-[#381A60] border-[#4A2A73] text-[#D6C2F2] hover:border-white/20'
                     }`}
                   >
                     {cat.label}

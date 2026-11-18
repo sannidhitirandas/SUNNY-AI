@@ -53,7 +53,7 @@ export const SafetyScreen: React.FC<SafetyScreenProps> = ({ onBack }) => {
         <button
           type="button"
           onClick={onBack}
-          className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#21163A] border border-[#392858] text-[#C6B8E5] hover:text-white transition-colors cursor-pointer"
+          className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#25103F] border border-[#4A2A73] text-[#D6C2F2] hover:text-white transition-colors cursor-pointer"
           aria-label="Back to settings"
         >
           <ArrowLeft size={18} />
@@ -62,12 +62,12 @@ export const SafetyScreen: React.FC<SafetyScreenProps> = ({ onBack }) => {
       </div>
 
       {/* Important Boundary Card */}
-      <AppCard className="sunny-safety-boundary p-5 mb-6 bg-[#17102C] border-[#FFD84D]/35">
+      <AppCard className="sunny-safety-boundary p-5 mb-6 bg-[#1A0A2E] border-[#D946EF]/35">
         <div className="flex items-center gap-2 mb-2">
-          <Shield size={20} className="text-[#FFD84D]" />
-          <h2 className="text-base font-bold text-[#FFD84D]">Sunny is an AI Companion</h2>
+          <Shield size={20} className="text-[#D946EF]" />
+          <h2 className="text-base font-bold text-[#D946EF]">Sunny is an AI Companion</h2>
         </div>
-        <p className="text-xs text-[#C6B8E5] leading-relaxed">
+        <p className="text-xs text-[#D6C2F2] leading-relaxed">
           Sunny is designed for everyday conversation, personal reflection, and light encouragement.
           <br /><br />
           Sunny is <strong className="text-white font-bold">not</strong> a human, therapist, physician, or emergency service. It cannot provide clinical assessments, crisis intervention, or medical advice.
@@ -76,16 +76,16 @@ export const SafetyScreen: React.FC<SafetyScreenProps> = ({ onBack }) => {
 
       {/* 24/7 Crisis Support Section */}
       <div className="mb-6">
-        <h3 className="text-[11px] font-bold tracking-wider text-[#9B8AB9] uppercase px-1 mb-1">
+        <h3 className="text-[11px] font-bold tracking-wider text-[#AA92CC] uppercase px-1 mb-1">
           IMMEDIATE CRISIS SUPPORT
         </h3>
-        <p className="text-xs text-[#C6B8E5] mb-3 px-1">
+        <p className="text-xs text-[#D6C2F2] mb-3 px-1">
           If you or someone you know is in immediate danger or experiencing a mental health emergency, please contact these free, confidential resources:
         </p>
 
         <div className="space-y-3">
           {CRISIS_RESOURCES.map((r, i) => (
-            <AppCard key={i} className="sunny-safety-resource p-4 bg-[#21163A]">
+            <AppCard key={i} className="sunny-safety-resource p-4 bg-[#25103F]">
               <div className="flex items-start justify-between gap-3 mb-1.5">
                 <div className="flex items-center gap-2.5">
                   <div className="w-8 h-8 rounded-full bg-[#FF8D9A]/15 flex items-center justify-center shrink-0">
@@ -93,7 +93,7 @@ export const SafetyScreen: React.FC<SafetyScreenProps> = ({ onBack }) => {
                   </div>
                   <div>
                     <h4 className="text-sm font-semibold text-white">{r.name}</h4>
-                    <span className="text-xs font-bold text-[#FFD84D] block">{r.contact}</span>
+                    <span className="text-xs font-bold text-[#D946EF] block">{r.contact}</span>
                   </div>
                 </div>
 
@@ -101,13 +101,13 @@ export const SafetyScreen: React.FC<SafetyScreenProps> = ({ onBack }) => {
                   href={r.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1 bg-[#FFD84D]/15 hover:bg-[#FFD84D]/25 border border-[#FFD84D]/30 text-[#FFD84D] text-xs font-bold px-2.5 py-1 rounded-lg transition-colors shrink-0"
+                  className="flex items-center gap-1 bg-[#D946EF]/15 hover:bg-[#D946EF]/25 border border-[#D946EF]/30 text-[#D946EF] text-xs font-bold px-2.5 py-1 rounded-lg transition-colors shrink-0"
                 >
                   <span>Connect</span>
                   <ExternalLink size={12} />
                 </a>
               </div>
-              <p className="text-xs text-[#C6B8E5] leading-relaxed mt-2">{r.detail}</p>
+              <p className="text-xs text-[#D6C2F2] leading-relaxed mt-2">{r.detail}</p>
             </AppCard>
           ))}
         </div>
@@ -115,21 +115,21 @@ export const SafetyScreen: React.FC<SafetyScreenProps> = ({ onBack }) => {
 
       {/* Interactive Mindful Grounding Tool */}
       <div className="mb-6">
-        <h3 className="text-[11px] font-bold tracking-wider text-[#9B8AB9] uppercase px-1 mb-1">
+        <h3 className="text-[11px] font-bold tracking-wider text-[#AA92CC] uppercase px-1 mb-1">
           GENTLE GROUNDING EXERCISE
         </h3>
-        <p className="text-xs text-[#C6B8E5] mb-3 px-1">
+        <p className="text-xs text-[#D6C2F2] mb-3 px-1">
           When things feel overwhelming, try the 5-4-3-2-1 technique to reconnect with your senses:
         </p>
 
-        <AppCard elevated className="sunny-grounding-card p-6 text-center border-[#392858]">
-          <span className="sunny-grounding-step text-xs font-bold text-[#FFD84D] uppercase tracking-wider block mb-1">
+        <AppCard elevated className="sunny-grounding-card p-6 text-center border-[#4A2A73]">
+          <span className="sunny-grounding-step text-xs font-bold text-[#D946EF] uppercase tracking-wider block mb-1">
             Step {breathingStep + 1} of {GROUNDING_STEPS.length}
           </span>
           <h3 className="text-xl font-bold text-white mb-2">
             {GROUNDING_STEPS[breathingStep].title}
           </h3>
-          <p className="text-sm text-[#C6B8E5] max-w-sm mx-auto leading-relaxed mb-6">
+          <p className="text-sm text-[#D6C2F2] max-w-sm mx-auto leading-relaxed mb-6">
             {GROUNDING_STEPS[breathingStep].instruction}
           </p>
 
@@ -144,7 +144,7 @@ export const SafetyScreen: React.FC<SafetyScreenProps> = ({ onBack }) => {
               <button
                 type="button"
                 onClick={() => setBreathingStep(0)}
-                className="flex h-11 w-11 items-center justify-center rounded-xl text-[#9B8AB9] hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+                className="flex h-11 w-11 items-center justify-center rounded-xl text-[#AA92CC] hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
                 aria-label="Reset grounding exercise"
               >
                 <RotateCcw size={18} />

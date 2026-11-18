@@ -92,7 +92,7 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
         });
         const dark = new THREE.MeshStandardMaterial({ color: 0x211936, roughness: 0.48, metalness: 0.24 });
         const deep = new THREE.MeshPhysicalMaterial({ color: 0x100b1e, roughness: 0.16, metalness: 0.12, clearcoat: 1 });
-        const gold = new THREE.MeshStandardMaterial({ color: 0xffd84d, roughness: 0.3, metalness: 0.18, emissive: 0x5a3900, emissiveIntensity: 0.22 });
+        const gold = new THREE.MeshStandardMaterial({ color: 0xd946ef, roughness: 0.3, metalness: 0.18, emissive: 0x4a0f5a, emissiveIntensity: 0.22 });
         const purpleGlow = new THREE.MeshStandardMaterial({ color: 0x9d70e8, roughness: 0.35, metalness: 0.12, emissive: 0x482477, emissiveIntensity: 0.35 });
 
         const rounded = (w: number, h: number, d: number, r: number, material: any) => {
@@ -213,12 +213,12 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
         const ringCtx = ringCanvas.getContext('2d');
         if (ringCtx) {
           const gradient = ringCtx.createConicGradient(3.5, 256, 256);
-          gradient.addColorStop(0, '#ffd84d');
+          gradient.addColorStop(0, '#D946EF');
           gradient.addColorStop(0.18, '#ff9d45');
           gradient.addColorStop(0.38, '#ff5b8f');
           gradient.addColorStop(0.58, '#a879ed');
           gradient.addColorStop(0.78, '#ff6a80');
-          gradient.addColorStop(1, '#ffd84d');
+          gradient.addColorStop(1, '#D946EF');
           ringCtx.fillStyle = gradient;
           ringCtx.fillRect(0, 0, 512, 512);
         }
@@ -250,7 +250,7 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
           faceCtx.beginPath();
           faceCtx.roundRect(12, 12, 488, 360, 78);
           faceCtx.fill();
-          faceCtx.shadowColor = '#ffe58a';
+          faceCtx.shadowColor = '#F0ABFC';
           faceCtx.shadowBlur = 26;
           faceCtx.fillStyle = '#fff2bf';
           faceCtx.beginPath();
@@ -402,7 +402,7 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
     <>
     <style>{`
       .sunny-robot-3d { position:relative; min-width:0; min-height:0; overflow:visible; }
-      .sunny-robot-3d-fallback { position:absolute; inset:0; display:grid; place-items:center; color:#FFD84D; font-size:2.5rem; pointer-events:none; }
+      .sunny-robot-3d-fallback { position:absolute; inset:0; display:grid; place-items:center; color:#D946EF; font-size:2.5rem; pointer-events:none; }
       .sunny-robot-ready .sunny-robot-3d-fallback { display:none; }
       .sunny-robot-fallback .sunny-robot-3d-fallback { display:grid; }
       @media(prefers-reduced-motion:reduce) { .sunny-robot-3d canvas { animation:none; } }

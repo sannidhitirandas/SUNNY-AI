@@ -32,8 +32,8 @@ export const PasswordRecoveryScreen: React.FC = () => {
   return (
     <div className="sunny-recovery-screen sunny-auth-screen relative flex min-h-[100dvh] w-full flex-col justify-center overflow-x-hidden overflow-y-auto px-6 py-12">
       <style>{`
-        .sunny-recovery-screen { isolation:isolate; background:radial-gradient(ellipse at 50% 12%,#38235B 0%,#211435 44%,#100B1D 100%); }
-        .sunny-recovery-card .sunny-app-button { background:linear-gradient(135deg,#FFE98A,#FFD84D) !important; color:#21152F !important; box-shadow:0 10px 28px -12px rgba(255,216,77,.55) !important; }
+        .sunny-recovery-screen { isolation:isolate; background:radial-gradient(ellipse at 50% 12%,#3E1F68 0%,#25103F 44%,#12051F 100%); }
+        .sunny-recovery-card .sunny-app-button { background:linear-gradient(135deg,#F0ABFC,#D946EF) !important; color:#25103F !important; box-shadow:0 10px 28px -12px rgba(217,70,239,.55) !important; }
         .sunny-recovery-content { position:relative; z-index:1; width:100%; max-width:24rem; margin:0 auto; }
         .sunny-recovery-card {
           background:linear-gradient(145deg,rgba(35,23,58,.9),rgba(19,12,35,.92)); border:1px solid rgba(190,151,239,.36);
@@ -49,7 +49,7 @@ export const PasswordRecoveryScreen: React.FC = () => {
         }
         .sunny-recovery-card .sunny-app-field::placeholder { color:rgba(222,207,243,.72); }
         .sunny-recovery-card .sunny-app-field:focus {
-          border-color:rgba(255,216,77,.9); box-shadow:0 0 0 3px rgba(255,216,77,.13);
+          border-color:rgba(217,70,239,.9); box-shadow:0 0 0 3px rgba(217,70,239,.13);
         }
         .sunny-recovery-card input:focus { outline:none; }
       `}</style>

@@ -386,7 +386,7 @@ export function App() {
           .sunny-prehome-video-backdrop { position:absolute; inset:0; z-index:-1; overflow:hidden; background:#121417; }
           .sunny-prehome-video-backdrop video { width:100%; height:100%; object-fit:cover; filter:none; }
           .sunny-prehome-video-backdrop::after { content:''; position:absolute; inset:0; background:transparent; }
-          .sunny-prehome-loading .border-\\[\\#FFD84D\\] { border-color:#E8E1D5; }
+          .sunny-prehome-loading .border-\\[\\#D946EF\\] { border-color:#E8E1D5; }
           .sunny-prehome-loading-content { text-shadow:0 1px 2px rgba(0,0,0,.98),0 3px 10px rgba(0,0,0,.95),0 8px 24px rgba(0,0,0,.88); }
         `}</style>
         <div className="sunny-prehome-video-backdrop" aria-hidden="true">
@@ -477,7 +477,7 @@ export function App() {
   const hideNavBar = chatNavHidden;
 
   return (
-    <div className="sunny-app-shell h-dvh min-h-0 overflow-hidden bg-[#100B22] flex flex-col relative selection:bg-[#FFD84D] selection:text-[#100B22]">
+    <div className="sunny-app-shell h-dvh min-h-0 overflow-hidden bg-[#12051F] flex flex-col relative selection:bg-[#D946EF] selection:text-white">
       <main className={`sunny-app-main flex-1 min-h-0 flex flex-col overflow-hidden ${activeTab === 'chat' ? 'pb-0' : 'pb-24'}`}>
         {activeTab === 'home' && (
           <HomeScreen

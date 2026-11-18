@@ -20,7 +20,7 @@ interface AppInputProps {
 
 // 16px (text-base) input text also stops mobile browsers from zooming in on focus.
 const FIELD_CLASSES =
-  'sunny-app-field w-full bg-[#1B1430] border border-[#392858] hover:border-[#4b3570] focus:border-[#FFD84D] focus:outline-none focus:ring-2 focus:ring-[#FFD84D]/20 text-white placeholder-white/50 text-base rounded-xl px-4 py-3 transition-all disabled:opacity-60 disabled:cursor-not-allowed';
+  'sunny-app-field w-full bg-[#1E0B33] border border-[#4A2A73] hover:border-[#4b3570] focus:border-[#D946EF] focus:outline-none focus:ring-2 focus:ring-[#D946EF]/20 text-white placeholder-white/50 text-base rounded-xl px-4 py-3 transition-all disabled:opacity-60 disabled:cursor-not-allowed';
 
 export const AppInput: React.FC<AppInputProps> = ({
   label,
@@ -84,7 +84,7 @@ export const AppInput: React.FC<AppInputProps> = ({
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-2 flex h-9 w-9 items-center justify-center rounded-full text-[#9B8AB9] hover:text-[#C6B8E5] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFD84D]/40 cursor-pointer"
+                className="absolute right-2 flex h-9 w-9 items-center justify-center rounded-full text-[#AA92CC] hover:text-[#D6C2F2] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D946EF]/40 cursor-pointer"
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}

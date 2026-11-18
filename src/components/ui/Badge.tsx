@@ -15,14 +15,14 @@ export const Badge: React.FC<BadgeProps> = ({
   const getVariantStyles = () => {
     switch (variant) {
       case 'purple':
-        return 'bg-[#302149] text-[#C6B8E5] border border-[#392858]';
+        return 'bg-[#381A60] text-[#D6C2F2] border border-[#4A2A73]';
       case 'green':
         return 'bg-[#A8D9A0]/15 text-[#A8D9A0] border border-[#A8D9A0]/30';
       case 'muted':
-        return 'bg-white/5 text-[#9B8AB9] border border-white/10';
+        return 'bg-white/5 text-[#AA92CC] border border-white/10';
       case 'yellow':
       default:
-        return 'bg-[#FFD84D]/15 text-[#FFD84D] border border-[#FFD84D]/30';
+        return 'bg-[#D946EF]/15 text-[#D946EF] border border-[#D946EF]/30';
     }
   };
 

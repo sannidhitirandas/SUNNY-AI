@@ -34,7 +34,7 @@ export const SunnyLogo: React.FC<SunnyLogoProps> = ({
       <div className="relative flex items-center justify-center" style={{ width: dim.boxSize, height: dim.boxSize }}>
         {/* Soft Ambient Glow */}
         <div
-          className="absolute rounded-full bg-[#FFD84D]/20 blur-md animate-glow pointer-events-none"
+          className="absolute rounded-full bg-[#D946EF]/20 blur-md animate-glow pointer-events-none"
           style={{ width: dim.boxSize * 1.3, height: dim.boxSize * 1.3 }}
         />
 
@@ -48,11 +48,11 @@ export const SunnyLogo: React.FC<SunnyLogoProps> = ({
           <defs>
             <radialGradient id={`sun-glow-${size}`} cx="35%" cy="30%" r="65%">
               <stop offset="0%" stopColor="#FFF9D2" />
-              <stop offset="45%" stopColor="#FFD84D" />
-              <stop offset="100%" stopColor="#F6BD45" />
+              <stop offset="45%" stopColor="#D946EF" />
+              <stop offset="100%" stopColor="#F472B6" />
             </radialGradient>
             <filter id={`drop-shadow-${size}`} x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="0" stdDeviation="2.5" floodColor="#FFD84D" floodOpacity="0.6" />
+              <feDropShadow dx="0" dy="0" stdDeviation="2.5" floodColor="#D946EF" floodOpacity="0.6" />
             </filter>
           </defs>
 
@@ -73,7 +73,7 @@ export const SunnyLogo: React.FC<SunnyLogoProps> = ({
                 y1={y1}
                 x2={x2}
                 y2={y2}
-                stroke="#FFD84D"
+                stroke="#D946EF"
                 strokeWidth={size === 'huge' ? 3.5 : size === 'large' ? 2.8 : 2}
                 strokeLinecap="round"
                 opacity="0.9"
@@ -98,7 +98,7 @@ export const SunnyLogo: React.FC<SunnyLogoProps> = ({
             Sunny
           </span>
           {showTagline && (
-            <span className={`text-[#C6B8E5] font-normal ${dim.taglineSize} mt-0.5`}>
+            <span className={`text-[#D6C2F2] font-normal ${dim.taglineSize} mt-0.5`}>
               Your little corner of sunshine
             </span>
           )}

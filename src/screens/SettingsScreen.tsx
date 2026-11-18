@@ -50,10 +50,10 @@ const VolumeSliderRow: React.FC<{
 }> = ({ title, value, disabled = false, onChange }) => {
   const percentage = Math.round(value * 100);
   return (
-    <div className={`flex flex-col gap-1.5 px-4 py-3 border-b border-[#392858]/40 ${disabled ? 'opacity-40' : ''}`}>
+    <div className={`flex flex-col gap-1.5 px-4 py-3 border-b border-[#4A2A73]/40 ${disabled ? 'opacity-40' : ''}`}>
       <div className="flex items-center justify-between text-xs sm:text-sm font-medium">
         <span className="text-white">{title}</span>
-        <span className="text-[#F5D27A] font-semibold">{percentage}%</span>
+        <span className="text-[#E879F9] font-semibold">{percentage}%</span>
       </div>
       <input
         type="range"
@@ -64,7 +64,7 @@ const VolumeSliderRow: React.FC<{
         value={value}
         onChange={(e) => onChange(parseFloat(e.target.value))}
         aria-label={title}
-        className="w-full accent-[#F5D27A] bg-[#21163A] h-2 rounded-lg cursor-pointer"
+        className="w-full accent-[#E879F9] bg-[#25103F] h-2 rounded-lg cursor-pointer"
       />
     </div>
   );
@@ -209,21 +209,21 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               <h1 className="text-lg font-bold text-white tracking-tight">Sunny</h1>
               <span className="text-sm" aria-hidden="true">☀️</span>
             </div>
-            <p className="text-[11px] text-[#C6B8E5]">Your little corner of sunshine</p>
+            <p className="text-[11px] text-[#D6C2F2]">Your little corner of sunshine</p>
           </div>
         </div>
       </div>
 
       {/* Settings hero uses the same soft glow and rounded gradient as Home */}
-      <section className="sunny-settings-hero relative isolate mb-7 overflow-hidden rounded-[30px] border border-[#8B6AA8]/30 bg-gradient-to-br from-[#302044] via-[#1D1431] to-[#100B22] p-5 shadow-[0_18px_55px_rgba(0,0,0,.2)] sm:p-7 lg:p-9">
-        <div aria-hidden="true" className="sunny-settings-glow pointer-events-none absolute -right-8 -top-12 h-56 w-56 rounded-full bg-[#F5D27A]/[0.10] blur-3xl" />
+      <section className="sunny-settings-hero relative isolate mb-7 overflow-hidden rounded-[30px] border border-[#8B6AA8]/30 bg-gradient-to-br from-[#381A60] via-[#1D1431] to-[#12051F] p-5 shadow-[0_18px_55px_rgba(0,0,0,.2)] sm:p-7 lg:p-9">
+        <div aria-hidden="true" className="sunny-settings-glow pointer-events-none absolute -right-8 -top-12 h-56 w-56 rounded-full bg-[#E879F9]/[0.10] blur-3xl" />
         <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="max-w-2xl">
             <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.16em] text-[#E9DFF8]">
-              <Sparkles size={15} className="text-[#F5D27A]" /> YOUR SUNNY, YOUR WAY
+              <Sparkles size={15} className="text-[#E879F9]" /> YOUR SUNNY, YOUR WAY
             </span>
             <h2 className="mt-3 text-3xl font-semibold leading-tight tracking-tight text-[#F8F1FF] sm:text-4xl">Make this space yours.</h2>
-            <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#C6B8E5] sm:text-base">
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#D6C2F2] sm:text-base">
               Fine-tune how Sunny talks, sounds, remembers, and checks in with you. Change anything whenever you need.
             </p>
           </div>
@@ -237,13 +237,13 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             className="sunny-settings-profile flex items-center gap-3 rounded-[22px] border border-white/10 bg-white/[0.055] px-4 py-3.5 text-left shadow-[inset_0_1px_0_rgba(255,255,255,.05)] sm:min-w-56"
             aria-label="Edit account profile"
           >
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F5D27A]/10 text-[#F5D27A]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#E879F9]/10 text-[#E879F9]">
               <UserIcon size={23} />
             </div>
             <div className="min-w-0">
-              <p className="text-xs text-[#9B8AB9]">YOUR PROFILE</p>
+              <p className="text-xs text-[#AA92CC]">YOUR PROFILE</p>
               <p className="mt-0.5 truncate text-base font-semibold text-white">{preferences.preferredName || user?.displayName || 'sunshine'}</p>
-              <p className="mt-0.5 text-xs text-[#C6B8E5]">{getPersonalityLabel(preferences.preferredTone)}</p>
+              <p className="mt-0.5 text-xs text-[#D6C2F2]">{getPersonalityLabel(preferences.preferredTone)}</p>
             </div>
           </button>
         </div>
@@ -256,14 +256,14 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         <SettingsRow
           title="Conversation Personality"
           subtitle="Change how Sunny responds to you"
-          icon={<Sparkles size={16} className="text-[#F5D27A]" />}
+          icon={<Sparkles size={16} className="text-[#E879F9]" />}
           rightText={getPersonalityLabel(preferences.preferredTone)}
           onPress={() => setToneModalVisible(true)}
         />
         <SettingsRow
           title="Preferred Name"
           subtitle="What Sunny calls you"
-          icon={<UserIcon size={16} className="text-[#F5D27A]" />}
+          icon={<UserIcon size={16} className="text-[#E879F9]" />}
           rightText={preferences.preferredName || user?.displayName || 'Set Name'}
           onPress={() => {
             setNewName(preferences.preferredName || user?.displayName || '');
@@ -273,14 +273,14 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         <SettingsRow
           title="Theme"
           subtitle="Choose Sunny’s appearance"
-          icon={<Palette size={16} className="text-[#F5D27A]" />}
+          icon={<Palette size={16} className="text-[#E879F9]" />}
           rightText={preferences.theme === 'sunny-light' ? 'Sunny Day' : 'Sunny Night'}
           onPress={() => setThemeModalVisible(true)}
         />
         <SettingsRow
           title="Chat background"
           subtitle="Pick a wallpaper for your chat with Sunny"
-          icon={<ImageIcon size={16} className="text-[#F5D27A]" />}
+          icon={<ImageIcon size={16} className="text-[#E879F9]" />}
           rightText={background.label}
           onPress={() => setBackgroundModalVisible(true)}
         />
@@ -291,7 +291,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         <SettingsRow
           title="Enable Memory"
           subtitle="Allow Sunny to remember approved details"
-          icon={<Bookmark size={16} className="text-[#F5D27A]" />}
+          icon={<Bookmark size={16} className="text-[#E879F9]" />}
           isSwitch
           switchValue={preferences.memoryEnabled}
           onSwitchChange={toggleMemory}
@@ -299,7 +299,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         <SettingsRow
           title="Manage Saved Memories"
           subtitle="View, edit, or delete personal notes"
-          icon={<List size={16} className="text-[#F5D27A]" />}
+          icon={<List size={16} className="text-[#E879F9]" />}
           onPress={() => onNavigateToTab('memories')}
         />
         <SettingsRow
@@ -315,14 +315,14 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         <SettingsRow
           title="Notification Preferences"
           subtitle={preferences.notificationsEnabled ? 'Preference is on; review Android permission and schedule status' : 'Notification preference is off'}
-          icon={<Bell size={16} className="text-[#F5D27A]" />}
+          icon={<Bell size={16} className="text-[#E879F9]" />}
           rightText={preferences.notificationsEnabled ? 'On' : 'Off'}
           onPress={() => onNavigateSubscreen('notifications')}
         />
         <SettingsRow
           title="Quiet Hours"
           subtitle={`${formatTime(preferences.notificationPreferences.quietHoursStart)} – ${formatTime(preferences.notificationPreferences.quietHoursEnd)} local time`}
-          icon={<Moon size={16} className="text-[#C6B8E5]" />}
+          icon={<Moon size={16} className="text-[#D6C2F2]" />}
           rightText={preferences.notificationPreferences.quietHoursEnabled ? 'On' : 'Off'}
           onPress={() => onNavigateSubscreen('notifications')}
         />
@@ -334,7 +334,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           <SettingsRow
             title="Set or change password"
             subtitle="Add email-and-password sign-in to this same account"
-            icon={<Lock size={16} className="text-[#F5D27A]" />}
+            icon={<Lock size={16} className="text-[#E879F9]" />}
             onPress={() => {
               setNewPassword('');
               setConfirmNewPassword('');
@@ -346,7 +346,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         <SettingsRow
           title="Account Profile"
           subtitle={user?.email || 'Guest profile saved on this device'}
-          icon={<UserCheck size={16} className="text-[#F5D27A]" />}
+          icon={<UserCheck size={16} className="text-[#E879F9]" />}
           rightText={user?.displayName || preferences.preferredName || 'Set name'}
           onPress={() => {
             setProfileName(user?.displayName || preferences.preferredName || '');
@@ -357,7 +357,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         <SettingsRow
           title="Replay Onboarding"
           subtitle="Experience the introductory flow again"
-          icon={<RotateCcw size={16} className="text-[#C6B8E5]" />}
+          icon={<RotateCcw size={16} className="text-[#D6C2F2]" />}
           onPress={async () => {
             await resetOnboarding();
             onReplayOnboarding();
@@ -386,7 +386,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         <SettingsRow
           title="Sound Effects"
           subtitle="Play UI sounds for chat, buttons, and events"
-          icon={<Volume2 size={16} className="text-[#F5D27A]" />}
+          icon={<Volume2 size={16} className="text-[#E879F9]" />}
           isSwitch
           switchValue={preferences.audioPreferences.soundEnabled}
           onSwitchChange={(enabled) => updateAudioPreferences({ soundEnabled: enabled })}
@@ -394,7 +394,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         <SettingsRow
           title="Background Music"
           subtitle="Calm ambient music in the background"
-          icon={<Music size={16} className="text-[#F5D27A]" />}
+          icon={<Music size={16} className="text-[#E879F9]" />}
           isSwitch
           switchValue={preferences.audioPreferences.musicEnabled}
           onSwitchChange={(enabled) => updateAudioPreferences({ musicEnabled: enabled })}
@@ -418,8 +418,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         />
 
         {/* Background Music Track Selection */}
-        <div className="sunny-settings-track-picker space-y-2 border-t border-[#392858]/40 px-4 py-4">
-          <span className="text-xs font-semibold text-[#C6B8E5] block tracking-wider uppercase mb-1">Background Music Track</span>
+        <div className="sunny-settings-track-picker space-y-2 border-t border-[#4A2A73]/40 px-4 py-4">
+          <span className="text-xs font-semibold text-[#D6C2F2] block tracking-wider uppercase mb-1">Background Music Track</span>
           <div className="space-y-1.5">
             {[
               { id: 'ambient', label: 'Sunny Ambience', desc: 'The official default Sunny app ambience' },
@@ -440,14 +440,14 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                     }
                   }}
                   className={`sunny-settings-choice w-full flex items-center justify-between p-3.5 rounded-2xl border text-left transition-all duration-200 cursor-pointer active:scale-[.99] ${
-                    isSelected ? 'border-[#F5D27A] bg-[#F5D27A]/15' : 'border-[#392858] bg-[#21163A] hover:border-white/20'
+                    isSelected ? 'border-[#E879F9] bg-[#E879F9]/15' : 'border-[#4A2A73] bg-[#25103F] hover:border-white/20'
                   }`}
                 >
                   <div>
-                    <span className={`text-xs sm:text-sm font-semibold block ${isSelected ? 'text-[#F5D27A]' : 'text-white'}`}>{opt.label}</span>
-                    <span className="text-[11px] text-[#9B8AB9] block mt-0.5">{opt.desc}</span>
+                    <span className={`text-xs sm:text-sm font-semibold block ${isSelected ? 'text-[#E879F9]' : 'text-white'}`}>{opt.label}</span>
+                    <span className="text-[11px] text-[#AA92CC] block mt-0.5">{opt.desc}</span>
                   </div>
-                  {isSelected && <CheckCircle2 size={16} className="text-[#F5D27A] shrink-0 ml-2" />}
+                  {isSelected && <CheckCircle2 size={16} className="text-[#E879F9] shrink-0 ml-2" />}
                 </button>
               );
             })}
@@ -460,7 +460,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         <SettingsRow
           title="Privacy & Data Controls"
           subtitle="Review local, account, and AI conversation data"
-          icon={<Lock size={16} className="text-[#F5D27A]" />}
+          icon={<Lock size={16} className="text-[#E879F9]" />}
           onPress={() => onNavigateSubscreen('privacy')}
         />
         <SettingsRow
@@ -483,7 +483,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         <SettingsRow
           title="About Sunny"
           subtitle="Mission and app version"
-          icon={<Info size={16} className="text-[#C6B8E5]" />}
+          icon={<Info size={16} className="text-[#D6C2F2]" />}
           onPress={() => onNavigateSubscreen('about')}
         />
       </SettingsSection>
@@ -492,12 +492,12 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
 
       {/* Tone Picker Modal */}
       {toneModalVisible && (
-        <div className="sunny-modal-overlay sunny-settings-overlay sunny-personality-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-sm">
-          <div role="dialog" aria-modal="true" aria-labelledby="tone-picker-title" className="sunny-modal-surface sunny-settings-dialog sunny-personality-dialog w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-[26px] p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+        <div className="sunny-modal-overlay sunny-settings-overlay sunny-personality-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#12051F]/80 backdrop-blur-sm">
+          <div role="dialog" aria-modal="true" aria-labelledby="tone-picker-title" className="sunny-modal-surface sunny-settings-dialog sunny-personality-dialog w-full max-w-sm bg-[#25103F] border border-[#4A2A73] rounded-[26px] p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
             <div className="sunny-personality-heading mb-4">
               <span className="sunny-personality-eyebrow"><Sparkles size={13} /> A LITTLE MORE YOU</span>
               <h3 id="tone-picker-title" className="mt-2 text-xl font-bold text-white">Choose Sunny’s vibe</h3>
-              <p className="mt-1 text-sm leading-relaxed text-[#C6B8E5]">Pick the kind of energy you’d like Sunny to bring. You can change this whenever you want.</p>
+              <p className="mt-1 text-sm leading-relaxed text-[#D6C2F2]">Pick the kind of energy you’d like Sunny to bring. You can change this whenever you want.</p>
             </div>
             <div className="space-y-2 mb-4">
               {TONES.map((item) => {
@@ -512,20 +512,20 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                     }}
                     className={`sunny-personality-option w-full flex items-center justify-between p-3.5 rounded-2xl border text-left transition-colors cursor-pointer ${
                       isSelected
-                        ? 'border-[#F5D27A] bg-[#F5D27A]/15'
-                        : 'border-[#392858] bg-[#302149] hover:border-white/20'
+                        ? 'border-[#E879F9] bg-[#E879F9]/15'
+                        : 'border-[#4A2A73] bg-[#381A60] hover:border-white/20'
                     }`}
                   >
                     <div>
-                      <span className={`text-sm font-semibold block ${isSelected ? 'text-[#F5D27A]' : 'text-white'}`}>
+                      <span className={`text-sm font-semibold block ${isSelected ? 'text-[#E879F9]' : 'text-white'}`}>
                         {item.label}
                       </span>
-                      <span className="text-xs text-[#C6B8E5] block mt-0.5">
+                      <span className="text-xs text-[#D6C2F2] block mt-0.5">
                         {item.desc}
                       </span>
                     </div>
                     {isSelected && (
-                      <CheckCircle2 size={18} className="text-[#F5D27A] shrink-0 ml-2" />
+                      <CheckCircle2 size={18} className="text-[#E879F9] shrink-0 ml-2" />
                     )}
                   </button>
                 );
@@ -542,8 +542,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       )}
 
       {themeModalVisible && (
-        <div className="sunny-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
-          <div role="dialog" aria-modal="true" aria-labelledby="theme-picker-title" className="sunny-modal-surface w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+        <div className="sunny-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#12051F]/80 backdrop-blur-xs">
+          <div role="dialog" aria-modal="true" aria-labelledby="theme-picker-title" className="sunny-modal-surface w-full max-w-sm bg-[#25103F] border border-[#4A2A73] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
             <h3 id="theme-picker-title" className="text-base font-bold text-white mb-3">Choose a theme</h3>
             <div className="space-y-2 mb-4">
               {THEMES.map((item) => {
@@ -557,14 +557,14 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                       setThemeModalVisible(false);
                     }}
                     className={`w-full flex items-center justify-between p-3 rounded-2xl border text-left transition-colors cursor-pointer ${
-                      isSelected ? 'border-[#F5D27A] bg-[#F5D27A]/15' : 'border-[#392858] bg-[#302149] hover:border-white/20'
+                      isSelected ? 'border-[#E879F9] bg-[#E879F9]/15' : 'border-[#4A2A73] bg-[#381A60] hover:border-white/20'
                     }`}
                   >
                     <span>
-                      <span className={`text-sm font-semibold block ${isSelected ? 'text-[#F5D27A]' : 'text-white'}`}>{item.label}</span>
-                      <span className="text-xs text-[#C6B8E5] block mt-0.5">{item.description}</span>
+                      <span className={`text-sm font-semibold block ${isSelected ? 'text-[#E879F9]' : 'text-white'}`}>{item.label}</span>
+                      <span className="text-xs text-[#D6C2F2] block mt-0.5">{item.description}</span>
                     </span>
-                    {isSelected && <CheckCircle2 size={18} className="text-[#F5D27A] shrink-0 ml-2" />}
+                    {isSelected && <CheckCircle2 size={18} className="text-[#E879F9] shrink-0 ml-2" />}
                   </button>
                 );
               })}
@@ -575,10 +575,10 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       )}
 
       {backgroundModalVisible && (
-        <div className="sunny-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
-          <div role="dialog" aria-modal="true" aria-labelledby="chat-bg-picker-title" className="sunny-modal-surface sunny-settings-dialog w-full max-w-md max-h-[90vh] overflow-y-auto bg-[#21163A] border border-[#392858] rounded-[26px] p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+        <div className="sunny-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#12051F]/80 backdrop-blur-xs">
+          <div role="dialog" aria-modal="true" aria-labelledby="chat-bg-picker-title" className="sunny-modal-surface sunny-settings-dialog w-full max-w-md max-h-[90vh] overflow-y-auto bg-[#25103F] border border-[#4A2A73] rounded-[26px] p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
             <h3 id="chat-bg-picker-title" className="text-base font-bold text-white mb-1">Chat background</h3>
-            <p className="text-xs text-[#C6B8E5] mb-3">{device === 'mobile' ? 'Mobile wallpapers' : 'Desktop wallpapers'} · Saved separately on this device</p>
+            <p className="text-xs text-[#D6C2F2] mb-3">{device === 'mobile' ? 'Mobile wallpapers' : 'Desktop wallpapers'} · Saved separately on this device</p>
             <div className="grid grid-cols-2 gap-3 mb-4">
               {availableBackgrounds.map((item) => {
                 const isSelected = background.id === item.id;
@@ -589,16 +589,16 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                     aria-pressed={isSelected}
                     onClick={() => setChatBackground(item.id)}
                     className={`sunny-settings-wallpaper relative overflow-hidden rounded-2xl border text-left transition-all duration-200 cursor-pointer active:scale-[.98] ${
-                      isSelected ? 'border-[#F5D27A] ring-2 ring-[#F5D27A]/60' : 'border-[#392858] hover:border-white/30'
+                      isSelected ? 'border-[#E879F9] ring-2 ring-[#E879F9]/60' : 'border-[#4A2A73] hover:border-white/30'
                     }`}
                   >
                     <div
-                      className="sunny-settings-wallpaper-thumb h-28 w-full bg-[#100B22] bg-cover bg-center"
+                      className="sunny-settings-wallpaper-thumb h-28 w-full bg-[#12051F] bg-cover bg-center"
                       style={item.thumb ? { backgroundImage: `url(${item.thumb})` } : undefined}
                     />
-                    <div className="flex items-center justify-between bg-[#302149] px-3 py-2.5">
-                      <span className={`text-sm font-semibold ${isSelected ? 'text-[#F5D27A]' : 'text-white'}`}>{item.label}</span>
-                      {isSelected && <CheckCircle2 size={16} className="text-[#F5D27A] shrink-0 ml-2" />}
+                    <div className="flex items-center justify-between bg-[#381A60] px-3 py-2.5">
+                      <span className={`text-sm font-semibold ${isSelected ? 'text-[#E879F9]' : 'text-white'}`}>{item.label}</span>
+                      {isSelected && <CheckCircle2 size={16} className="text-[#E879F9] shrink-0 ml-2" />}
                     </div>
                   </button>
                 );
@@ -611,8 +611,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
 
       {/* Edit Name Modal */}
       {nameModalVisible && (
-        <div className="sunny-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
-          <div role="dialog" aria-modal="true" aria-labelledby="preferred-name-title" className="sunny-modal-surface w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+        <div className="sunny-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#12051F]/80 backdrop-blur-xs">
+          <div role="dialog" aria-modal="true" aria-labelledby="preferred-name-title" className="sunny-modal-surface w-full max-w-sm bg-[#25103F] border border-[#4A2A73] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
             <h3 id="preferred-name-title" className="text-base font-bold text-white mb-3">
               What should Sunny call you?
             </h3>
@@ -642,10 +642,10 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       )}
 
       {passwordModalVisible && (
-        <div className="sunny-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
-          <div role="dialog" aria-modal="true" aria-labelledby="account-password-title" className="sunny-modal-surface w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+        <div className="sunny-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#12051F]/80 backdrop-blur-xs">
+          <div role="dialog" aria-modal="true" aria-labelledby="account-password-title" className="sunny-modal-surface w-full max-w-sm bg-[#25103F] border border-[#4A2A73] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
             <h3 id="account-password-title" className="text-base font-bold text-white mb-2">Set an account password</h3>
-            <p className="text-xs text-[#C6B8E5] mb-4">This adds email-and-password sign-in to your existing account. Your Google sign-in, chats, and saved memories stay on the same account.</p>
+            <p className="text-xs text-[#D6C2F2] mb-4">This adds email-and-password sign-in to your existing account. Your Google sign-in, chats, and saved memories stay on the same account.</p>
             <AppInput
               label="New password"
               placeholder="At least 6 characters"
@@ -686,10 +686,10 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       )}
 
       {profileModalVisible && (
-        <div className="sunny-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
-          <div role="dialog" aria-modal="true" aria-labelledby="profile-title" className="sunny-modal-surface w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+        <div className="sunny-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#12051F]/80 backdrop-blur-xs">
+          <div role="dialog" aria-modal="true" aria-labelledby="profile-title" className="sunny-modal-surface w-full max-w-sm bg-[#25103F] border border-[#4A2A73] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
             <h3 id="profile-title" className="text-base font-bold text-white mb-2">Account profile</h3>
-            <p className="text-xs text-[#C6B8E5] mb-4">
+            <p className="text-xs text-[#D6C2F2] mb-4">
               {user
                 ? `Signed in as ${user.email}. Only your display name can be changed here.`
                 : 'Your guest name is saved with preferences on this device; it is not a cloud account.'}

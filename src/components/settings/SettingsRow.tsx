@@ -34,7 +34,7 @@ export const SettingsRow: React.FC<SettingsRowProps> = ({
     <>
       <div className="flex items-center gap-3.5 flex-1 min-w-0 pr-2">
         {icon && (
-          <div aria-hidden="true" className="sunny-settings-icon w-9 h-9 rounded-[13px] bg-[#302149] flex items-center justify-center shrink-0">
+          <div aria-hidden="true" className="sunny-settings-icon w-9 h-9 rounded-[13px] bg-[#381A60] flex items-center justify-center shrink-0">
             {icon}
           </div>
         )}
@@ -53,7 +53,7 @@ export const SettingsRow: React.FC<SettingsRowProps> = ({
       <div className="flex items-center gap-2 shrink-0">
         {rightContent}
         {!rightContent && rightText && (
-          <span className="text-xs font-semibold text-[#F5D27A]">{rightText}</span>
+          <span className="text-xs font-semibold text-[#E879F9]">{rightText}</span>
         )}
         {isSwitch && (
           <button
@@ -63,16 +63,16 @@ export const SettingsRow: React.FC<SettingsRowProps> = ({
             aria-describedby={subtitle ? subtitleId : undefined}
             aria-checked={switchValue}
             onClick={() => onSwitchChange?.(!switchValue)}
-            className="relative inline-flex h-11 w-12 shrink-0 cursor-pointer items-center justify-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F5D27A]"
+            className="relative inline-flex h-11 w-12 shrink-0 cursor-pointer items-center justify-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E879F9]"
           >
             <span
               aria-hidden="true"
-              className={`absolute inset-x-1 top-1/2 h-6 -translate-y-1/2 rounded-full ${switchValue ? 'bg-[#F5D27A]' : 'bg-[#17102C] border border-[#392858]'}`}
+              className={`absolute inset-x-1 top-1/2 h-6 -translate-y-1/2 rounded-full ${switchValue ? 'bg-[#E879F9]' : 'bg-[#1A0A2E] border border-[#4A2A73]'}`}
             />
             <span
               aria-hidden="true"
               className={`absolute left-1 top-1/2 inline-block h-5 w-5 -translate-y-1/2 transform rounded-full shadow-lg transition duration-200 ${
-                switchValue ? 'translate-x-5 bg-[#100B22]' : 'translate-x-0 bg-[#9B8AB9]'
+                switchValue ? 'translate-x-5 bg-[#12051F]' : 'translate-x-0 bg-[#AA92CC]'
               }`}
             />
           </button>
@@ -84,7 +84,7 @@ export const SettingsRow: React.FC<SettingsRowProps> = ({
     </>
   );
   const className = `sunny-settings-row flex min-h-[72px] w-full items-center justify-between px-4 py-3.5 text-left transition-colors ${
-    isClickable ? 'cursor-pointer hover:bg-white/[0.035] focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#F5D27A]' : ''
+    isClickable ? 'cursor-pointer hover:bg-white/[0.035] focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#E879F9]' : ''
   }`;
 
   return (

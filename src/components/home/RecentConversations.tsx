@@ -32,7 +32,7 @@ export const RecentConversations: React.FC<RecentConversationsProps> = ({
       {lastMessage ? (
         <AppCard
           onPress={onResume}
-          className="sunny-recent-card rounded-[22px] border border-[#8B6AC0]/25 bg-gradient-to-r from-[#241936] to-[#191229] p-3.5 shadow-[0_8px_24px_rgba(0,0,0,.12)] transition-all hover:-translate-y-0.5 hover:border-[#B99AFF]/50 sm:p-4"
+          className="sunny-recent-card rounded-[22px] border border-[#8B6AC0]/25 bg-gradient-to-r from-[#2A1347] to-[#1E0B33] p-3.5 shadow-[0_8px_24px_rgba(0,0,0,.12)] transition-all hover:-translate-y-0.5 hover:border-[#B99AFF]/50 sm:p-4"
         >
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#8B5CF6]/20">

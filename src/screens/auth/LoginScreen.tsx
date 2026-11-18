@@ -117,14 +117,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
       <style>{`
         .login-screen {
           isolation: isolate;
-          background: radial-gradient(ellipse at 50% 12%, #38235B 0%, #211435 44%, #100B1D 100%);
+          background: radial-gradient(ellipse at 50% 12%, #3E1F68 0%, #25103F 44%, #12051F 100%);
         }
 
         .login-sparkle {
           position: absolute;
           z-index: 1;
           border-radius: 9999px;
-          background: #FFD84D;
+          background: #D946EF;
           box-shadow: 0 0 8px 1px rgba(218, 199, 169, 0.32);
           opacity: 0;
           pointer-events: none;
@@ -150,7 +150,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         }
 
 
-        .login-cta .sunny-app-button { background: linear-gradient(135deg,#FFE98A,#FFD84D) !important; color: #21152F !important; box-shadow: 0 10px 28px -12px rgba(255,216,77,.55) !important; }
+        .login-cta .sunny-app-button { background: linear-gradient(135deg,#F0ABFC,#D946EF) !important; color: #25103F !important; box-shadow: 0 10px 28px -12px rgba(217,70,239,.55) !important; }
         .login-cta .sunny-app-button:hover { background: linear-gradient(135deg,#FFF0B2,#FFE16A) !important; }
         .login-hero h1 { color: #fff; text-shadow: 0 2px 16px rgba(10,4,26,.72); }
         .login-hero p { color: rgba(245,237,255,.9); text-shadow: 0 2px 12px rgba(10,4,26,.7); }
@@ -170,8 +170,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           color: rgba(222, 207, 243, 0.72);
         }
         .login-card .sunny-app-field:focus {
-          border-color: rgba(255, 216, 77, 0.9);
-          box-shadow: 0 0 0 3px rgba(255, 216, 77, 0.13);
+          border-color: rgba(217,70,239, 0.9);
+          box-shadow: 0 0 0 3px rgba(217,70,239, 0.13);
         }
         .login-hero {
           position: relative;
@@ -307,7 +307,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                 <div className="flex items-center gap-3 py-4" aria-hidden="true">
                   <div className="h-px flex-1 bg-[#77736B]" />
                   <span className="text-xs font-medium tracking-wide text-[#C4BFB5]">OR</span>
-                  <div className="h-px flex-1 bg-[#392858]" />
+                  <div className="h-px flex-1 bg-[#4A2A73]" />
                 </div>
                 <button
                   type="button"
@@ -334,7 +334,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
               <button
                 type="button"
                 onClick={() => { setForgotPassword(true); setError(''); setNotice(''); }}
-                className="w-full cursor-pointer pt-4 text-sm font-semibold text-[#FFE27A] hover:underline"
+                className="w-full cursor-pointer pt-4 text-sm font-semibold text-[#F0ABFC] hover:underline"
               >
                 Forgot password?
               </button>
@@ -343,7 +343,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
               <button
                 type="button"
                 onClick={() => { setForgotPassword(false); setError(''); setNotice(''); }}
-                className="w-full cursor-pointer pt-4 text-sm font-semibold text-[#FFD84D] hover:underline"
+                className="w-full cursor-pointer pt-4 text-sm font-semibold text-[#D946EF] hover:underline"
               >
                 Back to sign in
               </button>
@@ -352,12 +352,12 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         </div>
 
         {!forgotPassword && (
-          <div className="mt-6 text-center text-sm text-[#C6B8E5]">
+          <div className="mt-6 text-center text-sm text-[#D6C2F2]">
             Don&apos;t have an account yet?{' '}
             <button
               type="button"
               onClick={onNavigateToRegister}
-              className="ml-1 cursor-pointer font-bold text-[#FFD84D] hover:underline"
+              className="ml-1 cursor-pointer font-bold text-[#D946EF] hover:underline"
             >
               Create one
             </button>

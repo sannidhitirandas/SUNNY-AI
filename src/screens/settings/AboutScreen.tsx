@@ -16,7 +16,7 @@ export const AboutScreen: React.FC<AboutScreenProps> = ({ onBack }) => {
         <button
           type="button"
           onClick={onBack}
-          className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#21163A] border border-[#392858] text-[#C6B8E5] hover:text-white transition-colors cursor-pointer"
+          className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#25103F] border border-[#4A2A73] text-[#D6C2F2] hover:text-white transition-colors cursor-pointer"
           aria-label="Back to settings"
         >
           <ArrowLeft size={18} />
@@ -28,7 +28,7 @@ export const AboutScreen: React.FC<AboutScreenProps> = ({ onBack }) => {
       <div className="sunny-about-hero flex flex-col items-center py-6 text-center">
         <SunnyLogo size="large" />
         <h2 className="text-2xl font-bold text-white mt-3">Sunny</h2>
-        <p className="text-sm text-[#C6B8E5] mt-0.5">A Personal AI Companion</p>
+        <p className="text-sm text-[#D6C2F2] mt-0.5">A Personal AI Companion</p>
         <div className="mt-2.5">
           <Badge label={`Version ${__APP_VERSION__} · Web & Android`} variant="yellow" />
         </div>
@@ -37,11 +37,11 @@ export const AboutScreen: React.FC<AboutScreenProps> = ({ onBack }) => {
       {/* Vision Card */}
       <AppCard className="p-5 mb-4">
         <h3 className="text-base font-bold text-white mb-2">The Vision</h3>
-        <p className="text-xs sm:text-sm text-[#C6B8E5] leading-relaxed">
+        <p className="text-xs sm:text-sm text-[#D6C2F2] leading-relaxed">
           Sunny is an AI companion for everyday conversation, reflection, and gentle encouragement. When memory is enabled, it can save useful details you share for future conversations.
         </p>
-        <div className="mt-4 p-3 rounded-xl bg-[#17102C] border border-[#FFD84D]/25 text-center">
-          <p className="text-xs sm:text-sm italic text-[#FFD84D]">
+        <div className="mt-4 p-3 rounded-xl bg-[#1A0A2E] border border-[#D946EF]/25 text-center">
+          <p className="text-xs sm:text-sm italic text-[#D946EF]">
             "You don't have to start over every time you come back."
           </p>
         </div>
@@ -52,20 +52,20 @@ export const AboutScreen: React.FC<AboutScreenProps> = ({ onBack }) => {
         <h3 className="text-base font-bold text-white mb-3">Core Principles</h3>
         <div className="space-y-3">
           <div>
-            <h4 className="text-xs font-bold text-[#FFD84D]">1. Emotional Safety</h4>
-            <p className="text-xs text-[#C6B8E5] leading-relaxed mt-0.5">
+            <h4 className="text-xs font-bold text-[#D946EF]">1. Emotional Safety</h4>
+            <p className="text-xs text-[#D6C2F2] leading-relaxed mt-0.5">
               Nonjudgmental, empathetic, and clear about being an AI without masquerading as human or therapist.
             </p>
           </div>
           <div>
-            <h4 className="text-xs font-bold text-[#FFD84D]">2. Transparent Memory</h4>
-            <p className="text-xs text-[#C6B8E5] leading-relaxed mt-0.5">
+            <h4 className="text-xs font-bold text-[#D946EF]">2. Transparent Memory</h4>
+            <p className="text-xs text-[#D6C2F2] leading-relaxed mt-0.5">
               Nothing is saved secretly. Every memory is visible, editable, and deletable by you.
             </p>
           </div>
           <div>
-            <h4 className="text-xs font-bold text-[#FFD84D]">3. Gentle Encouragement</h4>
-            <p className="text-xs text-[#C6B8E5] leading-relaxed mt-0.5">
+            <h4 className="text-xs font-bold text-[#D946EF]">3. Gentle Encouragement</h4>
+            <p className="text-xs text-[#D6C2F2] leading-relaxed mt-0.5">
               No streaks, no guilt trips, no pressure. Sunny is here when you need it, and quiet when you don't.
             </p>
           </div>
