@@ -97,8 +97,8 @@ const OnboardingStyles: React.FC = () => (
       isolation: isolate;
       background: transparent;
     }
-    .ob-background-video { filter: brightness(0.58) saturate(0.88); }
-    .ob-video-overlay { background: linear-gradient(180deg, rgba(13,15,18,.38), rgba(18,20,24,.60)); }
+    .ob-background-video { filter: none; }
+    .ob-video-overlay { background: transparent; }
     .ob-rays svg line { stroke: #E8E1D5 !important; }
     .ob-rays svg stop:nth-child(1) { stop-color: #F8F4EB; }
     .ob-rays svg stop:nth-child(2) { stop-color: #E5D8C3; }
@@ -154,7 +154,7 @@ const OnboardingStyles: React.FC = () => (
     .sunny-onboarding-shell h1,
     .sunny-onboarding-shell h2,
     .sunny-onboarding-shell p {
-      text-shadow: 0 2px 16px rgba(12, 8, 24, 0.42);
+      text-shadow: 0 1px 2px rgba(0,0,0,.98), 0 3px 10px rgba(0,0,0,.95), 0 8px 24px rgba(0,0,0,.88);
     }
     .ob-sparkle {
       position: absolute;
