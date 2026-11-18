@@ -132,7 +132,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   const showTyping = isThinking && messages[messages.length - 1]?.role !== 'assistant';
 
   return (
-<div style={gradientStyle} className={`${bubbleColors ? 'sunny-bubbles-on ' : ''}relative isolate flex h-full min-h-0 w-full max-w-none flex-1 flex-col overflow-hidden bg-[#100B22] px-0 ${backgroundModalVisible || personalityModalVisible || optionsVisible || memoryModalVisible ? 'z-[60]' : 'z-0'} ${navHidden ? 'pb-0' : 'pb-16 lg:pb-24'} transition-[padding] duration-300 ease-out sm:px-0 lg:rounded-none lg:border-0 lg:shadow-none`}>
+<div style={gradientStyle} className={`sunny-chat-ui ${bubbleColors ? 'sunny-bubbles-on ' : ''}relative isolate flex h-full min-h-0 w-full max-w-none flex-1 flex-col overflow-hidden bg-[#100B22] px-0 ${backgroundModalVisible || personalityModalVisible || optionsVisible || memoryModalVisible ? 'z-[60]' : 'z-0'} ${navHidden ? 'pb-0' : 'pb-16 lg:pb-24'} transition-[padding] duration-300 ease-out sm:px-0 lg:rounded-none lg:border-0 lg:shadow-none`}>
 
       {/* Chat wallpaper: image + theme-aware veil so message text stays readable */}
       {wallpaperSrc && (
