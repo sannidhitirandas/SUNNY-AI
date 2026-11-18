@@ -51,8 +51,8 @@ export const ConversationStarter: React.FC<ConversationStarterProps> = ({ onSele
     <section className="sunny-home-section my-7 sm:my-9" aria-labelledby="sunny-starter-heading">
       <div className="mb-4 flex items-end justify-between gap-3"><div><p className="mb-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[#FFD84D]/80">A moment for you</p><h2 id="sunny-starter-heading" className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
         What would feel good right now?
-      </h2>
-      <div className="grid grid-cols-2 gap-2.5 sm:gap-3 lg:gap-4">
+      </h2></div><span className="hidden pb-1 text-xs text-[#9B8AB9] sm:block">Choose your vibe</span></div>
+      <div className="grid grid-cols-2 gap-3 sm:gap-3.5 lg:gap-4">
         {STARTER_OPTIONS.map((item) => (
           <AppCard
             key={item.intent}
@@ -76,6 +76,6 @@ export const ConversationStarter: React.FC<ConversationStarterProps> = ({ onSele
           </AppCard>
         ))}
       </div>
-    </div>
+    </section>
   );
 };
