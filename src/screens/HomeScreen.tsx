@@ -48,6 +48,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
   return (
 <div className="sunny-home-screen relative isolate flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-7xl mx-auto w-full pb-8 sm:pb-10 lg:px-10 xl:px-14">
+      <div className="sunny-home-atmosphere" aria-hidden="true">
+        <span className="sunny-home-aurora sunny-home-aurora-one" />
+        <span className="sunny-home-aurora sunny-home-aurora-two" />
+        <span className="sunny-home-glow sunny-home-glow-sun" />
+        <span className="sunny-home-stars" />
+      </div>
+      <div className="sunny-home-content">
       {/* Top App Header */}
       <div className="flex items-center justify-between py-2 mb-3">
         <div className="flex items-center gap-2.5">
@@ -98,6 +105,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         lastMessage={lastMessage}
         onResume={handleTalkToSunny}
       />
+      </div>
     </div>
   );
 };
