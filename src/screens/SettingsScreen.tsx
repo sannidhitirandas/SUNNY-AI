@@ -483,11 +483,13 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
 
       {/* Tone Picker Modal */}
       {toneModalVisible && (
-        <div className="sunny-settings-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-sm">
-          <div role="dialog" aria-modal="true" aria-labelledby="tone-picker-title" className="sunny-settings-dialog w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-[26px] p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
-            <h3 id="tone-picker-title" className="text-base font-bold text-white mb-3">
-              Choose Sunny's Personality
-            </h3>
+        <div className="sunny-settings-overlay sunny-personality-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-sm">
+          <div role="dialog" aria-modal="true" aria-labelledby="tone-picker-title" className="sunny-settings-dialog sunny-personality-dialog w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-[26px] p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+            <div className="sunny-personality-heading mb-4">
+              <span className="sunny-personality-eyebrow"><Sparkles size={13} /> A LITTLE MORE YOU</span>
+              <h3 id="tone-picker-title" className="mt-2 text-xl font-bold text-white">Choose Sunny’s vibe</h3>
+              <p className="mt-1 text-sm leading-relaxed text-[#C6B8E5]">Pick the kind of energy you’d like Sunny to bring. You can change this whenever you want.</p>
+            </div>
             <div className="space-y-2 mb-4">
               {TONES.map((item) => {
                 const isSelected = preferences.preferredTone === item.tone;
@@ -499,7 +501,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                       await updateTone(item.tone);
                       setToneModalVisible(false);
                     }}
-                    className={`w-full flex items-center justify-between p-3 rounded-2xl border text-left transition-colors cursor-pointer ${
+                    className={`sunny-personality-option w-full flex items-center justify-between p-3.5 rounded-2xl border text-left transition-colors cursor-pointer ${
                       isSelected
                         ? 'border-[#FFD84D] bg-[#FFD84D]/15'
                         : 'border-[#392858] bg-[#302149] hover:border-white/20'
