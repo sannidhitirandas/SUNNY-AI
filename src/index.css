@@ -8,7 +8,7 @@
   font-display: swap;
 }
 
-@theme {
+:root {
   --font-sans: "Gabriola", Georgia, serif;
   --color-sunny-bg: #100B22;
   --color-sunny-secondary: #17102C;
