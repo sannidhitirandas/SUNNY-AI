@@ -241,8 +241,8 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
       />
 
       {personalityModalVisible && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
-          <div role="dialog" aria-modal="true" aria-labelledby="personality-picker-title" className="w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-3xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+        <div className="sunny-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
+          <div role="dialog" aria-modal="true" aria-labelledby="personality-picker-title" className="sunny-modal-surface w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-3xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between mb-3">
               <div>
                 <h3 id="personality-picker-title" className="text-base font-bold text-white">Choose Sunny's personality</h3>
@@ -283,8 +283,8 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
 
       {/* Options Menu Modal */}
       {optionsVisible && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
-          <div className="w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-3xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+        <div className="sunny-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
+          <div className="sunny-modal-surface w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-3xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between pb-3 mb-2 border-b border-[#392858]">
               <h3 className="text-base font-bold text-white">Chat Options</h3>
               <button
@@ -354,8 +354,8 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
       )}
 
       {backgroundModalVisible && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
-          <div role="dialog" aria-modal="true" aria-labelledby="chat-bg-picker-title" className="w-full max-w-md max-h-[min(90dvh,48rem)] overflow-y-auto overscroll-contain bg-[#21163A] border border-[#392858] rounded-2xl p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+        <div className="sunny-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
+          <div role="dialog" aria-modal="true" aria-labelledby="chat-bg-picker-title" className="sunny-modal-surface w-full max-w-md max-h-[min(90dvh,48rem)] overflow-y-auto overscroll-contain bg-[#21163A] border border-[#392858] rounded-2xl p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-2xl animate-in fade-in zoom-in-95 duration-150">
             <h3 id="chat-bg-picker-title" className="text-base font-bold text-white mb-1">Chat background</h3>
             <p className="text-xs text-[#C6B8E5] mb-3">{device === 'mobile' ? 'Mobile wallpapers' : 'Desktop wallpapers'} · Saved separately on this device</p>
             <div className="grid grid-cols-2 gap-3 mb-4">

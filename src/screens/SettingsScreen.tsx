@@ -227,7 +227,16 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               Fine-tune how Sunny talks, sounds, remembers, and checks in with you. Change anything whenever you need.
             </p>
           </div>
-          <div className="sunny-settings-profile flex items-center gap-3 rounded-[22px] border border-white/10 bg-white/[0.055] px-4 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,.05)] sm:min-w-56">
+          <button
+            type="button"
+            onClick={() => {
+              setProfileName(user?.displayName || preferences.preferredName || '');
+              setProfileError(null);
+              setProfileModalVisible(true);
+            }}
+            className="sunny-settings-profile flex items-center gap-3 rounded-[22px] border border-white/10 bg-white/[0.055] px-4 py-3.5 text-left shadow-[inset_0_1px_0_rgba(255,255,255,.05)] sm:min-w-56"
+            aria-label="Edit account profile"
+          >
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FFD84D]/10 text-[#FFD84D]">
               <UserIcon size={23} />
             </div>
@@ -236,7 +245,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               <p className="mt-0.5 truncate text-base font-semibold text-white">{preferences.preferredName || user?.displayName || 'sunshine'}</p>
               <p className="mt-0.5 text-xs text-[#C6B8E5]">{getPersonalityLabel(preferences.preferredTone)}</p>
             </div>
-          </div>
+          </button>
         </div>
       </section>
 
@@ -483,8 +492,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
 
       {/* Tone Picker Modal */}
       {toneModalVisible && (
-        <div className="sunny-settings-overlay sunny-personality-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-sm">
-          <div role="dialog" aria-modal="true" aria-labelledby="tone-picker-title" className="sunny-settings-dialog sunny-personality-dialog w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-[26px] p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+        <div className="sunny-modal-overlay sunny-settings-overlay sunny-personality-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-sm">
+          <div role="dialog" aria-modal="true" aria-labelledby="tone-picker-title" className="sunny-modal-surface sunny-settings-dialog sunny-personality-dialog w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-[26px] p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
             <div className="sunny-personality-heading mb-4">
               <span className="sunny-personality-eyebrow"><Sparkles size={13} /> A LITTLE MORE YOU</span>
               <h3 id="tone-picker-title" className="mt-2 text-xl font-bold text-white">Choose Sunny’s vibe</h3>
@@ -533,8 +542,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       )}
 
       {themeModalVisible && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
-          <div role="dialog" aria-modal="true" aria-labelledby="theme-picker-title" className="w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+        <div className="sunny-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
+          <div role="dialog" aria-modal="true" aria-labelledby="theme-picker-title" className="sunny-modal-surface w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
             <h3 id="theme-picker-title" className="text-base font-bold text-white mb-3">Choose a theme</h3>
             <div className="space-y-2 mb-4">
               {THEMES.map((item) => {
@@ -566,8 +575,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       )}
 
       {backgroundModalVisible && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
-          <div role="dialog" aria-modal="true" aria-labelledby="chat-bg-picker-title" className="sunny-settings-dialog w-full max-w-md max-h-[90vh] overflow-y-auto bg-[#21163A] border border-[#392858] rounded-[26px] p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+        <div className="sunny-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
+          <div role="dialog" aria-modal="true" aria-labelledby="chat-bg-picker-title" className="sunny-modal-surface sunny-settings-dialog w-full max-w-md max-h-[90vh] overflow-y-auto bg-[#21163A] border border-[#392858] rounded-[26px] p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
             <h3 id="chat-bg-picker-title" className="text-base font-bold text-white mb-1">Chat background</h3>
             <p className="text-xs text-[#C6B8E5] mb-3">{device === 'mobile' ? 'Mobile wallpapers' : 'Desktop wallpapers'} · Saved separately on this device</p>
             <div className="grid grid-cols-2 gap-3 mb-4">
@@ -602,8 +611,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
 
       {/* Edit Name Modal */}
       {nameModalVisible && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
-          <div role="dialog" aria-modal="true" aria-labelledby="preferred-name-title" className="w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+        <div className="sunny-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
+          <div role="dialog" aria-modal="true" aria-labelledby="preferred-name-title" className="sunny-modal-surface w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
             <h3 id="preferred-name-title" className="text-base font-bold text-white mb-3">
               What should Sunny call you?
             </h3>
@@ -633,8 +642,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       )}
 
       {passwordModalVisible && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
-          <div role="dialog" aria-modal="true" aria-labelledby="account-password-title" className="w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+        <div className="sunny-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
+          <div role="dialog" aria-modal="true" aria-labelledby="account-password-title" className="sunny-modal-surface w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
             <h3 id="account-password-title" className="text-base font-bold text-white mb-2">Set an account password</h3>
             <p className="text-xs text-[#C6B8E5] mb-4">This adds email-and-password sign-in to your existing account. Your Google sign-in, chats, and saved memories stay on the same account.</p>
             <AppInput
@@ -677,8 +686,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       )}
 
       {profileModalVisible && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
-          <div role="dialog" aria-modal="true" aria-labelledby="profile-title" className="w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+        <div className="sunny-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
+          <div role="dialog" aria-modal="true" aria-labelledby="profile-title" className="sunny-modal-surface w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
             <h3 id="profile-title" className="text-base font-bold text-white mb-2">Account profile</h3>
             <p className="text-xs text-[#C6B8E5] mb-4">
               {user

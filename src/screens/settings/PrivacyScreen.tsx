@@ -82,7 +82,7 @@ export const PrivacyScreen: React.FC<PrivacyScreenProps> = ({ onBack, onResetToO
   };
 
   return (
-    <div className="sunny-privacy-screen flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-xl mx-auto w-full pb-6 sm:pb-8">
+    <div className="sunny-privacy-screen sunny-subscreen flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-xl mx-auto w-full pb-6 sm:pb-8">
       {/* Top Bar */}
       <div className="sunny-privacy-header flex items-center gap-3 py-2 mb-4">
         <button
@@ -169,13 +169,13 @@ export const PrivacyScreen: React.FC<PrivacyScreenProps> = ({ onBack, onResetToO
       </SettingsSection>
 
       {deleteDialogVisible && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
+        <div className="sunny-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
           <div
             role="dialog"
             aria-modal="true"
             aria-labelledby="delete-account-title"
             aria-describedby="delete-account-description"
-            className="sunny-privacy-dialog w-full max-w-md bg-[#21163A] border border-[#FF8D9A]/40 rounded-2xl p-5 shadow-2xl"
+            className="sunny-modal-surface sunny-privacy-dialog w-full max-w-md bg-[#21163A] border border-[#FF8D9A]/40 rounded-2xl p-5 shadow-2xl"
           >
             <h2 id="delete-account-title" className="text-lg font-bold text-[#FF8D9A]">Delete your Sunny account?</h2>
             <p id="delete-account-description" className="mt-2 text-sm text-[#C6B8E5] leading-relaxed">

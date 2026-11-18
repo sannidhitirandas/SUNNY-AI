@@ -20,13 +20,13 @@ test('backend intent allowlist accepts only the four supported intents', () => {
 
 test('each intent has distinct behavioral guidance', () => {
   const guidance = intents.map((intent) => getIntentInstructions(intent));
-  assert.match(guidance[0], /Listen and understand before offering solutions/);
-  assert.match(guidance[1], /jokes, silly questions, interesting facts, or little games/);
-  assert.match(guidance[2], /realistic encouragement without forced positivity/);
-  assert.match(guidance[3], /Listen empathetically and understand first/);
-  assert.match(guidance[3], /Be playful, funny, curious, or entertaining/);
-  assert.match(guidance[3], /genuine encouragement and practical support/);
-  assert.match(guidance[3], /Do not force listening, humor, or encouragement into every response/);
+  assert.match(guidance[0], /Do not rush to advice, solutions/);
+  assert.match(guidance[1], /light banter, silly questions, and occasional original jokes/);
+  assert.match(guidance[2], /grounded cheerleader, not a motivational speaker/);
+  assert.match(guidance[3], /Read the moment instead of mechanically combining/);
+  assert.match(guidance[3], /If the user is sharing something painful, listen first/);
+  assert.match(guidance[3], /If they need help, be useful and clear/);
+  assert.match(guidance[3], /Do not turn every exchange into advice, emotional analysis, a list, or a question/);
   assert.equal(new Set(guidance).size, intents.length);
 });
 

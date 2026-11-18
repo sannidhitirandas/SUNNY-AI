@@ -232,3 +232,91 @@
   .sunny-composer-wrap { padding-left: .7rem !important; padding-right: .7rem !important; }
   .sunny-composer { border-radius: 1.25rem !important; }
 }
+
+/* Shared inner-app finishing layer: the content surfaces stay calm and tactile,
+   while the cinematic video treatment remains reserved for entry experiences. */
+.sunny-app-shell {
+  background:
+    radial-gradient(ellipse at 15% -10%, rgba(117, 82, 154, .13), transparent 34%),
+    radial-gradient(ellipse at 96% 0%, rgba(255, 216, 77, .055), transparent 25%),
+    #100B22;
+}
+.sunny-subscreen {
+  position: relative;
+  padding-top: clamp(1rem, 2.5vw, 2rem);
+  scrollbar-gutter: stable;
+  overscroll-behavior-y: contain;
+}
+.sunny-subscreen > div:first-child {
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  min-height: 4rem;
+  margin: -0.5rem -0.5rem 1.25rem;
+  padding: .5rem;
+  border-bottom: 1px solid var(--sunny-inner-line);
+  background: linear-gradient(180deg, rgba(16,11,34,.97) 72%, rgba(16,11,34,.76) 100%);
+  backdrop-filter: blur(18px) saturate(140%);
+}
+.sunny-subscreen h1 {
+  font-family: 'Gabriola', Georgia, serif;
+  font-size: clamp(1.75rem, 4vw, 2.15rem);
+  font-weight: 600;
+  letter-spacing: .01em;
+}
+.sunny-subscreen .sunny-app-card,
+.sunny-subscreen .sunny-privacy-highlight {
+  border-color: rgba(157,125,190,.18);
+  background: linear-gradient(145deg, rgba(39,28,59,.88), rgba(25,18,41,.96));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035), 0 12px 30px rgba(0,0,0,.11);
+}
+.sunny-subscreen .sunny-settings-panel {
+  background: linear-gradient(145deg, rgba(38,27,57,.88), rgba(24,17,40,.94)) !important;
+}
+.sunny-settings-profile {
+  cursor: pointer;
+  transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+.sunny-settings-profile:hover {
+  border-color: rgba(255,216,77,.36) !important;
+  background: rgba(255,255,255,.075) !important;
+  transform: translateY(-1px);
+}
+.sunny-settings-profile:focus-visible {
+  outline: 2px solid rgba(255,216,77,.85);
+  outline-offset: 3px;
+}
+.sunny-modal-overlay {
+  overscroll-behavior: contain;
+  padding-top: max(1rem, env(safe-area-inset-top));
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+.sunny-modal-surface {
+  max-height: min(90dvh, 48rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-color: rgba(177,143,211,.24) !important;
+  background: linear-gradient(145deg, #271D3A, #1B142B) !important;
+  box-shadow: 0 28px 90px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.05) !important;
+}
+:root[data-theme='sunny-light'] .sunny-subscreen > div:first-child {
+  background: linear-gradient(180deg, rgba(248,246,252,.98) 72%, rgba(248,246,252,.8) 100%);
+}
+:root[data-theme='sunny-light'] .sunny-subscreen .sunny-app-card,
+:root[data-theme='sunny-light'] .sunny-subscreen .sunny-privacy-highlight,
+:root[data-theme='sunny-light'] .sunny-subscreen .sunny-settings-panel,
+:root[data-theme='sunny-light'] .sunny-modal-surface {
+  background: linear-gradient(145deg, #FFFFFF, #F4EFF9) !important;
+  border-color: rgba(111,82,139,.16) !important;
+}
+@media (max-width: 640px) {
+  .sunny-subscreen { padding-left: 1rem; padding-right: 1rem; }
+  .sunny-subscreen > div:first-child { margin-left: -.25rem; margin-right: -.25rem; }
+  .sunny-subscreen h1 { font-size: 1.7rem; }
+  .sunny-modal-overlay { justify-content: flex-end !important; padding-left: .75rem !important; padding-right: .75rem !important; }
+  .sunny-modal-surface { width: 100%; border-bottom-right-radius: 1.35rem !important; border-bottom-left-radius: 1.35rem !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sunny-settings-profile { transition: none; }
+  .sunny-settings-profile:hover { transform: none; }
+}
