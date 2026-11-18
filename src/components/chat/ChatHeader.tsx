@@ -17,7 +17,7 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
   preferredTone = 'The Mix',
 }) => {
   return (
-    <div className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-[#392858]/80 bg-[#17102C]/95 px-4 py-3 backdrop-blur-xl sm:px-6 sm:py-4 lg:rounded-t-3xl lg:border-x">
+    <div className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-[#392858]/80 bg-[#17102C]/95 px-4 py-3 backdrop-blur-xl sm:px-6 sm:py-4">
       <div className="flex items-center gap-3">
         {onBack && (
           <button
