@@ -144,11 +144,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         }
 
         .login-card {
-          background: rgba(33, 22, 58, 0.78);
-          border: 1px solid #392858;
-          box-shadow: 0 20px 50px -24px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 216, 77, 0.04) inset;
-          -webkit-backdrop-filter: blur(10px);
-          backdrop-filter: blur(10px);
+          background: rgba(20, 16, 35, 0.48);
+          border: 1px solid rgba(255, 255, 255, 0.28);
+          box-shadow: 0 24px 70px -28px rgba(0, 0, 0, 0.48), 0 1px 0 rgba(255, 255, 255, 0.16) inset;
+          -webkit-backdrop-filter: blur(22px) saturate(1.15);
+          backdrop-filter: blur(22px) saturate(1.15);
           animation: login-fade-up 0.7s ease-out 0.15s both;
         }
 
@@ -167,13 +167,41 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           height: 100%;
           object-fit: cover;
           object-position: center;
-          opacity: .58;
-          filter: saturate(.84) brightness(.72);
+          opacity: 1;
+          filter: none;
         }
         .login-video-overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(180deg,rgba(16,11,34,.55),rgba(16,11,34,.42) 48%,rgba(16,11,34,.78));
+          background: transparent;
+        }
+
+        .login-hero h1 {
+          color: #fff;
+          text-shadow: 0 2px 18px rgba(12, 8, 24, 0.5);
+        }
+        .login-hero p {
+          color: rgba(255, 255, 255, 0.92);
+          text-shadow: 0 1px 12px rgba(12, 8, 24, 0.55);
+        }
+        .login-card label {
+          color: rgba(255, 255, 255, 0.96);
+          text-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
+        }
+        .login-card .sunny-app-field {
+          color: #fff;
+          background: rgba(255, 255, 255, 0.13);
+          border-color: rgba(255, 255, 255, 0.34);
+          box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08) inset;
+          -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(8px);
+        }
+        .login-card .sunny-app-field::placeholder {
+          color: rgba(255, 255, 255, 0.68);
+        }
+        .login-card .sunny-app-field:focus {
+          border-color: rgba(255, 255, 255, 0.88);
+          box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.16);
         }
         .login-hero {
           animation: login-fade-up 0.7s ease-out both;
@@ -182,8 +210,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         /* Gold focus ring on the text fields */
         .login-card input:focus {
           outline: none;
-          border-color: #FFD84D;
-          box-shadow: 0 0 0 3px rgba(255, 216, 77, 0.18);
         }
 
         .login-cta {
@@ -336,7 +362,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
                   type="button"
                   onClick={() => void handleGoogleSignIn()}
                   disabled={loading || googleLoading}
-                  className="flex min-h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-xl border border-[#493660] bg-[#1B1430] px-4 py-3 text-sm font-semibold text-white transition-colors hover:border-[#FFD84D]/40 hover:bg-[#302149] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="flex min-h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-xl border border-white/35 bg-white/12 px-4 py-3 text-sm font-semibold text-white shadow-sm backdrop-blur-md transition-colors hover:bg-white/20 hover:border-white/60 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {googleLoading ? (
                     <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" aria-hidden="true" />
