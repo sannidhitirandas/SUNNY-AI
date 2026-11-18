@@ -380,8 +380,16 @@ export function App() {
 
   if (route === 'loading') {
     return (
-      <div className="min-h-screen bg-[#100B22] flex items-center justify-center">
-        <div className="w-8 h-8 rounded-full border-3 border-[#FFD84D] border-t-transparent animate-spin" />
+      <div className="sunny-prehome-loading min-h-[100dvh] flex items-center justify-center overflow-hidden">
+        <div className="sunny-prehome-video-backdrop" aria-hidden="true">
+          <video autoPlay muted loop playsInline preload="metadata">
+            <source src="/sunny-home-background.mp4" type="video/mp4" />
+          </video>
+        </div>
+        <div className="sunny-prehome-loading-content" role="status" aria-live="polite" aria-label="Sunny is getting ready">
+          <div className="w-8 h-8 rounded-full border-3 border-[#FFD84D] border-t-transparent animate-spin" />
+          <span className="mt-4 text-[11px] font-bold tracking-[0.18em] text-[#FFF1B0]">GETTING SUNNY READY</span>
+        </div>
       </div>
     );
   }

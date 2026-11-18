@@ -1747,3 +1747,39 @@ button:disabled { cursor: not-allowed; }
 @media (prefers-reduced-motion:reduce) {
   .sunny-home-background-video { display:none; }
 }
+
+/* Transitional state between splash and the private companion workspace. */
+.sunny-prehome-loading {
+  position: relative;
+  isolation: isolate;
+  background: #100B22;
+}
+.sunny-prehome-video-backdrop {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  background: #100B22;
+}
+.sunny-prehome-video-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(16,11,34,.5), rgba(16,11,34,.68));
+}
+.sunny-prehome-video-backdrop video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: .72;
+}
+.sunny-prehome-loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-shadow: 0 2px 18px rgba(12,8,24,.7);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sunny-prehome-video-backdrop video { display: none; }
+}
