@@ -56,7 +56,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           loop
           playsInline
           preload="metadata"
-          poster="/sunny-home-background-poster.jpg"
         >
           <source src="/sunny-home-background.mp4" type="video/mp4" />
         </video>
