@@ -1,0 +1,201 @@
+/* Sunny inner app experience — separate from the cinematic outer/auth pages. */
+:root {
+  --sunny-inner-surface: rgba(33, 22, 58, .72);
+  --sunny-inner-surface-strong: #21163A;
+  --sunny-inner-line: rgba(157, 125, 190, .18);
+  --sunny-inner-muted: #AFA0C8;
+}
+.sunny-app-shell {
+  background:
+    radial-gradient(ellipse at 50% -18%, rgba(114, 76, 151, .17), transparent 42%),
+    #100B22;
+}
+.sunny-home-screen,
+.sunny-memories-screen,
+.sunny-settings-screen,
+.sunny-privacy-screen,
+.sunny-safety-screen,
+.sunny-about-screen {
+  scrollbar-gutter: stable;
+  overscroll-behavior-y: contain;
+}
+.sunny-home-screen,
+.sunny-memories-screen,
+.sunny-settings-screen {
+  max-width: 78rem;
+  padding-top: clamp(1rem, 2.5vw, 2rem);
+}
+.sunny-home-screen > .sunny-home-content > div:first-child,
+.sunny-memories-screen > div:first-child,
+.sunny-settings-screen > div:first-child {
+  min-height: 3.25rem;
+  margin-bottom: 1.35rem;
+  border-bottom: 1px solid var(--sunny-inner-line);
+  padding-bottom: .9rem;
+}
+.sunny-home-screen h1,
+.sunny-memories-screen > div:first-child h1,
+.sunny-settings-screen > div:first-child h1 {
+  font-family: 'Gabriola', Georgia, serif;
+  font-size: 1.85rem;
+  font-weight: 600;
+  letter-spacing: .015em;
+}
+.sunny-home-hero,
+.sunny-memories-hero,
+.sunny-settings-hero {
+  border: 1px solid rgba(177, 143, 211, .19) !important;
+  border-radius: 1.8rem !important;
+  background:
+    radial-gradient(ellipse at 88% 10%, rgba(255, 216, 77, .09), transparent 34%),
+    linear-gradient(135deg, #211832 0%, #1B142B 55%, #151024 100%) !important;
+  box-shadow: 0 22px 60px rgba(0,0,0,.20), inset 0 1px 0 rgba(255,255,255,.035) !important;
+}
+.sunny-home-hero { min-height: 17rem; }
+.sunny-home-hero h1 {
+  font-family: 'Gabriola', Georgia, serif;
+  font-size: clamp(3.2rem, 6vw, 4.6rem) !important;
+  line-height: .94 !important;
+  letter-spacing: .01em !important;
+}
+.sunny-home-hero p { max-width: 34rem; }
+.sunny-hero-glow,
+.sunny-memory-glow,
+.sunny-settings-glow { opacity: .65; }
+.sunny-hero-art { filter: drop-shadow(0 14px 28px rgba(255,216,77,.08)); }
+.sunny-home-section { margin-top: 2rem !important; margin-bottom: 2rem !important; }
+.sunny-home-section h2,
+.sunny-home-section h3 { letter-spacing: -.025em; }
+.sunny-vibe-card {
+  border: 1px solid rgba(157,125,190,.18) !important;
+  border-radius: 1.35rem !important;
+  background: linear-gradient(145deg, rgba(43,31,65,.92), rgba(25,18,41,.96)) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035), 0 12px 30px rgba(0,0,0,.12) !important;
+  min-height: 6.2rem !important;
+}
+.sunny-vibe-card:hover { border-color: rgba(255,216,77,.38) !important; }
+.sunny-vibe-icon { border-radius: 1rem !important; }
+.sunny-daily-card {
+  border: 1px solid rgba(157,125,190,.16) !important;
+  border-radius: 1.35rem !important;
+  background: rgba(33,22,58,.62) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035) !important;
+}
+.sunny-recent-card {
+  border: 1px solid rgba(157,125,190,.16) !important;
+  border-radius: 1.3rem !important;
+  background: rgba(33,22,58,.55) !important;
+}
+.sunny-memories-hero,
+.sunny-settings-hero { margin-bottom: 1.6rem !important; }
+.sunny-memory-count,
+.sunny-settings-profile {
+  background: rgba(255,255,255,.035) !important;
+  border-color: rgba(255,255,255,.09) !important;
+}
+.sunny-memory-search input {
+  border-color: rgba(157,125,190,.2) !important;
+  border-radius: 1.1rem !important;
+  background: rgba(27,20,48,.8) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.025) !important;
+}
+.sunny-memory-filters button { min-height: 2.45rem; }
+.sunny-memory-card {
+  border-color: rgba(157,125,190,.18) !important;
+  border-radius: 1.4rem !important;
+  background: linear-gradient(145deg, rgba(39,28,59,.96), rgba(25,18,41,.98)) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035), 0 14px 36px rgba(0,0,0,.16) !important;
+}
+.sunny-memory-card:hover { border-color: rgba(255,216,77,.3) !important; }
+.sunny-settings-grid { gap: 1.25rem !important; }
+.sunny-settings-section { margin-bottom: 1.35rem !important; }
+.sunny-settings-panel {
+  border: 1px solid rgba(157,125,190,.18) !important;
+  border-radius: 1.3rem !important;
+  background: rgba(29,21,45,.78) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035), 0 12px 30px rgba(0,0,0,.10) !important;
+}
+.sunny-settings-row { min-height: 4.65rem !important; padding-top: .85rem !important; padding-bottom: .85rem !important; }
+.sunny-settings-row:hover { background: rgba(255,255,255,.035) !important; }
+.sunny-settings-icon { border: 1px solid rgba(255,255,255,.045); background: rgba(139,101,201,.13) !important; }
+.sunny-chat-ui { background-color: #100B22 !important; }
+.sunny-chat-header {
+  border-bottom-color: rgba(157,125,190,.16) !important;
+  background: rgba(20,14,34,.88) !important;
+  padding-top: max(.8rem, env(safe-area-inset-top)) !important;
+  backdrop-filter: blur(28px) saturate(150%) !important;
+}
+.sunny-chat-avatar {
+  border-radius: 1.15rem !important;
+  background: linear-gradient(145deg, rgba(255,216,77,.17), rgba(139,101,201,.16)) !important;
+}
+.chat-message-list { background: radial-gradient(ellipse at 50% 0%, rgba(92,65,126,.12), transparent 52%) !important; }
+.sunny-chat-ui textarea {
+  border-radius: 1.25rem !important;
+  border-color: rgba(157,125,190,.24) !important;
+  background: rgba(27,20,48,.94) !important;
+}
+.sunny-privacy-header,
+.sunny-safety-header { border-bottom: 1px solid var(--sunny-inner-line); padding-bottom: 1rem; }
+.sunny-privacy-intro,
+.sunny-safety-boundary,
+.sunny-privacy-highlight,
+.sunny-safety-resource,
+.sunny-grounding-card {
+  border-radius: 1.35rem !important;
+  border-color: rgba(157,125,190,.18) !important;
+  background: rgba(33,22,58,.66) !important;
+}
+.sunny-about-hero { border-bottom: 1px solid var(--sunny-inner-line); margin-bottom: 1.2rem; }
+.sunny-about-screen > div:not(:first-child) {
+  border: 1px solid rgba(157,125,190,.16);
+  border-radius: 1.35rem;
+  background: rgba(33,22,58,.58);
+}
+.gooey-dock-shell {
+  border-color: rgba(177,143,211,.23) !important;
+  background: rgba(24,17,40,.9) !important;
+  box-shadow: 0 16px 44px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.06) !important;
+}
+.gooey-dock__item { min-height: 3.7rem; }
+.gooey-dock__label { font-size: .72rem !important; }
+:root[data-theme='sunny-light'] .sunny-home-hero,
+:root[data-theme='sunny-light'] .sunny-memories-hero,
+:root[data-theme='sunny-light'] .sunny-settings-hero {
+  background: radial-gradient(ellipse at 88% 10%, rgba(255,216,77,.15), transparent 34%), linear-gradient(135deg,#fff 0%,#F5F0FA 100%) !important;
+  border-color: rgba(111,82,139,.18) !important;
+}
+:root[data-theme='sunny-light'] .sunny-vibe-card,
+:root[data-theme='sunny-light'] .sunny-memory-card,
+:root[data-theme='sunny-light'] .sunny-settings-panel,
+:root[data-theme='sunny-light'] .sunny-daily-card,
+:root[data-theme='sunny-light'] .sunny-recent-card {
+  background: rgba(255,255,255,.88) !important;
+  border-color: rgba(111,82,139,.16) !important;
+}
+:root[data-theme='sunny-light'] .sunny-chat-header { background: rgba(248,246,252,.92) !important; }
+:root[data-theme='sunny-light'] .gooey-dock-shell { background: rgba(255,255,255,.92) !important; }
+@media (max-width: 640px) {
+  .sunny-home-screen,
+  .sunny-memories-screen,
+  .sunny-settings-screen { padding-left: 1rem; padding-right: 1rem; }
+  .sunny-home-screen > .sunny-home-content > div:first-child,
+  .sunny-memories-screen > div:first-child,
+  .sunny-settings-screen > div:first-child { margin-bottom: 1rem; }
+  .sunny-home-hero { min-height: 0; padding: 1.3rem !important; }
+  .sunny-home-hero h1 { font-size: clamp(2.8rem, 13vw, 3.7rem) !important; }
+  .sunny-hero-art { max-width: 14rem !important; height: 7.5rem !important; margin-top: .25rem; }
+  .sunny-vibe-card { min-height: 6.1rem !important; padding: .9rem !important; }
+  .sunny-settings-profile { width: 100%; }
+  .sunny-memory-card { padding: 1rem !important; }
+  .gooey-dock-shell { bottom: max(.65rem, env(safe-area-inset-bottom)) !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sunny-vibe-card,
+  .sunny-memory-card,
+  .sunny-recent-card,
+  .gooey-dock-shell { transition: none !important; }
+  .sunny-vibe-card:hover,
+  .sunny-memory-card:hover,
+  .sunny-recent-card:hover { transform: none !important; }
+}
