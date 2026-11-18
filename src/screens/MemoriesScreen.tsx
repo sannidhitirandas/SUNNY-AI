@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { useMemories } from '@/context/MemoryContext';
 import { usePreferences } from '@/context/PreferencesContext';
 import { audioService } from '@/services/audioService';
@@ -33,14 +33,6 @@ export const MemoriesScreen: React.FC = () => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [activeMemoryIndex, setActiveMemoryIndex] = useState(0);
-  const stackedMemories = useMemo(() => {
-    if (filteredMemories.length === 0) return [];
-    const start = activeMemoryIndex % filteredMemories.length;
-    return Array.from({ length: Math.min(3, filteredMemories.length) }, (_, depth) => ({
-      memory: filteredMemories[(start + depth) % filteredMemories.length],
-      depth,
-    }));
-  }, [filteredMemories, activeMemoryIndex]);
   const [editingMemory, setEditingMemory] = useState<Memory | null>(null);
 
   const handleOpenAdd = () => {
@@ -179,36 +171,35 @@ export const MemoriesScreen: React.FC = () => {
           {/* Memory card deck */}
           {filteredMemories.length > 0 ? (
             <section className="sunny-memory-deck mx-auto w-full max-w-2xl" aria-label="Stacked memories">
-              <div className="mb-4 flex items-center justify-between gap-3">
-                <span className="text-sm font-semibold text-[#E9DFF8]">Your saved details</span>
-                <span className="text-xs tabular-nums text-[#9B8AB9]">
-                  {((activeMemoryIndex % filteredMemories.length) + 1)} / {filteredMemories.length}
+              <div className="mb-5 flex items-end justify-between gap-3 px-1">
+                <div>
+                  <p className="text-sm font-semibold text-[#F8F1FF]">A little collection of you</p>
+                  <p className="mt-1 text-xs text-[#9B8AB9]">Every card holds something worth remembering</p>
+                </div>
+                <span className="sunny-memory-deck-counter">
+                  {((activeMemoryIndex % filteredMemories.length) + 1).toString().padStart(2, '0')}
+                  <span> / {filteredMemories.length.toString().padStart(2, '0')}</span>
                 </span>
               </div>
-              <div className="sunny-memory-deck-stage grid items-start">
-                {stackedMemories.slice().reverse().map(({ memory, depth }) => (
-                  <div
-                    key={memory.id}
-                    className="sunny-memory-deck-layer"
-                    style={{
-                      gridArea: '1 / 1',
-                      zIndex: 3 - depth,
-                      transform: `translateY(${depth * 13}px) scale(${1 - depth * 0.035}) rotate(${depth === 1 ? 1.1 : depth === 2 ? -1.2 : 0}deg)`,
-                      opacity: depth === 0 ? 1 : depth === 1 ? 0.72 : 0.42,
-                      pointerEvents: depth === 0 ? 'auto' : 'none',
-                    }}
-                    aria-hidden={depth > 0}
-                  >
-                    <MemoryCard
-                      memory={memory}
-                      onEdit={handleOpenEdit}
-                      onDelete={deleteMemory}
-                    />
-                  </div>
-                ))}
+
+              <div className="sunny-memory-deck-stage">
+                {filteredMemories.length > 1 && (
+                  <>
+                    <div className="sunny-memory-deck-sheet sunny-memory-deck-sheet-back" aria-hidden="true" />
+                    <div className="sunny-memory-deck-sheet sunny-memory-deck-sheet-middle" aria-hidden="true" />
+                  </>
+                )}
+                <div className="sunny-memory-deck-front" key={filteredMemories[activeMemoryIndex % filteredMemories.length].id}>
+                  <MemoryCard
+                    memory={filteredMemories[activeMemoryIndex % filteredMemories.length]}
+                    onEdit={handleOpenEdit}
+                    onDelete={deleteMemory}
+                  />
+                </div>
               </div>
+
               {filteredMemories.length > 1 && (
-                <div className="mt-7 flex items-center justify-center gap-3">
+                <div className="sunny-memory-deck-navigation">
                   <button
                     type="button"
                     onClick={() => setActiveMemoryIndex((current) => (current - 1 + filteredMemories.length) % filteredMemories.length)}
@@ -217,7 +208,11 @@ export const MemoriesScreen: React.FC = () => {
                   >
                     <span aria-hidden="true">←</span>
                   </button>
-                  <span className="min-w-24 text-center text-xs text-[#9B8AB9]">Explore your memories</span>
+                  <div className="sunny-memory-deck-progress" aria-hidden="true">
+                    {filteredMemories.slice(0, Math.min(filteredMemories.length, 7)).map((memory, index) => (
+                      <span key={memory.id} className={index === activeMemoryIndex % filteredMemories.length ? 'is-active' : ''} />
+                    ))}
+                  </div>
                   <button
                     type="button"
                     onClick={() => setActiveMemoryIndex((current) => (current + 1) % filteredMemories.length)}
