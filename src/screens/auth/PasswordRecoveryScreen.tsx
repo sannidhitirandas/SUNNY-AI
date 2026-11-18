@@ -32,13 +32,13 @@ export const PasswordRecoveryScreen: React.FC = () => {
   return (
     <div className="sunny-recovery-screen sunny-auth-screen relative flex min-h-[100dvh] w-full flex-col justify-center overflow-x-hidden overflow-y-auto px-6 py-12">
       <style>{`
-        .sunny-recovery-screen { isolation:isolate; background:linear-gradient(180deg,rgba(13,15,18,.38),rgba(18,20,24,.60)); }
+        .sunny-recovery-screen { isolation:isolate; background:transparent; }
         .sunny-recovery-video {
           position:fixed; z-index:0; inset:0; overflow:hidden; pointer-events:none; background:#121417;
         }
         .sunny-recovery-video video {
           position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center;
-          opacity:1; filter:brightness(.58) saturate(.88);
+          opacity:1; filter:none;
         }
         .sunny-recovery-video::after { content:''; position:absolute; inset:0; background:transparent; }
         .sunny-recovery-rays svg line { stroke:#E8E1D5 !important; }
@@ -54,7 +54,7 @@ export const PasswordRecoveryScreen: React.FC = () => {
           -webkit-backdrop-filter:blur(22px) saturate(1.15); backdrop-filter:blur(22px) saturate(1.15);
         }
         .sunny-recovery-content h1,.sunny-recovery-content p,.sunny-recovery-card label {
-          text-shadow:0 1px 12px rgba(12,8,24,.5);
+          text-shadow:0 1px 2px rgba(0,0,0,.98),0 3px 10px rgba(0,0,0,.95),0 8px 24px rgba(0,0,0,.88);
         }
         .sunny-recovery-card label { color:rgba(255,255,255,.96); }
         .sunny-recovery-card .sunny-app-field {
