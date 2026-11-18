@@ -9,7 +9,7 @@
 }
 
 @theme {
-  --font-sans: "Gabriola", Georgia, serif;
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --color-sunny-bg: #100B22;
   --color-sunny-secondary: #17102C;
   --color-sunny-card: #21163A;
@@ -27,8 +27,8 @@
 }
 
 body {
-  font-family: "Gabriola", Georgia, serif;
-  font-size: 18px;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
   background-color: var(--sunny-page-background, #100B22);
   color: var(--sunny-primary-text, #FFFFFF);
 }
@@ -258,9 +258,9 @@ html {
 }
 
 body {
-  font-family: "Gabriola", Georgia, serif;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 16px;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 @media (max-width: 640px) {
@@ -1142,4 +1142,98 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
 @media (prefers-reduced-motion:reduce) {
   .sunny-safety-header button,.sunny-safety-resource { transition:none; }
   .sunny-safety-header button:hover,.sunny-safety-resource:hover { transform:none; }
+}
+
+
+/* Sunny design system — shared visual language across web, mobile and native Android. */
+:root {
+  --sunny-bg: #100B22;
+  --sunny-surface: #17102C;
+  --sunny-card: #21163A;
+  --sunny-raised: #302149;
+  --sunny-accent: #FFD84D;
+  --sunny-accent-soft: rgba(255,216,77,.12);
+  --sunny-line: rgba(166,132,204,.2);
+  --sunny-glass: rgba(30,20,51,.78);
+  --sunny-shadow: 0 18px 48px rgba(0,0,0,.2);
+  --sunny-ease: cubic-bezier(.2,.8,.2,1);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: -.008em;
+  font-feature-settings: "ss01" on;
+}
+button, input, textarea, select {
+  font: inherit;
+}
+button { -webkit-tap-highlight-color: transparent; }
+button:disabled { cursor: not-allowed; }
+::selection { background: rgba(255,216,77,.28); color: inherit; }
+
+.sunny-app-shell {
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 82% -12%, rgba(117,78,157,.12), transparent 36%),
+    radial-gradient(ellipse at 0% 100%, rgba(75,48,112,.08), transparent 34%),
+    var(--sunny-bg);
+}
+.sunny-app-main { min-width:0; overscroll-behavior:contain; }
+.sunny-app-card {
+  position:relative;
+  border-color:var(--sunny-line);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035);
+  transition:transform 220ms var(--sunny-ease), border-color 220ms ease, box-shadow 220ms ease, background 220ms ease;
+}
+.sunny-app-card:has([data-card-interactive="true"]) { cursor:pointer; }
+.sunny-app-card:focus-visible {
+  outline:2px solid rgba(255,216,77,.8);
+  outline-offset:3px;
+}
+.sunny-app-button {
+  min-height:2.65rem;
+  border-radius:1rem;
+  letter-spacing:-.012em;
+  transition:transform 180ms var(--sunny-ease), background 180ms ease, border-color 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+}
+.sunny-app-button:not(:disabled):active { transform:scale(.975); }
+.sunny-app-button:not(:disabled):hover { box-shadow:0 9px 24px rgba(0,0,0,.16); }
+.sunny-app-field {
+  border-radius:1rem;
+  background:rgba(16,11,34,.58);
+  border-color:rgba(166,132,204,.25);
+  transition:border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+.sunny-app-field:focus {
+  border-color:rgba(255,216,77,.68);
+  background:rgba(16,11,34,.78);
+  box-shadow:0 0 0 3px rgba(255,216,77,.09);
+}
+.sunny-app-field::placeholder { color:#8F80A7; opacity:1; }
+.sunny-app-shell :where(a,button,[role="button"],input,textarea,select):focus-visible {
+  outline-color:rgba(255,216,77,.82);
+}
+.sunny-app-shell :where(a,button,[role="button"]) { touch-action:manipulation; }
+.sunny-app-shell :where(h1,h2,h3,h4) { text-wrap:balance; }
+.sunny-app-shell :where(p) { text-wrap:pretty; }
+
+@media (hover:hover) and (pointer:fine) {
+  .sunny-app-card:hover {
+    border-color:rgba(191,159,226,.3);
+    box-shadow:0 16px 40px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.045);
+  }
+}
+@media (max-width:640px) {
+  .sunny-app-shell { padding-bottom:env(safe-area-inset-bottom); }
+  .sunny-app-button { min-height:2.85rem; }
+}
+@media (prefers-reduced-motion:reduce) {
+  html { scroll-behavior:auto; }
+  .sunny-app-card,.sunny-app-button,.sunny-app-field { transition:none !important; }
+  .sunny-app-button:not(:disabled):active { transform:none; }
 }
