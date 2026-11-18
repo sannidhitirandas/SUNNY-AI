@@ -199,3 +199,36 @@
   .sunny-memory-card:hover,
   .sunny-recent-card:hover { transform: none !important; }
 }
+
+.sunny-composer-wrap { padding-top: .75rem !important; }
+.sunny-composer {
+  border-color: rgba(157,125,190,.24) !important;
+  border-radius: 1.45rem !important;
+  background: rgba(25,18,42,.94) !important;
+  box-shadow: 0 14px 38px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.045) !important;
+}
+.sunny-composer:focus-within {
+  border-color: rgba(255,216,77,.38) !important;
+  box-shadow: 0 14px 38px rgba(0,0,0,.28), 0 0 0 3px rgba(255,216,77,.055) !important;
+}
+.sunny-settings-dialog {
+  border-color: rgba(177,143,211,.24) !important;
+  border-radius: 1.55rem !important;
+  background: linear-gradient(145deg,#271D3A,#1B142B) !important;
+  box-shadow: 0 28px 90px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.05) !important;
+}
+.sunny-settings-wallpaper { border-color: rgba(157,125,190,.2) !important; }
+.sunny-settings-wallpaper:focus-visible,
+.sunny-memory-filters button:focus-visible,
+.sunny-settings-row:focus-visible { outline-offset: 3px; }
+:root[data-theme='sunny-light'] .sunny-composer {
+  background: rgba(255,255,255,.96) !important;
+  border-color: rgba(111,82,139,.2) !important;
+}
+:root[data-theme='sunny-light'] .sunny-settings-dialog {
+  background: linear-gradient(145deg,#fff,#F4EFF9) !important;
+}
+@media (max-width: 640px) {
+  .sunny-composer-wrap { padding-left: .7rem !important; padding-right: .7rem !important; }
+  .sunny-composer { border-radius: 1.25rem !important; }
+}
