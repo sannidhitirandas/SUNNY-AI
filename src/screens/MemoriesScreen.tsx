@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useMemories } from '@/context/MemoryContext';
 import { usePreferences } from '@/context/PreferencesContext';
 import { audioService } from '@/services/audioService';
@@ -32,6 +32,15 @@ export const MemoriesScreen: React.FC = () => {
   } = useMemories();
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [activeMemoryIndex, setActiveMemoryIndex] = useState(0);
+  const stackedMemories = useMemo(() => {
+    if (filteredMemories.length === 0) return [];
+    const start = activeMemoryIndex % filteredMemories.length;
+    return Array.from({ length: Math.min(3, filteredMemories.length) }, (_, depth) => ({
+      memory: filteredMemories[(start + depth) % filteredMemories.length],
+      depth,
+    }));
+  }, [filteredMemories, activeMemoryIndex]);
   const [editingMemory, setEditingMemory] = useState<Memory | null>(null);
 
   const handleOpenAdd = () => {
@@ -167,18 +176,59 @@ export const MemoriesScreen: React.FC = () => {
             <span className="text-xs text-[#9B8AB9]">Choose a card to edit or remove it</span>
           </div>
 
-          {/* Memory List */}
+          {/* Memory card deck */}
           {filteredMemories.length > 0 ? (
-            <div className="grid grid-cols-1 gap-3.5 md:grid-cols-2 xl:grid-cols-3">
-              {filteredMemories.map((item) => (
-                <MemoryCard
-                  key={item.id}
-                  memory={item}
-                  onEdit={handleOpenEdit}
-                  onDelete={deleteMemory}
-                />
-              ))}
-            </div>
+            <section className="sunny-memory-deck mx-auto w-full max-w-2xl" aria-label="Stacked memories">
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <span className="text-sm font-semibold text-[#E9DFF8]">Your saved details</span>
+                <span className="text-xs tabular-nums text-[#9B8AB9]">
+                  {((activeMemoryIndex % filteredMemories.length) + 1)} / {filteredMemories.length}
+                </span>
+              </div>
+              <div className="sunny-memory-deck-stage grid items-start">
+                {stackedMemories.slice().reverse().map(({ memory, depth }) => (
+                  <div
+                    key={memory.id}
+                    className="sunny-memory-deck-layer"
+                    style={{
+                      gridArea: '1 / 1',
+                      zIndex: 3 - depth,
+                      transform: `translateY(${depth * 13}px) scale(${1 - depth * 0.035}) rotate(${depth === 1 ? 1.1 : depth === 2 ? -1.2 : 0}deg)`,
+                      opacity: depth === 0 ? 1 : depth === 1 ? 0.72 : 0.42,
+                      pointerEvents: depth === 0 ? 'auto' : 'none',
+                    }}
+                    aria-hidden={depth > 0}
+                  >
+                    <MemoryCard
+                      memory={memory}
+                      onEdit={handleOpenEdit}
+                      onDelete={deleteMemory}
+                    />
+                  </div>
+                ))}
+              </div>
+              {filteredMemories.length > 1 && (
+                <div className="mt-7 flex items-center justify-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setActiveMemoryIndex((current) => (current - 1 + filteredMemories.length) % filteredMemories.length)}
+                    className="sunny-memory-deck-control"
+                    aria-label="Previous memory"
+                  >
+                    <span aria-hidden="true">←</span>
+                  </button>
+                  <span className="min-w-24 text-center text-xs text-[#9B8AB9]">Explore your memories</span>
+                  <button
+                    type="button"
+                    onClick={() => setActiveMemoryIndex((current) => (current + 1) % filteredMemories.length)}
+                    className="sunny-memory-deck-control"
+                    aria-label="Next memory"
+                  >
+                    <span aria-hidden="true">→</span>
+                  </button>
+                </div>
+              )}
+            </section>
           ) : (
             <EmptyState
               title={searchQuery ? 'No matching memories' : 'No memories saved yet'}
