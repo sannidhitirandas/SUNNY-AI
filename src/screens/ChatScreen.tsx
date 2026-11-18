@@ -155,7 +155,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
         .sunny-chat-ui :where(button:not([class*="text-[#FF8D9A]"])):hover {
           border-color:rgba(185,154,255,.55);
         }
-        .sunny-chat-ui .sunny-chat-header,
+        .sunny-chat-ui .sunny-chat-header .sunny-chat-avatar {\n          border-color:rgba(245,210,122,.32) !important;\n          color:#F5D27A !important;\n          background:linear-gradient(135deg,rgba(245,210,122,.16),rgba(139,92,246,.16)) !important;\n        }\n        .sunny-chat-ui .sunny-chat-header .sunny-chat-avatar svg { color:#F5D27A !important; }\n        .sunny-chat-ui .sunny-composer { border-color:rgba(245,210,122,.24) !important; }\n        .sunny-chat-ui .sunny-send-button:not(:disabled) { background:linear-gradient(135deg,#F5D27A,#DDAE50) !important; color:#241735 !important; box-shadow:0 4px 18px rgba(245,210,122,.18) !important; }\n        .sunny-chat-ui .sunny-chat-header,
         .sunny-chat-ui .sunny-message-composer {
           border-color:rgba(167,139,250,.2);
         }
