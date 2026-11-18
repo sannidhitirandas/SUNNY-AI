@@ -134,6 +134,38 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   return (
 <div style={gradientStyle} className={`sunny-chat-ui ${bubbleColors ? 'sunny-bubbles-on ' : ''}relative isolate flex h-full min-h-0 w-full max-w-none flex-1 flex-col overflow-hidden bg-[#100B22] px-0 ${backgroundModalVisible || personalityModalVisible || optionsVisible || memoryModalVisible ? 'z-[60]' : 'z-0'} ${navHidden ? 'pb-0' : 'pb-16 lg:pb-24'} transition-[padding] duration-300 ease-out sm:px-0 lg:rounded-none lg:border-0 lg:shadow-none`}>
 
+      <style>{`
+        .sunny-chat-ui {
+          background:
+            radial-gradient(ellipse at 50% -12%,rgba(126,83,190,.22),transparent 48%),
+            linear-gradient(160deg,#100B22 0%,#17102C 52%,#120D25 100%) !important;
+        }
+        .sunny-chat-ui .chat-message-list {
+          background: radial-gradient(ellipse at top,rgba(139,92,246,.13),transparent 58%) !important;
+        }
+        .sunny-chat-ui .sunny-modal-surface {
+          background:linear-gradient(145deg,#2B1E45,#191229) !important;
+          border-color:rgba(167,139,250,.28) !important;
+          box-shadow:0 28px 80px rgba(5,2,14,.55),inset 0 1px 0 rgba(255,255,255,.07) !important;
+        }
+        .sunny-chat-ui .sunny-modal-overlay { background:rgba(12,7,23,.82) !important; }
+        .sunny-chat-ui button:focus-visible { outline:2px solid #C4B5FD; outline-offset:3px; }
+        .sunny-chat-ui :where(button:not([class*="text-[#FF8D9A]"])):hover {
+          border-color:rgba(185,154,255,.55);
+        }
+        .sunny-chat-ui .sunny-chat-header,
+        .sunny-chat-ui .sunny-message-composer {
+          border-color:rgba(167,139,250,.2);
+        }
+        :root[data-theme='sunny-light'] .sunny-chat-ui {
+          background:linear-gradient(160deg,#F8F6FC,#F0EAF8 58%,#F8F5FC) !important;
+        }
+        :root[data-theme='sunny-light'] .sunny-chat-ui .sunny-modal-surface {
+          background:linear-gradient(145deg,#FFFFFF,#F2EBFC) !important;
+          border-color:rgba(91,67,120,.2) !important;
+        }
+      `}</style>
+
       {/* Chat wallpaper: image + theme-aware veil so message text stays readable */}
       {wallpaperSrc && (
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden lg:rounded-3xl">
@@ -151,7 +183,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
               background:
                 preferences.theme === 'sunny-light'
                   ? 'linear-gradient(to bottom, rgba(248,246,252,0.72), rgba(248,246,252,0.82))'
-                  : 'linear-gradient(to bottom, rgba(16,11,34,0.45), rgba(16,11,34,0.70))',
+                  : 'linear-gradient(to bottom, rgba(16,11,34,0.38), rgba(16,11,34,0.62))',
             }}
           />
         </div>
@@ -199,7 +231,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                 if (area) preserveScrollRef.current = { height: area.scrollHeight, top: area.scrollTop };
                 void loadOlderMessages();
               }}
-              className="rounded-full border border-[#392858] bg-[#21163A] px-4 py-2 text-xs font-medium text-[#D7C8F5] transition-colors hover:bg-[#302149] disabled:cursor-wait disabled:opacity-60"
+              className="rounded-full border border-[#392858] bg-[#21163A] px-4 py-2 text-xs font-medium text-[#E5D9FF] transition-colors hover:bg-[#302149] disabled:cursor-wait disabled:opacity-60"
             >
               {isLoadingOlderMessages ? 'Loading older messages…' : 'Load older messages'}
             </button>
@@ -246,9 +278,9 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
             <div className="flex items-center justify-between mb-3">
               <div>
                 <h3 id="personality-picker-title" className="text-base font-bold text-white">Choose Sunny's personality</h3>
-                <p className="mt-1 text-xs text-[#C6B8E5]">Switch whenever you like. Your conversation stays right here.</p>
+                <p className="mt-1 text-xs text-[#D2C5E8]">Switch whenever you like. Your conversation stays right here.</p>
               </div>
-              <button type="button" onClick={() => setPersonalityModalVisible(false)} className="p-1 rounded-lg text-[#C6B8E5] hover:text-white" aria-label="Close personality picker">
+              <button type="button" onClick={() => setPersonalityModalVisible(false)} className="p-1 rounded-lg text-[#D2C5E8] hover:text-white" aria-label="Close personality picker">
                 <X size={18} />
               </button>
             </div>
@@ -269,10 +301,10 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                       await setActiveIntent(item.intent);
                       setPersonalityModalVisible(false);
                     }}
-                    className={`w-full rounded-2xl border p-3 text-left transition-colors ${selected ? 'border-[#FFD84D] bg-[#FFD84D]/10' : 'border-[#392858] bg-[#302149] hover:border-white/25'}`}
+                    className={`w-full rounded-2xl border p-3 text-left transition-colors ${selected ? 'border-[#B99AFF] bg-[#B99AFF]/10' : 'border-[#392858] bg-[#302149] hover:border-white/25'}`}
                   >
-                    <span className={`block text-sm font-semibold ${selected ? 'text-[#FFD84D]' : 'text-white'}`}>{item.title}</span>
-                    <span className="mt-0.5 block text-xs text-[#C6B8E5]">{item.description}</span>
+                    <span className={`block text-sm font-semibold ${selected ? 'text-[#B99AFF]' : 'text-white'}`}>{item.title}</span>
+                    <span className="mt-0.5 block text-xs text-[#D2C5E8]">{item.description}</span>
                   </button>
                 );
               })}
@@ -290,7 +322,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
               <button
                 type="button"
                 onClick={() => setOptionsVisible(false)}
-                className="p-1 rounded-lg text-[#C6B8E5] hover:text-white transition-colors cursor-pointer"
+                className="p-1 rounded-lg text-[#D2C5E8] hover:text-white transition-colors cursor-pointer"
               >
                 <X size={18} />
               </button>
@@ -305,7 +337,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                 }}
                 className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#302149] text-white text-sm font-medium transition-colors text-left cursor-pointer"
               >
-                <Bookmark size={18} className="text-[#FFD84D]" />
+                <Bookmark size={18} className="text-[#B99AFF]" />
                 <span>View Saved Memories Vault</span>
               </button>
 
@@ -317,9 +349,9 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                 }}
                 className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#302149] text-white text-sm font-medium transition-colors text-left cursor-pointer"
               >
-                <ImageIcon size={18} className="text-[#FFD84D]" />
+                <ImageIcon size={18} className="text-[#B99AFF]" />
                 <span>Change Chat Wallpaper</span>
-                <span className="ml-auto text-xs text-[#C6B8E5]">{background.label}</span>
+                <span className="ml-auto text-xs text-[#D2C5E8]">{background.label}</span>
               </button>
 
               <button
@@ -357,7 +389,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
         <div className="sunny-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
           <div role="dialog" aria-modal="true" aria-labelledby="chat-bg-picker-title" className="sunny-modal-surface w-full max-w-md max-h-[min(90dvh,48rem)] overflow-y-auto overscroll-contain bg-[#21163A] border border-[#392858] rounded-2xl p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-2xl animate-in fade-in zoom-in-95 duration-150">
             <h3 id="chat-bg-picker-title" className="text-base font-bold text-white mb-1">Chat background</h3>
-            <p className="text-xs text-[#C6B8E5] mb-3">{device === 'mobile' ? 'Mobile wallpapers' : 'Desktop wallpapers'} · Saved separately on this device</p>
+            <p className="text-xs text-[#D2C5E8] mb-3">{device === 'mobile' ? 'Mobile wallpapers' : 'Desktop wallpapers'} · Saved separately on this device</p>
             <div className="grid grid-cols-2 gap-3 mb-4">
               {availableBackgrounds.map((item) => {
                 const isSelected = background.id === item.id;
@@ -368,7 +400,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                     aria-pressed={isSelected}
                     onClick={() => setChatBackground(item.id)}
                     className={`relative overflow-hidden rounded-2xl border text-left transition-colors cursor-pointer ${
-                      isSelected ? 'border-[#FFD84D] ring-2 ring-[#FFD84D]/60' : 'border-[#392858] hover:border-white/30'
+                      isSelected ? 'border-[#B99AFF] ring-2 ring-[#B99AFF]/60' : 'border-[#392858] hover:border-white/30'
                     }`}
                   >
                     <div
@@ -376,8 +408,8 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
                       style={item.thumb ? { backgroundImage: `url(${item.thumb})` } : undefined}
                     />
                     <div className="flex items-center justify-between bg-[#302149] px-3 py-2">
-                      <span className={`text-sm font-semibold ${isSelected ? 'text-[#FFD84D]' : 'text-white'}`}>{item.label}</span>
-                      {isSelected && <CheckCircle2 size={16} className="text-[#FFD84D] shrink-0 ml-2" />}
+                      <span className={`text-sm font-semibold ${isSelected ? 'text-[#B99AFF]' : 'text-white'}`}>{item.label}</span>
+                      {isSelected && <CheckCircle2 size={16} className="text-[#B99AFF] shrink-0 ml-2" />}
                     </div>
                   </button>
                 );
@@ -386,7 +418,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
             <button
               type="button"
               onClick={() => setBackgroundModalVisible(false)}
-              className="w-full rounded-xl px-4 py-2.5 text-sm font-semibold text-[#FFD84D] hover:bg-[#FFD84D]/10 transition-colors cursor-pointer"
+              className="w-full rounded-xl px-4 py-2.5 text-sm font-semibold text-[#B99AFF] hover:bg-[#B99AFF]/10 transition-colors cursor-pointer"
             >
               Done
             </button>
