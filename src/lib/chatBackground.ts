@@ -8,23 +8,25 @@ export type ChatBackgroundId =
   | 'violet-dusk'
   | 'lavender-meadow';
 
+export type ChatBackgroundDevice = 'pc' | 'mobile';
+
 export interface ChatBackgroundOption {
   id: ChatBackgroundId;
   label: string;
-  /** Wide image for desktop / landscape screens; null for the plain theme background. */
   pc: string | null;
-  /** Tall image for phones in portrait; null for the plain theme background. */
   mobile: string | null;
-  /** Small preview used in the Settings picker. */
   thumb: string | null;
 }
 
-const entry = (id: Exclude<ChatBackgroundId, 'none'>, label: string): ChatBackgroundOption => ({
+const entry = (
+  id: Exclude<ChatBackgroundId, 'none'>,
+  label: string
+): ChatBackgroundOption => ({
   id,
   label,
-  pc: `/chat-backgrounds/${id}-pc.jpg`,
+  pc: `/chat-backgrounds/${id}-pc.png`,
   mobile: `/chat-backgrounds/${id}-mobile.jpg`,
-  thumb: `/chat-backgrounds/${id}-thumb.jpg`,
+  thumb: `/chat-backgrounds/${id}-pc.png`,
 });
 
 export const CHAT_BACKGROUNDS: ChatBackgroundOption[] = [
@@ -36,46 +38,105 @@ export const CHAT_BACKGROUNDS: ChatBackgroundOption[] = [
   entry('lavender-meadow', 'Lavender Meadow'),
 ];
 
-const STORAGE_KEY = '@sunny_chat_background';
+const LEGACY_STORAGE_KEY = '@sunny_chat_background';
+const PC_STORAGE_KEY = '@sunny_chat_background_pc';
+const MOBILE_STORAGE_KEY = '@sunny_chat_background_mobile';
 const CHANGE_EVENT = 'sunny-chat-background-change';
 
-export const getChatBackgroundOption = (id: string | null | undefined): ChatBackgroundOption =>
+export const getChatBackgroundOption = (
+  id: string | null | undefined
+): ChatBackgroundOption =>
   CHAT_BACKGROUNDS.find((option) => option.id === id) ?? CHAT_BACKGROUNDS[0];
 
-const readStored = (): ChatBackgroundId => {
+export const getDeviceChatBackgrounds = (
+  device: ChatBackgroundDevice
+): ChatBackgroundOption[] =>
+  CHAT_BACKGROUNDS.map((option) => ({
+    ...option,
+    thumb: device === 'pc' ? option.pc : option.mobile,
+  }));
+
+const getDevice = (): ChatBackgroundDevice =>
+  typeof window !== 'undefined' &&
+  window.matchMedia('(max-width: 767px)').matches
+    ? 'mobile'
+    : 'pc';
+
+const getStorageKey = (device: ChatBackgroundDevice) =>
+  device === 'mobile' ? MOBILE_STORAGE_KEY : PC_STORAGE_KEY;
+
+const readStored = (device: ChatBackgroundDevice): ChatBackgroundId => {
   try {
-    return getChatBackgroundOption(window.localStorage.getItem(STORAGE_KEY)).id;
+    const key = getStorageKey(device);
+    const saved = window.localStorage.getItem(key);
+
+    if (saved) return getChatBackgroundOption(saved).id;
+
+    // Migrate the previous single wallpaper choice to this device only.
+    const legacy = window.localStorage.getItem(LEGACY_STORAGE_KEY);
+    if (legacy) {
+      window.localStorage.setItem(key, getChatBackgroundOption(legacy).id);
+      return getChatBackgroundOption(legacy).id;
+    }
+
+    return 'none';
   } catch {
     return 'none';
   }
 };
 
 /**
- * Per-device chat wallpaper. Kept in localStorage (not in synced preferences)
- * so it needs no database change; ChatScreen and Settings stay in sync via a window event.
+ * Wallpaper choices are stored separately for desktop and mobile and are not
+ * synced to account preferences. Settings and ChatScreen stay in sync via an event.
  */
 export const useChatBackground = () => {
-  const [backgroundId, setBackgroundId] = useState<ChatBackgroundId>(readStored);
+  const [device, setDevice] = useState<ChatBackgroundDevice>(getDevice);
+  const [backgroundId, setBackgroundId] = useState<ChatBackgroundId>(
+    () => readStored(getDevice())
+  );
 
   useEffect(() => {
-    const sync = () => setBackgroundId(readStored());
+    const mediaQuery = window.matchMedia('(max-width: 767px)');
+    const updateDevice = () => {
+      setDevice(mediaQuery.matches ? 'mobile' : 'pc');
+    };
+
+    mediaQuery.addEventListener('change', updateDevice);
+    return () => mediaQuery.removeEventListener('change', updateDevice);
+  }, []);
+
+  useEffect(() => {
+    const sync = () => setBackgroundId(readStored(device));
+
+    sync();
     window.addEventListener(CHANGE_EVENT, sync);
     window.addEventListener('storage', sync);
+
     return () => {
       window.removeEventListener(CHANGE_EVENT, sync);
       window.removeEventListener('storage', sync);
     };
-  }, []);
+  }, [device]);
 
-  const setChatBackground = useCallback((id: ChatBackgroundId) => {
-    try {
-      window.localStorage.setItem(STORAGE_KEY, id);
-    } catch {
-      // Storage can be unavailable; the choice then lasts only for this session.
-    }
-    setBackgroundId(id);
-    window.dispatchEvent(new Event(CHANGE_EVENT));
-  }, []);
+  const setChatBackground = useCallback(
+    (id: ChatBackgroundId) => {
+      try {
+        window.localStorage.setItem(getStorageKey(device), id);
+      } catch {
+        // Storage can be unavailable; the choice then lasts only for this session.
+      }
 
-  return { backgroundId, background: getChatBackgroundOption(backgroundId), setChatBackground };
+      setBackgroundId(id);
+      window.dispatchEvent(new Event(CHANGE_EVENT));
+    },
+    [device]
+  );
+
+  return {
+    backgroundId,
+    background: getChatBackgroundOption(backgroundId),
+    setChatBackground,
+    device,
+    availableBackgrounds: getDeviceChatBackgrounds(device),
+  };
 };
