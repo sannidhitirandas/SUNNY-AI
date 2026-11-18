@@ -79,7 +79,7 @@ const MessageBubbleBase: React.FC<MessageBubbleProps> = ({
 
   if (isUser) {
     return (
-      <div className={`mx-auto flex w-full max-w-3xl flex-col items-end px-4 sm:px-6 ${verticalSpacing} ${bottomSpacing} animate-in fade-in slide-in-from-bottom-1 duration-200`}>
+      <div className={`mx-auto flex w-full max-w-5xl flex-col items-end px-4 sm:px-6 ${verticalSpacing} ${bottomSpacing} animate-in fade-in slide-in-from-bottom-1 duration-200`}>
         <div className={`max-w-[88%] border border-[#FFD84D]/20 bg-[#FFD84D] px-4 py-3 text-[#100B22] shadow-[0_5px_18px_rgba(255,216,77,0.10)] sm:max-w-[76%] sm:px-5 ${isFirstInGroup ? 'rounded-t-[22px]' : 'rounded-t-[15px]'} ${isLastInGroup ? 'rounded-br-md rounded-bl-[22px]' : 'rounded-b-[15px]'}`}>
           {message.attachments?.length ? (
             <div className="mb-2 space-y-1.5">
