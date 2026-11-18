@@ -25,14 +25,14 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
             <ArrowLeft size={19} />
           </button>
         )}
-        <div className="sunny-chat-avatar flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-[#B99AFF]/25 bg-gradient-to-br from-[#B99AFF]/20 to-[#8B5CF6]/20 text-[#B99AFF] shadow-[0_5px_22px_rgba(185,154,255,.08)]">
+        <div className="sunny-chat-avatar flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-[#F5D27A]/30 bg-gradient-to-br from-[#F5D27A]/15 to-[#8B5CF6]/20 text-[#F5D27A] shadow-[0_5px_22px_rgba(185,154,255,.08)]">
           <Sun size={21} />
         </div>
         <div className="min-w-0">
           <h2 className="flex items-center gap-1.5 text-[15px] font-bold tracking-tight text-white">
             Sunny <span className="text-xs">☀️</span>
           </h2>
-          <button type="button" onClick={onPersonalityPress} className="mt-1 inline-flex max-w-full items-center gap-1.5 rounded-full border border-[#B99AFF]/20 bg-[#B99AFF]/[0.07] px-2.5 py-1 text-[11px] font-semibold text-[#B99AFF] transition-all hover:border-[#B99AFF]/40 hover:bg-[#B99AFF]/[0.12] active:scale-[.97]" aria-label={`Change Sunny's personality. Current: ${preferredTone}`}>
+          <button type="button" onClick={onPersonalityPress} className="mt-1 inline-flex max-w-full items-center gap-1.5 rounded-full border border-[#B99AFF]/20 bg-[#B99AFF]/[0.07] px-2.5 py-1 text-[11px] font-semibold text-[#DCC18A] transition-all hover:border-[#F5D27A]/40 hover:bg-[#F5D27A]/[0.10] active:scale-[.97]" aria-label={`Change Sunny's personality. Current: ${preferredTone}`}>
             <Sparkles size={11} className="shrink-0" />
             <span className="truncate">{preferredTone}</span>
             <span className="text-[#C6B8E5]/80">· Change</span>
