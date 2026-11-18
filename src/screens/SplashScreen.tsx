@@ -71,7 +71,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           width: 140%;
           height: 60%;
           transform: translateX(-50%);
-          background: radial-gradient(ellipse at 50% 100%, rgba(232, 207, 165, 0.22) 0%, rgba(190, 168, 143, 0.08) 40%, rgba(16, 11, 34, 0) 72%);
+          background: radial-gradient(ellipse at 50% 100%, rgba(167,139,250,.22) 0%, rgba(255,216,77,.08) 40%, rgba(16, 11, 34, 0) 72%);
           animation: sunrise-horizon-rise 2.2s cubic-bezier(0.22, 0.8, 0.25, 1) both;
           pointer-events: none;
         }
@@ -92,10 +92,10 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
         }
         .sunrise-rays > div > div:first-child { opacity: 0 !important; }
         .sunrise-rays svg line { stroke: #E8E1D5 !important; }
-        .sunrise-rays svg stop:nth-child(1) { stop-color: #F8F4EB; }
-        .sunrise-rays svg stop:nth-child(2) { stop-color: #E5D8C3; }
-        .sunrise-rays svg stop:nth-child(3) { stop-color: #BFAF98; }
-        .sunrise-rays svg feDropShadow { flood-color: #D8CBB5; flood-opacity: .28; }
+        .sunrise-rays svg stop:nth-child(1) { stop-color: #FFF9E8; }
+        .sunrise-rays svg stop:nth-child(2) { stop-color: #DCCBFF; }
+        .sunrise-rays svg stop:nth-child(3) { stop-color: #A78BFA; }
+        .sunrise-rays svg feDropShadow { flood-color: #B99AFF; flood-opacity: .28; }
 
         .sunrise-sparkle {
           position: absolute;
@@ -107,13 +107,13 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
         }
 
         .sunrise-eyebrow {
-          margin-bottom:.75rem; color:#E9E5DD;
+          margin-bottom:.75rem; color:#FFE58A;
           font-size:.67rem; font-weight:700; letter-spacing:.28em;
           text-transform:uppercase;
           animation: sunrise-fade-up .8s ease-out .65s both;
         }
         .sunrise-wordmark {
-          color: #F2EFE8 !important;
+          color: #FBF8FF !important;
           animation: sunrise-fade-up 0.9s ease-out 0.9s both;
           text-shadow:0 0 28px rgba(232, 224, 207, .12);
         }
@@ -124,7 +124,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           animation: sunrise-fade-up 1s ease-out 1.7s both;
         }
         .sunrise-waiting {
-          margin-top:2rem; color:#D8D8D3;
+          margin-top:2rem; color:#C6B8E5;
           font-size:.68rem; letter-spacing:.13em;
           animation:sunrise-fade-up .7s ease-out 2s both;
         }
@@ -152,7 +152,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           position: absolute;
           inset: 0;
           border-radius: 9999px;
-          background: linear-gradient(90deg, #D8CBB5, #F0E9DC);
+          background: linear-gradient(90deg, #B99AFF, #FFE58A);
           transform-origin: left center;
           animation: sunrise-bar-fill 2.6s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
         }
@@ -242,7 +242,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
         Hey, sunshine. 💛
       </p>
 
-      <p className="sunrise-tagline max-w-[16rem] text-sm italic leading-relaxed text-[#D7D4CC]">
+      <p className="sunrise-tagline max-w-[16rem] text-sm italic leading-relaxed text-[#D8CBEF]">
         You don&rsquo;t have to start over every time you come back.
       </p>
       <p className="sunrise-waiting" aria-hidden="true">GETTING YOUR SUNSHINE READY</p>
