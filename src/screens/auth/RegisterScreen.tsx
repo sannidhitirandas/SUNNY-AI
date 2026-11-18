@@ -85,9 +85,35 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
     <div className="reg-screen sunny-auth-screen relative min-h-[100dvh] w-full overflow-x-hidden overflow-y-auto">
       <style>{`
         .reg-screen {
-          background:
-            radial-gradient(ellipse 120% 50% at 50% 108%, rgba(255, 216, 77, 0.22) 0%, rgba(246, 189, 69, 0.10) 40%, rgba(16, 11, 34, 0) 72%),
-            linear-gradient(180deg, #100B22 0%, #17102C 55%, #221339 85%, #301a49 100%);
+          isolation: isolate;
+          background: transparent;
+        }
+        .reg-video-backdrop {
+          position: fixed;
+          z-index: 0;
+          inset: 0;
+          overflow: hidden;
+          pointer-events: none;
+          background: #100B22;
+        }
+        .reg-background-video {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+          opacity: 1;
+          filter: none;
+        }
+        .reg-video-overlay {
+          position: absolute;
+          inset: 0;
+          background: transparent;
+        }
+        .reg-screen .sunny-auth-shell { position: relative; z-index: 2; }
+        .reg-hero h1, .reg-hero p, .reg-card label, .reg-screen > div:last-child {
+          text-shadow: 0 1px 12px rgba(12, 8, 24, .5);
         }
         .reg-sparkle {
           position: absolute;
@@ -107,13 +133,28 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
           pointer-events: none;
         }
         .reg-card {
-          background: rgba(33, 22, 58, 0.78);
-          border: 1px solid #392858;
-          box-shadow: 0 20px 50px -24px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 216, 77, 0.04) inset;
-          -webkit-backdrop-filter: blur(10px);
-          backdrop-filter: blur(10px);
+          background: rgba(20, 16, 35, 0.48);
+          border: 1px solid rgba(255, 255, 255, 0.28);
+          box-shadow: 0 24px 70px -28px rgba(0, 0, 0, .48), 0 1px 0 rgba(255,255,255,.16) inset;
+          -webkit-backdrop-filter: blur(22px) saturate(1.15);
+          backdrop-filter: blur(22px) saturate(1.15);
           animation: reg-fade-up 0.7s ease-out 0.15s both;
         }
+        .reg-card label { color: rgba(255,255,255,.96); }
+        .reg-card .sunny-app-field {
+          color: #fff;
+          background: rgba(255,255,255,.13);
+          border-color: rgba(255,255,255,.34);
+          box-shadow: 0 1px 0 rgba(255,255,255,.08) inset;
+          -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(8px);
+        }
+        .reg-card .sunny-app-field::placeholder { color: rgba(255,255,255,.68); }
+        .reg-card .sunny-app-field:focus {
+          border-color: rgba(255,255,255,.88);
+          box-shadow: 0 0 0 3px rgba(255,255,255,.16);
+        }
+        .reg-card input:focus { outline: none; }
         .reg-hero {
           animation: reg-fade-up 0.7s ease-out both;
         }
@@ -133,11 +174,22 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
           0%, 100% { opacity: 0;   transform: scale(0.6); }
           50%      { opacity: 0.9; transform: scale(1); }
         }
+        @media (max-width: 640px) {
+          .reg-video-backdrop { position: fixed; inset: 0; width: 100vw; height: 100dvh; }
+          .reg-background-video { display: block; width: 100%; height: 100%; min-width: 100%; min-height: 100%; object-fit: cover; object-position: center center; transform: translateZ(0); }
+        }
         @media (prefers-reduced-motion: reduce) {
           .reg-hero, .reg-card, .reg-halo { animation: none !important; }
           .reg-sparkle { animation: none !important; opacity: 0.45; }
         }
       `}</style>
+
+      <div className="reg-video-backdrop" aria-hidden="true">
+        <video className="reg-background-video" autoPlay muted loop playsInline preload="metadata">
+          <source src="/sunny-home-background.mp4" type="video/mp4" />
+        </video>
+        <span className="reg-video-overlay" />
+      </div>
 
       {SPARKLES.map((sparkle, index) => (
         <span
