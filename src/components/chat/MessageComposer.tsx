@@ -134,12 +134,12 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({ onSend, disabl
             ))}
           </div>
         )}
-        <div className="sunny-composer flex items-end gap-2 rounded-[27px] border border-[#7656A5]/45 bg-[#1B1430]/95 px-2.5 py-2 shadow-[0_10px_35px_rgba(0,0,0,.24)] backdrop-blur-xl transition-all duration-200">
+        <div className="sunny-composer flex items-end gap-2 rounded-[27px] border border-[#A78BFA]/35 bg-[#1B1430]/95 px-2.5 py-2 shadow-[0_10px_35px_rgba(0,0,0,.24)] backdrop-blur-xl transition-all duration-200">
           <button type="button" onClick={() => void handleAttach()} disabled={disabled || preparingAttachment || sending || files.length >= MAX_FILES} className="mb-0.5 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full text-[#C6B8E5] transition-all hover:bg-[#302149] hover:text-[#A78BFA] active:scale-90 disabled:cursor-not-allowed disabled:opacity-40" aria-label="Attach files" title="Attach files">
             <Paperclip size={18} />
           </button>
           <textarea ref={textareaRef} value={text} onChange={handleInput} onKeyDown={handleKeyDown} onFocus={onFocus} onBlur={onBlur} placeholder={placeholder} rows={1} maxLength={1000} className="min-h-10 max-h-[120px] flex-1 resize-none bg-transparent px-1 py-2.5 text-base leading-6 text-white outline-none placeholder:text-[#9B8AB9] focus:outline-none" />
-          <button type="button" onPointerDown={(event) => event.preventDefault()} onClick={() => void handleSend()} disabled={isSendDisabled} className={`sunny-send-button mb-0.5 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full transition-all duration-200 active:scale-90 ${isSendDisabled ? 'bg-white/[0.06] text-[#9B8AB9] cursor-not-allowed opacity-50' : 'bg-[#A78BFA] text-[#100B22] shadow-[0_4px_16px_rgba(167,139,250,.22)] hover:brightness-105'}`} aria-label="Send message">
+          <button type="button" onPointerDown={(event) => event.preventDefault()} onClick={() => void handleSend()} disabled={isSendDisabled} className={`sunny-send-button mb-0.5 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full transition-all duration-200 active:scale-90 ${isSendDisabled ? 'bg-white/[0.06] text-[#9B8AB9] cursor-not-allowed opacity-50' : 'bg-gradient-to-br from-[#F5D27A] to-[#DDAE50] text-[#241735] shadow-[0_4px_16px_rgba(245,210,122,.2)] hover:brightness-105'}`} aria-label="Send message">
             <ArrowUp size={19} strokeWidth={2.7} />
           </button>
         </div>
