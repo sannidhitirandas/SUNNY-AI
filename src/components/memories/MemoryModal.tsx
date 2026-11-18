@@ -112,7 +112,7 @@ export const MemoryModal: React.FC<MemoryModalProps> = ({
                     onClick={() => setCategory(cat.value)}
                     className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors cursor-pointer ${
                       isSelected
-                        ? 'bg-[#FFD84D]/15 border-[#FFD84D] text-[#FFD84D] font-bold'
+                        ? 'bg-[#F5D27A]/15 border-[#F5D27A] text-[#F5D27A] font-bold'
                         : 'bg-[#302149] border-[#392858] text-[#C6B8E5] hover:border-white/20'
                     }`}
                   >
