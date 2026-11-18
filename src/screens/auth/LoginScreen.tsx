@@ -144,9 +144,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
       <style>{`
         .login-screen {
           isolation: isolate;
-          background:
-            radial-gradient(ellipse 120% 50% at 50% 108%, rgba(218, 199, 169, 0.12) 0%, rgba(190, 176, 155, 0.05) 40%, rgba(18, 20, 24, 0) 72%),
-            linear-gradient(180deg, #121417 0%, #191B1F 55%, #202226 100%);
+          background: transparent;
         }
 
         .login-sparkle {
@@ -199,10 +197,10 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         .login-video-overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(180deg, rgba(13, 15, 18, 0.34), rgba(18, 20, 24, 0.60));
+          background: transparent;
         }
 
-        .login-background-video { filter: brightness(0.58) saturate(0.88); }
+        .login-background-video { filter: none; }
         .login-rays svg line { stroke: #E8E1D5 !important; }
         .login-rays svg stop:nth-child(1) { stop-color: #F8F4EB; }
         .login-rays svg stop:nth-child(2) { stop-color: #E5D8C3; }
@@ -213,11 +211,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         .login-cta .sunny-app-button:hover { background: #F0E9DC !important; }
         .login-hero h1 {
           color: #fff;
-          text-shadow: 0 2px 18px rgba(12, 8, 24, 0.5);
+          text-shadow: 0 1px 2px rgba(0,0,0,.98), 0 3px 10px rgba(0,0,0,.95), 0 8px 24px rgba(0,0,0,.88);
         }
         .login-hero p {
           color: rgba(255, 255, 255, 0.92);
-          text-shadow: 0 1px 12px rgba(12, 8, 24, 0.55);
+          text-shadow: 0 1px 2px rgba(0,0,0,.98), 0 3px 10px rgba(0,0,0,.92);
         }
         .login-card label {
           color: rgba(255, 255, 255, 0.96);
