@@ -170,7 +170,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
       <div
         ref={messagesScrollRef}
         onScroll={handleScroll}
-        className="chat-message-list min-h-0 flex-1 space-y-0 overflow-y-auto bg-[radial-gradient(ellipse_at_top,rgba(48,33,73,0.18),transparent_55%)] py-4 sm:py-6"
+        className="chat-message-list min-h-0 flex-1 space-y-0 overflow-y-auto bg-[radial-gradient(ellipse_at_top,rgba(48,33,73,0.18),transparent_55%)] py-2 sm:py-3"
       >
         {hasOlderMessages && (
           <div className="flex justify-center px-4 pb-3">
