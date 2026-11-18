@@ -635,3 +635,50 @@
     padding-bottom: max(7.8rem,calc(6.6rem + env(safe-area-inset-bottom,0px))) !important;
   }
 }
+
+
+/* Chat is the primary workspace: use every available pixel instead of a
+   floating, inset card. The desktop dock is intentionally hidden while typing. */
+.sunny-app-main:has(> .sunny-chat-ui) {
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+.sunny-chat-ui {
+  width: 100% !important;
+  max-width: none !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  margin: 0 !important;
+  align-self: stretch !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  flex: 1 1 0% !important;
+}
+.sunny-chat-header {
+  flex: 0 0 auto;
+}
+.chat-message-list {
+  width: 100%;
+  max-width: none;
+  flex: 1 1 0%;
+  min-height: 0;
+}
+.sunny-composer-wrap {
+  flex: 0 0 auto;
+  width: 100%;
+  padding-bottom: max(.85rem,env(safe-area-inset-bottom)) !important;
+}
+@media (min-width: 900px) {
+  .sunny-chat-ui {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+  .sunny-chat-header { border-radius: 0 !important; }
+  .sunny-composer-wrap { padding-bottom: 1.25rem !important; }
+}
