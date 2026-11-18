@@ -74,13 +74,15 @@ const MessageBubbleBase: React.FC<MessageBubbleProps> = ({
     }
   };
 
-  const verticalSpacing = isFirstInGroup ? 'pt-1.5' : 'pt-0.5';
-  const bottomSpacing = isLastInGroup ? 'pb-1.5' : 'pb-0.5';
+  // Real-chat rhythm: tight inside a run of messages from the same sender,
+  // a clear gap when the sender changes.
+  const verticalSpacing = isFirstInGroup ? 'pt-3' : 'pt-0.5';
+  const bottomSpacing = 'pb-0.5';
 
   if (isUser) {
     return (
-      <div className={`mx-auto flex w-full max-w-5xl flex-col items-end px-4 sm:px-6 ${verticalSpacing} ${bottomSpacing} animate-in fade-in slide-in-from-bottom-1 duration-200`}>
-        <div className={`max-w-[88%] border border-[#FFD84D]/20 bg-[#FFD84D] px-4 py-3 text-[#100B22] shadow-[0_5px_18px_rgba(255,216,77,0.10)] sm:max-w-[76%] sm:px-5 ${isFirstInGroup ? 'rounded-t-[22px]' : 'rounded-t-[15px]'} ${isLastInGroup ? 'rounded-br-md rounded-bl-[22px]' : 'rounded-b-[15px]'}`}>
+      <div className={`mx-auto flex w-full max-w-4xl flex-col items-end px-4 sm:px-6 ${verticalSpacing} ${bottomSpacing} animate-in fade-in slide-in-from-bottom-1 duration-200`}>
+        <div className={`max-w-[88%] border border-[#FFD84D]/20 bg-[#FFD84D] px-4 py-2.5 text-[#100B22] shadow-[0_5px_18px_rgba(255,216,77,0.10)] sm:max-w-[70%] sm:px-5 ${isFirstInGroup ? 'rounded-t-[22px]' : 'rounded-t-[15px]'} ${isLastInGroup ? 'rounded-br-md rounded-bl-[22px]' : 'rounded-b-[15px]'}`}>
           {message.attachments?.length ? (
             <div className="mb-2 space-y-1.5">
               {message.attachments.map((file) => (
@@ -104,14 +106,15 @@ const MessageBubbleBase: React.FC<MessageBubbleProps> = ({
   }
 
   return (
-    <div className={`group mx-auto flex w-full max-w-3xl items-end gap-3 px-4 sm:px-6 ${verticalSpacing} ${bottomSpacing} animate-in fade-in slide-in-from-bottom-1 duration-200`}>
-      {isFirstInGroup ? (
+    <div className={`group mx-auto flex w-full max-w-4xl items-end gap-2.5 px-4 sm:px-6 ${verticalSpacing} ${bottomSpacing} animate-in fade-in slide-in-from-bottom-1 duration-200`}>
+      {/* Avatar sits beside the LAST bubble of a run, where the bubble tail points */}
+      {isLastInGroup ? (
         <div className="mb-1 shrink-0"><SunnyLogo size="small" /></div>
       ) : (
         <div className="w-8 shrink-0" aria-hidden="true" />
       )}
       <div
-        className={`relative max-w-[88%] border border-[#604477]/55 bg-gradient-to-br from-[#261a3d] to-[#21163A] px-4 py-3 text-white shadow-[0_5px_20px_rgba(0,0,0,0.10)] sm:max-w-[78%] sm:px-5 ${isFirstInGroup ? 'rounded-t-[22px]' : 'rounded-t-[15px]'} ${isLastInGroup ? 'rounded-bl-md rounded-br-[22px]' : 'rounded-b-[15px]'}`}
+        className={`relative max-w-[88%] border border-[#604477]/55 bg-gradient-to-br from-[#261a3d] to-[#21163A] px-4 py-2.5 text-white shadow-[0_5px_20px_rgba(0,0,0,0.10)] sm:max-w-[70%] sm:px-5 ${isFirstInGroup ? 'rounded-t-[22px]' : 'rounded-t-[15px]'} ${isLastInGroup ? 'rounded-bl-md rounded-br-[22px]' : 'rounded-b-[15px]'}`}
         onTouchStart={handleTouchStart}
         onTouchEnd={clearLongPress}
         onTouchMove={clearLongPress}
@@ -122,7 +125,7 @@ const MessageBubbleBase: React.FC<MessageBubbleProps> = ({
         }}
       >
         <p className="sunny-gradient-text whitespace-pre-wrap break-words text-base leading-6 text-white">{message.content}</p>
-        <div className="mt-2 flex items-center justify-between gap-3 text-[10px] text-white/85">
+        <div className="mt-1 flex items-center justify-between gap-3 text-[10px] text-white/85">
           {isLastInGroup ? <span>{formatTime(message.createdAt)}</span> : <span />}
           <div className="flex items-center gap-1.5">
             {copied && <span className="text-[#A8D9A0]">Copied</span>}
