@@ -501,3 +501,137 @@
     flex: 1 1 0 !important;
   }
 }
+
+
+/* Dribbble-inspired AI companion finish: near-black plum surfaces, richer violet
+   atmosphere, restrained rose accents and high-contrast conversation controls. */
+:root {
+  --sunny-ink: #08040E;
+  --sunny-plum: #1B1024;
+  --sunny-violet: #591097;
+  --sunny-rose: #AF838B;
+  --sunny-inner-line: rgba(194, 150, 205, .16);
+}
+.sunny-app-shell {
+  background:
+    radial-gradient(ellipse at 50% -18%, rgba(89,16,151,.22), transparent 43%),
+    radial-gradient(ellipse at 100% 35%, rgba(81,18,67,.12), transparent 32%),
+    #08040E !important;
+}
+.sunny-app-main {
+  background: transparent !important;
+}
+.sunny-home-screen,
+.sunny-memories-screen,
+.sunny-settings-screen {
+  padding-bottom: max(7.5rem, calc(6.4rem + env(safe-area-inset-bottom, 0px))) !important;
+}
+.sunny-home-screen > .sunny-home-content > div:first-child,
+.sunny-memories-screen > div:first-child,
+.sunny-settings-screen > div:first-child {
+  border-bottom-color: rgba(175,131,139,.15);
+}
+.sunny-home-hero,
+.sunny-memories-hero,
+.sunny-settings-hero {
+  border-color: rgba(175,131,139,.22) !important;
+  border-radius: 1.65rem !important;
+  background:
+    radial-gradient(ellipse at 90% 0%, rgba(194,26,56,.13), transparent 36%),
+    radial-gradient(ellipse at 8% 100%, rgba(89,16,151,.22), transparent 48%),
+    linear-gradient(135deg,#211328 0%,#160D20 55%,#0D0814 100%) !important;
+  box-shadow: 0 24px 70px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.045) !important;
+}
+.sunny-home-hero h1 {
+  text-shadow: 0 8px 34px rgba(89,16,151,.28);
+}
+.sunny-vibe-card,
+.sunny-daily-card,
+.sunny-recent-card,
+.sunny-memory-card,
+.sunny-settings-panel {
+  border-color: rgba(175,131,139,.17) !important;
+  background: linear-gradient(145deg,rgba(35,22,43,.96),rgba(17,10,24,.98)) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04),0 14px 36px rgba(0,0,0,.2) !important;
+  backdrop-filter: blur(18px);
+}
+.sunny-vibe-card {
+  border-radius: 1.2rem !important;
+  transition: transform 200ms ease,border-color 200ms ease,box-shadow 200ms ease !important;
+}
+.sunny-vibe-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255,216,77,.36) !important;
+  box-shadow: 0 16px 38px rgba(89,16,151,.16) !important;
+}
+.sunny-chat-ui {
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(89,16,151,.16),transparent 42%),
+    #08040E !important;
+}
+.sunny-chat-header {
+  background: rgba(12,7,17,.88) !important;
+  border-bottom: 1px solid rgba(175,131,139,.15) !important;
+}
+.chat-message-list {
+  background: radial-gradient(ellipse at 50% 0%,rgba(81,18,67,.12),transparent 58%) !important;
+}
+.sunny-composer {
+  background: linear-gradient(145deg,rgba(34,22,43,.98),rgba(19,12,27,.98)) !important;
+  border-color: rgba(175,131,139,.22) !important;
+  box-shadow: 0 18px 44px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.045) !important;
+}
+.sunny-composer:focus-within {
+  border-color: rgba(255,216,77,.42) !important;
+  box-shadow: 0 18px 44px rgba(0,0,0,.32),0 0 0 3px rgba(89,16,151,.16) !important;
+}
+.sunny-chat-ui textarea {
+  background: rgba(8,4,14,.62) !important;
+  border-color: rgba(175,131,139,.2) !important;
+}
+.sunny-memory-search input {
+  background: rgba(18,10,25,.92) !important;
+  border-color: rgba(175,131,139,.2) !important;
+}
+.sunny-memory-filters button {
+  border-radius: 999px;
+}
+.sunny-memory-filters button[aria-pressed="true"],
+.sunny-memory-filters button[data-state="active"] {
+  background: rgba(89,16,151,.32) !important;
+  border-color: rgba(175,131,139,.32) !important;
+}
+.sunny-settings-dialog,
+.sunny-modal-surface {
+  background: linear-gradient(145deg,#25162F,#100A18) !important;
+  border-color: rgba(175,131,139,.24) !important;
+  box-shadow: 0 30px 100px rgba(0,0,0,.62) !important;
+}
+.gooey-dock-shell {
+  background: rgba(15,9,21,.91) !important;
+  border-color: rgba(175,131,139,.24) !important;
+  box-shadow: 0 18px 50px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.055) !important;
+}
+.gooey-dock__blob {
+  background: radial-gradient(circle,rgba(89,16,151,.42),rgba(194,26,56,.12) 72%) !important;
+}
+.gooey-dock__item--active { color: #FFD84D !important; }
+:root[data-theme='sunny-light'] .sunny-app-shell {
+  background: radial-gradient(ellipse at 50% -15%,rgba(89,16,151,.09),transparent 42%),#F8F6FC !important;
+}
+:root[data-theme='sunny-light'] .sunny-vibe-card,
+:root[data-theme='sunny-light'] .sunny-daily-card,
+:root[data-theme='sunny-light'] .sunny-recent-card,
+:root[data-theme='sunny-light'] .sunny-memory-card,
+:root[data-theme='sunny-light'] .sunny-settings-panel {
+  background: linear-gradient(145deg,#FFFFFF,#F5F0FA) !important;
+  border-color: rgba(89,16,151,.13) !important;
+}
+:root[data-theme='sunny-light'] .sunny-chat-ui { background:#F8F6FC !important; }
+@media (max-width: 640px) {
+  .sunny-home-screen,
+  .sunny-memories-screen,
+  .sunny-settings-screen {
+    padding-bottom: max(7.8rem,calc(6.6rem + env(safe-area-inset-bottom,0px))) !important;
+  }
+}
