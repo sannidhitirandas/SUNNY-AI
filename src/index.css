@@ -9,7 +9,7 @@
   font-display: swap;
 }
 
-@theme {
+:root {
   --font-sans: var(--sunny-ui-font), system-ui, sans-serif;
   --color-sunny-bg: #100B22;
   --color-sunny-secondary: #17102C;
@@ -552,7 +552,7 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
 }
 .sunny-memory-glow { animation:sunny-memory-breathe 7s ease-in-out infinite; }
 .sunny-memory-count { backdrop-filter:blur(16px); }
-.sunny-memory-search input { -webkit-appearance:none; }
+.sunny-memory-search input { appearance:none; -webkit-appearance:none; }
 .sunny-memory-filters { scrollbar-width:none; -webkit-overflow-scrolling:touch; }
 .sunny-memory-filters::-webkit-scrollbar { display:none; }
 .sunny-memory-card { min-width:0; -webkit-tap-highlight-color:transparent; }
