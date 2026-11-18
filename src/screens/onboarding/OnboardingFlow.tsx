@@ -98,7 +98,7 @@ const OnboardingStyles: React.FC = () => (
     }
     .ob-video-backdrop {
       position: fixed;
-      z-index: 0;
+      z-index: -1;
       inset: 0;
       overflow: hidden;
       pointer-events: none;
@@ -122,7 +122,7 @@ const OnboardingStyles: React.FC = () => (
     .ob-sparkle { z-index: 1; }
     .sunny-onboarding-shell {
       position: relative;
-      z-index: 2;
+      z-index: 3;
     }
     .sunny-onboarding-choice {
       background: rgba(20, 16, 35, 0.48);
