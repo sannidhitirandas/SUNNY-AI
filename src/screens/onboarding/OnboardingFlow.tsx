@@ -213,7 +213,7 @@ const ChoiceCard: React.FC<ChoiceCardProps> = ({
     type="button"
     onClick={onClick}
     aria-pressed={selected}
-    className={`w-full cursor-pointer rounded-2xl border p-4 text-left transition-all ${
+    className={`sunny-onboarding-choice w-full cursor-pointer rounded-2xl border p-4 text-left transition-all ${
       selected
         ? 'border-[#FFD84D] bg-[#2b1d4a] shadow-[0_0_0_1px_rgba(255,216,77,0.25),0_12px_28px_-18px_rgba(255,216,77,0.5)]'
         : 'border-[#392858] bg-[#21163A]/80 hover:border-white/25'
@@ -335,7 +335,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
   };
 
   return (
-    <div className="ob-screen relative min-h-[100dvh] w-full overflow-x-hidden overflow-y-auto">
+    <div className="ob-screen sunny-onboarding relative min-h-[100dvh] w-full overflow-x-hidden overflow-y-auto">
       <OnboardingStyles />
 
       {SPARKLES.map((sparkle, index) => (
@@ -358,7 +358,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
 
       {/* Inline width keeps the column narrow on desktop even if global CSS overrides utility classes. */}
       <div
-        className="relative mx-auto flex min-h-[100dvh] flex-col px-5 py-6 sm:py-10"
+        className="sunny-onboarding-shell relative mx-auto flex min-h-[100dvh] flex-col px-5 py-6 sm:py-10"
         style={{ width: '100%', maxWidth: '28rem' }}
       >
         {/* Step 0: Welcome */}
@@ -386,7 +386,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                 </span>
               </div>
 
-              <div className="max-w-xs rounded-2xl border border-[#FFD84D]/30 bg-[#21163A]/80 p-4 text-center shadow-lg">
+              <div className="sunny-onboarding-quote max-w-xs rounded-2xl border border-[#FFD84D]/30 bg-[#21163A]/80 p-4 text-center shadow-lg">
                 <p className="text-sm font-medium italic text-[#FFD84D]">
                   &ldquo;You don&rsquo;t have to start over every time you come back.&rdquo;
                 </p>
@@ -432,7 +432,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                       type="button"
                       onClick={() => toggleInterest(interest)}
                       aria-pressed={isSelected}
-                      className={`inline-flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2.5 text-left text-sm transition-all ${
+                      className={`sunny-onboarding-interest inline-flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2.5 text-left text-sm transition-all ${
                         isSelected
                           ? 'border-[#FFD84D] bg-[#2b1d4a] font-semibold text-white shadow-[0_8px_20px_-14px_rgba(255,216,77,0.6)]'
                           : 'border-[#392858] bg-[#21163A]/80 text-[#C6B8E5] hover:border-white/25'
@@ -574,7 +574,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                 Sunny can send occasional gentle notes to brighten your morning, afternoon, or evening. Never spammy, never guilt-tripping.
               </p>
 
-              <div className="mb-4 space-y-3 rounded-2xl border border-[#392858] bg-[#17102C]/80 p-4">
+              <div className="sunny-onboarding-notification-preview mb-4 space-y-3 rounded-2xl border border-[#392858] bg-[#17102C]/80 p-4">
                 <div className="flex items-start gap-3">
                   <Sun size={18} className="mt-0.5 shrink-0 text-[#FFD84D]" />
                   <div>
@@ -645,7 +645,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                 <p role="status" className="mb-4 max-w-sm text-sm text-[#C6B8E5]">{notificationPermissionNote}</p>
               )}
 
-              <div className="max-w-sm rounded-2xl border border-[#392858] bg-[#21163A]/80 p-5 text-left">
+              <div className="sunny-onboarding-note max-w-sm rounded-2xl border border-[#392858] bg-[#21163A]/80 p-5 text-left">
                 <span className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-[#FFD84D]">
                   Friendly companion note
                 </span>
