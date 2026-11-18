@@ -83,7 +83,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           inset: 0;
           overflow: hidden;
           pointer-events: none;
-          background: #100B22;
+          background: #17191D;
         }
         .sunrise-background-video {
           position: absolute;
@@ -100,8 +100,8 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           position: absolute;
           inset: 0;
           background:
-            linear-gradient(180deg, rgba(10, 7, 24, 0.58) 0%, rgba(15, 9, 32, 0.34) 42%, rgba(10, 7, 24, 0.62) 100%),
-            radial-gradient(ellipse at 50% 48%, rgba(17, 10, 35, 0.12) 0%, rgba(10, 7, 24, 0.42) 100%);
+            linear-gradient(180deg, rgba(12, 14, 18, 0.56) 0%, rgba(18, 20, 24, 0.30) 42%, rgba(12, 14, 18, 0.60) 100%),
+            radial-gradient(ellipse at 50% 48%, rgba(18, 20, 24, 0.10) 0%, rgba(12, 14, 18, 0.38) 100%);
         }
         .sunrise-screen > .sunrise-sun,
         .sunrise-screen > .sunrise-eyebrow,
@@ -127,7 +127,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           width: 140%;
           height: 60%;
           transform: translateX(-50%);
-          background: radial-gradient(ellipse at 50% 100%, rgba(255, 216, 77, 0.38) 0%, rgba(246, 189, 69, 0.16) 40%, rgba(16, 11, 34, 0) 72%);
+          background: radial-gradient(ellipse at 50% 100%, rgba(232, 207, 165, 0.22) 0%, rgba(190, 168, 143, 0.08) 40%, rgba(16, 11, 34, 0) 72%);
           animation: sunrise-horizon-rise 2.2s cubic-bezier(0.22, 0.8, 0.25, 1) both;
           pointer-events: none;
         }
@@ -144,8 +144,14 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
         .sunrise-rays {
           position: relative;
           z-index: 1;
-          filter: drop-shadow(0 3px 8px rgba(30, 15, 12, .65)) drop-shadow(0 8px 18px rgba(255, 190, 64, .24));
+          filter: drop-shadow(0 3px 8px rgba(0, 0, 0, .58)) drop-shadow(0 8px 18px rgba(218, 199, 169, .16));
         }
+        .sunrise-rays > div > div:first-child { opacity: 0 !important; }
+        .sunrise-rays svg line { stroke: #E8E1D5 !important; }
+        .sunrise-rays svg stop:nth-child(1) { stop-color: #F8F4EB; }
+        .sunrise-rays svg stop:nth-child(2) { stop-color: #E5D8C3; }
+        .sunrise-rays svg stop:nth-child(3) { stop-color: #BFAF98; }
+        .sunrise-rays svg feDropShadow { flood-color: #D8CBB5; flood-opacity: .28; }
 
         .sunrise-sparkle {
           position: absolute;
@@ -157,14 +163,15 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
         }
 
         .sunrise-eyebrow {
-          margin-bottom:.75rem; color:#FFF1B8;
+          margin-bottom:.75rem; color:#E9E5DD;
           font-size:.67rem; font-weight:700; letter-spacing:.28em;
           text-transform:uppercase;
           animation: sunrise-fade-up .8s ease-out .65s both;
         }
         .sunrise-wordmark {
+          color: #F2EFE8 !important;
           animation: sunrise-fade-up 0.9s ease-out 0.9s both;
-          text-shadow:0 0 34px rgba(255,216,77,.18);
+          text-shadow:0 0 28px rgba(232, 224, 207, .12);
         }
         .sunrise-greeting {
           animation: sunrise-fade-up 0.9s ease-out 1.3s both;
@@ -173,7 +180,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           animation: sunrise-fade-up 1s ease-out 1.7s both;
         }
         .sunrise-waiting {
-          margin-top:2rem; color:#F2EAFE;
+          margin-top:2rem; color:#D8D8D3;
           font-size:.68rem; letter-spacing:.13em;
           animation:sunrise-fade-up .7s ease-out 2s both;
         }
@@ -201,7 +208,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           position: absolute;
           inset: 0;
           border-radius: 9999px;
-          background: linear-gradient(90deg, #F6BD45, #FFD84D);
+          background: linear-gradient(90deg, #D8CBB5, #F0E9DC);
           transform-origin: left center;
           animation: sunrise-bar-fill 2.6s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
         }
@@ -235,7 +242,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
         @media (max-width: 640px) {
           .sunrise-video-backdrop { position: absolute; inset: 0; width: 100vw; height: 100dvh; }
           .sunrise-background-video { display: block; width: 100%; height: 100%; min-width: 100%; min-height: 100%; object-fit: cover; object-position: center center; transform: translateZ(0) scale(1.01); }
-          .sunrise-video-overlay { background: linear-gradient(180deg, rgba(10, 7, 24, 0.62), rgba(15, 9, 32, 0.38) 48%, rgba(10, 7, 24, 0.68)); }
+          .sunrise-video-overlay { background: linear-gradient(180deg, rgba(12, 14, 18, 0.60), rgba(18, 20, 24, 0.34) 48%, rgba(12, 14, 18, 0.62)); }
           .sunrise-sun { margin-bottom: 1.6rem; }
         }
 
@@ -293,7 +300,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
       </div>
 
       <p className="sunrise-eyebrow">A little light, just for you</p>
-      <h1 className="sunrise-wordmark text-4xl font-bold tracking-tight text-[#FFD84D] mb-2">
+      <h1 className="sunrise-wordmark text-4xl font-bold tracking-tight mb-2">
         Sunny
       </h1>
 
@@ -301,7 +308,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
         Hey, sunshine. 💛
       </p>
 
-      <p className="sunrise-tagline max-w-[16rem] text-sm italic leading-relaxed text-[#C6B8E5]">
+      <p className="sunrise-tagline max-w-[16rem] text-sm italic leading-relaxed text-[#D7D4CC]">
         You don&rsquo;t have to start over every time you come back.
       </p>
       <p className="sunrise-waiting" aria-hidden="true">GETTING YOUR SUNSHINE READY</p>
