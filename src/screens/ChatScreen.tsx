@@ -294,6 +294,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
       {/* Message Composer */}
       <MessageComposer
         onSend={sendMessage}
+        onVoicePress={() => setVoiceModeVisible(true)}
         disabled={isThinking}
         placeholder={isThinking ? 'Sunny is replying…' : undefined}
         onFocus={onFocus}
