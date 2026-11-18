@@ -1591,3 +1591,113 @@ button:disabled { cursor: not-allowed; }
   .sunny-memory-deck-control,.sunny-memory-deck-progress span { transition: none; }
   .sunny-memory-deck-control:hover,.sunny-memory-deck-control:active { transform: none; }
 }
+
+
+/* Full-screen animated atmosphere for Sunny Home — original CSS artwork. */
+.sunny-home-screen {
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(77,48,112,.24), transparent 54%),
+    linear-gradient(155deg,#100B22 0%,#17102C 48%,#120D25 100%);
+}
+.sunny-home-atmosphere {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  contain: paint;
+  background:
+    radial-gradient(ellipse at 18% 22%,rgba(112,75,157,.10),transparent 36%),
+    radial-gradient(ellipse at 84% 58%,rgba(255,216,77,.045),transparent 34%);
+}
+.sunny-home-aurora {
+  position: absolute;
+  width: min(76vw,58rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: blur(72px);
+  opacity: .32;
+  will-change: transform;
+}
+.sunny-home-aurora-one {
+  top: -25rem;
+  left: -22rem;
+  background: radial-gradient(circle,rgba(137,91,190,.72) 0%,rgba(91,57,139,.25) 42%,transparent 70%);
+  animation: sunny-home-drift-one 24s ease-in-out infinite alternate;
+}
+.sunny-home-aurora-two {
+  top: 24%;
+  right: -30rem;
+  background: radial-gradient(circle,rgba(95,65,153,.7) 0%,rgba(74,48,119,.22) 45%,transparent 70%);
+  animation: sunny-home-drift-two 29s ease-in-out infinite alternate;
+}
+.sunny-home-glow {
+  position: absolute;
+  width: min(42vw,28rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: blur(58px);
+}
+.sunny-home-glow-sun {
+  top: 42%;
+  left: 42%;
+  background: radial-gradient(circle,rgba(255,216,77,.13),rgba(246,189,69,.035) 42%,transparent 72%);
+  animation: sunny-home-sun-breathe 12s ease-in-out infinite;
+}
+.sunny-home-stars {
+  position: absolute;
+  inset: 0;
+  opacity: .28;
+  background-image:
+    radial-gradient(1px 1px at 12% 18%,rgba(255,239,190,.9) 50%,transparent 100%),
+    radial-gradient(1px 1px at 76% 13%,rgba(255,255,255,.8) 50%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 88% 42%,rgba(255,216,77,.8) 50%,transparent 100%),
+    radial-gradient(1px 1px at 31% 62%,rgba(255,255,255,.7) 50%,transparent 100%),
+    radial-gradient(1px 1px at 67% 79%,rgba(255,239,190,.75) 50%,transparent 100%),
+    radial-gradient(1px 1px at 8% 88%,rgba(255,255,255,.6) 50%,transparent 100%);
+  background-size: 100% 100%;
+  animation: sunny-home-star-shimmer 8s ease-in-out infinite alternate;
+}
+.sunny-home-content {
+  position: relative;
+  z-index: 1;
+  min-height: 100%;
+}
+@keyframes sunny-home-drift-one {
+  from { transform: translate3d(0,0,0) scale(.92); }
+  to { transform: translate3d(9rem,7rem,0) scale(1.12); }
+}
+@keyframes sunny-home-drift-two {
+  from { transform: translate3d(0,0,0) scale(1.05); }
+  to { transform: translate3d(-8rem,-5rem,0) scale(.9); }
+}
+@keyframes sunny-home-sun-breathe {
+  0%,100% { opacity:.55; transform:scale(.88); }
+  50% { opacity:1; transform:scale(1.12); }
+}
+@keyframes sunny-home-star-shimmer {
+  from { opacity:.16; }
+  to { opacity:.42; }
+}
+:root[data-theme='sunny-light'] .sunny-home-screen {
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(185,153,218,.24),transparent 56%),
+    linear-gradient(155deg,#F8F6FC 0%,#F1EBF8 52%,#FBF8F0 100%);
+}
+:root[data-theme='sunny-light'] .sunny-home-atmosphere {
+  background:
+    radial-gradient(ellipse at 18% 22%,rgba(171,139,207,.16),transparent 38%),
+    radial-gradient(ellipse at 84% 58%,rgba(255,216,77,.09),transparent 36%);
+}
+:root[data-theme='sunny-light'] .sunny-home-aurora { opacity:.2; }
+:root[data-theme='sunny-light'] .sunny-home-glow-sun { opacity:.48; }
+:root[data-theme='sunny-light'] .sunny-home-stars { opacity:.12; }
+@media (max-width:640px) {
+  .sunny-home-aurora { filter:blur(58px); opacity:.25; }
+  .sunny-home-aurora-one { top:-18rem; left:-24rem; }
+  .sunny-home-aurora-two { right:-26rem; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .sunny-home-aurora,.sunny-home-glow-sun,.sunny-home-stars { animation:none !important; }
+}
