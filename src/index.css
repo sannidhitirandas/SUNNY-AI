@@ -406,21 +406,33 @@ button,
   }
 }
 
-/* Wallpaper-matched gradient text for Sunny's messages.
-   ChatScreen sets --sunny-text-1/2/3 and the .sunny-text-gradient-on class
-   only when a wallpaper is selected. The selector is deliberately specific so
-   it also beats the light theme's `text-white` colour override above. */
-html:root .sunny-text-gradient-on p.sunny-gradient-text {
+/* Wallpaper-matched bubble backgrounds.
+   ChatScreen sets the --sunny-* variables and the .sunny-bubbles-on class only
+   when a wallpaper is selected. Selectors are deliberately specific so they also
+   beat the light theme's colour overrides above. Text stays solid (emoji safe). */
+html:root .sunny-bubbles-on .sunny-bot-bubble {
   background-image: linear-gradient(
-    105deg,
-    var(--sunny-text-1),
-    var(--sunny-text-2) 55%,
-    var(--sunny-text-3)
+    135deg,
+    var(--sunny-bot-1),
+    var(--sunny-bot-2) 55%,
+    var(--sunny-bot-3)
   );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent !important;
-  /* keeps descenders/ascenders from being clipped by the text-shaped mask */
-  padding-bottom: 0.08em;
+}
+
+html:root .sunny-bubbles-on .sunny-you-bubble {
+  background-image: linear-gradient(
+    135deg,
+    var(--sunny-you-1),
+    var(--sunny-you-2) 55%,
+    var(--sunny-you-3)
+  );
+  background-color: var(--sunny-you-2) !important;
+  color: var(--sunny-you-fg) !important;
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.22);
+}
+
+html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
+  color: inherit !important;
+  opacity: 0.75;
 }

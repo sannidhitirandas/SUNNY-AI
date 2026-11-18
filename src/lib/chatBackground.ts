@@ -12,14 +12,24 @@ export type ChatBackgroundDevice = 'pc' | 'mobile';
 
 type GradientStops = [string, string, string];
 
+/** One theme's bubble colours for a wallpaper. */
+export interface ChatBubbleColors {
+  /** Sunny's bubbles. */
+  sunny: GradientStops;
+  /** Your bubbles. */
+  you: GradientStops;
+  /** Text colour on your bubbles (Sunny's bubbles keep the theme's normal text). */
+  youText: string;
+}
+
 /**
- * Text gradient for Sunny's messages, colour-picked from each wallpaper.
- * `dark` = light pastel stops for the dark theme's dark bubbles.
- * `light` = deeper stops that stay readable on the light theme's white bubbles.
+ * Bubble background gradients sampled from each wallpaper's palette.
+ * `dark`: deep tones for Sunny, vivid tones for you, white text on both.
+ * `light`: soft pastel tints with dark text, for the light theme.
  */
-export interface ChatTextGradient {
-  dark: GradientStops;
-  light: GradientStops;
+export interface ChatBubbleGradient {
+  dark: ChatBubbleColors;
+  light: ChatBubbleColors;
 }
 
 export interface ChatBackgroundOption {
@@ -28,48 +38,48 @@ export interface ChatBackgroundOption {
   pc: string | null;
   mobile: string | null;
   thumb: string | null;
-  textGradient: ChatTextGradient | null;
+  bubbleGradient: ChatBubbleGradient | null;
 }
 
 const entry = (
   id: Exclude<ChatBackgroundId, 'none'>,
   label: string,
-  textGradient: ChatTextGradient
+  bubbleGradient: ChatBubbleGradient
 ): ChatBackgroundOption => ({
   id,
   label,
   pc: `/chat-backgrounds/${id}-pc.png`,
   mobile: `/chat-backgrounds/${id}-mobile.jpg`,
   thumb: `/chat-backgrounds/${id}-pc.png`,
-  textGradient,
+  bubbleGradient,
 });
 
 export const CHAT_BACKGROUNDS: ChatBackgroundOption[] = [
-  { id: 'none', label: 'Plain', pc: null, mobile: null, thumb: null, textGradient: null },
-  // Pink cloud edges -> lilac field -> warm window glow
+  { id: 'none', label: 'Plain', pc: null, mobile: null, thumb: null, bubbleGradient: null },
+  // Indigo night + plum field / pink clouds + warm window glow
   entry('lavender-cottage', 'Lavender Cottage', {
-    dark: ['#FFC9E6', '#E4CCFF', '#FFE6B3'],
-    light: ['#B0267A', '#6B2BC4', '#A0580A'],
+    dark: { sunny: ['#2A1B52', '#3A2368', '#5A2A6E'], you: ['#8F2E7E', '#B23C8C', '#CC5A6E'], youText: '#FFFFFF' },
+    light: { sunny: ['#FBEFFA', '#F1E6FF', '#FFE9EF'], you: ['#F7C6E3', '#E3CCFF', '#FFD9B8'], youText: '#2A1740' },
   }),
-  // Neon cyan curtains -> violet skyline -> magenta glow
+  // Deep blue room / neon cyan, violet skyline, magenta glow
   entry('moonlit-window', 'Moonlit Window', {
-    dark: ['#9EEBFF', '#E2B8FF', '#FFC2E3'],
-    light: ['#0A6E8C', '#7A2BC4', '#B0206E'],
+    dark: { sunny: ['#12255C', '#2A1A6B', '#5A1A6A'], you: ['#0E7C9A', '#4C3FD0', '#B02A8C'], youText: '#FFFFFF' },
+    light: { sunny: ['#E8F6FB', '#EEE8FF', '#FBE9F5'], you: ['#B8ECF8', '#CFC4FF', '#F7C2E4'], youText: '#2A1740' },
   }),
-  // Sakura pink -> twilight blue -> soft lilac
+  // Twilight blue / sakura pink and violet clouds
   entry('sakura-skyline', 'Sakura Skyline', {
-    dark: ['#FFB8DC', '#C9D4FF', '#F0C8FF'],
-    light: ['#B0206E', '#2F4FC0', '#8A2BB8'],
+    dark: { sunny: ['#1E2A6A', '#4A2A7A', '#7A2A62'], you: ['#C23A86', '#8A3FC4', '#4A58D8'], youText: '#FFFFFF' },
+    light: { sunny: ['#FDEAF3', '#EAEEFF', '#F5E8FF'], you: ['#FBB9D9', '#C7D2FF', '#E2C3FA'], youText: '#2A1740' },
   }),
-  // Deep violet sky -> magenta clouds -> peach horizon
+  // Deep violet sky / magenta clouds, peach horizon
   entry('violet-dusk', 'Violet Dusk', {
-    dark: ['#E0C8FF', '#FFB8F0', '#FFD6B0'],
-    light: ['#6A1FC0', '#B0208F', '#A04A10'],
+    dark: { sunny: ['#2E1068', '#4A1A82', '#7A1F7A'], you: ['#6A2FD0', '#A02FB8', '#D0507A'], youText: '#FFFFFF' },
+    light: { sunny: ['#F0E8FF', '#F9E8FA', '#FFEFE6'], you: ['#D9C2FF', '#F5BBE9', '#FFD3B8'], youText: '#2A1740' },
   }),
-  // Lavender blooms -> pink clouds -> golden sunrise
+  // Lavender blooms / pink clouds, golden sunrise
   entry('lavender-meadow', 'Lavender Meadow', {
-    dark: ['#E6D4FF', '#FFC4E4', '#FFE49A'],
-    light: ['#6A3FC0', '#B0267A', '#8A6200'],
+    dark: { sunny: ['#281F63', '#43297C', '#6B3470'], you: ['#6F46D8', '#A83FA8', '#BE6A38'], youText: '#FFFFFF' },
+    light: { sunny: ['#F1EAFF', '#FCEAF3', '#FFF3D6'], you: ['#DCCBFF', '#FAC0DE', '#FFE49A'], youText: '#2A1740' },
   }),
 ];
 
@@ -181,7 +191,7 @@ export const useChatBackground = () => {
       const option = getChatBackgroundOption(backgroundId);
       return device === 'mobile' ? option.mobile : option.pc;
     })(),
-    textGradient: getChatBackgroundOption(backgroundId).textGradient,
+    bubbleGradient: getChatBackgroundOption(backgroundId).bubbleGradient,
     setChatBackground,
     device,
     availableBackgrounds: getDeviceChatBackgrounds(device),
