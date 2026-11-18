@@ -12,7 +12,7 @@ import { ConversationStarter } from '@/components/home/ConversationStarter';
 import { DailySunshineCard } from '@/components/home/DailySunshineCard';
 import { RecentConversations } from '@/components/home/RecentConversations';
 
-import { Settings, Sparkles } from 'lucide-react';
+import { Settings, Sparkles, MessageCircle, Bookmark, ArrowUpRight } from 'lucide-react';
 
 interface HomeScreenProps {
   onNavigateToTab: (
@@ -138,6 +138,33 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           displayName={displayName}
           onTalkPress={handleTalkToSunny}
         />
+
+        <section className="sunny-home-quick-grid my-6 grid grid-cols-1 gap-3 sm:grid-cols-2" aria-label="Quick actions">
+          <button
+            type="button"
+            onClick={handleTalkToSunny}
+            className="group relative flex min-h-[104px] items-center gap-4 overflow-hidden rounded-[24px] border border-[#B99AFF]/25 bg-gradient-to-br from-[#3B2860] to-[#211633] p-4 text-left shadow-[0_12px_30px_rgba(5,2,14,.16)] transition-all hover:-translate-y-1 hover:border-[#F5D27A]/50 hover:shadow-[0_16px_36px_rgba(5,2,14,.24)] active:scale-[.99]"
+          >
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#F5D27A] text-[#241735] shadow-[0_6px_20px_rgba(245,210,122,.18)]"><MessageCircle size={22}/></span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-sm font-bold text-white">Start a new chat</span>
+              <span className="mt-1 block text-xs leading-relaxed text-[#CDBEE4]">A fresh conversation with Sunny</span>
+            </span>
+            <ArrowUpRight size={17} className="shrink-0 text-[#F5D27A] transition-transform group-hover:-translate-y-1 group-hover:translate-x-1"/>
+          </button>
+          <button
+            type="button"
+            onClick={() => onNavigateToTab('memories')}
+            className="group relative flex min-h-[104px] items-center gap-4 overflow-hidden rounded-[24px] border border-[#B99AFF]/25 bg-gradient-to-br from-[#30234B] to-[#1B142C] p-4 text-left shadow-[0_12px_30px_rgba(5,2,14,.16)] transition-all hover:-translate-y-1 hover:border-[#F5D27A]/50 hover:shadow-[0_16px_36px_rgba(5,2,14,.24)] active:scale-[.99]"
+          >
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-[#F5D27A]/20 bg-[#F5D27A]/10 text-[#F5D27A]"><Bookmark size={21}/></span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-sm font-bold text-white">Memory vault</span>
+              <span className="mt-1 block text-xs leading-relaxed text-[#CDBEE4]">Your moments, saved with care</span>
+            </span>
+            <ArrowUpRight size={17} className="shrink-0 text-[#F5D27A] transition-transform group-hover:-translate-y-1 group-hover:translate-x-1"/>
+          </button>
+        </section>
 
         <ConversationStarter onSelectIntent={handleSelectIntent} />
 

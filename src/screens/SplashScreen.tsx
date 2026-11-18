@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { SunnyLogo } from '@/components/brand/SunnyLogo';
+import { SunnyRobot3D } from '@/components/brand/SunnyRobot3D';
 import { audioService } from '@/services/audioService';
 import { usePreferences } from '@/context/PreferencesContext';
 
@@ -25,36 +25,6 @@ const SPARKLES: Array<{ left: string; top: string; size: number; delay: number; 
 
 export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
   const { preferences } = usePreferences();
-  const splashVideoRef = React.useRef<HTMLVideoElement | null>(null);
-
-  // Keep the splash background video playing on mobile browsers where autoplay
-  // may be deferred until media is ready or the page returns to the foreground.
-  useEffect(() => {
-    const video = splashVideoRef.current;
-    if (!video) return;
-    video.muted = true;
-    video.defaultMuted = true;
-    video.playsInline = true;
-
-    const tryPlay = () => {
-      if (document.visibilityState !== 'visible') return;
-      const playback = video.play();
-      if (playback) playback.catch(() => {
-        // Respect browser autoplay restrictions and retain the background fallback.
-      });
-    };
-
-    tryPlay();
-    video.addEventListener('canplay', tryPlay);
-    document.addEventListener('visibilitychange', tryPlay);
-    window.addEventListener('pageshow', tryPlay);
-    return () => {
-      video.removeEventListener('canplay', tryPlay);
-      document.removeEventListener('visibilitychange', tryPlay);
-      window.removeEventListener('pageshow', tryPlay);
-    };
-  }, []);
-
   useEffect(() => {
     void audioService.play('open');
     if (preferences.audioPreferences.musicEnabled) {
@@ -75,31 +45,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
       <style>{`
         .sunrise-screen {
           isolation: isolate;
-          background: transparent;
-        }
-        .sunrise-video-backdrop {
-          position: absolute;
-          z-index: 0;
-          inset: 0;
-          overflow: hidden;
-          pointer-events: none;
-          background: #17191D;
-        }
-        .sunrise-background-video {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: center;
-          opacity: 1;
-          filter: none;
-          transform: scale(1.01);
-        }
-        .sunrise-video-overlay {
-          position: absolute;
-          inset: 0;
-          background: transparent;
+          background: radial-gradient(ellipse at 50% 38%, rgba(139,92,246,.28), transparent 44%), radial-gradient(ellipse at 50% 100%, rgba(255,216,77,.12), transparent 38%), linear-gradient(160deg,#100B22 0%,#1B1230 54%,#100B22 100%);
         }
         .sunrise-screen > .sunrise-sun,
         .sunrise-screen > .sunrise-eyebrow,
@@ -125,7 +71,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           width: 140%;
           height: 60%;
           transform: translateX(-50%);
-          background: radial-gradient(ellipse at 50% 100%, rgba(232, 207, 165, 0.22) 0%, rgba(190, 168, 143, 0.08) 40%, rgba(16, 11, 34, 0) 72%);
+          background: radial-gradient(ellipse at 50% 100%, rgba(167,139,250,.22) 0%, rgba(255,216,77,.08) 40%, rgba(16, 11, 34, 0) 72%);
           animation: sunrise-horizon-rise 2.2s cubic-bezier(0.22, 0.8, 0.25, 1) both;
           pointer-events: none;
         }
@@ -146,10 +92,10 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
         }
         .sunrise-rays > div > div:first-child { opacity: 0 !important; }
         .sunrise-rays svg line { stroke: #E8E1D5 !important; }
-        .sunrise-rays svg stop:nth-child(1) { stop-color: #F8F4EB; }
-        .sunrise-rays svg stop:nth-child(2) { stop-color: #E5D8C3; }
-        .sunrise-rays svg stop:nth-child(3) { stop-color: #BFAF98; }
-        .sunrise-rays svg feDropShadow { flood-color: #D8CBB5; flood-opacity: .28; }
+        .sunrise-rays svg stop:nth-child(1) { stop-color: #FFF9E8; }
+        .sunrise-rays svg stop:nth-child(2) { stop-color: #DCCBFF; }
+        .sunrise-rays svg stop:nth-child(3) { stop-color: #A78BFA; }
+        .sunrise-rays svg feDropShadow { flood-color: #B99AFF; flood-opacity: .28; }
 
         .sunrise-sparkle {
           position: absolute;
@@ -161,13 +107,13 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
         }
 
         .sunrise-eyebrow {
-          margin-bottom:.75rem; color:#E9E5DD;
+          margin-bottom:.75rem; color:#FFE58A;
           font-size:.67rem; font-weight:700; letter-spacing:.28em;
           text-transform:uppercase;
           animation: sunrise-fade-up .8s ease-out .65s both;
         }
         .sunrise-wordmark {
-          color: #F2EFE8 !important;
+          color: #FBF8FF !important;
           animation: sunrise-fade-up 0.9s ease-out 0.9s both;
           text-shadow:0 0 28px rgba(232, 224, 207, .12);
         }
@@ -178,7 +124,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           animation: sunrise-fade-up 1s ease-out 1.7s both;
         }
         .sunrise-waiting {
-          margin-top:2rem; color:#D8D8D3;
+          margin-top:2rem; color:#C6B8E5;
           font-size:.68rem; letter-spacing:.13em;
           animation:sunrise-fade-up .7s ease-out 2s both;
         }
@@ -206,7 +152,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           position: absolute;
           inset: 0;
           border-radius: 9999px;
-          background: linear-gradient(90deg, #D8CBB5, #F0E9DC);
+          background: linear-gradient(90deg, #B99AFF, #FFE58A);
           transform-origin: left center;
           animation: sunrise-bar-fill 2.6s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
         }
@@ -238,9 +184,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
         }
 
         @media (max-width: 640px) {
-          .sunrise-video-backdrop { position: absolute; inset: 0; width: 100vw; height: 100dvh; }
-          .sunrise-background-video { display: block; width: 100%; height: 100%; min-width: 100%; min-height: 100%; object-fit: cover; object-position: center center; transform: translateZ(0) scale(1.01); }
-          .sunrise-video-overlay { background: transparent; }
           .sunrise-sun { margin-bottom: 1.6rem; }
         }
 
@@ -264,13 +207,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
         }
       `}</style>
 
-      <div className="sunrise-video-backdrop" aria-hidden="true">
-        <video ref={splashVideoRef} className="sunrise-background-video" autoPlay muted loop playsInline preload="metadata">
-          <source src="/sunny-home-background.mp4" type="video/mp4" />
-        </video>
-        <span className="sunrise-video-overlay" />
-      </div>
-
       <div className="sunrise-horizon" aria-hidden="true" />
 
       {SPARKLES.map((sparkle, index) => (
@@ -292,8 +228,8 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
       ))}
 
       <div className="sunrise-sun">
-        <div className="sunrise-rays">
-          <SunnyLogo size="huge" />
+        <div className="sunrise-rays h-full w-full">
+          <SunnyRobot3D className="h-full w-full" />
         </div>
       </div>
 
@@ -306,7 +242,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
         Hey, sunshine. 💛
       </p>
 
-      <p className="sunrise-tagline max-w-[16rem] text-sm italic leading-relaxed text-[#D7D4CC]">
+      <p className="sunrise-tagline max-w-[16rem] text-sm italic leading-relaxed text-[#D8CBEF]">
         You don&rsquo;t have to start over every time you come back.
       </p>
       <p className="sunrise-waiting" aria-hidden="true">GETTING YOUR SUNSHINE READY</p>

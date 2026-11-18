@@ -240,6 +240,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         style={{ width: '100%', maxWidth: '26rem', position: 'relative', zIndex: 2 }}
       >
         <SunnyAuthHero
+          compact
           className="login-hero"
           title={forgotPassword ? 'Reset your password' : 'Welcome back'}
           description={forgotPassword

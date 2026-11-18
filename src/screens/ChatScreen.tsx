@@ -9,6 +9,7 @@ import { TypingIndicator } from '@/components/chat/TypingIndicator';
 import { MemoryModal } from '@/components/memories/MemoryModal';
 import { VoiceConversationScreen } from '@/components/chat/VoiceConversationScreen';
 import { MemoryCategory } from '@/types/memory';
+import { SunnyRobot3D } from '@/components/brand/SunnyRobot3D';
 import { getPersonalityLabel } from '@/types/user';
 import type { StarterIntent } from '@/types/chat';
 import { useChatBackground } from '@/lib/chatBackground';
@@ -224,6 +225,31 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
         onScroll={handleScroll}
         className="chat-message-list min-h-0 flex-1 space-y-0 overflow-y-auto bg-[radial-gradient(ellipse_at_top,rgba(48,33,73,0.18),transparent_55%)] pb-4 pt-1 sm:pb-5 sm:pt-2"
       >
+        {messages.length === 0 && !isThinking && (
+          <section className="sunny-chat-welcome mx-auto flex min-h-full w-full max-w-4xl flex-col items-center justify-center px-5 py-7 text-center sm:px-8" aria-label="Start a conversation with Sunny">
+            <div className="relative mb-3 h-36 w-40 sm:h-44 sm:w-48">
+              <div className="absolute inset-3 rounded-full bg-[#9B70E8]/20 blur-2xl" />
+              <SunnyRobot3D compact className="relative z-10 h-full w-full" />
+            </div>
+            <span className="mb-2 inline-flex items-center gap-2 rounded-full border border-[#F5D27A]/25 bg-[#F5D27A]/[0.08] px-3 py-1 text-[10px] font-bold uppercase tracking-[.18em] text-[#F5D27A]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#F5D27A] shadow-[0_0_10px_rgba(245,210,122,.8)]"/> Here with you
+            </span>
+            <h2 className="max-w-xl text-2xl font-semibold tracking-tight text-white sm:text-3xl">What would you like to talk about?</h2>
+            <p className="mt-2 max-w-md text-sm leading-relaxed text-[#C6B8E5]">Start anywhere. Sunny is here to listen, help you think, or simply keep you company.</p>
+            <div className="mt-6 grid w-full max-w-2xl grid-cols-1 gap-2.5 sm:grid-cols-3">
+              {[
+                { label: 'Help me unwind', prompt: 'I want to unwind. Can you help me slow down and feel a little calmer?' },
+                { label: 'I need a fresh perspective', prompt: 'I have something on my mind and would like a fresh perspective.' },
+                { label: 'Let’s talk about my day', prompt: 'Can we talk about my day? I would like to share what happened.' },
+              ].map((item) => (
+                <button key={item.label} type="button" onClick={() => void sendMessage(item.prompt, [])} className="group rounded-2xl border border-[#A78BFA]/25 bg-gradient-to-br from-[#302149]/90 to-[#1B1430]/90 px-4 py-3 text-left text-xs font-semibold text-[#F1E9FF] shadow-[0_8px_24px_rgba(0,0,0,.12)] transition-all hover:-translate-y-0.5 hover:border-[#F5D27A]/50 hover:bg-[#392858] active:scale-[.99]">
+                  <span>{item.label}</span>
+                  <span className="mt-2 block text-[#F5D27A] transition-transform group-hover:translate-x-1">↗</span>
+                </button>
+              ))}
+            </div>
+          </section>
+        )}
         {hasOlderMessages && (
           <div className="flex justify-center px-4 pb-3">
             <button
