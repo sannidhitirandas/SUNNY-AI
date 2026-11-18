@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Mail } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { usePreferences } from '@/context/PreferencesContext';
-import { SunnyLogo } from '@/components/brand/SunnyLogo';
+import { SunnyAuthHero } from '@/components/brand/SunnyAuthHero';
 import { AppInput } from '@/components/ui/AppInput';
 import { AppButton } from '@/components/ui/AppButton';
 import { validateRegistrationFields } from '@/lib/authValidation';
@@ -32,33 +32,6 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
 }) => {
   const { register } = useAuth();
   const { completeOnboarding, updatePreferredName } = usePreferences();
-  const registerVideoRef = React.useRef<HTMLVideoElement | null>(null);
-
-  // Retry muted inline playback when mobile browsers finish loading or restore the page.
-  React.useEffect(() => {
-    const video = registerVideoRef.current;
-    if (!video) return;
-    video.muted = true;
-    video.defaultMuted = true;
-    video.playsInline = true;
-    const tryPlay = () => {
-      if (document.visibilityState !== 'visible') return;
-      const playback = video.play();
-      if (playback) playback.catch(() => {
-        // Autoplay may be restricted by device settings; retain the gradient fallback.
-      });
-    };
-    tryPlay();
-    video.addEventListener('canplay', tryPlay);
-    document.addEventListener('visibilitychange', tryPlay);
-    window.addEventListener('pageshow', tryPlay);
-    return () => {
-      video.removeEventListener('canplay', tryPlay);
-      document.removeEventListener('visibilitychange', tryPlay);
-      window.removeEventListener('pageshow', tryPlay);
-    };
-  }, []);
-
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -112,49 +85,18 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
       <style>{`
         .reg-screen {
           isolation: isolate;
-          background: transparent;
+          background: radial-gradient(ellipse at 50% 12%, #38235B 0%, #211435 44%, #100B1D 100%);
         }
-        .reg-video-backdrop {
-          position: fixed;
-          z-index: -1;
-          inset: 0;
-          overflow: hidden;
-          pointer-events: none;
-          background: #121417;
-        }
-        .reg-background-video {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: center;
-          opacity: 1;
-          filter: none;
-        }
-        .reg-video-overlay {
-          position: absolute;
-          inset: 0;
-          background: transparent;
-        }
-        .reg-background-video { filter: none; }
-        .reg-rays svg line { stroke: #E8E1D5 !important; }
-        .reg-rays svg stop:nth-child(1) { stop-color: #F8F4EB; }
-        .reg-rays svg stop:nth-child(2) { stop-color: #E5D8C3; }
-        .reg-rays svg stop:nth-child(3) { stop-color: #BFAF98; }
-        .reg-rays svg feDropShadow { flood-color: #D8CBB5; flood-opacity: .28; }
-        .reg-rays > div > div:first-child { opacity: 0 !important; }
-        .reg-cta .sunny-app-button { background: #E5DCCB !important; color: #242321 !important; box-shadow: 0 8px 22px -12px rgba(218, 199, 169, .32) !important; }
-        .reg-cta .sunny-app-button:hover { background: #F0E9DC !important; }
+        .reg-cta .sunny-app-button { background: linear-gradient(135deg,#FFE98A,#FFD84D) !important; color: #21152F !important; box-shadow: 0 10px 28px -12px rgba(255,216,77,.55) !important; }
+        .reg-cta .sunny-app-button:hover { background: linear-gradient(135deg,#FFF0B2,#FFE16A) !important; }
         .reg-screen .sunny-auth-shell { position: relative; z-index: 2; }
         .reg-screen .reg-hero { position: relative; z-index: 3; }
-        .reg-hero h1, .reg-hero p, .reg-card label, .reg-screen > div:last-child {
-          text-shadow: 0 1px 2px rgba(0,0,0,.98), 0 3px 10px rgba(0,0,0,.95), 0 8px 24px rgba(0,0,0,.88);
-        }
+        .reg-hero h1, .reg-card label { text-shadow: 0 2px 12px rgba(10,4,26,.55); }
+        .reg-hero p { text-shadow: 0 2px 10px rgba(10,4,26,.5); }
         .reg-sparkle {
           position: absolute;
           border-radius: 9999px;
-          background: #E8E1D5;
+          background: #FFD84D;
           box-shadow: 0 0 8px 1px rgba(218, 199, 169, 0.32);
           opacity: 0;
           pointer-events: none;
@@ -169,9 +111,9 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
           pointer-events: none;
         }
         .reg-card {
-          background: rgba(20, 22, 25, 0.62);
-          border: 1px solid rgba(255, 255, 255, 0.28);
-          box-shadow: 0 24px 70px -28px rgba(0, 0, 0, .48), 0 1px 0 rgba(255,255,255,.16) inset;
+          background: linear-gradient(145deg, rgba(35, 23, 58, .88), rgba(19, 12, 35, .9));
+          border: 1px solid rgba(190, 151, 239, 0.36);
+          box-shadow: 0 26px 72px -28px rgba(0, 0, 0, .62), 0 1px 0 rgba(255,255,255,.1) inset, 0 0 36px rgba(123,76,184,.12);
           -webkit-backdrop-filter: blur(22px) saturate(1.15);
           backdrop-filter: blur(22px) saturate(1.15);
           animation: reg-fade-up 0.7s ease-out 0.15s both;
@@ -179,16 +121,16 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
         .reg-card label { color: rgba(255,255,255,.96); }
         .reg-card .sunny-app-field {
           color: #fff;
-          background: rgba(255,255,255,.13);
-          border-color: rgba(255,255,255,.34);
+          background: rgba(16,10,31,.48);
+          border-color: rgba(190,151,239,.34);
           box-shadow: 0 1px 0 rgba(255,255,255,.08) inset;
           -webkit-backdrop-filter: blur(8px);
           backdrop-filter: blur(8px);
         }
-        .reg-card .sunny-app-field::placeholder { color: rgba(255,255,255,.68); }
+        .reg-card .sunny-app-field::placeholder { color: rgba(222,207,243,.72); }
         .reg-card .sunny-app-field:focus {
-          border-color: rgba(255,255,255,.88);
-          box-shadow: 0 0 0 3px rgba(255,255,255,.16);
+          border-color: rgba(255,216,77,.9);
+          box-shadow: 0 0 0 3px rgba(255,216,77,.13);
         }
         .reg-card input:focus { outline: none; }
         .reg-hero {
@@ -210,22 +152,11 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
           0%, 100% { opacity: 0;   transform: scale(0.6); }
           50%      { opacity: 0.9; transform: scale(1); }
         }
-        @media (max-width: 640px) {
-          .reg-video-backdrop { position: fixed; inset: 0; width: 100vw; height: 100dvh; }
-          .reg-background-video { display: block; width: 100%; height: 100%; min-width: 100%; min-height: 100%; object-fit: cover; object-position: center center; transform: translateZ(0); }
-        }
         @media (prefers-reduced-motion: reduce) {
           .reg-hero, .reg-card, .reg-halo { animation: none !important; }
           .reg-sparkle { animation: none !important; opacity: 0.45; }
         }
       `}</style>
-
-      <div className="reg-video-backdrop" aria-hidden="true">
-        <video ref={registerVideoRef} className="reg-background-video" autoPlay muted loop playsInline preload="metadata">
-          <source src="/sunny-home-background.mp4" type="video/mp4" />
-        </video>
-        <span className="reg-video-overlay" />
-      </div>
 
       {SPARKLES.map((sparkle, index) => (
         <span
@@ -250,22 +181,13 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
         className="sunny-auth-shell relative mx-auto flex min-h-[100dvh] flex-col justify-center px-5 py-10"
         style={{ width: '100%', maxWidth: '26rem' }}
       >
-        <div className="reg-hero mb-6 flex flex-col items-center text-center">
-          <div className="relative">
-            <div className="reg-halo" aria-hidden="true" />
-            <div className="reg-rays relative">
-              <SunnyLogo size="medium" />
-            </div>
-          </div>
-          <h1 className="mt-5 mb-1.5 text-3xl font-bold tracking-tight text-white">
-            {confirmationRequired ? 'Check your inbox' : 'Join Sunny'}
-          </h1>
-          <p className="max-w-xs text-sm leading-relaxed text-[#D7D4CC]">
-            {confirmationRequired
-              ? 'One quick step and your little corner of sunshine is ready.'
-              : 'Create your secure Sunny account.'}
-          </p>
-        </div>
+        <SunnyAuthHero
+          className="reg-hero"
+          title={confirmationRequired ? 'Check your inbox' : 'Join Sunny'}
+          description={confirmationRequired
+            ? 'One quick step and your little corner of sunshine is ready.'
+            : 'Create your secure Sunny account.'}
+        />
 
         <div className="reg-card sunny-auth-card rounded-3xl p-5 sm:p-6">
           <form onSubmit={handleRegister} autoComplete="on" className="space-y-1">
@@ -370,7 +292,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
           <button
             type="button"
             onClick={onNavigateToLogin}
-            className="ml-1 cursor-pointer font-bold text-[#E8E1D5] hover:underline"
+            className="ml-1 cursor-pointer font-bold text-[#FFE27A] hover:underline"
           >
             Sign In
           </button>
