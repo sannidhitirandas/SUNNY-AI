@@ -208,6 +208,9 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         .login-rays svg stop:nth-child(2) { stop-color: #E5D8C3; }
         .login-rays svg stop:nth-child(3) { stop-color: #BFAF98; }
         .login-rays svg feDropShadow { flood-color: #D8CBB5; flood-opacity: .28; }
+        .login-rays > div > div:first-child { opacity: 0 !important; }
+        .login-cta .sunny-app-button { background: #E5DCCB !important; color: #242321 !important; box-shadow: 0 8px 22px -12px rgba(218, 199, 169, .32) !important; }
+        .login-cta .sunny-app-button:hover { background: #F0E9DC !important; }
         .login-hero h1 {
           color: #fff;
           text-shadow: 0 2px 18px rgba(12, 8, 24, 0.5);
