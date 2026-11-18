@@ -313,7 +313,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({
 
   return (
     <div className={`border-t border-white/[0.04] bg-gradient-to-t from-[#100B22] via-[#100B22]/[0.98] to-[#100B22]/90 px-3 pt-3 transition-[padding] duration-200 ease-out sm:px-5 ${isKeyboardVisible ? 'pb-1' : 'pb-3'}`}>
-      <div className="mx-auto w-full max-w-3xl">
+      <div className="mx-auto w-full max-w-5xl">
       {fileError && (
         <div className="mb-2 px-3 text-xs text-[#FF9DA8]" role="alert">{fileError}</div>
       )}
