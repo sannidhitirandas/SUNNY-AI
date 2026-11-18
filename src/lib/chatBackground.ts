@@ -10,32 +10,67 @@ export type ChatBackgroundId =
 
 export type ChatBackgroundDevice = 'pc' | 'mobile';
 
+type GradientStops = [string, string, string];
+
+/**
+ * Text gradient for Sunny's messages, colour-picked from each wallpaper.
+ * `dark` = light pastel stops for the dark theme's dark bubbles.
+ * `light` = deeper stops that stay readable on the light theme's white bubbles.
+ */
+export interface ChatTextGradient {
+  dark: GradientStops;
+  light: GradientStops;
+}
+
 export interface ChatBackgroundOption {
   id: ChatBackgroundId;
   label: string;
   pc: string | null;
   mobile: string | null;
   thumb: string | null;
+  textGradient: ChatTextGradient | null;
 }
 
 const entry = (
   id: Exclude<ChatBackgroundId, 'none'>,
-  label: string
+  label: string,
+  textGradient: ChatTextGradient
 ): ChatBackgroundOption => ({
   id,
   label,
   pc: `/chat-backgrounds/${id}-pc.png`,
   mobile: `/chat-backgrounds/${id}-mobile.jpg`,
   thumb: `/chat-backgrounds/${id}-pc.png`,
+  textGradient,
 });
 
 export const CHAT_BACKGROUNDS: ChatBackgroundOption[] = [
-  { id: 'none', label: 'Plain', pc: null, mobile: null, thumb: null },
-  entry('lavender-cottage', 'Lavender Cottage'),
-  entry('moonlit-window', 'Moonlit Window'),
-  entry('sakura-skyline', 'Sakura Skyline'),
-  entry('violet-dusk', 'Violet Dusk'),
-  entry('lavender-meadow', 'Lavender Meadow'),
+  { id: 'none', label: 'Plain', pc: null, mobile: null, thumb: null, textGradient: null },
+  // Pink cloud edges -> lilac field -> warm window glow
+  entry('lavender-cottage', 'Lavender Cottage', {
+    dark: ['#FFC9E6', '#E4CCFF', '#FFE6B3'],
+    light: ['#B0267A', '#6B2BC4', '#A0580A'],
+  }),
+  // Neon cyan curtains -> violet skyline -> magenta glow
+  entry('moonlit-window', 'Moonlit Window', {
+    dark: ['#9EEBFF', '#E2B8FF', '#FFC2E3'],
+    light: ['#0A6E8C', '#7A2BC4', '#B0206E'],
+  }),
+  // Sakura pink -> twilight blue -> soft lilac
+  entry('sakura-skyline', 'Sakura Skyline', {
+    dark: ['#FFB8DC', '#C9D4FF', '#F0C8FF'],
+    light: ['#B0206E', '#2F4FC0', '#8A2BB8'],
+  }),
+  // Deep violet sky -> magenta clouds -> peach horizon
+  entry('violet-dusk', 'Violet Dusk', {
+    dark: ['#E0C8FF', '#FFB8F0', '#FFD6B0'],
+    light: ['#6A1FC0', '#B0208F', '#A04A10'],
+  }),
+  // Lavender blooms -> pink clouds -> golden sunrise
+  entry('lavender-meadow', 'Lavender Meadow', {
+    dark: ['#E6D4FF', '#FFC4E4', '#FFE49A'],
+    light: ['#6A3FC0', '#B0267A', '#8A6200'],
+  }),
 ];
 
 const LEGACY_STORAGE_KEY = '@sunny_chat_background';
@@ -146,6 +181,7 @@ export const useChatBackground = () => {
       const option = getChatBackgroundOption(backgroundId);
       return device === 'mobile' ? option.mobile : option.pc;
     })(),
+    textGradient: getChatBackgroundOption(backgroundId).textGradient,
     setChatBackground,
     device,
     availableBackgrounds: getDeviceChatBackgrounds(device),

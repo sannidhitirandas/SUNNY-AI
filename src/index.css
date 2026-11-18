@@ -405,3 +405,22 @@ button,
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Wallpaper-matched gradient text for Sunny's messages.
+   ChatScreen sets --sunny-text-1/2/3 and the .sunny-text-gradient-on class
+   only when a wallpaper is selected. The selector is deliberately specific so
+   it also beats the light theme's `text-white` colour override above. */
+html:root .sunny-text-gradient-on p.sunny-gradient-text {
+  background-image: linear-gradient(
+    105deg,
+    var(--sunny-text-1),
+    var(--sunny-text-2) 55%,
+    var(--sunny-text-3)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent !important;
+  /* keeps descenders/ascenders from being clipped by the text-shaped mask */
+  padding-bottom: 0.08em;
+}

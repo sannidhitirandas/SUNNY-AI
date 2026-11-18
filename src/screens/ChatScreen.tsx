@@ -31,7 +31,14 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   const { messages, isThinking, isLoadingOlderMessages, hasOlderMessages, loadOlderMessages, lastError, activeIntent, setActiveIntent, sendMessage, retryMessage, clearChat } = useChat();
   const { preferences } = usePreferences();
   const { addMemory } = useMemories();
-  const { background, wallpaperSrc, setChatBackground, availableBackgrounds, device } = useChatBackground();
+  const { background, wallpaperSrc, textGradient, setChatBackground, availableBackgrounds, device } = useChatBackground();
+
+  // Wallpaper-matched gradient for Sunny's message text, handed to CSS as variables.
+  // Only on when a wallpaper is picked; "Plain" keeps the normal solid text colour.
+  const gradientStops = textGradient ? (preferences.theme === 'sunny-light' ? textGradient.light : textGradient.dark) : null;
+  const gradientStyle = gradientStops
+    ? ({ '--sunny-text-1': gradientStops[0], '--sunny-text-2': gradientStops[1], '--sunny-text-3': gradientStops[2] } as React.CSSProperties)
+    : undefined;
 
   const messagesScrollRef = useRef<HTMLDivElement>(null);
   const preserveScrollRef = useRef<{ height: number; top: number } | null>(null);
@@ -113,7 +120,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   const showTyping = isThinking && messages[messages.length - 1]?.role !== 'assistant';
 
   return (
-<div className={`relative isolate flex h-full min-h-0 w-full max-w-none flex-1 flex-col overflow-hidden bg-[#100B22] px-0 ${backgroundModalVisible || personalityModalVisible || optionsVisible || memoryModalVisible ? 'z-[60]' : 'z-0'} ${isKeyboardVisible ? 'pb-0' : 'pb-16'} sm:px-0 sm:pb-16 lg:rounded-none lg:border-0 lg:pb-24 lg:shadow-none`}>
+<div style={gradientStyle} className={`${gradientStops ? 'sunny-text-gradient-on ' : ''}relative isolate flex h-full min-h-0 w-full max-w-none flex-1 flex-col overflow-hidden bg-[#100B22] px-0 ${backgroundModalVisible || personalityModalVisible || optionsVisible || memoryModalVisible ? 'z-[60]' : 'z-0'} ${isKeyboardVisible ? 'pb-0' : 'pb-16'} sm:px-0 sm:pb-16 lg:rounded-none lg:border-0 lg:pb-24 lg:shadow-none`}>
 
       {/* Chat wallpaper: image + theme-aware veil so message text stays readable */}
       {wallpaperSrc && (

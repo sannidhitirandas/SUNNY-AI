@@ -121,7 +121,7 @@ const MessageBubbleBase: React.FC<MessageBubbleProps> = ({
           setMenuOpen(true);
         }}
       >
-        <p className="whitespace-pre-wrap break-words text-base leading-6 text-white">{message.content}</p>
+        <p className="sunny-gradient-text whitespace-pre-wrap break-words text-base leading-6 text-white">{message.content}</p>
         <div className="mt-2 flex items-center justify-between gap-3 text-[10px] text-white/85">
           {isLastInGroup ? <span>{formatTime(message.createdAt)}</span> : <span />}
           <div className="flex items-center gap-1.5">
