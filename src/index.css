@@ -965,3 +965,81 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
   .sunny-mood-option { transition:none; }
   .sunny-mood-option:hover { transform:none; }
 }
+
+
+/* Privacy & data controls: make sensitive actions clear, calm and deliberate. */
+.sunny-privacy-screen {
+  max-width:48rem;
+  padding-top:clamp(1rem,3vw,2rem);
+  padding-bottom:max(2rem,env(safe-area-inset-bottom));
+  isolation:isolate;
+  -webkit-tap-highlight-color:transparent;
+}
+.sunny-privacy-header button {
+  flex:none;
+  border-radius:1rem;
+  transition:background 180ms ease,border-color 180ms ease,transform 180ms ease;
+}
+.sunny-privacy-header button:hover {
+  background:#302149;
+  border-color:rgba(255,216,77,.38);
+  transform:translateX(-2px);
+}
+.sunny-privacy-header h1 { letter-spacing:-.025em; }
+.sunny-privacy-intro {
+  position:relative;
+  overflow:hidden;
+  border-radius:1.55rem;
+  background:
+    radial-gradient(ellipse at 100% 0%,rgba(255,216,77,.13),transparent 48%),
+    linear-gradient(145deg,#281b40 0%,#17102c 75%);
+  box-shadow:0 18px 48px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.045);
+}
+.sunny-privacy-intro h2 { letter-spacing:-.02em; }
+.sunny-privacy-intro p { font-size:.8rem; line-height:1.7; }
+.sunny-privacy-highlight {
+  min-width:0;
+  padding:1rem;
+  border-radius:1.2rem;
+  background:linear-gradient(145deg,rgba(39,27,61,.92),rgba(29,20,47,.96));
+  border-color:rgba(166,132,204,.17);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+  transition:transform 180ms ease,border-color 180ms ease;
+}
+.sunny-privacy-highlight:hover { transform:translateY(-1px); border-color:rgba(255,216,77,.25); }
+.sunny-privacy-highlight h3 { letter-spacing:-.01em; }
+.sunny-privacy-highlight p { line-height:1.65; overflow-wrap:anywhere; }
+.sunny-privacy-screen .sunny-settings-section { margin-bottom:1.25rem; }
+.sunny-privacy-screen .sunny-settings-panel {
+  border-radius:1.35rem;
+  border-color:rgba(166,132,204,.18);
+  background:linear-gradient(145deg,rgba(39,27,61,.94),rgba(25,17,43,.97));
+}
+.sunny-privacy-screen .sunny-settings-row { min-height:4.5rem; }
+.sunny-privacy-screen .sunny-settings-row:focus-within { outline-offset:-2px; }
+.sunny-privacy-dialog {
+  max-height:min(88dvh,42rem);
+  overflow-y:auto;
+  border-radius:1.65rem;
+  background:
+    radial-gradient(ellipse at 100% 0%,rgba(255,141,154,.10),transparent 45%),
+    linear-gradient(145deg,#2b1c40,#21163a 65%,#19112d);
+  box-shadow:0 28px 90px rgba(0,0,0,.52),inset 0 1px 0 rgba(255,255,255,.04);
+}
+.sunny-privacy-screen button:focus-visible,
+.sunny-privacy-screen input:focus-visible {
+  outline:2px solid rgba(255,216,77,.86);
+  outline-offset:3px;
+}
+.sunny-privacy-dialog button:focus-visible { outline-color:rgba(255,141,154,.9); }
+@media (max-width:480px) {
+  .sunny-privacy-screen { padding-left:.9rem; padding-right:.9rem; }
+  .sunny-privacy-intro { border-radius:1.3rem; padding:1.1rem; }
+  .sunny-privacy-highlight { padding:.85rem; gap:.7rem; border-radius:1.05rem; }
+  .sunny-privacy-screen .sunny-settings-panel { border-radius:1.15rem; }
+  .sunny-privacy-dialog { padding:1.1rem; border-radius:1.4rem; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .sunny-privacy-header button,.sunny-privacy-highlight { transition:none; }
+  .sunny-privacy-header button:hover,.sunny-privacy-highlight:hover { transform:none; }
+}
