@@ -93,9 +93,57 @@ const SPARKLES: Array<{ left: string; top: string; size: number; delay: number; 
 const OnboardingStyles: React.FC = () => (
   <style>{`
     .ob-screen {
-      background:
-        radial-gradient(ellipse 120% 50% at 50% 108%, rgba(255, 216, 77, 0.20) 0%, rgba(246, 189, 69, 0.09) 40%, rgba(16, 11, 34, 0) 72%),
-        linear-gradient(180deg, #100B22 0%, #17102C 55%, #221339 85%, #2d1946 100%);
+      isolation: isolate;
+      background: transparent;
+    }
+    .ob-video-backdrop {
+      position: fixed;
+      z-index: 0;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      background: #100B22;
+    }
+    .ob-background-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      opacity: 1;
+      filter: none;
+    }
+    .ob-video-overlay {
+      position: absolute;
+      inset: 0;
+      background: transparent;
+    }
+    .ob-sparkle { z-index: 1; }
+    .sunny-onboarding-shell {
+      position: relative;
+      z-index: 2;
+    }
+    .sunny-onboarding-choice {
+      background: rgba(20, 16, 35, 0.48);
+      border-color: rgba(255, 255, 255, 0.28);
+      -webkit-backdrop-filter: blur(16px) saturate(1.15);
+      backdrop-filter: blur(16px) saturate(1.15);
+    }
+    .sunny-onboarding-choice[aria-pressed="true"] {
+      background: rgba(255, 216, 77, 0.18);
+      border-color: rgba(255, 216, 77, 0.78);
+    }
+    .sunny-onboarding-quote {
+      background: rgba(20, 16, 35, 0.42) !important;
+      border-color: rgba(255, 255, 255, 0.32) !important;
+      -webkit-backdrop-filter: blur(18px);
+      backdrop-filter: blur(18px);
+    }
+    .sunny-onboarding-shell h1,
+    .sunny-onboarding-shell h2,
+    .sunny-onboarding-shell p {
+      text-shadow: 0 2px 16px rgba(12, 8, 24, 0.42);
     }
     .ob-sparkle {
       position: absolute;
@@ -337,6 +385,13 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
   return (
     <div className="ob-screen sunny-onboarding relative min-h-[100dvh] w-full overflow-x-hidden overflow-y-auto">
       <OnboardingStyles />
+
+      <div className="ob-video-backdrop" aria-hidden="true">
+        <video className="ob-background-video" autoPlay muted loop playsInline preload="metadata">
+          <source src="/sunny-home-background.mp4" type="video/mp4" />
+        </video>
+        <span className="ob-video-overlay" />
+      </div>
 
       {SPARKLES.map((sparkle, index) => (
         <span
