@@ -25,14 +25,14 @@ export const RecentConversations: React.FC<RecentConversationsProps> = ({
   onResume,
 }) => {
   return (
-    <div className="my-6 sm:my-8">
-      <h3 className="text-lg font-medium tracking-tight text-white mb-3">
+    <section className="sunny-home-section my-7 sm:my-9" aria-labelledby="sunny-recent-heading">
+      <h3 id="sunny-recent-heading" className="mb-3 text-lg font-semibold tracking-tight text-white">
         Recent conversation
       </h3>
       {lastMessage ? (
         <AppCard
           onPress={onResume}
-          className="rounded-2xl border border-[#392858]/70 bg-[#17102C] p-3.5 transition-colors hover:border-[#FFD84D]/40 sm:p-4"
+          className="sunny-recent-card rounded-[22px] border border-[#5A426F]/45 bg-gradient-to-r from-[#211633] to-[#191229] p-3.5 shadow-[0_8px_24px_rgba(0,0,0,.12)] transition-all hover:-translate-y-0.5 hover:border-[#FFD84D]/35 sm:p-4"
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-[#302149] flex items-center justify-center shrink-0">
