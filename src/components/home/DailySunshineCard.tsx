@@ -33,7 +33,8 @@ export const DailySunshineCard: React.FC = () => {
           <span>Another ☀️</span>
         </button>
       </div>
-      <p key={index}\n        className="sunny-reminder-text text-[15px] leading-relaxed text-[#F5EDFF] sm:text-xl">
+      <p key={index}
+        className="sunny-reminder-text text-[15px] leading-relaxed text-[#F5EDFF] sm:text-xl">
         "{DAILY_REMINDERS[index]}"
       </p>
     </AppCard>
