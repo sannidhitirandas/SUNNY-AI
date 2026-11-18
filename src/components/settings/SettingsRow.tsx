@@ -53,7 +53,7 @@ export const SettingsRow: React.FC<SettingsRowProps> = ({
       <div className="flex items-center gap-2 shrink-0">
         {rightContent}
         {!rightContent && rightText && (
-          <span className="text-xs font-semibold text-[#FFD84D]">{rightText}</span>
+          <span className="text-xs font-semibold text-[#F5D27A]">{rightText}</span>
         )}
         {isSwitch && (
           <button
@@ -63,11 +63,11 @@ export const SettingsRow: React.FC<SettingsRowProps> = ({
             aria-describedby={subtitle ? subtitleId : undefined}
             aria-checked={switchValue}
             onClick={() => onSwitchChange?.(!switchValue)}
-            className="relative inline-flex h-11 w-12 shrink-0 cursor-pointer items-center justify-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FFD84D]"
+            className="relative inline-flex h-11 w-12 shrink-0 cursor-pointer items-center justify-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F5D27A]"
           >
             <span
               aria-hidden="true"
-              className={`absolute inset-x-1 top-1/2 h-6 -translate-y-1/2 rounded-full ${switchValue ? 'bg-[#FFD84D]' : 'bg-[#17102C] border border-[#392858]'}`}
+              className={`absolute inset-x-1 top-1/2 h-6 -translate-y-1/2 rounded-full ${switchValue ? 'bg-[#F5D27A]' : 'bg-[#17102C] border border-[#392858]'}`}
             />
             <span
               aria-hidden="true"
@@ -84,7 +84,7 @@ export const SettingsRow: React.FC<SettingsRowProps> = ({
     </>
   );
   const className = `sunny-settings-row flex min-h-[72px] w-full items-center justify-between px-4 py-3.5 text-left transition-colors ${
-    isClickable ? 'cursor-pointer hover:bg-white/[0.035] focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#FFD84D]' : ''
+    isClickable ? 'cursor-pointer hover:bg-white/[0.035] focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#F5D27A]' : ''
   }`;
 
   return (
