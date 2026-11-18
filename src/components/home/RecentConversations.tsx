@@ -61,6 +61,6 @@ export const RecentConversations: React.FC<RecentConversationsProps> = ({
           </p>
         </AppCard>
       )}
-    </div>
+    </section>
   );
 };
