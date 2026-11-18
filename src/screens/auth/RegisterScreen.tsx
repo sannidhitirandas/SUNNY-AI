@@ -143,6 +143,9 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
         .reg-rays svg stop:nth-child(2) { stop-color: #E5D8C3; }
         .reg-rays svg stop:nth-child(3) { stop-color: #BFAF98; }
         .reg-rays svg feDropShadow { flood-color: #D8CBB5; flood-opacity: .28; }
+        .reg-rays > div > div:first-child { opacity: 0 !important; }
+        .reg-cta .sunny-app-button { background: #E5DCCB !important; color: #242321 !important; box-shadow: 0 8px 22px -12px rgba(218, 199, 169, .32) !important; }
+        .reg-cta .sunny-app-button:hover { background: #F0E9DC !important; }
         .reg-screen .sunny-auth-shell { position: relative; z-index: 2; }
         .reg-screen .reg-hero { position: relative; z-index: 3; }
         .reg-hero h1, .reg-hero p, .reg-card label, .reg-screen > div:last-child {
