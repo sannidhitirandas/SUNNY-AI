@@ -120,7 +120,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
           inset: 0;
           overflow: hidden;
           pointer-events: none;
-          background: #100B22;
+          background: #121417;
         }
         .reg-background-video {
           position: absolute;
@@ -135,8 +135,14 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
         .reg-video-overlay {
           position: absolute;
           inset: 0;
-          background: transparent;
+          background: linear-gradient(180deg, rgba(13, 15, 18, 0.34), rgba(18, 20, 24, 0.60));
         }
+        .reg-background-video { filter: brightness(0.58) saturate(0.88); }
+        .reg-rays svg line { stroke: #E8E1D5 !important; }
+        .reg-rays svg stop:nth-child(1) { stop-color: #F8F4EB; }
+        .reg-rays svg stop:nth-child(2) { stop-color: #E5D8C3; }
+        .reg-rays svg stop:nth-child(3) { stop-color: #BFAF98; }
+        .reg-rays svg feDropShadow { flood-color: #D8CBB5; flood-opacity: .28; }
         .reg-screen .sunny-auth-shell { position: relative; z-index: 2; }
         .reg-screen .reg-hero { position: relative; z-index: 3; }
         .reg-hero h1, .reg-hero p, .reg-card label, .reg-screen > div:last-child {
@@ -145,8 +151,8 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
         .reg-sparkle {
           position: absolute;
           border-radius: 9999px;
-          background: #FFE9A3;
-          box-shadow: 0 0 8px 1px rgba(255, 216, 77, 0.6);
+          background: #E8E1D5;
+          box-shadow: 0 0 8px 1px rgba(218, 199, 169, 0.32);
           opacity: 0;
           pointer-events: none;
           animation: reg-twinkle var(--sparkle-duration) ease-in-out var(--sparkle-delay) infinite;
@@ -155,12 +161,12 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
           position: absolute;
           inset: -36px;
           border-radius: 9999px;
-          background: radial-gradient(circle, rgba(255, 216, 77, 0.30) 0%, rgba(246, 189, 69, 0.10) 45%, rgba(255, 216, 77, 0) 72%);
+          background: radial-gradient(circle, rgba(218, 199, 169, 0.18) 0%, rgba(190, 176, 155, 0.06) 45%, rgba(218, 199, 169, 0) 72%);
           animation: reg-halo-pulse 3.4s ease-in-out infinite;
           pointer-events: none;
         }
         .reg-card {
-          background: rgba(20, 16, 35, 0.48);
+          background: rgba(20, 22, 25, 0.62);
           border: 1px solid rgba(255, 255, 255, 0.28);
           box-shadow: 0 24px 70px -28px rgba(0, 0, 0, .48), 0 1px 0 rgba(255,255,255,.16) inset;
           -webkit-backdrop-filter: blur(22px) saturate(1.15);
@@ -187,7 +193,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
         }
         .reg-cta {
           border-radius: 0.875rem;
-          box-shadow: 0 10px 26px -12px rgba(255, 216, 77, 0.55);
+          box-shadow: 0 10px 26px -12px rgba(218, 199, 169, 0.28);
         }
         @keyframes reg-fade-up {
           from { opacity: 0; transform: translateY(12px); }
@@ -244,14 +250,14 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
         <div className="reg-hero mb-6 flex flex-col items-center text-center">
           <div className="relative">
             <div className="reg-halo" aria-hidden="true" />
-            <div className="relative">
+            <div className="reg-rays relative">
               <SunnyLogo size="medium" />
             </div>
           </div>
           <h1 className="mt-5 mb-1.5 text-3xl font-bold tracking-tight text-white">
             {confirmationRequired ? 'Check your inbox' : 'Join Sunny'}
           </h1>
-          <p className="max-w-xs text-sm leading-relaxed text-[#C6B8E5]">
+          <p className="max-w-xs text-sm leading-relaxed text-[#D7D4CC]">
             {confirmationRequired
               ? 'One quick step and your little corner of sunshine is ready.'
               : 'Create your secure Sunny account.'}
@@ -361,7 +367,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
           <button
             type="button"
             onClick={onNavigateToLogin}
-            className="ml-1 cursor-pointer font-bold text-[#FFD84D] hover:underline"
+            className="ml-1 cursor-pointer font-bold text-[#E8E1D5] hover:underline"
           >
             Sign In
           </button>
