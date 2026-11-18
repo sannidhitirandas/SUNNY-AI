@@ -113,7 +113,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   const showTyping = isThinking && messages[messages.length - 1]?.role !== 'assistant';
 
   return (
-<div className={`relative isolate mx-auto flex h-full min-h-0 w-full max-w-5xl flex-1 flex-col overflow-hidden bg-[#100B22] px-0 ${isKeyboardVisible ? 'pb-0' : 'pb-16'} sm:px-3 sm:pb-16 lg:rounded-3xl lg:border lg:border-[#392858]/70 lg:pb-8 lg:shadow-[0_24px_80px_rgba(0,0,0,0.18)]`}>
+<div className={`relative isolate flex h-full min-h-0 w-full max-w-none flex-1 flex-col overflow-hidden bg-[#100B22] px-0 ${isKeyboardVisible ? 'pb-0' : 'pb-16'} sm:px-0 sm:pb-16 lg:rounded-none lg:border-0 lg:pb-24 lg:shadow-none`}>
 
       {/* Chat wallpaper: image + theme-aware veil so message text stays readable */}
       {background.pc && (
