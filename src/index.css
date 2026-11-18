@@ -1281,3 +1281,79 @@ button:disabled { cursor: not-allowed; }
 .sunny-app-shell :where(button, input, textarea, select, label, small, time) {
   font-family: var(--sunny-ui-font), system-ui, sans-serif;
 }
+
+
+/* Editorial surfaces: let spacing and type create hierarchy instead of stacking cards. */
+.sunny-home-hero,
+.sunny-daily-card,
+.sunny-recent-card,
+.sunny-memories-hero,
+.sunny-memory-card,
+.sunny-settings-hero,
+.sunny-settings-panel,
+.sunny-privacy-intro,
+.sunny-privacy-highlight,
+.sunny-about-screen .sunny-about-hero + .app-card,
+.sunny-about-screen .app-card,
+.sunny-notifications-screen .app-card {
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Keep the welcome area atmospheric, not a framed rectangle. */
+.sunny-home-hero {
+  background: linear-gradient(115deg, rgba(132,91,168,.13), rgba(33,22,58,.10) 58%, transparent) !important;
+  border-radius: 1.5rem !important;
+}
+.sunny-daily-card,
+.sunny-recent-card,
+.sunny-memory-card,
+.sunny-privacy-intro,
+.sunny-privacy-highlight,
+.sunny-about-screen .app-card,
+.sunny-notifications-screen .app-card {
+  background: transparent !important;
+  border-radius: 0 !important;
+}
+.sunny-daily-card,
+.sunny-recent-card,
+.sunny-memory-card,
+.sunny-privacy-highlight {
+  border-bottom: 1px solid rgba(198,184,229,.12) !important;
+}
+.sunny-memory-card {
+  padding-left: .25rem !important;
+  padding-right: .25rem !important;
+}
+.sunny-memories-hero {
+  background: radial-gradient(ellipse at 85% 15%, rgba(132,91,168,.18), transparent 55%) !important;
+  border-radius: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.sunny-settings-panel {
+  background: transparent !important;
+  border-color: transparent !important;
+  border-radius: 0 !important;
+}
+.sunny-settings-section {
+  border-radius: 0 !important;
+}
+.sunny-privacy-highlight {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.sunny-about-screen .app-card,
+.sunny-notifications-screen .app-card {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.sunny-vibe-card {
+  box-shadow: none !important;
+}
+.sunny-vibe-card:hover {
+  transform: translateY(-2px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sunny-vibe-card:hover { transform: none; }
+}
