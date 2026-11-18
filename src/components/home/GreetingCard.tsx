@@ -11,13 +11,13 @@ interface GreetingCardProps {
 function SunshineIllustration() {
   return (
     <div aria-hidden="true" className="sunny-hero-art relative mx-auto flex h-32 w-full max-w-[260px] items-end justify-center sm:h-40 sm:max-w-[310px] lg:absolute lg:bottom-0 lg:right-5 lg:h-full lg:w-[42%] lg:max-w-none">
-      <div className="absolute bottom-3 h-12 w-56 rounded-[50%] bg-[#9B72F2]/35 blur-xl sm:bottom-5 sm:h-16 sm:w-64" />
+      <div className="absolute bottom-3 h-12 w-56 rounded-[50%] bg-[#F5C96A]/30 blur-xl sm:bottom-5 sm:h-16 sm:w-64" />
       <svg viewBox="0 0 280 150" className="relative z-10 h-full w-full overflow-visible" role="presentation">
         <defs>
           <radialGradient id="sunnySunFill" cx="38%" cy="28%" r="75%">
-            <stop offset="0%" stopColor="#F5ECFF" />
-            <stop offset="58%" stopColor="#B99AFF" />
-            <stop offset="100%" stopColor="#7546C8" />
+            <stop offset="0%" stopColor="#FFF7D6" />
+            <stop offset="58%" stopColor="#F7D36F" />
+            <stop offset="100%" stopColor="#D99135" />
           </radialGradient>
           <linearGradient id="sunnyCloudFill" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#7654A8" />
@@ -26,7 +26,7 @@ function SunshineIllustration() {
         </defs>
         <path d="M14 126c4-15 17-18 28-11 4-23 31-28 45-8 14-7 30 2 31 18l20 7H14z" fill="url(#sunnyCloudFill)" opacity=".9"/>
         <path d="M160 128c2-13 14-19 26-12 8-19 32-17 39 2 12-5 24 3 25 13l14 3H160z" fill="url(#sunnyCloudFill)" opacity=".9"/>
-        <ellipse cx="142" cy="72" rx="62" ry="54" fill="none" stroke="#B99AFF" strokeOpacity=".32" transform="rotate(-18 142 72)"/>
+        <ellipse cx="142" cy="72" rx="62" ry="54" fill="none" stroke="#F5D27A" strokeOpacity=".48" transform="rotate(-18 142 72)"/>
         <g transform="translate(140 69)">
           {Array.from({length:16},(_,i)=><ellipse key={i} cx="0" cy="-34" rx="10" ry="16" fill="url(#sunnySunFill)" transform={`rotate(${i*22.5})`}/>)}
           <circle r="36" fill="url(#sunnySunFill)"/>
@@ -35,7 +35,7 @@ function SunshineIllustration() {
           <ellipse cx="-22" cy="7" rx="6" ry="3" fill="#E8A8D2" opacity=".7"/>
           <ellipse cx="22" cy="7" rx="6" ry="3" fill="#E8A8D2" opacity=".7"/>
         </g>
-        <path d="M57 28l2.5 6.5L66 37l-6.5 2.5L57 46l-2.5-6.5L48 37l6.5-2.5zM224 19l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#D7C2FF"/>
+        <path d="M57 28l2.5 6.5L66 37l-6.5 2.5L57 46l-2.5-6.5L48 37l6.5-2.5zM224 19l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#FFE29A"/>
       </svg>
     </div>
   );
@@ -57,9 +57,9 @@ export const GreetingCard: React.FC<GreetingCardProps> = ({
       <div className="sunny-hero-glow pointer-events-none absolute -right-10 -top-16 h-56 w-56 rounded-full bg-[#A78BFA]/20 blur-3xl" />
       <div className="relative z-20 flex items-center justify-between lg:mb-5">
         <span className="inline-flex items-center gap-2 text-sm font-semibold tracking-wide text-[#E9DEFF]">
-          <Sparkles size={16} className="text-[#C4A8FF]" /> YOUR LITTLE CORNER OF SUNSHINE
+          <Sparkles size={16} className="text-[#F5D27A]" /> YOUR LITTLE CORNER OF SUNSHINE
         </span>
-        <span className="hidden items-center gap-2 text-xs text-[#D6C7F2] sm:inline-flex"><Sparkles size={14} className="text-[#C4A8FF]"/> A little space just for you</span>
+        <span className="hidden items-center gap-2 text-xs text-[#D6C7F2] sm:inline-flex"><Sparkles size={14} className="text-[#F5D27A]"/> A little space just for you</span>
       </div>
       <div className="relative z-20 lg:max-w-[58%]">
         <h1 className="mt-3 text-4xl font-semibold leading-[1.08] tracking-tight text-[#FBF8FF] sm:text-5xl lg:mt-0 lg:text-[3.65rem]">
