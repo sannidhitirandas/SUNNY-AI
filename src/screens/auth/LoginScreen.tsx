@@ -30,6 +30,32 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
   registerHardwareBackHandler,
 }) => {
   const { login } = useAuth();
+  const loginVideoRef = React.useRef<HTMLVideoElement | null>(null);
+
+  // Mobile browsers may defer autoplay until the page is visible or the video is ready.
+  useEffect(() => {
+    const video = loginVideoRef.current;
+    if (!video) return;
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    const tryPlay = () => {
+      if (document.visibilityState !== 'visible') return;
+      const playback = video.play();
+      if (playback) playback.catch(() => {
+        // Autoplay can be blocked by browser/device settings; keep the visual fallback.
+      });
+    };
+    tryPlay();
+    video.addEventListener('canplay', tryPlay);
+    document.addEventListener('visibilitychange', tryPlay);
+    window.addEventListener('pageshow', tryPlay);
+    return () => {
+      video.removeEventListener('canplay', tryPlay);
+      document.removeEventListener('visibilitychange', tryPlay);
+      window.removeEventListener('pageshow', tryPlay);
+    };
+  }, []);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
