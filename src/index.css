@@ -842,3 +842,57 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
 @media (prefers-reduced-motion: reduce) {
   .sunny-about-screen > div:first-child button { transition: none; }
 }
+
+
+/* Personality & mood selection: make each companion style feel like a distinct, tactile choice. */
+.sunny-personality-dialog {
+  max-height: min(88dvh, 44rem);
+  overflow-y: auto;
+  border-radius: 1.8rem;
+  background:
+    radial-gradient(ellipse at 92% 0%, rgba(255,216,77,.10), transparent 42%),
+    linear-gradient(150deg, #281b40 0%, #21163a 58%, #19112d 100%);
+  box-shadow: 0 28px 90px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.055);
+}
+.sunny-personality-heading { position: relative; }
+.sunny-personality-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  color: #FFD84D;
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .16em;
+}
+.sunny-personality-option {
+  min-height: 5rem;
+  gap: .85rem;
+  background: rgba(48,33,73,.56);
+  border-color: rgba(151,119,190,.22);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+.sunny-personality-option:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255,216,77,.48);
+  background: rgba(65,45,94,.72);
+}
+.sunny-personality-option:active { transform: scale(.99); }
+.sunny-personality-option:focus-visible {
+  outline: 2px solid #FFD84D;
+  outline-offset: 3px;
+}
+.sunny-personality-option.border-\[\#FFD84D\] {
+  background: linear-gradient(115deg, rgba(255,216,77,.14), rgba(255,216,77,.045));
+  box-shadow: 0 8px 26px rgba(255,216,77,.07), inset 0 1px 0 rgba(255,255,255,.055);
+}
+.sunny-personality-option span:first-child { line-height: 1.35; }
+@media (max-width: 480px) {
+  .sunny-personality-dialog { padding: 1.1rem; border-radius: 1.45rem; }
+  .sunny-personality-option { padding: .85rem; gap: .65rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sunny-personality-option { transition: none; }
+  .sunny-personality-option:hover,
+  .sunny-personality-option:active { transform: none; }
+}
