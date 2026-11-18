@@ -58,6 +58,7 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
         renderer.domElement.setAttribute('aria-hidden', 'true');
         renderer.domElement.style.cssText = 'display:block;width:100%;height:100%;outline:none;';
         host.appendChild(renderer.domElement);
+        host.classList.add('sunny-robot-ready');
 
         const pmrem = new THREE.PMREMGenerator(renderer);
         const environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
@@ -384,6 +385,7 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
         };
       } catch (error) {
         console.error('[SunnyRobot3D] Could not initialize the 3D companion:', error);
+        host?.classList.remove('sunny-robot-ready');
         host?.classList.add('sunny-robot-fallback');
       }
     };
@@ -397,6 +399,14 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
   }, [compact]);
 
   return (
+    <>
+    <style>{`
+      .sunny-robot-3d { position:relative; min-width:0; min-height:0; overflow:visible; }
+      .sunny-robot-3d-fallback { position:absolute; inset:0; display:grid; place-items:center; color:#FFD84D; font-size:2.5rem; pointer-events:none; }
+      .sunny-robot-ready .sunny-robot-3d-fallback { display:none; }
+      .sunny-robot-fallback .sunny-robot-3d-fallback { display:grid; }
+      @media(prefers-reduced-motion:reduce) { .sunny-robot-3d canvas { animation:none; } }
+    `}</style>
     <div
       ref={hostRef}
       className={`sunny-robot-3d ${compact ? 'sunny-robot-3d-compact' : ''} ${className}`}
@@ -405,5 +415,6 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
     >
       <span className="sunny-robot-3d-fallback" aria-hidden="true">✦</span>
     </div>
+    </>
   );
 };
