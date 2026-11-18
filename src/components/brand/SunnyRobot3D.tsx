@@ -248,16 +248,10 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
           faceCtx.shadowBlur = 30;
           faceCtx.fillStyle = '#ffffff';
           faceCtx.beginPath();
-          faceCtx.ellipse(174, 184, 30, Math.max(3, 43 * blink), 0, 0, Math.PI * 2);
-          faceCtx.ellipse(338, 184, 30, Math.max(3, 43 * blink), 0, 0, Math.PI * 2);
+          faceCtx.ellipse(174, 192, 30, Math.max(3, 43 * blink), 0, 0, Math.PI * 2);
+          faceCtx.ellipse(338, 192, 30, Math.max(3, 43 * blink), 0, 0, Math.PI * 2);
           faceCtx.fill();
           faceCtx.shadowBlur = 0;
-          faceCtx.strokeStyle = '#F0ABFC';
-          faceCtx.lineWidth = 11;
-          faceCtx.lineCap = 'round';
-          faceCtx.beginPath();
-          faceCtx.arc(256, 225, 44, 0.25, Math.PI - 0.25);
-          faceCtx.stroke();
           faceTexture.needsUpdate = true;
         };
         drawFace();
