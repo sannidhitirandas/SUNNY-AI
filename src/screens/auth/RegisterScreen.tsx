@@ -90,7 +90,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
         }
         .reg-video-backdrop {
           position: fixed;
-          z-index: 0;
+          z-index: -1;
           inset: 0;
           overflow: hidden;
           pointer-events: none;
@@ -112,6 +112,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
           background: transparent;
         }
         .reg-screen .sunny-auth-shell { position: relative; z-index: 2; }
+        .reg-screen .reg-hero { position: relative; z-index: 3; }
         .reg-hero h1, .reg-hero p, .reg-card label, .reg-screen > div:last-child {
           text-shadow: 0 1px 12px rgba(12, 8, 24, .5);
         }
