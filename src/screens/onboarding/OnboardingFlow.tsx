@@ -50,13 +50,13 @@ const TONE_OPTIONS: ToneOption[] = [
     title: 'The Mix',
     badge: 'Recommended',
     description: 'A natural blend of listening, laughter, and encouragement that adapts to what you need.',
-    icon: <Sparkles size={20} className="text-[#E8E1D5]" />,
+    icon: <Sparkles size={20} className="text-[#FFE58A]" />,
   },
   {
     tone: 'playful',
     title: 'Funny Friend',
     description: 'Playful banter, silly ideas, and laughs when the moment is right—without joking over real pain.',
-    icon: <Smile size={20} className="text-[#E8E1D5]" />,
+    icon: <Smile size={20} className="text-[#FFE58A]" />,
   },
   {
     tone: 'gentle',
@@ -98,21 +98,21 @@ const OnboardingStyles: React.FC = () => (
       background: radial-gradient(ellipse at 50% 22%,rgba(139,92,246,.24),transparent 42%),radial-gradient(ellipse at 50% 100%,rgba(255,216,77,.1),transparent 40%),linear-gradient(160deg,#100B22 0%,#1B1230 55%,#100B22 100%);
     }
     .ob-rays svg line { stroke: #E8E1D5 !important; }
-    .ob-rays svg stop:nth-child(1) { stop-color: #F8F4EB; }
-    .ob-rays svg stop:nth-child(2) { stop-color: #E5D8C3; }
-    .ob-rays svg stop:nth-child(3) { stop-color: #BFAF98; }
-    .ob-rays svg feDropShadow { flood-color: #D8CBB5; flood-opacity: .28; }
+    
+    
+    
+    
     .ob-halo { opacity: .65; }
-    .ob-cta .sunny-app-button { background: #E5DCCB !important; color: #242321 !important; box-shadow: 0 8px 22px -12px rgba(218,199,169,.32) !important; }
-    .ob-cta .sunny-app-button:hover { background: #F0E9DC !important; }
+    .ob-cta .sunny-app-button { background: linear-gradient(120deg,#FFE58A,#FFD84D) !important; color: #241735 !important; box-shadow: 0 8px 24px -10px rgba(255,216,77,.38) !important; }
+    .ob-cta .sunny-app-button:hover { background: #FFF0AD !important; }
     .ob-sparkle { z-index: 1; }
     .sunny-onboarding-shell {
       position: relative;
       z-index: 3;
     }
     .sunny-onboarding-choice {
-      background: rgba(20, 16, 35, 0.48);
-      border-color: rgba(255, 255, 255, 0.28);
+      background: rgba(43, 30, 69, 0.78);
+      border-color: rgba(167, 139, 250, 0.28);
       -webkit-backdrop-filter: blur(16px) saturate(1.15);
       backdrop-filter: blur(16px) saturate(1.15);
     }
@@ -121,8 +121,8 @@ const OnboardingStyles: React.FC = () => (
       border-color: rgba(255, 216, 77, 0.78);
     }
     .sunny-onboarding-quote {
-      background: rgba(20, 16, 35, 0.42) !important;
-      border-color: rgba(255, 255, 255, 0.32) !important;
+      background: rgba(43, 30, 69, 0.82) !important;
+      border-color: rgba(245, 210, 122, 0.28) !important;
       -webkit-backdrop-filter: blur(18px);
       backdrop-filter: blur(18px);
     }
@@ -134,7 +134,7 @@ const OnboardingStyles: React.FC = () => (
     .ob-sparkle {
       position: absolute;
       border-radius: 9999px;
-      background: #F8F4EB;
+      background: #FFF9E8;
       box-shadow: 0 0 8px 1px rgba(255, 216, 77, 0.6);
       opacity: 0;
       pointer-events: none;
@@ -203,13 +203,13 @@ const ProgressHeader: React.FC<ProgressHeaderProps> = ({ step, onBack }) => (
       <button
         type="button"
         onClick={onBack}
-        className="-ml-2 flex cursor-pointer items-center gap-1 rounded-full px-2 py-1.5 text-sm font-medium text-[#D7D4CC] transition-colors hover:text-white"
+        className="-ml-2 flex cursor-pointer items-center gap-1 rounded-full px-2 py-1.5 text-sm font-medium text-[#D8CBEF] transition-colors hover:text-white"
         aria-label="Go back"
       >
         <ArrowLeft size={16} />
         Back
       </button>
-      <span className="text-xs font-bold uppercase tracking-wider text-[#E8E1D5]">
+      <span className="text-xs font-bold uppercase tracking-wider text-[#FFE58A]">
         Step {step} of {TOTAL_STEPS}
       </span>
     </div>
@@ -217,7 +217,7 @@ const ProgressHeader: React.FC<ProgressHeaderProps> = ({ step, onBack }) => (
       {Array.from({ length: TOTAL_STEPS }).map((_, index) => (
         <div key={index} className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#77736B]">
           {index < step && (
-            <div className="ob-progress-fill h-full w-full rounded-full bg-gradient-to-r from-[#CBBDA7] to-[#E8E1D5]" />
+            <div className="ob-progress-fill h-full w-full rounded-full bg-gradient-to-r from-[#A78BFA] to-[#FFD84D]" />
           )}
         </div>
       ))}
@@ -251,22 +251,22 @@ const ChoiceCard: React.FC<ChoiceCardProps> = ({
     className={`sunny-onboarding-choice w-full cursor-pointer rounded-2xl border p-4 text-left transition-all ${
       selected
         ? 'border-[#E8E1D5] bg-[#3A3B3D] shadow-[0_0_0_1px_rgba(255,216,77,0.25),0_12px_28px_-18px_rgba(255,216,77,0.5)]'
-        : 'border-[#77736B] bg-[#292B2E]/80 hover:border-white/25'
+        : 'border-[#A78BFA]/30 bg-[#211633]/80 hover:border-white/25'
     }`}
   >
     <div className="flex items-start gap-3">
       <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${iconBg}`}>{icon}</div>
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
-          <h3 className={`text-base font-semibold ${selected ? 'text-[#E8E1D5]' : 'text-white'}`}>{title}</h3>
+          <h3 className={`text-base font-semibold ${selected ? 'text-[#FFE58A]' : 'text-white'}`}>{title}</h3>
           {badge && (
-            <span className="rounded-full bg-[#E8E1D5]/15 px-2 py-0.5 text-[10px] font-bold text-[#E8E1D5]">
+            <span className="rounded-full bg-[#E8E1D5]/15 px-2 py-0.5 text-[10px] font-bold text-[#FFE58A]">
               {badge}
             </span>
           )}
         </div>
         {description && (
-          <p className="mt-1 text-sm leading-relaxed text-[#D7D4CC]">{description}</p>
+          <p className="mt-1 text-sm leading-relaxed text-[#D8CBEF]">{description}</p>
         )}
       </div>
       <div
@@ -405,24 +405,24 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
               </div>
 
               <h1 className="mb-3 text-4xl font-bold tracking-tight text-white">Hey, sunshine. ☀️</h1>
-              <p className="mb-6 max-w-xs text-base leading-relaxed text-[#D7D4CC]">
+              <p className="mb-6 max-w-xs text-base leading-relaxed text-[#D8CBEF]">
                 Meet Sunny, your little corner of sunshine. A friendly, comforting space to talk, laugh, reflect, and feel a little less alone.
               </p>
 
               <div className="mb-6 flex flex-wrap items-center justify-center gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#77736B] bg-[#292B2E]/80 px-3 py-1.5 text-xs font-medium text-[#D7D4CC]">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#A78BFA]/30 bg-[#211633]/80 px-3 py-1.5 text-xs font-medium text-[#D8CBEF]">
                   <Heart size={13} className="text-[#D8C7C1]" /> Listens
                 </span>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#77736B] bg-[#292B2E]/80 px-3 py-1.5 text-xs font-medium text-[#D7D4CC]">
-                  <Smile size={13} className="text-[#E8E1D5]" /> Laughs with you
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#A78BFA]/30 bg-[#211633]/80 px-3 py-1.5 text-xs font-medium text-[#D8CBEF]">
+                  <Smile size={13} className="text-[#FFE58A]" /> Laughs with you
                 </span>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#77736B] bg-[#292B2E]/80 px-3 py-1.5 text-xs font-medium text-[#D7D4CC]">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#A78BFA]/30 bg-[#211633]/80 px-3 py-1.5 text-xs font-medium text-[#D8CBEF]">
                   <Leaf size={13} className="text-[#C5C8BE]" /> Cheers you on
                 </span>
               </div>
 
               <div className="sunny-onboarding-quote max-w-xs rounded-2xl border border-[#E8E1D5]/30 bg-[#292B2E]/80 p-4 text-center shadow-lg">
-                <p className="text-sm font-medium italic text-[#E8E1D5]">
+                <p className="text-sm font-medium italic text-[#FFE58A]">
                   &ldquo;You don&rsquo;t have to start over every time you come back.&rdquo;
                 </p>
               </div>
@@ -454,7 +454,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
             <div>
               <ProgressHeader step={1} onBack={goBack} />
               <h2 className="mb-1.5 text-3xl font-bold tracking-tight text-white">What brings you here?</h2>
-              <p className="mb-6 text-sm leading-relaxed text-[#D7D4CC]">
+              <p className="mb-6 text-sm leading-relaxed text-[#D8CBEF]">
                 Select anything you'd like Sunny to help with. You can change this anytime.
               </p>
 
@@ -470,7 +470,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                       className={`sunny-onboarding-interest inline-flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2.5 text-left text-sm transition-all ${
                         isSelected
                           ? 'border-[#E8E1D5] bg-[#3A3B3D] font-semibold text-white shadow-[0_8px_20px_-14px_rgba(255,216,77,0.6)]'
-                          : 'border-[#77736B] bg-[#292B2E]/80 text-[#D7D4CC] hover:border-white/25'
+                          : 'border-[#A78BFA]/30 bg-[#211633]/80 text-[#D8CBEF] hover:border-white/25'
                       }`}
                     >
                       {isSelected && (
@@ -511,7 +511,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
             <div>
               <ProgressHeader step={2} onBack={goBack} />
               <h2 className="mb-1.5 text-3xl font-bold tracking-tight text-white">Choose Sunny's vibe</h2>
-              <p className="mb-6 text-sm leading-relaxed text-[#D7D4CC]">
+              <p className="mb-6 text-sm leading-relaxed text-[#D8CBEF]">
                 How would you like Sunny to feel? You can change this anytime in settings.
               </p>
 
@@ -552,7 +552,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
               <h2 className="mb-1.5 text-3xl font-bold tracking-tight text-white">
                 Sunny can remember the little things.
               </h2>
-              <p className="mb-6 text-sm leading-relaxed text-[#D7D4CC]">
+              <p className="mb-6 text-sm leading-relaxed text-[#D8CBEF]">
                 With your permission, Sunny automatically saves useful details you share—like interests, goals, and upcoming events—to help in future conversations. Sunny avoids saving passwords and other sensitive details. You can review or delete memories anytime.
               </p>
 
@@ -560,7 +560,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                 <ChoiceCard
                   selected={memoryConsent}
                   onClick={() => setMemoryConsent(true)}
-                  icon={<Bookmark size={18} className="text-[#E8E1D5]" />}
+                  icon={<Bookmark size={18} className="text-[#FFE58A]" />}
                   iconBg="bg-[#E8E1D5]/15"
                   title="Enable memory"
                   description="Sunny remembers meaningful personal context so you don't have to re-explain yourself every time."
@@ -576,8 +576,8 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
               </div>
 
               <div className="mt-4 flex items-start gap-2.5 rounded-2xl border border-[#77736B] bg-[#202226]/80 p-3.5">
-                <ShieldCheck size={18} className="mt-0.5 shrink-0 text-[#E8E1D5]" />
-                <p className="text-sm leading-relaxed text-[#D7D4CC]">
+                <ShieldCheck size={18} className="mt-0.5 shrink-0 text-[#FFE58A]" />
+                <p className="text-sm leading-relaxed text-[#D8CBEF]">
                   You are always in control. You can view, edit, or delete any saved memory at any time in the Memories tab.
                 </p>
               </div>
@@ -605,16 +605,16 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
               <h2 className="mb-1.5 text-3xl font-bold tracking-tight text-white">
                 A little sunshine throughout your day?
               </h2>
-              <p className="mb-6 text-sm leading-relaxed text-[#D7D4CC]">
+              <p className="mb-6 text-sm leading-relaxed text-[#D8CBEF]">
                 Sunny can send occasional gentle notes to brighten your morning, afternoon, or evening. Never spammy, never guilt-tripping.
               </p>
 
               <div className="sunny-onboarding-notification-preview mb-4 space-y-3 rounded-2xl border border-[#77736B] bg-[#202226]/80 p-4">
                 <div className="flex items-start gap-3">
-                  <Sun size={18} className="mt-0.5 shrink-0 text-[#E8E1D5]" />
+                  <Sun size={18} className="mt-0.5 shrink-0 text-[#FFE58A]" />
                   <div>
                     <h4 className="text-sm font-semibold text-white">Morning Sunshine</h4>
-                    <p className="mt-0.5 text-sm italic text-[#D7D4CC]">
+                    <p className="mt-0.5 text-sm italic text-[#D8CBEF]">
                       "Good morning, sunshine. ☀️ I hope today brings you one little thing to smile about."
                     </p>
                   </div>
@@ -623,7 +623,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                   <Heart size={18} className="mt-0.5 shrink-0 text-[#D8C7C1]" />
                   <div>
                     <h4 className="text-sm font-semibold text-white">Gentle Check-in</h4>
-                    <p className="mt-0.5 text-sm italic text-[#D7D4CC]">
+                    <p className="mt-0.5 text-sm italic text-[#D8CBEF]">
                       "Hey, sunshine. 💛 How's your day going? No pressure to reply."
                     </p>
                   </div>
@@ -634,7 +634,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                 <ChoiceCard
                   selected={notificationConsent}
                   onClick={() => setNotificationConsent(true)}
-                  icon={<Bell size={18} className="text-[#E8E1D5]" />}
+                  icon={<Bell size={18} className="text-[#FFE58A]" />}
                   iconBg="bg-[#E8E1D5]/15"
                   title="Enable gentle notifications"
                 />
@@ -673,18 +673,18 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
               <h2 className="mb-3 text-3xl font-bold tracking-tight text-white">
                 Your little corner of sunshine is ready. 💛
               </h2>
-              <p className="mb-6 max-w-sm text-base leading-relaxed text-[#D7D4CC]">
+              <p className="mb-6 max-w-sm text-base leading-relaxed text-[#D8CBEF]">
                 Sunny is here whenever you need a moment to reflect, laugh, or just talk through your day.
               </p>
               {notificationPermissionNote && (
-                <p role="status" className="mb-4 max-w-sm text-sm text-[#D7D4CC]">{notificationPermissionNote}</p>
+                <p role="status" className="mb-4 max-w-sm text-sm text-[#D8CBEF]">{notificationPermissionNote}</p>
               )}
 
-              <div className="sunny-onboarding-note max-w-sm rounded-2xl border border-[#77736B] bg-[#292B2E]/80 p-5 text-left">
-                <span className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-[#E8E1D5]">
+              <div className="sunny-onboarding-note max-w-sm rounded-2xl border border-[#A78BFA]/30 bg-[#211633]/80 p-5 text-left">
+                <span className="mb-1 block text-[11px] font-bold uppercase tracking-wider text-[#FFE58A]">
                   Friendly companion note
                 </span>
-                <p className="text-sm leading-relaxed text-[#D7D4CC]">
+                <p className="text-sm leading-relaxed text-[#D8CBEF]">
                   Sunny is an AI companion designed for everyday thoughts and comfort. Remember to take good care of yourself and lean on real friends and professional support whenever needed.
                 </p>
               </div>
