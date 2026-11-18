@@ -3,7 +3,7 @@ import { Capacitor } from '@capacitor/core';
 import { usePreferences } from '@/context/PreferencesContext';
 import { notificationService } from '@/services/notificationService';
 import { PersonalityTone } from '@/types/user';
-import { SunnyLogo } from '@/components/brand/SunnyLogo';
+import { SunnyRobot3D } from '@/components/brand/SunnyRobot3D';
 import { AppButton } from '@/components/ui/AppButton';
 import {
   Sparkles,
@@ -93,12 +93,10 @@ const SPARKLES: Array<{ left: string; top: string; size: number; delay: number; 
 const OnboardingStyles: React.FC = () => (
   <style>{`
     .ob-screen {
-      color: #F2EFE8;
+      color: #F8F4FF;
       isolation: isolate;
-      background: transparent;
+      background: radial-gradient(ellipse at 50% 22%,rgba(139,92,246,.24),transparent 42%),radial-gradient(ellipse at 50% 100%,rgba(255,216,77,.1),transparent 40%),linear-gradient(160deg,#100B22 0%,#1B1230 55%,#100B22 100%);
     }
-    .ob-background-video { filter: none; }
-    .ob-video-overlay { background: transparent; }
     .ob-rays svg line { stroke: #E8E1D5 !important; }
     .ob-rays svg stop:nth-child(1) { stop-color: #F8F4EB; }
     .ob-rays svg stop:nth-child(2) { stop-color: #E5D8C3; }
@@ -107,29 +105,6 @@ const OnboardingStyles: React.FC = () => (
     .ob-halo { opacity: .65; }
     .ob-cta .sunny-app-button { background: #E5DCCB !important; color: #242321 !important; box-shadow: 0 8px 22px -12px rgba(218,199,169,.32) !important; }
     .ob-cta .sunny-app-button:hover { background: #F0E9DC !important; }
-    .ob-video-backdrop {
-      position: fixed;
-      z-index: -1;
-      inset: 0;
-      overflow: hidden;
-      pointer-events: none;
-      background: #121417;
-    }
-    .ob-background-video {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      opacity: 1;
-      filter: none;
-    }
-    .ob-video-overlay {
-      position: absolute;
-      inset: 0;
-      background: transparent;
-    }
     .ob-sparkle { z-index: 1; }
     .sunny-onboarding-shell {
       position: relative;
@@ -201,8 +176,6 @@ const OnboardingStyles: React.FC = () => (
       to   { transform: scaleX(1); }
     }
     @media (max-width: 640px) {
-      .ob-video-backdrop { position: fixed; inset: 0; width: 100vw; height: 100dvh; }
-      .ob-background-video { display: block; width: 100%; height: 100%; min-width: 100%; min-height: 100%; object-fit: cover; object-position: center center; transform: translateZ(0); }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -213,11 +186,9 @@ const OnboardingStyles: React.FC = () => (
 );
 
 const SunnyHero: React.FC = () => (
-  <div className="relative">
+  <div className="relative flex h-56 w-60 items-center justify-center sm:h-64 sm:w-64">
     <div className="ob-halo" aria-hidden="true" />
-    <div className="relative">
-      <SunnyLogo size="large" />
-    </div>
+    <SunnyRobot3D className="relative z-10 h-full w-full" />
   </div>
 );
 
@@ -401,13 +372,6 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
   return (
     <div className="ob-screen sunny-onboarding relative min-h-[100dvh] w-full overflow-x-hidden overflow-y-auto">
       <OnboardingStyles />
-
-      <div className="ob-video-backdrop" aria-hidden="true">
-        <video className="ob-background-video" autoPlay muted loop playsInline preload="metadata">
-          <source src="/sunny-home-background.mp4" type="video/mp4" />
-        </video>
-        <span className="ob-video-overlay" />
-      </div>
 
       {SPARKLES.map((sparkle, index) => (
         <span
