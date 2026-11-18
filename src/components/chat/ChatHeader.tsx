@@ -1,10 +1,11 @@
 import React from 'react';
-import { ArrowLeft, MoreVertical, Sparkles, Sun } from 'lucide-react';
+import { ArrowLeft, Mic, MoreVertical, Sparkles, Sun } from 'lucide-react';
 import { SunnyLogo } from '../brand/SunnyLogo';
 
 interface ChatHeaderProps {
   onBack?: () => void;
   onOptionsPress: () => void;
+  onVoicePress: () => void;
   onPersonalityPress: () => void;
   preferredTone?: string;
 }
@@ -12,6 +13,7 @@ interface ChatHeaderProps {
 export const ChatHeader: React.FC<ChatHeaderProps> = ({
   onBack,
   onOptionsPress,
+  onVoicePress,
   onPersonalityPress,
   preferredTone = 'The Mix',
 }) => {
@@ -41,6 +43,9 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
         <span className="hidden items-center gap-1.5 rounded-full border border-[#B9A6E8]/15 bg-[#B9A6E8]/[0.07] px-3 py-1.5 text-[10px] font-semibold text-[#B9A6E8] sm:inline-flex">
           <span className="h-1.5 w-1.5 rounded-full bg-[#B9A6E8] shadow-[0_0_8px_rgba(168,217,160,.65)]" /> Here for you
         </span>
+        <button type="button" onClick={onVoicePress} className="flex h-9 w-9 items-center justify-center rounded-full border border-[#B99AFF]/25 bg-[#B99AFF]/[0.09] text-[#CDB8FF] transition-all hover:border-[#B99AFF]/50 hover:bg-[#B99AFF]/[0.16] hover:text-white active:scale-95" aria-label="Start voice conversation" title="Voice conversation">
+          <Mic size={17} />
+        </button>
         <button type="button" onClick={onOptionsPress} className="flex h-9 w-9 items-center justify-center rounded-full border border-white/[0.06] bg-white/[0.035] text-[#C6B8E5] transition-all hover:border-white/10 hover:bg-white/[0.08] hover:text-white active:scale-95" aria-label="Chat options">
           <MoreVertical size={18} />
         </button>
