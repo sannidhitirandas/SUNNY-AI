@@ -30,33 +30,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
   registerHardwareBackHandler,
 }) => {
   const { login } = useAuth();
-  const loginVideoRef = React.useRef<HTMLVideoElement | null>(null);
-
-  // Mobile browsers may defer autoplay until the page is visible or the video is ready.
-  useEffect(() => {
-    const video = loginVideoRef.current;
-    if (!video) return;
-    video.muted = true;
-    video.defaultMuted = true;
-    video.playsInline = true;
-    const tryPlay = () => {
-      if (document.visibilityState !== 'visible') return;
-      const playback = video.play();
-      if (playback) playback.catch(() => {
-        // Autoplay can be blocked by browser/device settings; keep the visual fallback.
-      });
-    };
-    tryPlay();
-    video.addEventListener('canplay', tryPlay);
-    document.addEventListener('visibilitychange', tryPlay);
-    window.addEventListener('pageshow', tryPlay);
-    return () => {
-      video.removeEventListener('canplay', tryPlay);
-      document.removeEventListener('visibilitychange', tryPlay);
-      window.removeEventListener('pageshow', tryPlay);
-    };
-  }, []);
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -144,7 +117,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
       <style>{`
         .login-screen {
           isolation: isolate;
-          background: transparent;
+          background: radial-gradient(ellipse at 50% 12%, #38235B 0%, #211435 44%, #100B1D 100%);
         }
 
         .login-sparkle {
@@ -176,47 +149,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           animation: login-fade-up 0.7s ease-out 0.15s both;
         }
 
-        .login-video-backdrop {
-          position: fixed;
-          z-index: -1;
-          inset: 0;
-          overflow: hidden;
-          pointer-events: none;
-          background: #121417;
-        }
-        .login-background-video {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: center;
-          opacity: 1;
-          filter: none;
-        }
-        .login-video-overlay {
-          position: absolute;
-          inset: 0;
-          background: transparent;
-        }
 
-        .login-background-video { filter: none; }
-        .login-rays svg line { stroke: #E8E1D5 !important; }
-        .login-rays svg stop:nth-child(1) { stop-color: #F8F4EB; }
-        .login-rays svg stop:nth-child(2) { stop-color: #E5D8C3; }
-        .login-rays svg stop:nth-child(3) { stop-color: #BFAF98; }
-        .login-rays svg feDropShadow { flood-color: #D8CBB5; flood-opacity: .28; }
-        .login-rays > div > div:first-child { opacity: 0 !important; }
         .login-cta .sunny-app-button { background: linear-gradient(135deg,#FFE98A,#FFD84D) !important; color: #21152F !important; box-shadow: 0 10px 28px -12px rgba(255,216,77,.55) !important; }
         .login-cta .sunny-app-button:hover { background: linear-gradient(135deg,#FFF0B2,#FFE16A) !important; }
-        .login-hero h1 {
-          color: #fff;
-          text-shadow: 0 1px 2px rgba(0,0,0,.98), 0 3px 10px rgba(0,0,0,.95), 0 8px 24px rgba(0,0,0,.88);
-        }
-        .login-hero p {
-          color: rgba(255, 255, 255, 0.92);
-          text-shadow: 0 1px 2px rgba(0,0,0,.98), 0 3px 10px rgba(0,0,0,.92);
-        }
+        .login-hero h1 { color: #fff; text-shadow: 0 2px 16px rgba(10,4,26,.72); }
+        .login-hero p { color: rgba(245,237,255,.9); text-shadow: 0 2px 12px rgba(10,4,26,.7); }
         .login-card label {
           color: rgba(255, 255, 255, 0.96);
           text-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
@@ -265,10 +202,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           50%      { opacity: 0.9;  transform: scale(1); }
         }
 
-        @media (max-width: 640px) {
-          .login-video-backdrop { position: fixed; inset: 0; width: 100vw; height: 100dvh; }
-          .login-background-video { display: block; width: 100%; height: 100%; min-width: 100%; min-height: 100%; object-fit: cover; object-position: center center; transform: translateZ(0); }
-        }
 
         @media (prefers-reduced-motion: reduce) {
           .login-hero,
@@ -282,20 +215,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           }
         }
       `}</style>
-
-      <div className="login-video-backdrop" aria-hidden="true">
-        <video
-          className="login-background-video"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-        >
-          <source src="/sunny-home-background.mp4" type="video/mp4" />
-        </video>
-        <span className="login-video-overlay" />
-      </div>
 
       {SPARKLES.map((sparkle, index) => (
         <span
@@ -414,7 +333,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
               <button
                 type="button"
                 onClick={() => { setForgotPassword(true); setError(''); setNotice(''); }}
-                className="w-full cursor-pointer pt-4 text-sm font-semibold text-[#E8E1D5] hover:underline"
+                className="w-full cursor-pointer pt-4 text-sm font-semibold text-[#FFE27A] hover:underline"
               >
                 Forgot password?
               </button>
