@@ -135,9 +135,9 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
         .reg-video-overlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(180deg, rgba(13, 15, 18, 0.34), rgba(18, 20, 24, 0.60));
+          background: transparent;
         }
-        .reg-background-video { filter: brightness(0.58) saturate(0.88); }
+        .reg-background-video { filter: none; }
         .reg-rays svg line { stroke: #E8E1D5 !important; }
         .reg-rays svg stop:nth-child(1) { stop-color: #F8F4EB; }
         .reg-rays svg stop:nth-child(2) { stop-color: #E5D8C3; }
@@ -149,7 +149,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
         .reg-screen .sunny-auth-shell { position: relative; z-index: 2; }
         .reg-screen .reg-hero { position: relative; z-index: 3; }
         .reg-hero h1, .reg-hero p, .reg-card label, .reg-screen > div:last-child {
-          text-shadow: 0 1px 12px rgba(12, 8, 24, .5);
+          text-shadow: 0 1px 2px rgba(0,0,0,.98), 0 3px 10px rgba(0,0,0,.95), 0 8px 24px rgba(0,0,0,.88);
         }
         .reg-sparkle {
           position: absolute;
