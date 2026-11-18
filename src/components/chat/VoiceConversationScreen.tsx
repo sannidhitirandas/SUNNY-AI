@@ -116,7 +116,7 @@ export const VoiceConversationScreen: React.FC<VoiceConversationScreenProps> = (
 
   useEffect(() => {
     if (!submittedRef.current || isThinking) return;
-    const latest = messages.filter((m) => m.role === 'assistant').at(-1);
+    const latest = messages.filter((m) => m.role === 'assistant').slice(-1)[0];
     if (!latest || latest.id === baselineAssistantIdRef.current) return;
     submittedRef.current = false;
     baselineAssistantIdRef.current = latest.id;
