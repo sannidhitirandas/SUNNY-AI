@@ -93,15 +93,13 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           object-fit: cover;
           object-position: center;
           opacity: 1;
-          filter: brightness(0.58) saturate(0.88);
+          filter: none;
           transform: scale(1.01);
         }
         .sunrise-video-overlay {
           position: absolute;
           inset: 0;
-          background:
-            linear-gradient(180deg, rgba(12, 14, 18, 0.56) 0%, rgba(18, 20, 24, 0.30) 42%, rgba(12, 14, 18, 0.60) 100%),
-            radial-gradient(ellipse at 50% 48%, rgba(18, 20, 24, 0.10) 0%, rgba(12, 14, 18, 0.38) 100%);
+          background: transparent;
         }
         .sunrise-screen > .sunrise-sun,
         .sunrise-screen > .sunrise-eyebrow,
@@ -112,7 +110,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
         .sunrise-screen > .sunrise-bar {
           position: relative;
           z-index: 3;
-          text-shadow: 0 2px 5px rgba(0, 0, 0, 0.95), 0 4px 24px rgba(0, 0, 0, 0.9);
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 1), 0 3px 10px rgba(0, 0, 0, 0.98), 0 8px 28px rgba(0, 0, 0, 0.92);
         }
         .sunrise-screen > .sunrise-horizon,
         .sunrise-screen > .sunrise-sparkle {
@@ -242,7 +240,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
         @media (max-width: 640px) {
           .sunrise-video-backdrop { position: absolute; inset: 0; width: 100vw; height: 100dvh; }
           .sunrise-background-video { display: block; width: 100%; height: 100%; min-width: 100%; min-height: 100%; object-fit: cover; object-position: center center; transform: translateZ(0) scale(1.01); }
-          .sunrise-video-overlay { background: linear-gradient(180deg, rgba(12, 14, 18, 0.60), rgba(18, 20, 24, 0.34) 48%, rgba(12, 14, 18, 0.62)); }
+          .sunrise-video-overlay { background: transparent; }
           .sunrise-sun { margin-bottom: 1.6rem; }
         }
 
