@@ -25,6 +25,35 @@ const SPARKLES: Array<{ left: string; top: string; size: number; delay: number; 
 
 export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
   const { preferences } = usePreferences();
+  const splashVideoRef = React.useRef<HTMLVideoElement | null>(null);
+
+  // Keep the splash background video playing on mobile browsers where autoplay
+  // may be deferred until media is ready or the page returns to the foreground.
+  useEffect(() => {
+    const video = splashVideoRef.current;
+    if (!video) return;
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+
+    const tryPlay = () => {
+      if (document.visibilityState !== 'visible') return;
+      const playback = video.play();
+      if (playback) playback.catch(() => {
+        // Respect browser autoplay restrictions and retain the background fallback.
+      });
+    };
+
+    tryPlay();
+    video.addEventListener('canplay', tryPlay);
+    document.addEventListener('visibilitychange', tryPlay);
+    window.addEventListener('pageshow', tryPlay);
+    return () => {
+      video.removeEventListener('canplay', tryPlay);
+      document.removeEventListener('visibilitychange', tryPlay);
+      window.removeEventListener('pageshow', tryPlay);
+    };
+  }, []);
 
   useEffect(() => {
     void audioService.play('open');
@@ -255,7 +284,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
       `}</style>
 
       <div className="sunrise-video-backdrop" aria-hidden="true">
-        <video className="sunrise-background-video" autoPlay muted loop playsInline preload="metadata">
+        <video ref={splashVideoRef} className="sunrise-background-video" autoPlay muted loop playsInline preload="metadata">
           <source src="/sunny-home-background.mp4" type="video/mp4" />
         </video>
         <span className="sunrise-video-overlay" />
