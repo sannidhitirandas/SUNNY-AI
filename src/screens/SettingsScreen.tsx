@@ -4,7 +4,7 @@ import { usePreferences } from '@/context/PreferencesContext';
 import { useChat } from '@/context/ChatContext';
 import { audioService } from '@/services/audioService';
 import { getPersonalityLabel, PersonalityTone, SunnyTheme } from '@/types/user';
-import { CHAT_BACKGROUNDS, useChatBackground } from '@/lib/chatBackground';
+import { useChatBackground } from '@/lib/chatBackground';
 import { SettingsSection } from '@/components/settings/SettingsSection';
 import { SettingsRow } from '@/components/settings/SettingsRow';
 import { AppInput } from '@/components/ui/AppInput';
@@ -87,7 +87,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
     resetOnboarding,
   } = usePreferences();
   const { clearChat } = useChat();
-  const { background, setChatBackground } = useChatBackground();
+  const { background, setChatBackground, availableBackgrounds, device } = useChatBackground();
 
   const [toneModalVisible, setToneModalVisible] = useState(false);
   const [themeModalVisible, setThemeModalVisible] = useState(false);
@@ -566,9 +566,10 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       {backgroundModalVisible && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
           <div role="dialog" aria-modal="true" aria-labelledby="chat-bg-picker-title" className="w-full max-w-md max-h-[90vh] overflow-y-auto bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
-            <h3 id="chat-bg-picker-title" className="text-base font-bold text-white mb-3">Chat background</h3>
+            <h3 id="chat-bg-picker-title" className="text-base font-bold text-white mb-1">Chat background</h3>
+            <p className="text-xs text-[#C6B8E5] mb-3">{device === 'mobile' ? 'Mobile wallpapers' : 'Desktop wallpapers'} · Saved separately on this device</p>
             <div className="grid grid-cols-2 gap-3 mb-4">
-              {CHAT_BACKGROUNDS.map((item) => {
+              {availableBackgrounds.map((item) => {
                 const isSelected = background.id === item.id;
                 return (
                   <button
