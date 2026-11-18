@@ -32,33 +32,6 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
 }) => {
   const { register } = useAuth();
   const { completeOnboarding, updatePreferredName } = usePreferences();
-  const registerVideoRef = React.useRef<HTMLVideoElement | null>(null);
-
-  // Retry muted inline playback when mobile browsers finish loading or restore the page.
-  React.useEffect(() => {
-    const video = registerVideoRef.current;
-    if (!video) return;
-    video.muted = true;
-    video.defaultMuted = true;
-    video.playsInline = true;
-    const tryPlay = () => {
-      if (document.visibilityState !== 'visible') return;
-      const playback = video.play();
-      if (playback) playback.catch(() => {
-        // Autoplay may be restricted by device settings; retain the gradient fallback.
-      });
-    };
-    tryPlay();
-    video.addEventListener('canplay', tryPlay);
-    document.addEventListener('visibilitychange', tryPlay);
-    window.addEventListener('pageshow', tryPlay);
-    return () => {
-      video.removeEventListener('canplay', tryPlay);
-      document.removeEventListener('visibilitychange', tryPlay);
-      window.removeEventListener('pageshow', tryPlay);
-    };
-  }, []);
-
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -112,45 +85,14 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
       <style>{`
         .reg-screen {
           isolation: isolate;
-          background: transparent;
+          background: radial-gradient(ellipse at 50% 12%, #38235B 0%, #211435 44%, #100B1D 100%);
         }
-        .reg-video-backdrop {
-          position: fixed;
-          z-index: -1;
-          inset: 0;
-          overflow: hidden;
-          pointer-events: none;
-          background: #121417;
-        }
-        .reg-background-video {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: center;
-          opacity: 1;
-          filter: none;
-        }
-        .reg-video-overlay {
-          position: absolute;
-          inset: 0;
-          background: transparent;
-        }
-        .reg-background-video { filter: none; }
-        .reg-rays svg line { stroke: #E8E1D5 !important; }
-        .reg-rays svg stop:nth-child(1) { stop-color: #F8F4EB; }
-        .reg-rays svg stop:nth-child(2) { stop-color: #E5D8C3; }
-        .reg-rays svg stop:nth-child(3) { stop-color: #BFAF98; }
-        .reg-rays svg feDropShadow { flood-color: #D8CBB5; flood-opacity: .28; }
-        .reg-rays > div > div:first-child { opacity: 0 !important; }
         .reg-cta .sunny-app-button { background: linear-gradient(135deg,#FFE98A,#FFD84D) !important; color: #21152F !important; box-shadow: 0 10px 28px -12px rgba(255,216,77,.55) !important; }
         .reg-cta .sunny-app-button:hover { background: linear-gradient(135deg,#FFF0B2,#FFE16A) !important; }
         .reg-screen .sunny-auth-shell { position: relative; z-index: 2; }
         .reg-screen .reg-hero { position: relative; z-index: 3; }
-        .reg-hero h1, .reg-hero p, .reg-card label, .reg-screen > div:last-child {
-          text-shadow: 0 1px 2px rgba(0,0,0,.98), 0 3px 10px rgba(0,0,0,.95), 0 8px 24px rgba(0,0,0,.88);
-        }
+        .reg-hero h1, .reg-card label { text-shadow: 0 2px 12px rgba(10,4,26,.55); }
+        .reg-hero p { text-shadow: 0 2px 10px rgba(10,4,26,.5); }
         .reg-sparkle {
           position: absolute;
           border-radius: 9999px;
@@ -210,22 +152,11 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
           0%, 100% { opacity: 0;   transform: scale(0.6); }
           50%      { opacity: 0.9; transform: scale(1); }
         }
-        @media (max-width: 640px) {
-          .reg-video-backdrop { position: fixed; inset: 0; width: 100vw; height: 100dvh; }
-          .reg-background-video { display: block; width: 100%; height: 100%; min-width: 100%; min-height: 100%; object-fit: cover; object-position: center center; transform: translateZ(0); }
-        }
         @media (prefers-reduced-motion: reduce) {
           .reg-hero, .reg-card, .reg-halo { animation: none !important; }
           .reg-sparkle { animation: none !important; opacity: 0.45; }
         }
       `}</style>
-
-      <div className="reg-video-backdrop" aria-hidden="true">
-        <video ref={registerVideoRef} className="reg-background-video" autoPlay muted loop playsInline preload="metadata">
-          <source src="/sunny-home-background.mp4" type="video/mp4" />
-        </video>
-        <span className="reg-video-overlay" />
-      </div>
 
       {SPARKLES.map((sparkle, index) => (
         <span
