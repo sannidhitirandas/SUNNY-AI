@@ -50,7 +50,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
         }
         .sunrise-video-backdrop {
           position: absolute;
-          z-index: 0;
+          z-index: -1;
           inset: 0;
           overflow: hidden;
           pointer-events: none;
@@ -79,7 +79,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
         .sunrise-screen > .sunrise-waiting,
         .sunrise-screen > .sunrise-bar {
           position: relative;
-          z-index: 2;
+          z-index: 3;
           text-shadow: 0 2px 18px rgba(12, 8, 24, 0.55);
         }
         .sunrise-screen > .sunrise-horizon,
