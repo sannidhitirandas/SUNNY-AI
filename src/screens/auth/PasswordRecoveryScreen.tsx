@@ -32,18 +32,24 @@ export const PasswordRecoveryScreen: React.FC = () => {
   return (
     <div className="sunny-recovery-screen sunny-auth-screen relative flex min-h-[100dvh] w-full flex-col justify-center overflow-x-hidden overflow-y-auto px-6 py-12">
       <style>{`
-        .sunny-recovery-screen { isolation:isolate; background:transparent; }
+        .sunny-recovery-screen { isolation:isolate; background:linear-gradient(180deg,rgba(13,15,18,.38),rgba(18,20,24,.60)); }
         .sunny-recovery-video {
-          position:fixed; z-index:0; inset:0; overflow:hidden; pointer-events:none; background:#100B22;
+          position:fixed; z-index:0; inset:0; overflow:hidden; pointer-events:none; background:#121417;
         }
         .sunny-recovery-video video {
           position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center;
-          opacity:1; filter:none;
+          opacity:1; filter:brightness(.58) saturate(.88);
         }
         .sunny-recovery-video::after { content:''; position:absolute; inset:0; background:transparent; }
+        .sunny-recovery-rays svg line { stroke:#E8E1D5 !important; }
+        .sunny-recovery-rays svg stop:nth-child(1) { stop-color:#F8F4EB; }
+        .sunny-recovery-rays svg stop:nth-child(2) { stop-color:#E5D8C3; }
+        .sunny-recovery-rays svg stop:nth-child(3) { stop-color:#BFAF98; }
+        .sunny-recovery-rays > div > div:first-child { opacity:0 !important; }
+        .sunny-recovery-card .sunny-app-button { background:#E5DCCB !important; color:#242321 !important; box-shadow:0 8px 22px -12px rgba(218,199,169,.32) !important; }
         .sunny-recovery-content { position:relative; z-index:1; width:100%; max-width:24rem; margin:0 auto; }
         .sunny-recovery-card {
-          background:rgba(20,16,35,.48); border:1px solid rgba(255,255,255,.28);
+          background:rgba(20,22,25,.62); border:1px solid rgba(255,255,255,.28);
           box-shadow:0 24px 70px -28px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.16);
           -webkit-backdrop-filter:blur(22px) saturate(1.15); backdrop-filter:blur(22px) saturate(1.15);
         }
@@ -73,9 +79,9 @@ export const PasswordRecoveryScreen: React.FC = () => {
       </div>
       <div className="sunny-recovery-content">
         <div className="mb-6 flex flex-col items-center text-center">
-          <SunnyLogo size="large" />
+          <div className="sunny-recovery-rays"><SunnyLogo size="large" /></div>
           <h1 className="mt-4 mb-1 text-2xl font-bold text-white">Choose a new password</h1>
-          <p className="text-xs text-[#F0EAF8]">Your recovery link is ready. Set a new password to continue.</p>
+          <p className="text-xs text-[#D7D4CC]">Your recovery link is ready. Set a new password to continue.</p>
         </div>
         <form onSubmit={handleUpdatePassword} className="sunny-recovery-card space-y-1 rounded-3xl p-5">
           <AppInput
