@@ -228,6 +228,11 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           50% { opacity:1; transform:scaleX(1); transform-origin:left; }
         }
 
+        @media (max-width: 640px) {
+          .sunrise-video-backdrop { position: absolute; inset: 0; width: 100vw; height: 100dvh; }
+          .sunrise-background-video { display: block; width: 100%; height: 100%; min-width: 100%; min-height: 100%; object-fit: cover; object-position: center center; transform: translateZ(0); }
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .sunrise-horizon,
           .sunrise-halo,
