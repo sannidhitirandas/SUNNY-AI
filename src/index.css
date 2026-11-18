@@ -1237,3 +1237,31 @@ button:disabled { cursor: not-allowed; }
   .sunny-app-card,.sunny-app-button,.sunny-app-field { transition:none !important; }
   .sunny-app-button:not(:disabled):active { transform:none; }
 }
+
+
+/* Screen entrances stay subtle: the content settles in without shifting the layout. */
+.sunny-app-main > * {
+  min-width:0;
+  min-height:0;
+  animation:sunny-screen-settle 260ms var(--sunny-ease) both;
+}
+@keyframes sunny-screen-settle {
+  from { opacity:.72; transform:translateY(6px); }
+  to { opacity:1; transform:translateY(0); }
+}
+:root[data-theme='sunny-light'] {
+  --sunny-bg:#F8F6FC;
+  --sunny-surface:#F0EDF6;
+  --sunny-card:#FFFFFF;
+  --sunny-raised:#EAE3F2;
+  --sunny-line:rgba(76,53,104,.16);
+}
+:root[data-theme='sunny-light'] .sunny-app-shell {
+  background:
+    radial-gradient(ellipse at 82% -12%,rgba(157,120,191,.12),transparent 36%),
+    radial-gradient(ellipse at 0% 100%,rgba(177,147,211,.09),transparent 34%),
+    #F8F6FC;
+}
+@media (prefers-reduced-motion:reduce) {
+  .sunny-app-main > * { animation:none !important; }
+}
