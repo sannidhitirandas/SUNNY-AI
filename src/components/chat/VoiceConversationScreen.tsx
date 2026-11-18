@@ -35,7 +35,7 @@ export const VoiceConversationScreen: React.FC<VoiceConversationScreenProps> = (
   const [error, setError] = useState('');
   const [autoSpeak, setAutoSpeak] = useState(true);
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
-  const baselineAssistantIdRef = useRef(messages.filter((m) => m.role === 'assistant').at(-1)?.id);
+  const baselineAssistantIdRef = useRef(messages.filter((m) => m.role === 'assistant').slice(-1)[0]?.id);
   const submittedRef = useRef(false);
   const mountedRef = useRef(true);
 
@@ -78,7 +78,7 @@ export const VoiceConversationScreen: React.FC<VoiceConversationScreenProps> = (
         if (finalText.trim()) {
           setListening(false);
           submittedRef.current = true;
-          baselineAssistantIdRef.current = messages.filter((m) => m.role === 'assistant').at(-1)?.id;
+          baselineAssistantIdRef.current = messages.filter((m) => m.role === 'assistant').slice(-1)[0]?.id;
           void sendMessage(finalText.trim());
         }
       };
@@ -156,7 +156,7 @@ export const VoiceConversationScreen: React.FC<VoiceConversationScreenProps> = (
         <div className="text-center"><p className="text-[10px] font-bold tracking-[.28em] text-[#C4B5FD]">SUNNY AI</p><p className="mt-1 text-sm font-semibold text-white/90">Voice conversation</p></div>
         <button type="button" onClick={() => setAutoSpeak((value) => !value)} className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[.06] text-[#D8CCF3]" aria-label={autoSpeak ? 'Turn off voice replies' : 'Turn on voice replies'}>{autoSpeak ? <Volume2 size={19}/> : <VolumeX size={19}/>}</button>
       </header>
-      <div className="flex flex-1 flex-col items-center justify-center px-7 pb-8 text-center">
+      <div className="flex flex-1 flex-col items-center justify-center overflow-y-auto px-7 pb-8 text-center">
         <div className="mb-8 flex items-center gap-2 rounded-full border border-[#B99AFF]/20 bg-[#B99AFF]/[.08] px-4 py-2 text-xs font-medium text-[#E9D5FF]">
           <span className={`h-2 w-2 rounded-full ${isThinking || speaking || listening ? 'bg-[#C4B5FD] shadow-[0_0_12px_#C4B5FD]' : 'bg-[#9D8ABF]'}`}/>
           {status}
