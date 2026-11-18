@@ -10,7 +10,7 @@ import { MemoryModal } from '@/components/memories/MemoryModal';
 import { MemoryCategory } from '@/types/memory';
 import { getPersonalityLabel } from '@/types/user';
 import type { StarterIntent } from '@/types/chat';
-import { CHAT_BACKGROUNDS, useChatBackground } from '@/lib/chatBackground';
+import { useChatBackground } from '@/lib/chatBackground';
 import { Bookmark, HeartHandshake, Trash2, X, AlertTriangle, ImageIcon, CheckCircle2 } from 'lucide-react';
 
 interface ChatScreenProps {
@@ -31,7 +31,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   const { messages, isThinking, isLoadingOlderMessages, hasOlderMessages, loadOlderMessages, lastError, activeIntent, setActiveIntent, sendMessage, retryMessage, clearChat } = useChat();
   const { preferences } = usePreferences();
   const { addMemory } = useMemories();
-  const { background, setChatBackground } = useChatBackground();
+  const { background, setChatBackground, availableBackgrounds, device } = useChatBackground();
 
   const messagesScrollRef = useRef<HTMLDivElement>(null);
   const preserveScrollRef = useRef<{ height: number; top: number } | null>(null);
@@ -339,9 +339,10 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
       {backgroundModalVisible && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
           <div role="dialog" aria-modal="true" aria-labelledby="chat-bg-picker-title" className="w-full max-w-md max-h-[min(90dvh,48rem)] overflow-y-auto overscroll-contain bg-[#21163A] border border-[#392858] rounded-2xl p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-2xl animate-in fade-in zoom-in-95 duration-150">
-            <h3 id="chat-bg-picker-title" className="text-base font-bold text-white mb-3">Chat background</h3>
+            <h3 id="chat-bg-picker-title" className="text-base font-bold text-white mb-1">Chat background</h3>
+            <p className="text-xs text-[#C6B8E5] mb-3">{device === 'mobile' ? 'Mobile wallpapers' : 'Desktop wallpapers'} · Saved separately on this device</p>
             <div className="grid grid-cols-2 gap-3 mb-4">
-              {CHAT_BACKGROUNDS.map((item) => {
+              {availableBackgrounds.map((item) => {
                 const isSelected = background.id === item.id;
                 return (
                   <button
