@@ -51,7 +51,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       <style>{`
         .sunny-home-screen {
           --sunny-home-accent: #B99AFF;
-          --sunny-home-accent-bright: #D7C2FF;
+          --sunny-home-accent-bright: #D7C2FF;\n          --sunny-home-sunshine: #F5D27A;
           background:
             radial-gradient(ellipse at 50% -8%, rgba(126,83,190,.30), transparent 48%),
             radial-gradient(ellipse at 100% 38%, rgba(91,54,151,.13), transparent 34%),
@@ -114,14 +114,14 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-xl font-extrabold tracking-tight text-white">Sunny</h1>
-                <span className="rounded-full border border-[#A78BFA]/30 bg-[#8B5CF6]/15 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[.16em] text-[#D7C2FF]">AI companion</span>
+                <span className="rounded-full border border-[#F5D27A]/35 bg-[#F5D27A]/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[.16em] text-[#FFE29A]">AI companion</span>
               </div>
               <p className="text-xs text-[#BFB0D8]">Your little corner of sunshine</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <span className="hidden items-center gap-1.5 text-[11px] font-medium text-[#C8B7E7] sm:inline-flex">
-              <Sparkles size={13} className="text-[#B99AFF]" /> Here for you
+              <Sparkles size={13} className="text-[#F5D27A]" /> Here for you
             </span>
             <button
               type="button"
