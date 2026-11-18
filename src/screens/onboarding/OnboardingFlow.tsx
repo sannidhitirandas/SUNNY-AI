@@ -189,6 +189,11 @@ const OnboardingStyles: React.FC = () => (
       from { transform: scaleX(0); }
       to   { transform: scaleX(1); }
     }
+    @media (max-width: 640px) {
+      .ob-video-backdrop { position: fixed; inset: 0; width: 100vw; height: 100dvh; }
+      .ob-background-video { display: block; width: 100%; height: 100%; min-width: 100%; min-height: 100%; object-fit: cover; object-position: center center; transform: translateZ(0); }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .ob-step, .ob-halo, .ob-progress-fill { animation: none !important; }
       .ob-sparkle { animation: none !important; opacity: 0.45; }
