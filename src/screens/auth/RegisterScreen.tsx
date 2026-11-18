@@ -32,6 +32,32 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
 }) => {
   const { register } = useAuth();
   const { completeOnboarding, updatePreferredName } = usePreferences();
+  const registerVideoRef = React.useRef<HTMLVideoElement | null>(null);
+
+  // Retry muted inline playback when mobile browsers finish loading or restore the page.
+  React.useEffect(() => {
+    const video = registerVideoRef.current;
+    if (!video) return;
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    const tryPlay = () => {
+      if (document.visibilityState !== 'visible') return;
+      const playback = video.play();
+      if (playback) playback.catch(() => {
+        // Autoplay may be restricted by device settings; retain the gradient fallback.
+      });
+    };
+    tryPlay();
+    video.addEventListener('canplay', tryPlay);
+    document.addEventListener('visibilitychange', tryPlay);
+    window.addEventListener('pageshow', tryPlay);
+    return () => {
+      video.removeEventListener('canplay', tryPlay);
+      document.removeEventListener('visibilitychange', tryPlay);
+      window.removeEventListener('pageshow', tryPlay);
+    };
+  }, []);
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -186,7 +212,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
       `}</style>
 
       <div className="reg-video-backdrop" aria-hidden="true">
-        <video className="reg-background-video" autoPlay muted loop playsInline preload="metadata">
+        <video ref={registerVideoRef} className="reg-background-video" autoPlay muted loop playsInline preload="metadata">
           <source src="/sunny-home-background.mp4" type="video/mp4" />
         </video>
         <span className="reg-video-overlay" />
