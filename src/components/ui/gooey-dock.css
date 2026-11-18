@@ -57,7 +57,18 @@
   text-overflow:ellipsis; white-space:nowrap;
 }
 @media (min-width:1024px) {
-  .gooey-dock-shell { bottom:1rem; width:min(27rem,calc(100% - 2rem)); }
+  .gooey-dock-shell {
+    left:1rem;
+    bottom:50%;
+    width:4.45rem;
+    padding:.5rem .38rem;
+    transform:translateY(50%);
+    border-radius:2rem;
+  }
+  .gooey-dock-shell--hidden { transform:translate(-7rem,50%); }
+  .gooey-dock { min-height:18rem; flex-direction:column; justify-content:space-between; }
+  .gooey-dock__item { width:100%; min-height:3.85rem; flex:0 0 auto; border-radius:1.35rem; }
+  .gooey-dock__blob { width:3.35rem; height:3.35rem; }
 }
 @media (prefers-reduced-motion:reduce) {
   .gooey-dock-shell,.gooey-dock__blob,.gooey-dock__item { transition:none; }

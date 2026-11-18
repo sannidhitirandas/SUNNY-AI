@@ -320,3 +320,132 @@
   .sunny-settings-profile { transition: none; }
   .sunny-settings-profile:hover { transform: none; }
 }
+
+/* The everyday companion workspace. Deliberately image-free: moving video is
+   reserved for the splash, auth, recovery, and onboarding moments. */
+.sunny-app-main {
+  background:
+    linear-gradient(110deg, rgba(255,255,255,.012) 1px, transparent 1px),
+    linear-gradient(rgba(255,255,255,.009) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.sunny-home-content,
+.sunny-memories-screen,
+.sunny-settings-screen {
+  position: relative;
+}
+.sunny-home-content::after,
+.sunny-memories-screen::after,
+.sunny-settings-screen::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 19rem;
+  height: 19rem;
+  border-radius: 9999px;
+  right: -12rem;
+  bottom: 8rem;
+  background: radial-gradient(circle, rgba(255,216,77,.055), transparent 68%);
+  filter: blur(8px);
+  pointer-events: none;
+}
+.sunny-home-hero,
+.sunny-memories-hero,
+.sunny-settings-hero {
+  position: relative;
+}
+.sunny-home-hero::after,
+.sunny-memories-hero::after,
+.sunny-settings-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 1px solid rgba(255,255,255,.025);
+  border-radius: inherit;
+}
+.sunny-home-hero h2,
+.sunny-memories-hero h2,
+.sunny-settings-hero h2 {
+  text-wrap: balance;
+}
+.sunny-memory-deck-stage {
+  min-height: 14rem;
+}
+.sunny-memory-deck-front {
+  position: relative;
+  z-index: 3;
+}
+.sunny-memory-deck-sheet {
+  border-color: rgba(177,143,211,.2) !important;
+  background: linear-gradient(145deg, rgba(44,32,66,.72), rgba(25,18,41,.9)) !important;
+  box-shadow: 0 16px 32px rgba(0,0,0,.16);
+}
+.sunny-chat-ui {
+  background:
+    radial-gradient(ellipse at 78% 2%, rgba(255,216,77,.045), transparent 27%),
+    radial-gradient(ellipse at 8% 0%, rgba(129,94,174,.12), transparent 32%),
+    #100B22 !important;
+}
+.sunny-chat-header {
+  box-shadow: 0 1px 0 rgba(255,255,255,.025), 0 12px 32px rgba(0,0,0,.12) !important;
+}
+.chat-message-list {
+  scrollbar-gutter: stable;
+}
+@media (min-width: 900px) {
+  .sunny-home-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(20rem, .8fr);
+    gap: 1.25rem;
+    align-items: start;
+  }
+  .sunny-home-content > :first-child,
+  .sunny-home-content > .sunny-home-hero,
+  .sunny-home-content > .sunny-home-section:first-of-type {
+    grid-column: 1 / -1;
+  }
+  .sunny-home-content > .sunny-daily-card,
+  .sunny-home-content > .sunny-home-section:last-child {
+    margin: 0 !important;
+    align-self: stretch;
+  }
+  .sunny-home-content > .sunny-daily-card { min-height: 100%; }
+  .sunny-home-content > .sunny-home-section:last-child { padding-top: .1rem; }
+  .sunny-home-content > .sunny-home-section:last-child .sunny-recent-card,
+  .sunny-home-content > .sunny-home-section:last-child .sunny-app-card {
+    min-height: 8.85rem;
+  }
+  .sunny-memories-screen,
+  .sunny-settings-screen { max-width: 88rem; }
+  .sunny-memories-hero,
+  .sunny-settings-hero { min-height: 17.75rem; }
+  .sunny-settings-grid { gap: 1.5rem !important; }
+  .sunny-settings-panel { box-shadow: 0 18px 42px rgba(0,0,0,.13), inset 0 1px 0 rgba(255,255,255,.04) !important; }
+  .sunny-chat-ui {
+    width: min(100% - 2.5rem, 88rem) !important;
+    align-self: center;
+    margin: 1.25rem;
+    border: 1px solid rgba(157,125,190,.18);
+    border-radius: 1.8rem !important;
+    box-shadow: 0 28px 70px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.025);
+  }
+  .sunny-chat-header { border-top-right-radius: 1.75rem; border-top-left-radius: 1.75rem; }
+  .sunny-composer-wrap { padding-bottom: 1.1rem !important; }
+}
+@media (min-width: 1024px) {
+  .sunny-app-shell { padding-left: 6.4rem; }
+  .sunny-app-main { min-width: 0; }
+}
+:root[data-theme='sunny-light'] .sunny-app-main {
+  background:
+    linear-gradient(110deg, rgba(80,57,108,.035) 1px, transparent 1px),
+    linear-gradient(rgba(80,57,108,.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+:root[data-theme='sunny-light'] .sunny-chat-ui {
+  background:
+    radial-gradient(ellipse at 78% 2%, rgba(255,216,77,.12), transparent 27%),
+    radial-gradient(ellipse at 8% 0%, rgba(129,94,174,.10), transparent 32%),
+    #F8F6FC !important;
+}
