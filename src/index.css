@@ -771,3 +771,74 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
     animation:none !important;
   }
 }
+
+
+/* About Sunny: a warm, editorial brand page that feels like part of the companion. */
+.sunny-about-screen {
+  max-width: 48rem;
+  padding-top: clamp(1rem, 3vw, 2rem);
+  padding-bottom: max(2rem, env(safe-area-inset-bottom));
+}
+.sunny-about-screen > div:first-child button {
+  border-radius: 1rem;
+  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+}
+.sunny-about-screen > div:first-child button:hover {
+  transform: translateX(-2px);
+  background: #302149;
+  border-color: rgba(255,216,77,.35);
+}
+.sunny-about-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 17rem;
+  margin: .25rem 0 1.25rem;
+  padding: 2rem 1rem;
+  border: 1px solid rgba(196,164,235,.18);
+  border-radius: 2rem;
+  background:
+    radial-gradient(ellipse at 50% 4%, rgba(255,216,77,.17), transparent 48%),
+    radial-gradient(ellipse at 12% 85%, rgba(145,103,207,.16), transparent 48%),
+    linear-gradient(145deg, #302149 0%, #1b1230 54%, #100b22 100%);
+  box-shadow: 0 22px 60px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.06);
+}
+.sunny-about-hero::before,
+.sunny-about-hero::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 13rem;
+  height: 13rem;
+  border: 1px solid rgba(255,216,77,.12);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.sunny-about-hero::before { top: -8rem; right: -4rem; box-shadow: 0 0 0 1.5rem rgba(255,216,77,.025), 0 0 0 3rem rgba(255,216,77,.02); }
+.sunny-about-hero::after { bottom: -10rem; left: -5rem; border-color: rgba(190,156,240,.16); }
+.sunny-about-hero h2 {
+  font-size: clamp(2rem, 6vw, 2.65rem);
+  letter-spacing: -.035em;
+  line-height: 1.05;
+}
+.sunny-about-hero p { line-height: 1.55; }
+.sunny-about-screen > div:nth-child(3),
+.sunny-about-screen > div:nth-child(4) {
+  border: 1px solid rgba(178,148,218,.16);
+  border-radius: 1.5rem;
+  background: linear-gradient(145deg, rgba(43,29,70,.92), rgba(27,18,47,.94));
+  box-shadow: 0 12px 34px rgba(0,0,0,.13), inset 0 1px 0 rgba(255,255,255,.035);
+}
+.sunny-about-screen > div:nth-child(3) > div,
+.sunny-about-screen > div:nth-child(4) > div { background: transparent; }
+.sunny-about-screen h3 { font-size: 1.1rem; letter-spacing: -.015em; }
+.sunny-about-screen h4 { letter-spacing: .01em; }
+.sunny-about-screen p { line-height: 1.7; }
+@media (max-width: 640px) {
+  .sunny-about-hero { min-height: 15rem; border-radius: 1.6rem; padding: 1.75rem 1rem; }
+  .sunny-about-screen > div:nth-child(3),
+  .sunny-about-screen > div:nth-child(4) { border-radius: 1.25rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sunny-about-screen > div:first-child button { transition: none; }
+}
