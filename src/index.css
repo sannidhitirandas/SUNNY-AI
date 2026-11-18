@@ -1043,3 +1043,103 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
   .sunny-privacy-header button,.sunny-privacy-highlight { transition:none; }
   .sunny-privacy-header button:hover,.sunny-privacy-highlight:hover { transform:none; }
 }
+
+
+/* Help & emotional safety: calm, clear hierarchy for support resources and grounding. */
+.sunny-safety-screen {
+  max-width:48rem;
+  padding-top:clamp(1rem,3vw,2rem);
+  padding-bottom:max(2rem,env(safe-area-inset-bottom));
+  isolation:isolate;
+  -webkit-tap-highlight-color:transparent;
+}
+.sunny-safety-header button {
+  flex:none;
+  border-radius:1rem;
+  transition:background 180ms ease,border-color 180ms ease,transform 180ms ease;
+}
+.sunny-safety-header button:hover {
+  background:#302149;
+  border-color:rgba(255,216,77,.38);
+  transform:translateX(-2px);
+}
+.sunny-safety-header h1 { letter-spacing:-.025em; }
+.sunny-safety-boundary {
+  position:relative;
+  overflow:hidden;
+  border-radius:1.55rem;
+  background:
+    radial-gradient(ellipse at 100% 0%,rgba(255,216,77,.14),transparent 46%),
+    linear-gradient(145deg,#2b2042 0%,#17102c 76%);
+  box-shadow:0 18px 48px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.045);
+}
+.sunny-safety-boundary h2 { letter-spacing:-.02em; }
+.sunny-safety-boundary p { font-size:.82rem; line-height:1.75; }
+.sunny-safety-screen > div > h3 {
+  letter-spacing:.13em;
+}
+.sunny-safety-resource {
+  min-width:0;
+  border:1px solid rgba(166,132,204,.17);
+  border-radius:1.25rem;
+  background:linear-gradient(145deg,rgba(39,27,61,.95),rgba(27,19,45,.97));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+  transition:transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease;
+}
+.sunny-safety-resource:hover {
+  transform:translateY(-2px);
+  border-color:rgba(255,216,77,.28);
+  box-shadow:0 12px 30px rgba(0,0,0,.18);
+}
+.sunny-safety-resource h4 { letter-spacing:-.01em; }
+.sunny-safety-resource p { line-height:1.65; }
+.sunny-safety-resource a {
+  min-height:2.25rem;
+  align-items:center;
+  justify-content:center;
+  border-radius:.8rem;
+  text-decoration:none;
+}
+.sunny-grounding-card {
+  position:relative;
+  overflow:hidden;
+  min-height:17rem;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  border-radius:1.6rem;
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(255,216,77,.12),transparent 48%),
+    linear-gradient(145deg,#302149,#21163a 60%,#17102c);
+  box-shadow:0 20px 52px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.05);
+}
+.sunny-grounding-step {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:.4rem .75rem;
+  border:1px solid rgba(255,216,77,.2);
+  border-radius:999px;
+  background:rgba(255,216,77,.08);
+}
+.sunny-grounding-card h3 { letter-spacing:-.035em; text-wrap:balance; }
+.sunny-grounding-card p { line-height:1.75; }
+.sunny-safety-screen button:focus-visible,
+.sunny-safety-screen a:focus-visible {
+  outline:2px solid rgba(255,216,77,.88);
+  outline-offset:3px;
+}
+@media (max-width:480px) {
+  .sunny-safety-screen { padding-left:.9rem; padding-right:.9rem; }
+  .sunny-safety-boundary { padding:1.1rem; border-radius:1.3rem; }
+  .sunny-safety-resource { padding:.9rem; border-radius:1.05rem; }
+  .sunny-safety-resource > div:first-child { flex-wrap:wrap; }
+  .sunny-safety-resource > div:first-child > div:first-child { min-width:0; }
+  .sunny-safety-resource a { flex:none; }
+  .sunny-grounding-card { min-height:16rem; padding:1.2rem; border-radius:1.35rem; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .sunny-safety-header button,.sunny-safety-resource { transition:none; }
+  .sunny-safety-header button:hover,.sunny-safety-resource:hover { transform:none; }
+}
