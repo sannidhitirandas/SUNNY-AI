@@ -48,11 +48,19 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
   return (
 <div className="sunny-home-screen relative isolate flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-7xl mx-auto w-full pb-8 sm:pb-10 lg:px-10 xl:px-14">
-      <div className="sunny-home-atmosphere" aria-hidden="true">
-        <span className="sunny-home-aurora sunny-home-aurora-one" />
-        <span className="sunny-home-aurora sunny-home-aurora-two" />
-        <span className="sunny-home-glow sunny-home-glow-sun" />
-        <span className="sunny-home-stars" />
+      <div className="sunny-home-video-backdrop" aria-hidden="true">
+        <video
+          className="sunny-home-background-video"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          poster="/sunny-home-background-poster.jpg"
+        >
+          <source src="/sunny-home-background.mp4" type="video/mp4" />
+        </video>
+        <span className="sunny-home-video-overlay" />
       </div>
       <div className="sunny-home-content">
       {/* Top App Header */}
