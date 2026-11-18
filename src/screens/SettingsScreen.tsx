@@ -53,7 +53,7 @@ const VolumeSliderRow: React.FC<{
     <div className={`flex flex-col gap-1.5 px-4 py-3 border-b border-[#392858]/40 ${disabled ? 'opacity-40' : ''}`}>
       <div className="flex items-center justify-between text-xs sm:text-sm font-medium">
         <span className="text-white">{title}</span>
-        <span className="text-[#FFD84D] font-semibold">{percentage}%</span>
+        <span className="text-[#F5D27A] font-semibold">{percentage}%</span>
       </div>
       <input
         type="range"
@@ -64,7 +64,7 @@ const VolumeSliderRow: React.FC<{
         value={value}
         onChange={(e) => onChange(parseFloat(e.target.value))}
         aria-label={title}
-        className="w-full accent-[#FFD84D] bg-[#21163A] h-2 rounded-lg cursor-pointer"
+        className="w-full accent-[#F5D27A] bg-[#21163A] h-2 rounded-lg cursor-pointer"
       />
     </div>
   );
@@ -216,11 +216,11 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
 
       {/* Settings hero uses the same soft glow and rounded gradient as Home */}
       <section className="sunny-settings-hero relative isolate mb-7 overflow-hidden rounded-[30px] border border-[#8B6AA8]/30 bg-gradient-to-br from-[#302044] via-[#1D1431] to-[#100B22] p-5 shadow-[0_18px_55px_rgba(0,0,0,.2)] sm:p-7 lg:p-9">
-        <div aria-hidden="true" className="sunny-settings-glow pointer-events-none absolute -right-8 -top-12 h-56 w-56 rounded-full bg-[#FFD84D]/[0.10] blur-3xl" />
+        <div aria-hidden="true" className="sunny-settings-glow pointer-events-none absolute -right-8 -top-12 h-56 w-56 rounded-full bg-[#F5D27A]/[0.10] blur-3xl" />
         <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="max-w-2xl">
             <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.16em] text-[#E9DFF8]">
-              <Sparkles size={15} className="text-[#FFD84D]" /> YOUR SUNNY, YOUR WAY
+              <Sparkles size={15} className="text-[#F5D27A]" /> YOUR SUNNY, YOUR WAY
             </span>
             <h2 className="mt-3 text-3xl font-semibold leading-tight tracking-tight text-[#F8F1FF] sm:text-4xl">Make this space yours.</h2>
             <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#C6B8E5] sm:text-base">
@@ -237,7 +237,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             className="sunny-settings-profile flex items-center gap-3 rounded-[22px] border border-white/10 bg-white/[0.055] px-4 py-3.5 text-left shadow-[inset_0_1px_0_rgba(255,255,255,.05)] sm:min-w-56"
             aria-label="Edit account profile"
           >
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FFD84D]/10 text-[#FFD84D]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F5D27A]/10 text-[#F5D27A]">
               <UserIcon size={23} />
             </div>
             <div className="min-w-0">
@@ -256,14 +256,14 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         <SettingsRow
           title="Conversation Personality"
           subtitle="Change how Sunny responds to you"
-          icon={<Sparkles size={16} className="text-[#FFD84D]" />}
+          icon={<Sparkles size={16} className="text-[#F5D27A]" />}
           rightText={getPersonalityLabel(preferences.preferredTone)}
           onPress={() => setToneModalVisible(true)}
         />
         <SettingsRow
           title="Preferred Name"
           subtitle="What Sunny calls you"
-          icon={<UserIcon size={16} className="text-[#FFD84D]" />}
+          icon={<UserIcon size={16} className="text-[#F5D27A]" />}
           rightText={preferences.preferredName || user?.displayName || 'Set Name'}
           onPress={() => {
             setNewName(preferences.preferredName || user?.displayName || '');
@@ -273,14 +273,14 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         <SettingsRow
           title="Theme"
           subtitle="Choose Sunny’s appearance"
-          icon={<Palette size={16} className="text-[#FFD84D]" />}
+          icon={<Palette size={16} className="text-[#F5D27A]" />}
           rightText={preferences.theme === 'sunny-light' ? 'Sunny Day' : 'Sunny Night'}
           onPress={() => setThemeModalVisible(true)}
         />
         <SettingsRow
           title="Chat background"
           subtitle="Pick a wallpaper for your chat with Sunny"
-          icon={<ImageIcon size={16} className="text-[#FFD84D]" />}
+          icon={<ImageIcon size={16} className="text-[#F5D27A]" />}
           rightText={background.label}
           onPress={() => setBackgroundModalVisible(true)}
         />
@@ -291,7 +291,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         <SettingsRow
           title="Enable Memory"
           subtitle="Allow Sunny to remember approved details"
-          icon={<Bookmark size={16} className="text-[#FFD84D]" />}
+          icon={<Bookmark size={16} className="text-[#F5D27A]" />}
           isSwitch
           switchValue={preferences.memoryEnabled}
           onSwitchChange={toggleMemory}
@@ -299,7 +299,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         <SettingsRow
           title="Manage Saved Memories"
           subtitle="View, edit, or delete personal notes"
-          icon={<List size={16} className="text-[#FFD84D]" />}
+          icon={<List size={16} className="text-[#F5D27A]" />}
           onPress={() => onNavigateToTab('memories')}
         />
         <SettingsRow
@@ -315,7 +315,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         <SettingsRow
           title="Notification Preferences"
           subtitle={preferences.notificationsEnabled ? 'Preference is on; review Android permission and schedule status' : 'Notification preference is off'}
-          icon={<Bell size={16} className="text-[#FFD84D]" />}
+          icon={<Bell size={16} className="text-[#F5D27A]" />}
           rightText={preferences.notificationsEnabled ? 'On' : 'Off'}
           onPress={() => onNavigateSubscreen('notifications')}
         />
@@ -334,7 +334,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           <SettingsRow
             title="Set or change password"
             subtitle="Add email-and-password sign-in to this same account"
-            icon={<Lock size={16} className="text-[#FFD84D]" />}
+            icon={<Lock size={16} className="text-[#F5D27A]" />}
             onPress={() => {
               setNewPassword('');
               setConfirmNewPassword('');
@@ -346,7 +346,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         <SettingsRow
           title="Account Profile"
           subtitle={user?.email || 'Guest profile saved on this device'}
-          icon={<UserCheck size={16} className="text-[#FFD84D]" />}
+          icon={<UserCheck size={16} className="text-[#F5D27A]" />}
           rightText={user?.displayName || preferences.preferredName || 'Set name'}
           onPress={() => {
             setProfileName(user?.displayName || preferences.preferredName || '');
@@ -386,7 +386,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         <SettingsRow
           title="Sound Effects"
           subtitle="Play UI sounds for chat, buttons, and events"
-          icon={<Volume2 size={16} className="text-[#FFD84D]" />}
+          icon={<Volume2 size={16} className="text-[#F5D27A]" />}
           isSwitch
           switchValue={preferences.audioPreferences.soundEnabled}
           onSwitchChange={(enabled) => updateAudioPreferences({ soundEnabled: enabled })}
@@ -394,7 +394,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         <SettingsRow
           title="Background Music"
           subtitle="Calm ambient music in the background"
-          icon={<Music size={16} className="text-[#FFD84D]" />}
+          icon={<Music size={16} className="text-[#F5D27A]" />}
           isSwitch
           switchValue={preferences.audioPreferences.musicEnabled}
           onSwitchChange={(enabled) => updateAudioPreferences({ musicEnabled: enabled })}
@@ -440,14 +440,14 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                     }
                   }}
                   className={`sunny-settings-choice w-full flex items-center justify-between p-3.5 rounded-2xl border text-left transition-all duration-200 cursor-pointer active:scale-[.99] ${
-                    isSelected ? 'border-[#FFD84D] bg-[#FFD84D]/15' : 'border-[#392858] bg-[#21163A] hover:border-white/20'
+                    isSelected ? 'border-[#F5D27A] bg-[#F5D27A]/15' : 'border-[#392858] bg-[#21163A] hover:border-white/20'
                   }`}
                 >
                   <div>
-                    <span className={`text-xs sm:text-sm font-semibold block ${isSelected ? 'text-[#FFD84D]' : 'text-white'}`}>{opt.label}</span>
+                    <span className={`text-xs sm:text-sm font-semibold block ${isSelected ? 'text-[#F5D27A]' : 'text-white'}`}>{opt.label}</span>
                     <span className="text-[11px] text-[#9B8AB9] block mt-0.5">{opt.desc}</span>
                   </div>
-                  {isSelected && <CheckCircle2 size={16} className="text-[#FFD84D] shrink-0 ml-2" />}
+                  {isSelected && <CheckCircle2 size={16} className="text-[#F5D27A] shrink-0 ml-2" />}
                 </button>
               );
             })}
@@ -460,7 +460,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         <SettingsRow
           title="Privacy & Data Controls"
           subtitle="Review local, account, and AI conversation data"
-          icon={<Lock size={16} className="text-[#FFD84D]" />}
+          icon={<Lock size={16} className="text-[#F5D27A]" />}
           onPress={() => onNavigateSubscreen('privacy')}
         />
         <SettingsRow
@@ -512,12 +512,12 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                     }}
                     className={`sunny-personality-option w-full flex items-center justify-between p-3.5 rounded-2xl border text-left transition-colors cursor-pointer ${
                       isSelected
-                        ? 'border-[#FFD84D] bg-[#FFD84D]/15'
+                        ? 'border-[#F5D27A] bg-[#F5D27A]/15'
                         : 'border-[#392858] bg-[#302149] hover:border-white/20'
                     }`}
                   >
                     <div>
-                      <span className={`text-sm font-semibold block ${isSelected ? 'text-[#FFD84D]' : 'text-white'}`}>
+                      <span className={`text-sm font-semibold block ${isSelected ? 'text-[#F5D27A]' : 'text-white'}`}>
                         {item.label}
                       </span>
                       <span className="text-xs text-[#C6B8E5] block mt-0.5">
@@ -525,7 +525,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                       </span>
                     </div>
                     {isSelected && (
-                      <CheckCircle2 size={18} className="text-[#FFD84D] shrink-0 ml-2" />
+                      <CheckCircle2 size={18} className="text-[#F5D27A] shrink-0 ml-2" />
                     )}
                   </button>
                 );
@@ -557,14 +557,14 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                       setThemeModalVisible(false);
                     }}
                     className={`w-full flex items-center justify-between p-3 rounded-2xl border text-left transition-colors cursor-pointer ${
-                      isSelected ? 'border-[#FFD84D] bg-[#FFD84D]/15' : 'border-[#392858] bg-[#302149] hover:border-white/20'
+                      isSelected ? 'border-[#F5D27A] bg-[#F5D27A]/15' : 'border-[#392858] bg-[#302149] hover:border-white/20'
                     }`}
                   >
                     <span>
-                      <span className={`text-sm font-semibold block ${isSelected ? 'text-[#FFD84D]' : 'text-white'}`}>{item.label}</span>
+                      <span className={`text-sm font-semibold block ${isSelected ? 'text-[#F5D27A]' : 'text-white'}`}>{item.label}</span>
                       <span className="text-xs text-[#C6B8E5] block mt-0.5">{item.description}</span>
                     </span>
-                    {isSelected && <CheckCircle2 size={18} className="text-[#FFD84D] shrink-0 ml-2" />}
+                    {isSelected && <CheckCircle2 size={18} className="text-[#F5D27A] shrink-0 ml-2" />}
                   </button>
                 );
               })}
@@ -589,7 +589,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                     aria-pressed={isSelected}
                     onClick={() => setChatBackground(item.id)}
                     className={`sunny-settings-wallpaper relative overflow-hidden rounded-2xl border text-left transition-all duration-200 cursor-pointer active:scale-[.98] ${
-                      isSelected ? 'border-[#FFD84D] ring-2 ring-[#FFD84D]/60' : 'border-[#392858] hover:border-white/30'
+                      isSelected ? 'border-[#F5D27A] ring-2 ring-[#F5D27A]/60' : 'border-[#392858] hover:border-white/30'
                     }`}
                   >
                     <div
@@ -597,8 +597,8 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                       style={item.thumb ? { backgroundImage: `url(${item.thumb})` } : undefined}
                     />
                     <div className="flex items-center justify-between bg-[#302149] px-3 py-2.5">
-                      <span className={`text-sm font-semibold ${isSelected ? 'text-[#FFD84D]' : 'text-white'}`}>{item.label}</span>
-                      {isSelected && <CheckCircle2 size={16} className="text-[#FFD84D] shrink-0 ml-2" />}
+                      <span className={`text-sm font-semibold ${isSelected ? 'text-[#F5D27A]' : 'text-white'}`}>{item.label}</span>
+                      {isSelected && <CheckCircle2 size={16} className="text-[#F5D27A] shrink-0 ml-2" />}
                     </div>
                   </button>
                 );
