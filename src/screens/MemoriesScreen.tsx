@@ -59,7 +59,7 @@ export const MemoriesScreen: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-7xl mx-auto w-full pb-6 sm:pb-8 lg:px-10 xl:px-14">
+    <div className="sunny-memories-screen flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-7xl mx-auto w-full pb-8 sm:pb-10 lg:px-10 xl:px-14">
       {/* Shared Sunny website header */}
       <div className="flex items-center justify-between py-2 mb-4">
         <div className="flex items-center gap-2.5">
@@ -79,19 +79,19 @@ export const MemoriesScreen: React.FC = () => {
       </div>
 
       {/* Warm, spacious page intro matching the Home screen */}
-      <section className="relative isolate mb-6 overflow-hidden rounded-[28px] border border-[#604477]/45 bg-gradient-to-br from-[#211536] via-[#17102C] to-[#100B22] p-5 sm:p-7 lg:p-8">
-        <div aria-hidden="true" className="pointer-events-none absolute -right-8 -top-12 h-44 w-44 rounded-full bg-[#FFD84D]/[0.07] blur-3xl" />
+      <section className="sunny-memories-hero relative isolate mb-7 overflow-hidden rounded-[30px] border border-[#8B6AA8]/30 bg-gradient-to-br from-[#302044] via-[#1D1431] to-[#100B22] p-5 shadow-[0_18px_55px_rgba(0,0,0,.2)] sm:p-7 lg:p-9">
+        <div aria-hidden="true" className="sunny-memory-glow pointer-events-none absolute -right-8 -top-12 h-56 w-56 rounded-full bg-[#FFD84D]/[0.10] blur-3xl" />
         <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
             <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.16em] text-[#E9DFF8]">
               <Sparkles size={15} className="text-[#FFD84D]" /> YOUR LITTLE MEMORY VAULT
             </span>
-            <h2 className="mt-3 text-3xl font-normal tracking-tight text-[#F8F1FF] sm:text-4xl">The little things that matter 💛</h2>
+            <h2 className="mt-3 text-3xl font-semibold leading-tight tracking-tight text-[#F8F1FF] sm:text-4xl">The little things that matter 💛</h2>
             <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#C6B8E5] sm:text-base">
               A private space for the details you choose to share with Sunny. You’re always in control of what stays.
             </p>
           </div>
-          <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 sm:min-w-40">
+          <div className="sunny-memory-count flex items-center gap-3 rounded-[22px] border border-white/10 bg-white/[0.055] px-4 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,.05)] sm:min-w-40">
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#FFD84D]/10 text-[#FFD84D]">
               <Brain size={22} />
             </div>
@@ -120,14 +120,14 @@ export const MemoriesScreen: React.FC = () => {
       ) : (
         <>
           {/* Search bar */}
-          <div className="relative flex items-center my-4 max-w-2xl">
+          <div className="sunny-memory-search relative my-5 flex max-w-2xl items-center">
             <Search size={16} className="absolute left-3.5 text-[#9B8AB9]" />
             <input
               type="text"
               placeholder="Search memories..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-[#1B1430] border border-[#392858] focus:border-[#FFD84D] focus:outline-none text-white placeholder-[#9B8AB9] text-xs sm:text-sm rounded-xl pl-9 pr-8 py-2.5 transition-colors"
+              className="w-full rounded-2xl border border-[#604477]/50 bg-[#1B1430]/90 py-3 pl-10 pr-10 text-sm text-white shadow-[0_8px_24px_rgba(0,0,0,.12)] outline-none transition-all placeholder:text-[#9B8AB9] focus:border-[#FFD84D]/60 focus:ring-2 focus:ring-[#FFD84D]/[0.08]"
             />
             {searchQuery && (
               <button
@@ -141,7 +141,7 @@ export const MemoriesScreen: React.FC = () => {
           </div>
 
           {/* Category Filter Chips */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none mb-3">
+          <div className="sunny-memory-filters mb-5 flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
             {FILTER_CATEGORIES.map((item) => {
               const isSelected = selectedCategory === item.value;
               return (
@@ -151,8 +151,8 @@ export const MemoriesScreen: React.FC = () => {
                   onClick={() => setSelectedCategory(item.value)}
                   className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap border transition-colors cursor-pointer shrink-0 ${
                     isSelected
-                      ? 'bg-[#FFD84D]/15 border-[#FFD84D] text-[#FFD84D] font-bold'
-                      : 'bg-[#21163A] border-[#392858] text-[#C6B8E5] hover:border-white/20'
+                      ? 'border-[#FFD84D]/55 bg-[#FFD84D]/15 text-[#FFD84D] shadow-[0_4px_16px_rgba(255,216,77,.08)]'
+                      : 'border-[#604477]/45 bg-[#21163A]/80 text-[#B9AACA] hover:border-[#FFD84D]/30 hover:text-white'
                   }`}
                 >
                   {item.label}
@@ -162,14 +162,14 @@ export const MemoriesScreen: React.FC = () => {
           </div>
 
           {/* Memory Count */}
-          <div className="mb-3 flex items-center justify-between gap-3 px-1">
-            <span className="text-sm font-medium text-[#C6B8E5]">Your saved details</span>
+          <div className="mb-4 flex items-center justify-between gap-3 px-1">
+            <span className="text-sm font-semibold text-[#E9DFF8]">Your saved details</span>
             <span className="text-xs text-[#9B8AB9]">Choose a card to edit or remove it</span>
           </div>
 
           {/* Memory List */}
           {filteredMemories.length > 0 ? (
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid grid-cols-1 gap-3.5 md:grid-cols-2 xl:grid-cols-3">
               {filteredMemories.map((item) => (
                 <MemoryCard
                   key={item.id}
