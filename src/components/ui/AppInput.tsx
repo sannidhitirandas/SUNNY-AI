@@ -20,7 +20,7 @@ interface AppInputProps {
 
 // 16px (text-base) input text also stops mobile browsers from zooming in on focus.
 const FIELD_CLASSES =
-  'w-full bg-[#1B1430] border border-[#392858] hover:border-[#4b3570] focus:border-[#FFD84D] focus:outline-none focus:ring-2 focus:ring-[#FFD84D]/20 text-white placeholder-white/50 text-base rounded-xl px-4 py-3 transition-all disabled:opacity-60 disabled:cursor-not-allowed';
+  'sunny-app-field w-full bg-[#1B1430] border border-[#392858] hover:border-[#4b3570] focus:border-[#FFD84D] focus:outline-none focus:ring-2 focus:ring-[#FFD84D]/20 text-white placeholder-white/50 text-base rounded-xl px-4 py-3 transition-all disabled:opacity-60 disabled:cursor-not-allowed';
 
 export const AppInput: React.FC<AppInputProps> = ({
   label,
