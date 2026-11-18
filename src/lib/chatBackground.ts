@@ -145,7 +145,7 @@ export const getDeviceChatBackgrounds = (
 // Single rule for "is this a phone/tablet?" used by the picker, storage AND the
 // wallpaper image. Narrow windows, or touch-first devices up to tablet width
 // (so a phone held sideways still counts as mobile).
-const MOBILE_QUERY =
+export const MOBILE_QUERY =
   '(max-width: 767px), (pointer: coarse) and (max-width: 1024px)';
 
 const getDevice = (): ChatBackgroundDevice =>
