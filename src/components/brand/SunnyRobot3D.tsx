@@ -47,12 +47,12 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
         camera.position.set(0, compact ? 0.2 : 0.35, compact ? 7.7 : 8.4);
         camera.lookAt(0, compact ? 0.05 : 0.12, 0);
 
-        renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'low-power' });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, compact ? 1.5 : 2));
+        renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
         renderer.setSize(host.clientWidth || 1, host.clientHeight || 1);
         renderer.outputColorSpace = THREE.SRGBColorSpace;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.08;
+        renderer.toneMappingExposure = 1.12;
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         renderer.domElement.setAttribute('aria-hidden', 'true');
@@ -65,43 +65,48 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
         scene.environment = environment;
         scene.environmentIntensity = 0.9;
 
-        scene.add(new THREE.HemisphereLight(0xfff5e9, 0x34264b, 1.15));
-        const key = new THREE.DirectionalLight(0xfff2df, 2.3);
+        scene.add(new THREE.HemisphereLight(0xfdf4ff, 0x3b1768, 1.15));
+        const key = new THREE.DirectionalLight(0xfff6ff, 2.3);
         key.position.set(-3.5, 5.5, 4.5);
         key.castShadow = true;
-        key.shadow.mapSize.set(1024, 1024);
+        key.shadow.mapSize.set(2048, 2048);
         key.shadow.camera.near = 0.5;
         key.shadow.camera.far = 18;
         key.shadow.bias = -0.0005;
-        key.shadow.radius = 5;
+        key.shadow.radius = 4;
+        key.shadow.normalBias = 0.02;
         scene.add(key);
-        const rim = new THREE.DirectionalLight(0xd9c4ff, 1.7);
+        const rim = new THREE.DirectionalLight(0xf0abfc, 1.9);
         rim.position.set(4, 2.5, -4);
         scene.add(rim);
-        const warm = new THREE.PointLight(0xffc15c, 2.1, 8);
+        const warm = new THREE.PointLight(0xe879f9, 2.4, 9);
         warm.position.set(-3, 1.2, 1.5);
         scene.add(warm);
+        const fill = new THREE.PointLight(0x8b5cf6, 2.2, 9);
+        fill.position.set(3.2, -0.6, 2.2);
+        scene.add(fill);
 
         const shell = new THREE.MeshPhysicalMaterial({
           color: 0xe9e3f0, roughness: 0.32, metalness: 0.04,
           clearcoat: 0.65, clearcoatRoughness: 0.24, envMapIntensity: 1.1,
         });
         const shellLight = new THREE.MeshPhysicalMaterial({
-          color: 0xfaf7ff, roughness: 0.28, metalness: 0.025,
-          clearcoat: 0.72, clearcoatRoughness: 0.2, envMapIntensity: 1.15,
+          color: 0xfaf7ff, roughness: 0.26, metalness: 0.025,
+          clearcoat: 0.85, clearcoatRoughness: 0.16, envMapIntensity: 1.2,
+          iridescence: 0.35, iridescenceIOR: 1.3,
         });
         const dark = new THREE.MeshStandardMaterial({ color: 0x211936, roughness: 0.48, metalness: 0.24 });
         const deep = new THREE.MeshPhysicalMaterial({ color: 0x100b1e, roughness: 0.16, metalness: 0.12, clearcoat: 1 });
         const gold = new THREE.MeshStandardMaterial({ color: 0xd946ef, roughness: 0.3, metalness: 0.18, emissive: 0x4a0f5a, emissiveIntensity: 0.22 });
-        const purpleGlow = new THREE.MeshStandardMaterial({ color: 0x9d70e8, roughness: 0.35, metalness: 0.12, emissive: 0x482477, emissiveIntensity: 0.35 });
+        const purpleGlow = new THREE.MeshStandardMaterial({ color: 0xa855f7, roughness: 0.3, metalness: 0.12, emissive: 0x6d28d9, emissiveIntensity: 0.5 });
 
         const rounded = (w: number, h: number, d: number, r: number, material: any) => {
-          const mesh = new THREE.Mesh(new RoundedBoxGeometry(w, h, d, 6, r), material);
+          const mesh = new THREE.Mesh(new RoundedBoxGeometry(w, h, d, 12, r), material);
           mesh.castShadow = true;
           mesh.receiveShadow = true;
           return mesh;
         };
-        const sphere = (radius: number, material: any, segments = 24) => {
+        const sphere = (radius: number, material: any, segments = 48) => {
           const mesh = new THREE.Mesh(new THREE.SphereGeometry(radius, segments, segments), material);
           mesh.castShadow = true;
           return mesh;
@@ -114,7 +119,36 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
         const pedestalTop = rounded(1.76, 0.055, 1.58, 0.025, purpleGlow);
         pedestalTop.position.y = -1.62;
         scene.add(pedestalTop);
-        const ground = new THREE.Mesh(new THREE.CircleGeometry(2.15, 64), new THREE.MeshBasicMaterial({ color: 0x7c55b4, transparent: true, opacity: 0.13 }));
+        const glowRing = new THREE.Mesh(
+          new THREE.TorusGeometry(0.98, 0.022, 16, 160),
+          new THREE.MeshBasicMaterial({ color: 0xe879f9, transparent: true, opacity: 0.9, toneMapped: false }),
+        );
+        glowRing.rotation.x = Math.PI / 2;
+        glowRing.position.y = -1.585;
+        scene.add(glowRing);
+
+        const glowCanvas = document.createElement('canvas');
+        glowCanvas.width = 256;
+        glowCanvas.height = 256;
+        const glowCtx = glowCanvas.getContext('2d');
+        if (glowCtx) {
+          const g = glowCtx.createRadialGradient(128, 128, 0, 128, 128, 128);
+          g.addColorStop(0, 'rgba(217,70,239,0.55)');
+          g.addColorStop(0.45, 'rgba(139,43,226,0.22)');
+          g.addColorStop(1, 'rgba(139,43,226,0)');
+          glowCtx.fillStyle = g;
+          glowCtx.fillRect(0, 0, 256, 256);
+        }
+        const glowTexture = new THREE.CanvasTexture(glowCanvas);
+        glowTexture.colorSpace = THREE.SRGBColorSpace;
+        const backGlow = new THREE.Sprite(new THREE.SpriteMaterial({
+          map: glowTexture, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0.8,
+        }));
+        backGlow.scale.set(7, 7, 1);
+        backGlow.position.set(0, 0.1, -2.2);
+        scene.add(backGlow);
+
+        const ground = new THREE.Mesh(new THREE.CircleGeometry(2.15, 64), new THREE.MeshBasicMaterial({ color: 0xa855f7, transparent: true, opacity: 0.22 }));
         ground.rotation.x = -Math.PI / 2;
         ground.position.y = -1.99;
         scene.add(ground);
@@ -214,10 +248,10 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
         if (ringCtx) {
           const gradient = ringCtx.createConicGradient(3.5, 256, 256);
           gradient.addColorStop(0, '#D946EF');
-          gradient.addColorStop(0.18, '#ff9d45');
-          gradient.addColorStop(0.38, '#ff5b8f');
-          gradient.addColorStop(0.58, '#a879ed');
-          gradient.addColorStop(0.78, '#ff6a80');
+          gradient.addColorStop(0.2, '#8B2BE2');
+          gradient.addColorStop(0.4, '#F472B6');
+          gradient.addColorStop(0.6, '#A78BFA');
+          gradient.addColorStop(0.8, '#E879F9');
           gradient.addColorStop(1, '#D946EF');
           ringCtx.fillStyle = gradient;
           ringCtx.fillRect(0, 0, 512, 512);
@@ -228,11 +262,11 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
           map: ringTexture, emissiveMap: ringTexture, emissive: 0xffffff,
           emissiveIntensity: 0.18, roughness: 0.32, clearcoat: 0.65,
         });
-        const faceRing = new THREE.Mesh(new THREE.TorusGeometry(0.72, 0.075, 20, 100), ringMaterial);
+        const faceRing = new THREE.Mesh(new THREE.TorusGeometry(0.72, 0.075, 32, 180), ringMaterial);
         faceRing.position.set(0, 0.28, 0.61);
         headPivot.add(faceRing);
 
-        const bezel = new THREE.Mesh(new THREE.TorusGeometry(0.615, 0.045, 16, 96), shell);
+        const bezel = new THREE.Mesh(new THREE.TorusGeometry(0.615, 0.045, 24, 160), shell);
         bezel.position.set(0, 0.28, 0.625);
         headPivot.add(bezel);
 
@@ -251,14 +285,19 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
           faceCtx.roundRect(12, 12, 488, 360, 78);
           faceCtx.fill();
           faceCtx.shadowColor = '#F0ABFC';
-          faceCtx.shadowBlur = 26;
-          faceCtx.fillStyle = '#fff2bf';
+          faceCtx.shadowBlur = 30;
+          faceCtx.fillStyle = '#ffffff';
           faceCtx.beginPath();
           faceCtx.ellipse(174, 184, 30, Math.max(3, 43 * blink), 0, 0, Math.PI * 2);
           faceCtx.ellipse(338, 184, 30, Math.max(3, 43 * blink), 0, 0, Math.PI * 2);
           faceCtx.fill();
           faceCtx.shadowBlur = 0;
-          faceCtx.strokeStyle = '#e8c8ff';
+          faceCtx.fillStyle = 'rgba(244,114,182,0.38)';
+          faceCtx.beginPath();
+          faceCtx.ellipse(100, 244, 34, 18, 0, 0, Math.PI * 2);
+          faceCtx.ellipse(412, 244, 34, 18, 0, 0, Math.PI * 2);
+          faceCtx.fill();
+          faceCtx.strokeStyle = '#F0ABFC';
           faceCtx.lineWidth = 11;
           faceCtx.lineCap = 'round';
           faceCtx.beginPath();
@@ -268,15 +307,15 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
         };
         drawFace();
         const face = new THREE.Mesh(
-          new RoundedBoxGeometry(1.08, 0.83, 0.045, 8, 0.14),
-          new THREE.MeshPhysicalMaterial({ color: 0xffffff, map: faceTexture, emissive: 0xffffff, emissiveMap: faceTexture, emissiveIntensity: 1.25, roughness: 0.18, clearcoat: 1 }),
+          new RoundedBoxGeometry(1.08, 0.83, 0.045, 12, 0.14),
+          new THREE.MeshPhysicalMaterial({ color: 0xffffff, map: faceTexture, emissive: 0xffffff, emissiveMap: faceTexture, emissiveIntensity: 1.25, roughness: 0.18, clearcoat: 1, toneMapped: false }),
         );
         face.position.set(0, 0.28, 0.64);
         headPivot.add(face);
 
         // Side ear pods and small gold status caps.
         for (const side of [-1, 1]) {
-          const ear = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.18, 32), shell);
+          const ear = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.18, 64), shell);
           ear.rotation.z = Math.PI / 2;
           ear.position.set(side * 0.83, 0.28, 0);
           ear.castShadow = true;
@@ -285,7 +324,7 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
           cap.position.set(side * 0.93, 0.28, 0);
           headPivot.add(cap);
         }
-        const antenna = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.045, 0.23, 16), dark);
+        const antenna = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.045, 0.23, 32), dark);
         antenna.position.set(0, 1.02, 0);
         headPivot.add(antenna);
         const antennaTip = sphere(0.105, gold);
@@ -311,13 +350,26 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
         let nextBlink = 2.8 + Math.random() * 2.5;
         let blinkStarted = -1;
         const clock = new THREE.Clock();
+        let elapsed = 0;
+        let visible = true;
+        const visibilityObserver = typeof IntersectionObserver !== 'undefined'
+          ? new IntersectionObserver((entries) => { visible = entries.some((entry) => entry.isIntersecting); })
+          : undefined;
+        visibilityObserver?.observe(host);
 
         const render = () => {
           if (disposed) return;
           frame = requestAnimationFrame(render);
-          const elapsed = clock.getElapsedTime();
-          pointer.x += (pointer.tx - pointer.x) * 0.055;
-          pointer.y += (pointer.ty - pointer.y) * 0.055;
+          const delta = Math.min(clock.getDelta(), 0.05);
+          if (!visible || document.hidden) return;
+          elapsed += delta;
+          const smooth = 1 - Math.exp(-delta * 4.5);
+          pointer.x += (pointer.tx - pointer.x) * smooth;
+          pointer.y += (pointer.ty - pointer.y) * smooth;
+          const pulse = 0.5 + 0.5 * Math.sin(elapsed * 2.2);
+          gold.emissiveIntensity = 0.25 + pulse * 0.45;
+          glowRing.material.opacity = 0.6 + pulse * 0.35;
+          backGlow.material.opacity = 0.7 + pulse * 0.15;
 
           if (!reducedMotion) {
             robot.position.y = Math.sin(elapsed * 1.35) * 0.035;
@@ -329,8 +381,8 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
               arm.rotation.z = side * (Math.sin(elapsed * 1.35 + side) * 0.045);
               arm.rotation.x = Math.sin(elapsed * 1.1 + side) * 0.025;
             });
-            camera.position.x += (pointer.x * 0.18 - camera.position.x) * 0.035;
-            camera.position.y += ((compact ? 0.2 : 0.35) - pointer.y * 0.08 - camera.position.y) * 0.035;
+            camera.position.x += (pointer.x * 0.18 - camera.position.x) * smooth * 0.6;
+            camera.position.y += ((compact ? 0.2 : 0.35) - pointer.y * 0.08 - camera.position.y) * smooth * 0.6;
             if (elapsed > nextBlink && blinkStarted < 0) blinkStarted = elapsed;
             if (blinkStarted >= 0) {
               const progress = (elapsed - blinkStarted) / 0.18;
@@ -364,6 +416,7 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
           host.removeEventListener('pointermove', onPointer);
           host.removeEventListener('pointerleave', onLeave);
           resizeObserver?.disconnect();
+          visibilityObserver?.disconnect();
           scene.traverse((object: any) => {
             if (object.geometry) object.geometry.dispose();
             if (object.material) {
@@ -377,6 +430,7 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
             }
           });
           ringTexture.dispose();
+          glowTexture.dispose();
           faceTexture.dispose();
           environment.dispose();
           pmrem.dispose();
@@ -411,7 +465,7 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
       ref={hostRef}
       className={`sunny-robot-3d ${compact ? 'sunny-robot-3d-compact' : ''} ${className}`}
       role="img"
-      aria-label="Sunny, a friendly 3D robot with a glowing face and purple and yellow details"
+      aria-label="Sunny, a friendly 3D robot with a glowing face and purple and pink details"
     >
       <span className="sunny-robot-3d-fallback" aria-hidden="true">✦</span>
     </div>
