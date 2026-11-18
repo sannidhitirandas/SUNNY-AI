@@ -82,9 +82,9 @@ export const PrivacyScreen: React.FC<PrivacyScreenProps> = ({ onBack, onResetToO
   };
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-xl mx-auto w-full pb-6 sm:pb-8">
+    <div className="sunny-privacy-screen flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-xl mx-auto w-full pb-6 sm:pb-8">
       {/* Top Bar */}
-      <div className="flex items-center gap-3 py-2 mb-4">
+      <div className="sunny-privacy-header flex items-center gap-3 py-2 mb-4">
         <button
           type="button"
           onClick={onBack}
@@ -97,7 +97,7 @@ export const PrivacyScreen: React.FC<PrivacyScreenProps> = ({ onBack, onResetToO
       </div>
 
       {/* Intro Card */}
-      <AppCard className="p-5 mb-5 border-[#FFD84D]/25 bg-[#17102C]">
+      <AppCard className="sunny-privacy-intro p-5 mb-5 border-[#FFD84D]/25 bg-[#17102C]">
         <h2 className="text-base font-bold text-white mb-1.5">Where Sunny data is stored</h2>
         <p className="text-xs text-[#C6B8E5] leading-relaxed">
           {user
@@ -109,7 +109,7 @@ export const PrivacyScreen: React.FC<PrivacyScreenProps> = ({ onBack, onResetToO
       {/* Highlights */}
       <div className="space-y-3 mb-6">
         {highlights.map((h, i) => (
-          <div key={i} className="flex items-start gap-3.5 p-3 rounded-2xl bg-[#21163A] border border-[#392858]">
+          <div key={i} className="sunny-privacy-highlight flex items-start gap-3.5 p-3 rounded-2xl bg-[#21163A] border border-[#392858]">
             <div className="w-9 h-9 rounded-xl bg-[#302149] flex items-center justify-center shrink-0 mt-0.5">
               {getIcon(h.icon)}
             </div>
@@ -175,7 +175,7 @@ export const PrivacyScreen: React.FC<PrivacyScreenProps> = ({ onBack, onResetToO
             aria-modal="true"
             aria-labelledby="delete-account-title"
             aria-describedby="delete-account-description"
-            className="w-full max-w-md bg-[#21163A] border border-[#FF8D9A]/40 rounded-2xl p-5 shadow-2xl"
+            className="sunny-privacy-dialog w-full max-w-md bg-[#21163A] border border-[#FF8D9A]/40 rounded-2xl p-5 shadow-2xl"
           >
             <h2 id="delete-account-title" className="text-lg font-bold text-[#FF8D9A]">Delete your Sunny account?</h2>
             <p id="delete-account-description" className="mt-2 text-sm text-[#C6B8E5] leading-relaxed">
