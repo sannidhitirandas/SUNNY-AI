@@ -230,6 +230,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           50%      { opacity: 0.9;  transform: scale(1); }
         }
 
+        @media (max-width: 640px) {
+          .login-video-backdrop { position: fixed; inset: 0; width: 100vw; height: 100dvh; }
+          .login-background-video { display: block; width: 100%; height: 100%; min-width: 100%; min-height: 100%; object-fit: cover; object-position: center center; transform: translateZ(0); }
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .login-hero,
           .login-card,
