@@ -579,3 +579,41 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
   .sunny-memories-hero,.sunny-memory-glow { animation:none !important; }
   .sunny-memory-card { transition:none !important; }
 }
+
+
+/* Settings: grouped, tactile controls with a calm premium mobile-first layout. */
+.sunny-settings-screen { isolation:isolate; font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+.sunny-settings-hero { animation:sunny-settings-enter 480ms cubic-bezier(.2,.8,.2,1) both; box-shadow:0 18px 55px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.055); }
+.sunny-settings-glow { animation:sunny-settings-breathe 7s ease-in-out infinite; }
+.sunny-settings-profile { backdrop-filter:blur(16px); }
+.sunny-settings-section { min-width:0; }
+.sunny-settings-panel { backdrop-filter:blur(12px); }
+.sunny-settings-row { min-width:0; -webkit-tap-highlight-color:transparent; }
+.sunny-settings-row > div { min-width:0; }
+.sunny-settings-icon { transition:background 180ms ease,transform 180ms ease; }
+.sunny-settings-row:hover .sunny-settings-icon { background:#3A2A50; transform:scale(1.04); }
+.sunny-settings-row [role="switch"]:active { transform:scale(.94); }
+.sunny-settings-row [role="switch"] > span:last-child { box-shadow:0 2px 7px rgba(0,0,0,.28); }
+.sunny-settings-choice:hover,.sunny-settings-wallpaper:hover { border-color:rgba(255,216,77,.4); }
+.sunny-settings-wallpaper-thumb { transition:transform 260ms cubic-bezier(.2,.8,.2,1),filter 260ms ease; }
+.sunny-settings-wallpaper:hover .sunny-settings-wallpaper-thumb { transform:scale(1.035); filter:saturate(1.08); }
+.sunny-settings-track-picker button { -webkit-tap-highlight-color:transparent; }
+.sunny-settings-track-picker button:focus-visible,.sunny-settings-choice:focus-visible,.sunny-settings-wallpaper:focus-visible { outline:2px solid rgba(255,216,77,.85); outline-offset:3px; }
+.sunny-settings-overlay { animation:sunny-settings-overlay-in 160ms ease both; }
+.sunny-settings-dialog { box-shadow:0 24px 80px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.045); }
+.sunny-settings-screen input[type="range"] { accent-color:#FFD84D; }
+@keyframes sunny-settings-enter { from { opacity:0; transform:translateY(9px); } to { opacity:1; transform:translateY(0); } }
+@keyframes sunny-settings-breathe { 0%,100% { opacity:.6; transform:scale(.94); } 50% { opacity:1; transform:scale(1.08); } }
+@keyframes sunny-settings-overlay-in { from { opacity:0; } to { opacity:1; } }
+@media (max-width:380px) {
+  .sunny-settings-screen { padding-left:.85rem; padding-right:.85rem; }
+  .sunny-settings-hero { border-radius:24px; padding:1rem; }
+  .sunny-settings-row { min-height:68px; padding-left:.8rem; padding-right:.8rem; gap:.5rem; }
+  .sunny-settings-row .sunny-settings-icon { width:2rem; height:2rem; }
+  .sunny-settings-panel { border-radius:18px; }
+  .sunny-settings-wallpaper-thumb { height:6rem; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .sunny-settings-hero,.sunny-settings-glow,.sunny-settings-overlay { animation:none !important; }
+  .sunny-settings-icon,.sunny-settings-wallpaper-thumb { transition:none !important; }
+}
