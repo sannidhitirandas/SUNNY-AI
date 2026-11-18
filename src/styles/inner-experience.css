@@ -449,3 +449,55 @@
     radial-gradient(ellipse at 8% 0%, rgba(129,94,174,.10), transparent 32%),
     #F8F6FC !important;
 }
+
+
+/* Bottom navigation is a permanent horizontal dock on every screen size.
+   Keep it clear of Android gesture/navigation insets and above scrolling content. */
+.gooey-dock-shell {
+  position: fixed !important;
+  z-index: 1000 !important;
+  top: auto !important;
+  right: auto !important;
+  left: 50% !important;
+  bottom: calc(.75rem + env(safe-area-inset-bottom, 0px)) !important;
+  width: min(calc(100% - 1.5rem), 27rem) !important;
+  padding: .35rem .55rem !important;
+  transform: translateX(-50%) !important;
+}
+.gooey-dock-shell--hidden {
+  transform: translate(-50%, calc(100% + 2rem)) !important;
+}
+.gooey-dock {
+  min-height: 3.65rem !important;
+  flex-direction: row !important;
+  justify-content: space-around !important;
+}
+.gooey-dock__item {
+  width: auto !important;
+  min-height: 3.55rem !important;
+  flex: 1 1 0 !important;
+}
+@media (min-width: 1024px) {
+  .sunny-app-shell { padding-left: 0 !important; }
+  .gooey-dock-shell {
+    top: auto !important;
+    right: auto !important;
+    left: 50% !important;
+    bottom: calc(.9rem + env(safe-area-inset-bottom, 0px)) !important;
+    width: min(calc(100% - 2rem), 29rem) !important;
+    transform: translateX(-50%) !important;
+  }
+  .gooey-dock-shell--hidden {
+    transform: translate(-50%, calc(100% + 2rem)) !important;
+  }
+  .gooey-dock {
+    min-height: 3.65rem !important;
+    flex-direction: row !important;
+    justify-content: space-around !important;
+  }
+  .gooey-dock__item {
+    width: auto !important;
+    min-height: 3.55rem !important;
+    flex: 1 1 0 !important;
+  }
+}
