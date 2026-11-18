@@ -1425,3 +1425,169 @@ button:disabled { cursor: not-allowed; }
   .sunny-memory-deck-control:hover,
   .sunny-memory-deck-control:active { transform: none; }
 }
+
+
+/* Memory Vault keepsake deck — real overlapping paper layers, not faded duplicate cards. */
+.sunny-memory-deck {
+  position: relative;
+  padding: .25rem 0 1rem;
+}
+.sunny-memory-deck-counter {
+  color: #FFD84D;
+  font-size: .82rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .04em;
+}
+.sunny-memory-deck-counter span {
+  color: #8F80A7;
+  font-weight: 500;
+}
+.sunny-memory-deck-stage {
+  position: relative;
+  isolation: isolate;
+  padding: 0 0 2.2rem;
+}
+.sunny-memory-deck-sheet {
+  position: absolute;
+  inset: 0 0 2.2rem;
+  border: 1px solid rgba(190,160,220,.25);
+  border-radius: 1.65rem;
+  pointer-events: none;
+  transform-origin: 50% 12%;
+}
+.sunny-memory-deck-sheet-back {
+  top: 1.35rem;
+  left: 1.05rem;
+  right: -.45rem;
+  bottom: 1.15rem;
+  transform: rotate(2.7deg);
+  background: linear-gradient(145deg,#392650,#261a3b 72%);
+  box-shadow: 0 20px 34px rgba(0,0,0,.22);
+}
+.sunny-memory-deck-sheet-middle {
+  top: .7rem;
+  left: .45rem;
+  right: -.2rem;
+  bottom: 1.65rem;
+  transform: rotate(-1.35deg);
+  background:
+    radial-gradient(ellipse at 90% 0%,rgba(255,216,77,.12),transparent 48%),
+    linear-gradient(145deg,#302044,#211630 75%);
+  box-shadow: 0 15px 28px rgba(0,0,0,.2);
+}
+.sunny-memory-deck-front {
+  position: relative;
+  z-index: 2;
+  animation: sunny-memory-card-arrive 380ms cubic-bezier(.2,.8,.2,1) both;
+}
+.sunny-memory-deck-front .sunny-memory-card {
+  min-height: 16rem;
+  padding: clamp(1.15rem,3vw,1.65rem) !important;
+  border: 1px solid rgba(197,166,226,.34) !important;
+  border-radius: 1.55rem !important;
+  background:
+    radial-gradient(ellipse at 100% 0%,rgba(255,216,77,.10),transparent 40%),
+    radial-gradient(ellipse at 0% 100%,rgba(145,105,190,.13),transparent 48%),
+    linear-gradient(145deg,#2c2043 0%,#211630 58%,#191229 100%) !important;
+  box-shadow:
+    0 28px 58px rgba(0,0,0,.34),
+    0 5px 14px rgba(0,0,0,.18),
+    inset 0 1px 0 rgba(255,255,255,.075) !important;
+}
+.sunny-memory-deck-front .sunny-memory-card h3 {
+  font-size: clamp(1.15rem,2.5vw,1.35rem);
+  line-height: 1.35;
+}
+.sunny-memory-deck-front .sunny-memory-card p {
+  max-width: 58ch;
+  line-height: 1.8;
+}
+.sunny-memory-deck-front .sunny-memory-card > div:last-child {
+  margin-top: auto;
+  padding-top: 1rem;
+}
+.sunny-memory-deck-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  margin-top: .25rem;
+}
+.sunny-memory-deck-control {
+  display: grid;
+  width: 2.8rem;
+  height: 2.8rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgba(181,148,214,.25);
+  border-radius: 50%;
+  color: #FFD84D;
+  background: linear-gradient(145deg,rgba(57,39,81,.92),rgba(34,23,54,.96));
+  box-shadow: 0 8px 22px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.06);
+  font-size: 1.2rem;
+  transition: transform 180ms ease,border-color 180ms ease,background 180ms ease;
+}
+.sunny-memory-deck-control:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255,216,77,.58);
+  background: #3c2a56;
+}
+.sunny-memory-deck-control:active { transform: scale(.94); }
+.sunny-memory-deck-control:focus-visible {
+  outline: 2px solid rgba(255,216,77,.9);
+  outline-offset: 3px;
+}
+.sunny-memory-deck-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .35rem;
+  min-width: 3rem;
+}
+.sunny-memory-deck-progress span {
+  width: .35rem;
+  height: .35rem;
+  border-radius: 999px;
+  background: rgba(198,184,229,.28);
+  transition: width 220ms ease,background 220ms ease;
+}
+.sunny-memory-deck-progress span.is-active {
+  width: 1.25rem;
+  background: #FFD84D;
+}
+@keyframes sunny-memory-card-arrive {
+  from { opacity: .65; transform: translateY(9px) scale(.985) rotate(-.4deg); }
+  to { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
+}
+:root[data-theme='sunny-light'] .sunny-memory-deck-sheet-back {
+  background: linear-gradient(145deg,#E8DDF2,#DCD0E9);
+  border-color: rgba(91,67,120,.2);
+}
+:root[data-theme='sunny-light'] .sunny-memory-deck-sheet-middle {
+  background: linear-gradient(145deg,#F0E9F7,#E8DFF1);
+  border-color: rgba(91,67,120,.18);
+}
+:root[data-theme='sunny-light'] .sunny-memory-deck-front .sunny-memory-card {
+  border-color: rgba(91,67,120,.2) !important;
+  background:
+    radial-gradient(ellipse at 100% 0%,rgba(255,216,77,.14),transparent 42%),
+    linear-gradient(145deg,#fff 0%,#F7F2FC 100%) !important;
+  box-shadow: 0 24px 48px rgba(54,35,76,.16),inset 0 1px 0 #fff !important;
+}
+:root[data-theme='sunny-light'] .sunny-memory-deck-control {
+  color: #75520A;
+  border-color: rgba(91,67,120,.2);
+  background: linear-gradient(145deg,#fff,#F1EAF7);
+}
+@media (max-width: 640px) {
+  .sunny-memory-deck-sheet { border-radius: 1.3rem; }
+  .sunny-memory-deck-sheet-back { left: .65rem; right: -.2rem; }
+  .sunny-memory-deck-sheet-middle { left: .25rem; right: -.1rem; }
+  .sunny-memory-deck-front .sunny-memory-card { min-height: 15rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sunny-memory-deck-front { animation: none; }
+  .sunny-memory-deck-control,.sunny-memory-deck-progress span { transition: none; }
+  .sunny-memory-deck-control:hover,.sunny-memory-deck-control:active { transform: none; }
+}
