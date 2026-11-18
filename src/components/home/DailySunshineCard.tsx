@@ -15,22 +15,22 @@ export const DailySunshineCard: React.FC = () => {
   const [index, setIndex] = useState<number>(0);
 
   return (
-    <AppCard className="sunny-daily-card my-5 rounded-[24px] border border-[#7C6394]/30 bg-gradient-to-r from-[#302044] via-[#261B3A] to-[#211633] p-4 shadow-[0_10px_30px_rgba(0,0,0,.14)] sm:p-5">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#FFD84D]">
-          Little reminder 💛
+    <AppCard className="sunny-daily-card my-5 rounded-[24px] border border-[#8B6AC0]/25 bg-gradient-to-r from-[#2B1E45] via-[#241936] to-[#1B142C] p-4 shadow-[0_10px_30px_rgba(0,0,0,.14)] sm:p-5">
+      <div className="mb-2 flex items-center justify-between">
+        <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#C4A8FF]">
+          Little reminder
         </span>
         <button
           type="button"
           onClick={() => setIndex((prev) => (prev + 1) % DAILY_REMINDERS.length)}
-          className="inline-flex items-center gap-1.5 rounded-full border border-[#FFD84D]/20 bg-[#FFD84D]/10 px-3 py-1.5 text-xs font-semibold text-[#FFD84D] transition-all hover:border-[#FFD84D]/40 hover:bg-[#FFD84D]/20 active:scale-95 cursor-pointer"
+          className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[#A78BFA]/30 bg-[#8B5CF6]/15 px-3 py-1.5 text-xs font-semibold text-[#DCCBFF] transition-all hover:border-[#C4A8FF]/60 hover:bg-[#8B5CF6]/25 active:scale-95"
         >
           <Sparkles size={13} />
-          <span>Another ☀️</span>
+          <span>Another</span>
         </button>
       </div>
       <p key={index} className="sunny-reminder-text text-[15px] leading-relaxed text-[#F5EDFF] sm:text-xl">
-        "{DAILY_REMINDERS[index]}"
+        “{DAILY_REMINDERS[index]}”
       </p>
     </AppCard>
   );
