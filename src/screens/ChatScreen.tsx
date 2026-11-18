@@ -170,7 +170,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
       <div
         ref={messagesScrollRef}
         onScroll={handleScroll}
-        className="min-h-0 flex-1 space-y-1 overflow-y-auto bg-[radial-gradient(ellipse_at_top,rgba(48,33,73,0.18),transparent_55%)] py-4 sm:py-6"
+        className="chat-message-list min-h-0 flex-1 space-y-0 overflow-y-auto bg-[radial-gradient(ellipse_at_top,rgba(48,33,73,0.18),transparent_55%)] py-4 sm:py-6"
       >
         {hasOlderMessages && (
           <div className="flex justify-center px-4 pb-3">
@@ -188,14 +188,27 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
             </button>
           </div>
         )}
-        {messages.map((item) => (
-          <MessageBubble
-            key={item.id}
-            message={item}
-            onRetry={retryMessage}
-            onSaveAsMemory={preferences.memoryEnabled ? handleOpenSaveMemory : undefined}
-          />
-        ))}
+        {messages.map((item, index) => {
+          const previous = messages[index - 1];
+          const next = messages[index + 1];
+          const isSameGroup = (a: typeof item | undefined, b: typeof item | undefined) => {
+            if (!a || !b || a.role !== b.role) return false;
+            const aTime = Date.parse(a.createdAt);
+            const bTime = Date.parse(b.createdAt);
+            return Number.isFinite(aTime) && Number.isFinite(bTime) && Math.abs(bTime - aTime) <= 5 * 60 * 1000;
+          };
+
+          return (
+            <MessageBubble
+              key={item.id}
+              message={item}
+              isFirstInGroup={!isSameGroup(previous, item)}
+              isLastInGroup={!isSameGroup(item, next)}
+              onRetry={retryMessage}
+              onSaveAsMemory={preferences.memoryEnabled ? handleOpenSaveMemory : undefined}
+            />
+          );
+        })}
 
         {showTyping && <TypingIndicator />}
       </div>
