@@ -47,9 +47,9 @@ export const SafetyScreen: React.FC<SafetyScreenProps> = ({ onBack }) => {
   ];
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-xl mx-auto w-full pb-6 sm:pb-8">
+    <div className="sunny-safety-screen flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-xl mx-auto w-full pb-6 sm:pb-8">
       {/* Top Bar */}
-      <div className="flex items-center gap-3 py-2 mb-4">
+      <div className="sunny-safety-header flex items-center gap-3 py-2 mb-4">
         <button
           type="button"
           onClick={onBack}
@@ -62,7 +62,7 @@ export const SafetyScreen: React.FC<SafetyScreenProps> = ({ onBack }) => {
       </div>
 
       {/* Important Boundary Card */}
-      <AppCard className="p-5 mb-6 bg-[#17102C] border-[#FFD84D]/35">
+      <AppCard className="sunny-safety-boundary p-5 mb-6 bg-[#17102C] border-[#FFD84D]/35">
         <div className="flex items-center gap-2 mb-2">
           <Shield size={20} className="text-[#FFD84D]" />
           <h2 className="text-base font-bold text-[#FFD84D]">Sunny is an AI Companion</h2>
@@ -85,7 +85,7 @@ export const SafetyScreen: React.FC<SafetyScreenProps> = ({ onBack }) => {
 
         <div className="space-y-3">
           {CRISIS_RESOURCES.map((r, i) => (
-            <AppCard key={i} className="p-4 bg-[#21163A]">
+            <AppCard key={i} className="sunny-safety-resource p-4 bg-[#21163A]">
               <div className="flex items-start justify-between gap-3 mb-1.5">
                 <div className="flex items-center gap-2.5">
                   <div className="w-8 h-8 rounded-full bg-[#FF8D9A]/15 flex items-center justify-center shrink-0">
@@ -122,8 +122,8 @@ export const SafetyScreen: React.FC<SafetyScreenProps> = ({ onBack }) => {
           When things feel overwhelming, try the 5-4-3-2-1 technique to reconnect with your senses:
         </p>
 
-        <AppCard elevated className="p-6 text-center border-[#392858]">
-          <span className="text-xs font-bold text-[#FFD84D] uppercase tracking-wider block mb-1">
+        <AppCard elevated className="sunny-grounding-card p-6 text-center border-[#392858]">
+          <span className="sunny-grounding-step text-xs font-bold text-[#FFD84D] uppercase tracking-wider block mb-1">
             Step {breathingStep + 1} of {GROUNDING_STEPS.length}
           </span>
           <h3 className="text-xl font-bold text-white mb-2">

@@ -30,13 +30,13 @@ export const PasswordRecoveryScreen: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[100dvh] overflow-y-auto flex flex-col justify-center max-w-sm mx-auto w-full px-6 py-12 bg-[#100B22]">
+    <div className="sunny-auth-screen min-h-[100dvh] overflow-y-auto flex flex-col justify-center max-w-sm mx-auto w-full px-6 py-12 bg-[#100B22]">
       <div className="flex flex-col items-center text-center mb-6">
         <SunnyLogo size="large" />
         <h1 className="text-2xl font-bold text-white mt-4 mb-1">Choose a new password</h1>
         <p className="text-xs text-[#C6B8E5]">Your recovery link is ready. Set a new password to continue.</p>
       </div>
-      <form onSubmit={handleUpdatePassword} className="space-y-1">
+      <form onSubmit={handleUpdatePassword} className="sunny-auth-card rounded-3xl border border-[#604477]/45 bg-[#21163A]/85 p-5 shadow-[0_20px_50px_-24px_rgba(0,0,0,.7)] backdrop-blur-xl space-y-1">
         <AppInput
           label="New Password"
           placeholder="At least 6 characters"

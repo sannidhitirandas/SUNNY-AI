@@ -19,7 +19,11 @@ export const AppCard: React.FC<AppCardProps> = ({
   return (
     <div
       onClick={onPress}
-      className={`rounded-2xl border transition-all duration-200 ${
+      onKeyDown={isClickable ? (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onPress?.(); } } : undefined}
+      role={isClickable ? 'button' : props.role}
+      tabIndex={isClickable ? 0 : props.tabIndex}
+      data-card-interactive={isClickable ? 'true' : undefined}
+      className={`sunny-app-card rounded-2xl border transition-all duration-200 ${
         elevated
           ? 'bg-[#261a42] border-[#3e2c60] shadow-lg'
           : 'bg-[#21163A] border-[#392858]'

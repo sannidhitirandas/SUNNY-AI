@@ -199,7 +199,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   };
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-7xl mx-auto w-full pb-6 sm:pb-8 lg:px-10 xl:px-14">
+    <div className="sunny-settings-screen flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-7xl mx-auto w-full pb-8 sm:pb-10 lg:px-10 xl:px-14">
       {/* Shared Sunny website header */}
       <div className="flex items-center justify-between py-2 mb-4">
         <div className="flex items-center gap-2.5">
@@ -215,19 +215,19 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       </div>
 
       {/* Settings hero uses the same soft glow and rounded gradient as Home */}
-      <section className="relative isolate mb-7 overflow-hidden rounded-[28px] border border-[#604477]/45 bg-gradient-to-br from-[#211536] via-[#17102C] to-[#100B22] p-5 sm:p-7 lg:p-8">
-        <div aria-hidden="true" className="pointer-events-none absolute -right-8 -top-12 h-44 w-44 rounded-full bg-[#FFD84D]/[0.07] blur-3xl" />
+      <section className="sunny-settings-hero relative isolate mb-7 overflow-hidden rounded-[30px] border border-[#8B6AA8]/30 bg-gradient-to-br from-[#302044] via-[#1D1431] to-[#100B22] p-5 shadow-[0_18px_55px_rgba(0,0,0,.2)] sm:p-7 lg:p-9">
+        <div aria-hidden="true" className="sunny-settings-glow pointer-events-none absolute -right-8 -top-12 h-56 w-56 rounded-full bg-[#FFD84D]/[0.10] blur-3xl" />
         <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="max-w-2xl">
             <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.16em] text-[#E9DFF8]">
               <Sparkles size={15} className="text-[#FFD84D]" /> YOUR SUNNY, YOUR WAY
             </span>
-            <h2 className="mt-3 text-3xl font-normal tracking-tight text-[#F8F1FF] sm:text-4xl">Make this space yours.</h2>
+            <h2 className="mt-3 text-3xl font-semibold leading-tight tracking-tight text-[#F8F1FF] sm:text-4xl">Make this space yours.</h2>
             <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#C6B8E5] sm:text-base">
               Fine-tune how Sunny talks, sounds, remembers, and checks in with you. Change anything whenever you need.
             </p>
           </div>
-          <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 sm:min-w-56">
+          <div className="sunny-settings-profile flex items-center gap-3 rounded-[22px] border border-white/10 bg-white/[0.055] px-4 py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,.05)] sm:min-w-56">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FFD84D]/10 text-[#FFD84D]">
               <UserIcon size={23} />
             </div>
@@ -240,7 +240,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         </div>
       </section>
 
-      <div className="grid grid-cols-1 gap-x-6 xl:grid-cols-2">
+      <div className="sunny-settings-grid grid grid-cols-1 gap-x-6 xl:grid-cols-2">
         <div className="min-w-0">
       {/* Section A — Your Sunny */}
       <SettingsSection title="YOUR SUNNY">
@@ -409,7 +409,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
         />
 
         {/* Background Music Track Selection */}
-        <div className="px-4 py-3 space-y-2 border-t border-[#392858]/40">
+        <div className="sunny-settings-track-picker space-y-2 border-t border-[#392858]/40 px-4 py-4">
           <span className="text-xs font-semibold text-[#C6B8E5] block tracking-wider uppercase mb-1">Background Music Track</span>
           <div className="space-y-1.5">
             {[
@@ -430,7 +430,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                       await audioService.playNonChatMusic(opt.id as any);
                     }
                   }}
-                  className={`w-full flex items-center justify-between p-3 rounded-xl border text-left transition-colors cursor-pointer ${
+                  className={`sunny-settings-choice w-full flex items-center justify-between p-3.5 rounded-2xl border text-left transition-all duration-200 cursor-pointer active:scale-[.99] ${
                     isSelected ? 'border-[#FFD84D] bg-[#FFD84D]/15' : 'border-[#392858] bg-[#21163A] hover:border-white/20'
                   }`}
                 >
@@ -483,11 +483,13 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
 
       {/* Tone Picker Modal */}
       {toneModalVisible && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
-          <div role="dialog" aria-modal="true" aria-labelledby="tone-picker-title" className="w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
-            <h3 id="tone-picker-title" className="text-base font-bold text-white mb-3">
-              Choose Sunny's Personality
-            </h3>
+        <div className="sunny-settings-overlay sunny-personality-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-sm">
+          <div role="dialog" aria-modal="true" aria-labelledby="tone-picker-title" className="sunny-settings-dialog sunny-personality-dialog w-full max-w-sm bg-[#21163A] border border-[#392858] rounded-[26px] p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+            <div className="sunny-personality-heading mb-4">
+              <span className="sunny-personality-eyebrow"><Sparkles size={13} /> A LITTLE MORE YOU</span>
+              <h3 id="tone-picker-title" className="mt-2 text-xl font-bold text-white">Choose Sunny’s vibe</h3>
+              <p className="mt-1 text-sm leading-relaxed text-[#C6B8E5]">Pick the kind of energy you’d like Sunny to bring. You can change this whenever you want.</p>
+            </div>
             <div className="space-y-2 mb-4">
               {TONES.map((item) => {
                 const isSelected = preferences.preferredTone === item.tone;
@@ -499,7 +501,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                       await updateTone(item.tone);
                       setToneModalVisible(false);
                     }}
-                    className={`w-full flex items-center justify-between p-3 rounded-2xl border text-left transition-colors cursor-pointer ${
+                    className={`sunny-personality-option w-full flex items-center justify-between p-3.5 rounded-2xl border text-left transition-colors cursor-pointer ${
                       isSelected
                         ? 'border-[#FFD84D] bg-[#FFD84D]/15'
                         : 'border-[#392858] bg-[#302149] hover:border-white/20'
@@ -565,7 +567,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
 
       {backgroundModalVisible && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100B22]/80 backdrop-blur-xs">
-          <div role="dialog" aria-modal="true" aria-labelledby="chat-bg-picker-title" className="w-full max-w-md max-h-[90vh] overflow-y-auto bg-[#21163A] border border-[#392858] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
+          <div role="dialog" aria-modal="true" aria-labelledby="chat-bg-picker-title" className="sunny-settings-dialog w-full max-w-md max-h-[90vh] overflow-y-auto bg-[#21163A] border border-[#392858] rounded-[26px] p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
             <h3 id="chat-bg-picker-title" className="text-base font-bold text-white mb-1">Chat background</h3>
             <p className="text-xs text-[#C6B8E5] mb-3">{device === 'mobile' ? 'Mobile wallpapers' : 'Desktop wallpapers'} · Saved separately on this device</p>
             <div className="grid grid-cols-2 gap-3 mb-4">
@@ -577,15 +579,15 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                     type="button"
                     aria-pressed={isSelected}
                     onClick={() => setChatBackground(item.id)}
-                    className={`relative overflow-hidden rounded-2xl border text-left transition-colors cursor-pointer ${
+                    className={`sunny-settings-wallpaper relative overflow-hidden rounded-2xl border text-left transition-all duration-200 cursor-pointer active:scale-[.98] ${
                       isSelected ? 'border-[#FFD84D] ring-2 ring-[#FFD84D]/60' : 'border-[#392858] hover:border-white/30'
                     }`}
                   >
                     <div
-                      className="h-24 w-full bg-[#100B22] bg-cover bg-center"
+                      className="sunny-settings-wallpaper-thumb h-28 w-full bg-[#100B22] bg-cover bg-center"
                       style={item.thumb ? { backgroundImage: `url(${item.thumb})` } : undefined}
                     />
-                    <div className="flex items-center justify-between bg-[#302149] px-3 py-2">
+                    <div className="flex items-center justify-between bg-[#302149] px-3 py-2.5">
                       <span className={`text-sm font-semibold ${isSelected ? 'text-[#FFD84D]' : 'text-white'}`}>{item.label}</span>
                       {isSelected && <CheckCircle2 size={16} className="text-[#FFD84D] shrink-0 ml-2" />}
                     </div>

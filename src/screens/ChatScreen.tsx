@@ -19,6 +19,8 @@ interface ChatScreenProps {
   onFocus?: () => void;
   onBlur?: () => void;
   isKeyboardVisible?: boolean;
+  /** True when the bottom nav dock is hidden, so the chat can reclaim its space. */
+  isNavHidden?: boolean;
 }
 
 export const ChatScreen: React.FC<ChatScreenProps> = ({
@@ -27,17 +29,27 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   onFocus,
   onBlur,
   isKeyboardVisible = false,
+  isNavHidden,
 }) => {
+  const navHidden = isNavHidden ?? isKeyboardVisible;
   const { messages, isThinking, isLoadingOlderMessages, hasOlderMessages, loadOlderMessages, lastError, activeIntent, setActiveIntent, sendMessage, retryMessage, clearChat } = useChat();
   const { preferences } = usePreferences();
   const { addMemory } = useMemories();
-  const { background, wallpaperSrc, textGradient, setChatBackground, availableBackgrounds, device } = useChatBackground();
+  const { background, wallpaperSrc, bubbleGradient, setChatBackground, availableBackgrounds, device } = useChatBackground();
 
-  // Wallpaper-matched gradient for Sunny's message text, handed to CSS as variables.
-  // Only on when a wallpaper is picked; "Plain" keeps the normal solid text colour.
-  const gradientStops = textGradient ? (preferences.theme === 'sunny-light' ? textGradient.light : textGradient.dark) : null;
-  const gradientStyle = gradientStops
-    ? ({ '--sunny-text-1': gradientStops[0], '--sunny-text-2': gradientStops[1], '--sunny-text-3': gradientStops[2] } as React.CSSProperties)
+  // Wallpaper-matched bubble backgrounds (Sunny's and yours), handed to CSS as variables.
+  // Only on when a wallpaper is picked; "Plain" keeps the normal bubble colours.
+  const bubbleColors = bubbleGradient ? (preferences.theme === 'sunny-light' ? bubbleGradient.light : bubbleGradient.dark) : null;
+  const gradientStyle = bubbleColors
+    ? ({
+        '--sunny-bot-1': bubbleColors.sunny[0],
+        '--sunny-bot-2': bubbleColors.sunny[1],
+        '--sunny-bot-3': bubbleColors.sunny[2],
+        '--sunny-you-1': bubbleColors.you[0],
+        '--sunny-you-2': bubbleColors.you[1],
+        '--sunny-you-3': bubbleColors.you[2],
+        '--sunny-you-fg': bubbleColors.youText,
+      } as React.CSSProperties)
     : undefined;
 
   const messagesScrollRef = useRef<HTMLDivElement>(null);
@@ -120,7 +132,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
   const showTyping = isThinking && messages[messages.length - 1]?.role !== 'assistant';
 
   return (
-<div style={gradientStyle} className={`${gradientStops ? 'sunny-text-gradient-on ' : ''}relative isolate flex h-full min-h-0 w-full max-w-none flex-1 flex-col overflow-hidden bg-[#100B22] px-0 ${backgroundModalVisible || personalityModalVisible || optionsVisible || memoryModalVisible ? 'z-[60]' : 'z-0'} ${isKeyboardVisible ? 'pb-0' : 'pb-16'} sm:px-0 sm:pb-16 lg:rounded-none lg:border-0 lg:pb-24 lg:shadow-none`}>
+<div style={gradientStyle} className={`sunny-chat-ui ${bubbleColors ? 'sunny-bubbles-on ' : ''}relative isolate flex h-full min-h-0 w-full max-w-none flex-1 flex-col overflow-hidden bg-[#100B22] px-0 ${backgroundModalVisible || personalityModalVisible || optionsVisible || memoryModalVisible ? 'z-[60]' : 'z-0'} ${navHidden ? 'pb-0' : 'pb-16 lg:pb-24'} transition-[padding] duration-300 ease-out sm:px-0 lg:rounded-none lg:border-0 lg:shadow-none`}>
 
       {/* Chat wallpaper: image + theme-aware veil so message text stays readable */}
       {wallpaperSrc && (
@@ -175,7 +187,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
       <div
         ref={messagesScrollRef}
         onScroll={handleScroll}
-        className="chat-message-list min-h-0 flex-1 space-y-0 overflow-y-auto bg-[radial-gradient(ellipse_at_top,rgba(48,33,73,0.18),transparent_55%)] py-2 sm:py-3"
+        className="chat-message-list min-h-0 flex-1 space-y-0 overflow-y-auto bg-[radial-gradient(ellipse_at_top,rgba(48,33,73,0.18),transparent_55%)] pb-4 pt-1 sm:pb-5 sm:pt-2"
       >
         {hasOlderMessages && (
           <div className="flex justify-center px-4 pb-3">

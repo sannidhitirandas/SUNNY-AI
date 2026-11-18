@@ -82,7 +82,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
   };
 
   return (
-    <div className="reg-screen relative min-h-[100dvh] w-full overflow-x-hidden overflow-y-auto">
+    <div className="reg-screen sunny-auth-screen relative min-h-[100dvh] w-full overflow-x-hidden overflow-y-auto">
       <style>{`
         .reg-screen {
           background:
@@ -159,7 +159,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
 
       {/* Inline width keeps the column narrow on desktop even if global CSS overrides utility classes. */}
       <div
-        className="relative mx-auto flex min-h-[100dvh] flex-col justify-center px-5 py-10"
+        className="sunny-auth-shell relative mx-auto flex min-h-[100dvh] flex-col justify-center px-5 py-10"
         style={{ width: '100%', maxWidth: '26rem' }}
       >
         <div className="reg-hero mb-6 flex flex-col items-center text-center">
@@ -179,7 +179,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
           </p>
         </div>
 
-        <div className="reg-card rounded-3xl p-5 sm:p-6">
+        <div className="reg-card sunny-auth-card rounded-3xl p-5 sm:p-6">
           <form onSubmit={handleRegister} autoComplete="on" className="space-y-1">
             {!confirmationRequired && (
               <>

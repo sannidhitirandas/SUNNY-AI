@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
 @import "tailwindcss";
 
 @font-face {
@@ -9,7 +10,7 @@
 }
 
 @theme {
-  --font-sans: "Gabriola", Georgia, serif;
+  --font-sans: var(--sunny-ui-font), system-ui, sans-serif;
   --color-sunny-bg: #100B22;
   --color-sunny-secondary: #17102C;
   --color-sunny-card: #21163A;
@@ -27,8 +28,8 @@
 }
 
 body {
-  font-family: "Gabriola", Georgia, serif;
-  font-size: 18px;
+  font-family: var(--sunny-ui-font), system-ui, sans-serif;
+  font-size: 16px;
   background-color: var(--sunny-page-background, #100B22);
   color: var(--sunny-primary-text, #FFFFFF);
 }
@@ -258,9 +259,9 @@ html {
 }
 
 body {
-  font-family: "Gabriola", Georgia, serif;
+  font-family: var(--sunny-ui-font), system-ui, sans-serif;
   font-size: 16px;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 @media (max-width: 640px) {
@@ -406,21 +407,1342 @@ button,
   }
 }
 
-/* Wallpaper-matched gradient text for Sunny's messages.
-   ChatScreen sets --sunny-text-1/2/3 and the .sunny-text-gradient-on class
-   only when a wallpaper is selected. The selector is deliberately specific so
-   it also beats the light theme's `text-white` colour override above. */
-html:root .sunny-text-gradient-on p.sunny-gradient-text {
+/* Wallpaper-matched bubble backgrounds.
+   ChatScreen sets the --sunny-* variables and the .sunny-bubbles-on class only
+   when a wallpaper is selected. Selectors are deliberately specific so they also
+   beat the light theme's colour overrides above. Text stays solid (emoji safe). */
+html:root .sunny-bubbles-on .sunny-bot-bubble {
   background-image: linear-gradient(
-    105deg,
-    var(--sunny-text-1),
-    var(--sunny-text-2) 55%,
-    var(--sunny-text-3)
+    135deg,
+    var(--sunny-bot-1),
+    var(--sunny-bot-2) 55%,
+    var(--sunny-bot-3)
   );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent !important;
-  /* keeps descenders/ascenders from being clipped by the text-shaped mask */
-  padding-bottom: 0.08em;
+}
+
+html:root .sunny-bubbles-on .sunny-you-bubble {
+  background-image: linear-gradient(
+    135deg,
+    var(--sunny-you-1),
+    var(--sunny-you-2) 55%,
+    var(--sunny-you-3)
+  );
+  background-color: var(--sunny-you-2) !important;
+  color: var(--sunny-you-fg) !important;
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.22);
+}
+
+html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
+  color: inherit !important;
+  opacity: 0.75;
+}
+
+
+/* Sunny chat visual layer: clean mobile typography, soft glass and restrained motion. */
+.sunny-chat-ui,
+.sunny-chat-ui button,
+.sunny-chat-ui textarea {
+  font-family: var(--sunny-ui-font), system-ui, sans-serif;
+}
+.sunny-chat-header { box-shadow: 0 8px 28px rgba(0,0,0,.12); }
+.sunny-chat-avatar { animation: sunny-avatar-breathe 5s ease-in-out infinite; }
+.sunny-composer { transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease; }
+.sunny-composer:focus-within {
+  border-color: rgba(255,216,77,.42);
+  box-shadow: 0 0 0 3px rgba(255,216,77,.055), 0 12px 36px rgba(0,0,0,.28);
+}
+.sunny-send-button:not(:disabled) { animation: sunny-send-ready 240ms ease-out both; }
+.chat-message-list > * { animation: sunny-message-arrive 260ms cubic-bezier(.2,.75,.25,1) both; }
+@keyframes sunny-message-arrive {
+  from { opacity: 0; transform: translateY(7px) scale(.992); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes sunny-avatar-breathe {
+  0%,100% { box-shadow: 0 5px 22px rgba(255,216,77,.07); }
+  50% { box-shadow: 0 5px 26px rgba(255,216,77,.17); }
+}
+@keyframes sunny-send-ready {
+  from { transform: scale(.88); }
+  to { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sunny-chat-avatar, .sunny-send-button:not(:disabled), .chat-message-list > * { animation: none !important; }
+}
+
+
+/* Home screen: Voxa-inspired premium dashboard treatment, using Sunny's palette. */
+.sunny-home-screen {
+  isolation: isolate;
+  font-family: var(--sunny-ui-font), system-ui, sans-serif;
+  scrollbar-width: thin;
+}
+.sunny-home-screen::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  top: -9rem;
+  right: -8rem;
+  width: 24rem;
+  height: 24rem;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(132,91,168,.12), transparent 68%);
+}
+.sunny-home-hero {
+  box-shadow: 0 18px 55px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.055);
+  animation: sunny-home-enter 520ms cubic-bezier(.2,.8,.2,1) both;
+}
+.sunny-hero-glow { animation: sunny-home-glow 7s ease-in-out infinite; }
+.sunny-hero-art svg { filter: drop-shadow(0 12px 24px rgba(255,190,74,.12)); }
+.sunny-home-section { animation: sunny-home-enter 420ms cubic-bezier(.2,.8,.2,1) both; }
+.sunny-vibe-card { -webkit-tap-highlight-color: transparent; }
+.sunny-vibe-card:focus-visible {
+  outline: 2px solid rgba(255,216,77,.85);
+  outline-offset: 3px;
+}
+.sunny-vibe-icon { transition: transform 220ms cubic-bezier(.2,.8,.2,1); }
+.sunny-vibe-card:hover .sunny-vibe-icon { transform: rotate(-5deg) scale(1.07); }
+.sunny-daily-card { position:relative; overflow:hidden; }
+.sunny-daily-card::after {
+  content:"";
+  position:absolute;
+  top:-3rem;
+  right:-2rem;
+  width:9rem;
+  height:9rem;
+  border-radius:50%;
+  background:rgba(255,216,77,.055);
+  filter:blur(22px);
+  pointer-events:none;
+}
+.sunny-reminder-text { animation: sunny-reminder-in 260ms ease both; }
+.sunny-recent-card { -webkit-tap-highlight-color:transparent; }
+@keyframes sunny-home-enter {
+  from { opacity:0; transform:translateY(9px); }
+  to { opacity:1; transform:translateY(0); }
+}
+@keyframes sunny-home-glow {
+  0%,100% { opacity:.65; transform:scale(.95); }
+  50% { opacity:1; transform:scale(1.08); }
+}
+@keyframes sunny-reminder-in {
+  from { opacity:0; transform:translateY(4px); }
+  to { opacity:1; transform:translateY(0); }
+}
+@media (max-width: 380px) {
+  .sunny-home-screen { padding-left:.85rem; padding-right:.85rem; }
+  .sunny-home-hero { border-radius:24px; padding:1rem; }
+  .sunny-vibe-card { min-height:90px; padding:.7rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sunny-home-hero,.sunny-home-section,.sunny-hero-glow,.sunny-reminder-text { animation:none !important; }
+  .sunny-vibe-icon { transition:none; }
+}
+
+
+/* Memories page: a calm, premium memory-vault surface. */
+.sunny-memories-screen {
+  isolation:isolate;
+  font-family: var(--sunny-ui-font), system-ui, sans-serif;
+}
+.sunny-memories-hero {
+  animation:sunny-memory-enter 480ms cubic-bezier(.2,.8,.2,1) both;
+  box-shadow:0 18px 55px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.055);
+}
+.sunny-memory-glow { animation:sunny-memory-breathe 7s ease-in-out infinite; }
+.sunny-memory-count { backdrop-filter:blur(16px); }
+.sunny-memory-search input { -webkit-appearance:none; }
+.sunny-memory-filters { scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+.sunny-memory-filters::-webkit-scrollbar { display:none; }
+.sunny-memory-card { min-width:0; -webkit-tap-highlight-color:transparent; }
+.sunny-memory-card h3,.sunny-memory-card p { overflow-wrap:anywhere; }
+.sunny-memory-card button:focus-visible,
+.sunny-memory-filters button:focus-visible,
+.sunny-memories-screen button:focus-visible {
+  outline:2px solid rgba(255,216,77,.8);
+  outline-offset:3px;
+}
+@keyframes sunny-memory-enter {
+  from { opacity:0; transform:translateY(9px); }
+  to { opacity:1; transform:translateY(0); }
+}
+@keyframes sunny-memory-breathe {
+  0%,100% { opacity:.6; transform:scale(.94); }
+  50% { opacity:1; transform:scale(1.08); }
+}
+@media (max-width:380px) {
+  .sunny-memories-screen { padding-left:.85rem; padding-right:.85rem; }
+  .sunny-memories-hero { border-radius:24px; padding:1rem; }
+  .sunny-memory-card { padding:.9rem; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .sunny-memories-hero,.sunny-memory-glow { animation:none !important; }
+  .sunny-memory-card { transition:none !important; }
+}
+
+
+/* Settings: grouped, tactile controls with a calm premium mobile-first layout. */
+.sunny-settings-screen { isolation:isolate; font-family: var(--sunny-ui-font), system-ui, sans-serif; }
+.sunny-settings-hero { animation:sunny-settings-enter 480ms cubic-bezier(.2,.8,.2,1) both; box-shadow:0 18px 55px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.055); }
+.sunny-settings-glow { animation:sunny-settings-breathe 7s ease-in-out infinite; }
+.sunny-settings-profile { backdrop-filter:blur(16px); }
+.sunny-settings-section { min-width:0; }
+.sunny-settings-panel { backdrop-filter:blur(12px); }
+.sunny-settings-row { min-width:0; -webkit-tap-highlight-color:transparent; }
+.sunny-settings-row > div { min-width:0; }
+.sunny-settings-icon { transition:background 180ms ease,transform 180ms ease; }
+.sunny-settings-row:hover .sunny-settings-icon { background:#3A2A50; transform:scale(1.04); }
+.sunny-settings-row [role="switch"]:active { transform:scale(.94); }
+.sunny-settings-row [role="switch"] > span:last-child { box-shadow:0 2px 7px rgba(0,0,0,.28); }
+.sunny-settings-choice:hover,.sunny-settings-wallpaper:hover { border-color:rgba(255,216,77,.4); }
+.sunny-settings-wallpaper-thumb { transition:transform 260ms cubic-bezier(.2,.8,.2,1),filter 260ms ease; }
+.sunny-settings-wallpaper:hover .sunny-settings-wallpaper-thumb { transform:scale(1.035); filter:saturate(1.08); }
+.sunny-settings-track-picker button { -webkit-tap-highlight-color:transparent; }
+.sunny-settings-track-picker button:focus-visible,.sunny-settings-choice:focus-visible,.sunny-settings-wallpaper:focus-visible { outline:2px solid rgba(255,216,77,.85); outline-offset:3px; }
+.sunny-settings-overlay { animation:sunny-settings-overlay-in 160ms ease both; }
+.sunny-settings-dialog { box-shadow:0 24px 80px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.045); }
+.sunny-settings-screen input[type="range"] { accent-color:#FFD84D; }
+@keyframes sunny-settings-enter { from { opacity:0; transform:translateY(9px); } to { opacity:1; transform:translateY(0); } }
+@keyframes sunny-settings-breathe { 0%,100% { opacity:.6; transform:scale(.94); } 50% { opacity:1; transform:scale(1.08); } }
+@keyframes sunny-settings-overlay-in { from { opacity:0; } to { opacity:1; } }
+@media (max-width:380px) {
+  .sunny-settings-screen { padding-left:.85rem; padding-right:.85rem; }
+  .sunny-settings-hero { border-radius:24px; padding:1rem; }
+  .sunny-settings-row { min-height:68px; padding-left:.8rem; padding-right:.8rem; gap:.5rem; }
+  .sunny-settings-row .sunny-settings-icon { width:2rem; height:2rem; }
+  .sunny-settings-panel { border-radius:18px; }
+  .sunny-settings-wallpaper-thumb { height:6rem; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .sunny-settings-hero,.sunny-settings-glow,.sunny-settings-overlay { animation:none !important; }
+  .sunny-settings-icon,.sunny-settings-wallpaper-thumb { transition:none !important; }
+}
+
+
+/* Notification preferences: warm schedule dashboard and touch-friendly controls. */
+.sunny-notifications-screen {
+  isolation:isolate;
+  font-family: var(--sunny-ui-font), system-ui, sans-serif;
+}
+.sunny-notifications-header { animation:sunny-notice-enter 420ms cubic-bezier(.2,.8,.2,1) both; }
+.sunny-notifications-status {
+  animation:sunny-notice-enter 480ms cubic-bezier(.2,.8,.2,1) both;
+}
+.sunny-notifications-status::after {
+  content:""; position:absolute; z-index:-1; width:12rem; height:12rem; right:-4rem; top:-5rem;
+  border-radius:999px; background:rgba(255,216,77,.10); filter:blur(42px); pointer-events:none;
+}
+.sunny-notifications-screen .sunny-settings-section { margin-bottom:1.35rem; }
+.sunny-notifications-screen .sunny-settings-panel { border-radius:22px; }
+.sunny-notifications-screen .sunny-settings-row { min-height:72px; }
+.sunny-notifications-time,.sunny-notifications-select { min-height:40px; }
+.sunny-notifications-preview-card {
+  border-radius:20px;
+  transition:transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease;
+}
+.sunny-notifications-preview-card:hover {
+  transform:translateY(-2px);
+  border-color:rgba(255,216,77,.3);
+  box-shadow:0 14px 32px rgba(0,0,0,.2);
+}
+.sunny-notifications-screen button:focus-visible,
+.sunny-notifications-screen input:focus-visible,
+.sunny-notifications-screen select:focus-visible {
+  outline:2px solid rgba(255,216,77,.85); outline-offset:3px;
+}
+@keyframes sunny-notice-enter {
+  from { opacity:0; transform:translateY(8px); }
+  to { opacity:1; transform:translateY(0); }
+}
+@media (max-width:380px) {
+  .sunny-notifications-screen { padding-left:.85rem; padding-right:.85rem; }
+  .sunny-notifications-status { border-radius:22px; padding:1rem; }
+  .sunny-notifications-screen .sunny-settings-panel { border-radius:18px; }
+  .sunny-notifications-screen .sunny-settings-row { min-height:68px; padding-left:.8rem; padding-right:.8rem; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .sunny-notifications-header,.sunny-notifications-status { animation:none !important; }
+  .sunny-notifications-preview-card { transition:none !important; }
+}
+
+/* Sunny onboarding: cohesive mobile-first welcome and setup flow. */
+.sunny-onboarding {
+  min-height:100vh;
+  min-height:100dvh;
+  isolation:isolate;
+  overscroll-behavior-y:contain;
+  -webkit-tap-highlight-color:transparent;
+}
+.sunny-onboarding-shell { padding-left:clamp(1.15rem,5vw,1.5rem); padding-right:clamp(1.15rem,5vw,1.5rem); }
+.sunny-onboarding .ob-step { width:100%; }
+.sunny-onboarding .ob-step > div:first-child { min-width:0; }
+.sunny-onboarding .ob-step h1,.sunny-onboarding .ob-step h2 { text-wrap:balance; }
+.sunny-onboarding .ob-step p { text-wrap:pretty; }
+.sunny-onboarding-choice {
+  min-height:76px;
+  border-radius:21px;
+  background:linear-gradient(145deg,rgba(39,27,61,.94),rgba(28,19,45,.92));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+  -webkit-tap-highlight-color:transparent;
+}
+.sunny-onboarding-choice[aria-pressed="true"] {
+  background:linear-gradient(145deg,rgba(62,43,82,.98),rgba(39,27,68,.98));
+  border-color:rgba(255,216,77,.85);
+}
+.sunny-onboarding-choice:active,.sunny-onboarding-interest:active { transform:scale(.985); }
+.sunny-onboarding-interest {
+  min-height:42px;
+  border-radius:999px;
+  background:rgba(33,22,58,.72);
+  -webkit-tap-highlight-color:transparent;
+}
+.sunny-onboarding-interest[aria-pressed="true"] {
+  background:linear-gradient(135deg,rgba(72,51,94,.95),rgba(43,29,74,.98));
+  border-color:rgba(255,216,77,.85);
+}
+.sunny-onboarding .ob-cta { border-radius:18px; }
+.sunny-onboarding .ob-cta button { min-height:52px; border-radius:16px; }
+.sunny-onboarding .ob-step button:focus-visible {
+  outline:2px solid rgba(255,216,77,.9);
+  outline-offset:3px;
+}
+.sunny-onboarding-quote,.sunny-onboarding-note,.sunny-onboarding-notification-preview {
+  box-shadow:0 16px 42px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.035);
+}
+.sunny-onboarding-notification-preview { border-radius:22px; }
+.sunny-onboarding .ob-step > div:last-child { padding-bottom:max(0px,env(safe-area-inset-bottom)); }
+.sunny-onboarding .ob-step > div:first-child { animation:sunny-onboarding-enter 420ms cubic-bezier(.2,.8,.2,1) both; }
+.sunny-onboarding .ob-progress-fill { border-radius:999px; }
+@keyframes sunny-onboarding-enter {
+  from { opacity:0; transform:translateY(9px); }
+  to { opacity:1; transform:translateY(0); }
+}
+@media (min-width:640px) {
+  .sunny-onboarding-shell { padding-top:2.5rem; padding-bottom:2.5rem; }
+  .sunny-onboarding-choice { padding:1.1rem; }
+}
+@media (max-width:380px) {
+  .sunny-onboarding-shell { padding-top:1.1rem; padding-bottom:1.1rem; }
+  .sunny-onboarding .ob-step h2 { font-size:1.7rem; line-height:1.18; }
+  .sunny-onboarding-choice { min-height:68px; padding:.85rem; border-radius:18px; }
+  .sunny-onboarding-interest { padding:.6rem .85rem; font-size:.8rem; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .sunny-onboarding .ob-step > div:first-child { animation:none !important; }
+  .sunny-onboarding-choice,.sunny-onboarding-interest { transition:none !important; }
+}
+
+/* Shared auth surfaces: consistent with Sunny's dark, cozy app shell. */
+.sunny-auth-screen {
+  isolation:isolate;
+  -webkit-tap-highlight-color:transparent;
+  overscroll-behavior-y:contain;
+}
+.sunny-auth-shell { padding-left:clamp(1.1rem,5vw,1.5rem); padding-right:clamp(1.1rem,5vw,1.5rem); }
+.sunny-auth-card {
+  border-color:rgba(115,83,145,.48);
+  background:linear-gradient(145deg,rgba(39,27,61,.94),rgba(25,17,42,.96));
+  box-shadow:0 24px 65px -32px rgba(0,0,0,.82),inset 0 1px 0 rgba(255,255,255,.035);
+}
+.sunny-auth-screen input {
+  min-height:46px;
+  border-radius:13px;
+}
+.sunny-auth-screen input:focus {
+  border-color:rgba(255,216,77,.72);
+  box-shadow:0 0 0 2px rgba(255,216,77,.10);
+}
+.sunny-auth-screen button { -webkit-tap-highlight-color:transparent; }
+.sunny-auth-screen button:focus-visible {
+  outline:2px solid rgba(255,216,77,.85);
+  outline-offset:3px;
+}
+.sunny-auth-screen .login-cta,.sunny-auth-screen .reg-cta { border-radius:17px; }
+.sunny-auth-screen .login-cta button,.sunny-auth-screen .reg-cta button { min-height:52px; border-radius:16px; }
+.sunny-auth-screen .login-card,.sunny-auth-screen .reg-card { border-radius:26px; }
+@media (max-width:380px) {
+  .sunny-auth-shell { padding-top:1.25rem; padding-bottom:1.25rem; }
+  .sunny-auth-card { padding:1rem; border-radius:22px; }
+  .sunny-auth-screen .login-hero,.sunny-auth-screen .reg-hero { margin-bottom:1.15rem; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .sunny-auth-screen .login-hero,.sunny-auth-screen .login-card,
+  .sunny-auth-screen .reg-hero,.sunny-auth-screen .reg-card {
+    animation:none !important;
+  }
+}
+
+
+/* About Sunny: a warm, editorial brand page that feels like part of the companion. */
+.sunny-about-screen {
+  max-width: 48rem;
+  padding-top: clamp(1rem, 3vw, 2rem);
+  padding-bottom: max(2rem, env(safe-area-inset-bottom));
+}
+.sunny-about-screen > div:first-child button {
+  border-radius: 1rem;
+  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+}
+.sunny-about-screen > div:first-child button:hover {
+  transform: translateX(-2px);
+  background: #302149;
+  border-color: rgba(255,216,77,.35);
+}
+.sunny-about-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 17rem;
+  margin: .25rem 0 1.25rem;
+  padding: 2rem 1rem;
+  border: 1px solid rgba(196,164,235,.18);
+  border-radius: 2rem;
+  background:
+    radial-gradient(ellipse at 50% 4%, rgba(255,216,77,.17), transparent 48%),
+    radial-gradient(ellipse at 12% 85%, rgba(145,103,207,.16), transparent 48%),
+    linear-gradient(145deg, #302149 0%, #1b1230 54%, #100b22 100%);
+  box-shadow: 0 22px 60px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.06);
+}
+.sunny-about-hero::before,
+.sunny-about-hero::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 13rem;
+  height: 13rem;
+  border: 1px solid rgba(255,216,77,.12);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.sunny-about-hero::before { top: -8rem; right: -4rem; box-shadow: 0 0 0 1.5rem rgba(255,216,77,.025), 0 0 0 3rem rgba(255,216,77,.02); }
+.sunny-about-hero::after { bottom: -10rem; left: -5rem; border-color: rgba(190,156,240,.16); }
+.sunny-about-hero h2 {
+  font-size: clamp(2rem, 6vw, 2.65rem);
+  letter-spacing: -.035em;
+  line-height: 1.05;
+}
+.sunny-about-hero p { line-height: 1.55; }
+.sunny-about-screen > div:nth-child(3),
+.sunny-about-screen > div:nth-child(4) {
+  border: 1px solid rgba(178,148,218,.16);
+  border-radius: 1.5rem;
+  background: linear-gradient(145deg, rgba(43,29,70,.92), rgba(27,18,47,.94));
+  box-shadow: 0 12px 34px rgba(0,0,0,.13), inset 0 1px 0 rgba(255,255,255,.035);
+}
+.sunny-about-screen > div:nth-child(3) > div,
+.sunny-about-screen > div:nth-child(4) > div { background: transparent; }
+.sunny-about-screen h3 { font-size: 1.1rem; letter-spacing: -.015em; }
+.sunny-about-screen h4 { letter-spacing: .01em; }
+.sunny-about-screen p { line-height: 1.7; }
+@media (max-width: 640px) {
+  .sunny-about-hero { min-height: 15rem; border-radius: 1.6rem; padding: 1.75rem 1rem; }
+  .sunny-about-screen > div:nth-child(3),
+  .sunny-about-screen > div:nth-child(4) { border-radius: 1.25rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sunny-about-screen > div:first-child button { transition: none; }
+}
+
+
+/* Personality & mood selection: make each companion style feel like a distinct, tactile choice. */
+.sunny-personality-dialog {
+  max-height: min(88dvh, 44rem);
+  overflow-y: auto;
+  border-radius: 1.8rem;
+  background:
+    radial-gradient(ellipse at 92% 0%, rgba(255,216,77,.10), transparent 42%),
+    linear-gradient(150deg, #281b40 0%, #21163a 58%, #19112d 100%);
+  box-shadow: 0 28px 90px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.055);
+}
+.sunny-personality-heading { position: relative; }
+.sunny-personality-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  color: #FFD84D;
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .16em;
+}
+.sunny-personality-option {
+  min-height: 5rem;
+  gap: .85rem;
+  background: rgba(48,33,73,.56);
+  border-color: rgba(151,119,190,.22);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+.sunny-personality-option:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255,216,77,.48);
+  background: rgba(65,45,94,.72);
+}
+.sunny-personality-option:active { transform: scale(.99); }
+.sunny-personality-option:focus-visible {
+  outline: 2px solid #FFD84D;
+  outline-offset: 3px;
+}
+.sunny-personality-option.border-\[\#FFD84D\] {
+  background: linear-gradient(115deg, rgba(255,216,77,.14), rgba(255,216,77,.045));
+  box-shadow: 0 8px 26px rgba(255,216,77,.07), inset 0 1px 0 rgba(255,255,255,.055);
+}
+.sunny-personality-option span:first-child { line-height: 1.35; }
+@media (max-width: 480px) {
+  .sunny-personality-dialog { padding: 1.1rem; border-radius: 1.45rem; }
+  .sunny-personality-option { padding: .85rem; gap: .65rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sunny-personality-option { transition: none; }
+  .sunny-personality-option:hover,
+  .sunny-personality-option:active { transform: none; }
+}
+
+
+/* Daily mood check-in: gentle, private-feeling reflection on the home screen. */
+.sunny-mood-card {
+  position:relative;
+  overflow:hidden;
+  padding:1.25rem;
+  border:1px solid rgba(166,132,204,.2);
+  border-radius:1.65rem;
+  background:
+    radial-gradient(ellipse at 100% 0%,rgba(255,216,77,.09),transparent 42%),
+    linear-gradient(145deg,rgba(42,29,67,.96),rgba(25,17,43,.98));
+  box-shadow:0 18px 48px rgba(0,0,0,.17),inset 0 1px 0 rgba(255,255,255,.04);
+}
+.sunny-mood-heading { display:flex; align-items:flex-start; gap:.8rem; }
+.sunny-mood-heading-icon {
+  display:grid; place-items:center; flex:none; width:2.5rem; height:2.5rem;
+  border:1px solid rgba(255,216,77,.2); border-radius: .9rem;
+  color:#FFD84D; background:rgba(255,216,77,.09);
+}
+.sunny-mood-eyebrow { margin:0 0 .25rem; color:#FFD84D; font-size:.62rem; font-weight:800; letter-spacing:.15em; }
+.sunny-mood-heading h2 { color:#fff; font-size:1.2rem; font-weight:750; letter-spacing:-.025em; line-height:1.25; }
+.sunny-mood-heading p:last-child { margin-top:.3rem; color:#BDAFD3; font-size:.78rem; line-height:1.5; }
+.sunny-mood-options { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:.45rem; margin-top:1.2rem; }
+.sunny-mood-option {
+  display:flex; min-width:0; min-height:5rem; flex-direction:column; align-items:center; justify-content:center; gap:.35rem;
+  border:1px solid rgba(165,135,198,.18); border-radius:1rem; color:#CFC2E0;
+  background:rgba(255,255,255,.025); font-size:.68rem; font-weight:650;
+  transition:transform 180ms ease,border-color 180ms ease,background 180ms ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.sunny-mood-option:hover { transform:translateY(-2px); border-color:rgba(255,216,77,.4); background:rgba(255,216,77,.055); }
+.sunny-mood-option[aria-pressed="true"] {
+  color:#FFF5CC; border-color:rgba(255,216,77,.72);
+  background:linear-gradient(145deg,rgba(255,216,77,.16),rgba(255,216,77,.055));
+  box-shadow:0 6px 22px rgba(255,216,77,.07),inset 0 1px 0 rgba(255,255,255,.05);
+}
+.sunny-mood-option:disabled { opacity:.55; cursor:wait; }
+.sunny-mood-emoji { font-size:1.55rem; line-height:1.2; }
+.sunny-mood-option:focus-visible,.sunny-mood-reflection textarea:focus-visible {
+  outline:2px solid rgba(255,216,77,.85); outline-offset:3px;
+}
+.sunny-mood-reflection { margin-top:1rem; padding-top:1rem; border-top:1px solid rgba(180,151,214,.13); }
+.sunny-mood-reflection label { display:block; margin-bottom:.5rem; color:#E9DFF6; font-size:.78rem; font-weight:650; }
+.sunny-mood-reflection textarea {
+  display:block; width:100%; resize:vertical; min-height:4rem; padding:.75rem .85rem;
+  border:1px solid rgba(166,132,204,.22); border-radius:.9rem; color:#F8F3FF;
+  background:rgba(12,8,25,.35); font:inherit; font-size:.8rem; line-height:1.5;
+}
+.sunny-mood-reflection textarea::placeholder { color:#8F80A7; }
+.sunny-mood-saved { display:block; margin-top:.4rem; color:#9D8DB5; font-size:.65rem; text-align:right; }
+.sunny-mood-week { margin-top:1.1rem; padding-top:.9rem; border-top:1px solid rgba(180,151,214,.13); }
+.sunny-mood-week-title { margin-bottom:.6rem; color:#BDAFD3; font-size:.68rem; font-weight:700; letter-spacing:.04em; }
+.sunny-mood-week-days { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:.35rem; }
+.sunny-mood-day { display:flex; min-width:0; flex-direction:column; align-items:center; gap:.3rem; color:#9D8DB5; font-size:.62rem; }
+.sunny-mood-day-emoji { display:grid; place-items:center; width:2rem; height:2rem; border:1px solid rgba(166,132,204,.15); border-radius:50%; color:#8E7EA5; background:rgba(255,255,255,.025); font-size:1rem; }
+.sunny-mood-day.is-today .sunny-mood-day-emoji { border-color:rgba(255,216,77,.4); color:#FFD84D; background:rgba(255,216,77,.08); }
+.sunny-mood-day.is-today { color:#F3DFA2; }
+@media (max-width:420px) {
+  .sunny-mood-card { padding:1rem; border-radius:1.35rem; }
+  .sunny-mood-options { gap:.3rem; }
+  .sunny-mood-option { min-height:4.55rem; border-radius:.8rem; font-size:.62rem; }
+  .sunny-mood-emoji { font-size:1.35rem; }
+  .sunny-mood-day-emoji { width:1.8rem; height:1.8rem; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .sunny-mood-option { transition:none; }
+  .sunny-mood-option:hover { transform:none; }
+}
+
+
+/* Privacy & data controls: make sensitive actions clear, calm and deliberate. */
+.sunny-privacy-screen {
+  max-width:48rem;
+  padding-top:clamp(1rem,3vw,2rem);
+  padding-bottom:max(2rem,env(safe-area-inset-bottom));
+  isolation:isolate;
+  -webkit-tap-highlight-color:transparent;
+}
+.sunny-privacy-header button {
+  flex:none;
+  border-radius:1rem;
+  transition:background 180ms ease,border-color 180ms ease,transform 180ms ease;
+}
+.sunny-privacy-header button:hover {
+  background:#302149;
+  border-color:rgba(255,216,77,.38);
+  transform:translateX(-2px);
+}
+.sunny-privacy-header h1 { letter-spacing:-.025em; }
+.sunny-privacy-intro {
+  position:relative;
+  overflow:hidden;
+  border-radius:1.55rem;
+  background:
+    radial-gradient(ellipse at 100% 0%,rgba(255,216,77,.13),transparent 48%),
+    linear-gradient(145deg,#281b40 0%,#17102c 75%);
+  box-shadow:0 18px 48px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.045);
+}
+.sunny-privacy-intro h2 { letter-spacing:-.02em; }
+.sunny-privacy-intro p { font-size:.8rem; line-height:1.7; }
+.sunny-privacy-highlight {
+  min-width:0;
+  padding:1rem;
+  border-radius:1.2rem;
+  background:linear-gradient(145deg,rgba(39,27,61,.92),rgba(29,20,47,.96));
+  border-color:rgba(166,132,204,.17);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+  transition:transform 180ms ease,border-color 180ms ease;
+}
+.sunny-privacy-highlight:hover { transform:translateY(-1px); border-color:rgba(255,216,77,.25); }
+.sunny-privacy-highlight h3 { letter-spacing:-.01em; }
+.sunny-privacy-highlight p { line-height:1.65; overflow-wrap:anywhere; }
+.sunny-privacy-screen .sunny-settings-section { margin-bottom:1.25rem; }
+.sunny-privacy-screen .sunny-settings-panel {
+  border-radius:1.35rem;
+  border-color:rgba(166,132,204,.18);
+  background:linear-gradient(145deg,rgba(39,27,61,.94),rgba(25,17,43,.97));
+}
+.sunny-privacy-screen .sunny-settings-row { min-height:4.5rem; }
+.sunny-privacy-screen .sunny-settings-row:focus-within { outline-offset:-2px; }
+.sunny-privacy-dialog {
+  max-height:min(88dvh,42rem);
+  overflow-y:auto;
+  border-radius:1.65rem;
+  background:
+    radial-gradient(ellipse at 100% 0%,rgba(255,141,154,.10),transparent 45%),
+    linear-gradient(145deg,#2b1c40,#21163a 65%,#19112d);
+  box-shadow:0 28px 90px rgba(0,0,0,.52),inset 0 1px 0 rgba(255,255,255,.04);
+}
+.sunny-privacy-screen button:focus-visible,
+.sunny-privacy-screen input:focus-visible {
+  outline:2px solid rgba(255,216,77,.86);
+  outline-offset:3px;
+}
+.sunny-privacy-dialog button:focus-visible { outline-color:rgba(255,141,154,.9); }
+@media (max-width:480px) {
+  .sunny-privacy-screen { padding-left:.9rem; padding-right:.9rem; }
+  .sunny-privacy-intro { border-radius:1.3rem; padding:1.1rem; }
+  .sunny-privacy-highlight { padding:.85rem; gap:.7rem; border-radius:1.05rem; }
+  .sunny-privacy-screen .sunny-settings-panel { border-radius:1.15rem; }
+  .sunny-privacy-dialog { padding:1.1rem; border-radius:1.4rem; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .sunny-privacy-header button,.sunny-privacy-highlight { transition:none; }
+  .sunny-privacy-header button:hover,.sunny-privacy-highlight:hover { transform:none; }
+}
+
+
+/* Help & emotional safety: calm, clear hierarchy for support resources and grounding. */
+.sunny-safety-screen {
+  max-width:48rem;
+  padding-top:clamp(1rem,3vw,2rem);
+  padding-bottom:max(2rem,env(safe-area-inset-bottom));
+  isolation:isolate;
+  -webkit-tap-highlight-color:transparent;
+}
+.sunny-safety-header button {
+  flex:none;
+  border-radius:1rem;
+  transition:background 180ms ease,border-color 180ms ease,transform 180ms ease;
+}
+.sunny-safety-header button:hover {
+  background:#302149;
+  border-color:rgba(255,216,77,.38);
+  transform:translateX(-2px);
+}
+.sunny-safety-header h1 { letter-spacing:-.025em; }
+.sunny-safety-boundary {
+  position:relative;
+  overflow:hidden;
+  border-radius:1.55rem;
+  background:
+    radial-gradient(ellipse at 100% 0%,rgba(255,216,77,.14),transparent 46%),
+    linear-gradient(145deg,#2b2042 0%,#17102c 76%);
+  box-shadow:0 18px 48px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.045);
+}
+.sunny-safety-boundary h2 { letter-spacing:-.02em; }
+.sunny-safety-boundary p { font-size:.82rem; line-height:1.75; }
+.sunny-safety-screen > div > h3 {
+  letter-spacing:.13em;
+}
+.sunny-safety-resource {
+  min-width:0;
+  border:1px solid rgba(166,132,204,.17);
+  border-radius:1.25rem;
+  background:linear-gradient(145deg,rgba(39,27,61,.95),rgba(27,19,45,.97));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+  transition:transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease;
+}
+.sunny-safety-resource:hover {
+  transform:translateY(-2px);
+  border-color:rgba(255,216,77,.28);
+  box-shadow:0 12px 30px rgba(0,0,0,.18);
+}
+.sunny-safety-resource h4 { letter-spacing:-.01em; }
+.sunny-safety-resource p { line-height:1.65; }
+.sunny-safety-resource a {
+  min-height:2.25rem;
+  align-items:center;
+  justify-content:center;
+  border-radius:.8rem;
+  text-decoration:none;
+}
+.sunny-grounding-card {
+  position:relative;
+  overflow:hidden;
+  min-height:17rem;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  border-radius:1.6rem;
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(255,216,77,.12),transparent 48%),
+    linear-gradient(145deg,#302149,#21163a 60%,#17102c);
+  box-shadow:0 20px 52px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.05);
+}
+.sunny-grounding-step {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:.4rem .75rem;
+  border:1px solid rgba(255,216,77,.2);
+  border-radius:999px;
+  background:rgba(255,216,77,.08);
+}
+.sunny-grounding-card h3 { letter-spacing:-.035em; text-wrap:balance; }
+.sunny-grounding-card p { line-height:1.75; }
+.sunny-safety-screen button:focus-visible,
+.sunny-safety-screen a:focus-visible {
+  outline:2px solid rgba(255,216,77,.88);
+  outline-offset:3px;
+}
+@media (max-width:480px) {
+  .sunny-safety-screen { padding-left:.9rem; padding-right:.9rem; }
+  .sunny-safety-boundary { padding:1.1rem; border-radius:1.3rem; }
+  .sunny-safety-resource { padding:.9rem; border-radius:1.05rem; }
+  .sunny-safety-resource > div:first-child { flex-wrap:wrap; }
+  .sunny-safety-resource > div:first-child > div:first-child { min-width:0; }
+  .sunny-safety-resource a { flex:none; }
+  .sunny-grounding-card { min-height:16rem; padding:1.2rem; border-radius:1.35rem; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .sunny-safety-header button,.sunny-safety-resource { transition:none; }
+  .sunny-safety-header button:hover,.sunny-safety-resource:hover { transform:none; }
+}
+
+
+/* Sunny design system — shared visual language across web, mobile and native Android. */
+:root {
+  --sunny-ui-font: 'Plus Jakarta Sans';
+  --sunny-script-font: 'Gabriola', Georgia, serif;
+  --sunny-bg: #100B22;
+  --sunny-surface: #17102C;
+  --sunny-card: #21163A;
+  --sunny-raised: #302149;
+  --sunny-accent: #FFD84D;
+  --sunny-accent-soft: rgba(255,216,77,.12);
+  --sunny-line: rgba(166,132,204,.2);
+  --sunny-glass: rgba(30,20,51,.78);
+  --sunny-shadow: 0 18px 48px rgba(0,0,0,.2);
+  --sunny-ease: cubic-bezier(.2,.8,.2,1);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sunny-ui-font), system-ui, sans-serif;
+  letter-spacing: -.008em;
+  font-feature-settings: "ss01" on;
+}
+button, input, textarea, select {
+  font: inherit;
+}
+button { -webkit-tap-highlight-color: transparent; }
+button:disabled { cursor: not-allowed; }
+::selection { background: rgba(255,216,77,.28); color: inherit; }
+
+.sunny-app-shell {
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 82% -12%, rgba(117,78,157,.12), transparent 36%),
+    radial-gradient(ellipse at 0% 100%, rgba(75,48,112,.08), transparent 34%),
+    var(--sunny-bg);
+}
+.sunny-app-main { min-width:0; overscroll-behavior:contain; }
+.sunny-app-card {
+  position:relative;
+  border-color:var(--sunny-line);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035);
+  transition:transform 220ms var(--sunny-ease), border-color 220ms ease, box-shadow 220ms ease, background 220ms ease;
+}
+.sunny-app-card[data-card-interactive="true"] { cursor:pointer; }
+.sunny-app-card:focus-visible {
+  outline:2px solid rgba(255,216,77,.8);
+  outline-offset:3px;
+}
+.sunny-app-button {
+  min-height:2.65rem;
+  border-radius:1rem;
+  letter-spacing:-.012em;
+  transition:transform 180ms var(--sunny-ease), background 180ms ease, border-color 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
+}
+.sunny-app-button:not(:disabled):active { transform:scale(.975); }
+.sunny-app-button:not(:disabled):hover { box-shadow:0 9px 24px rgba(0,0,0,.16); }
+.sunny-app-field {
+  border-radius:1rem;
+  background:rgba(16,11,34,.58);
+  border-color:rgba(166,132,204,.25);
+  transition:border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+.sunny-app-field:focus {
+  border-color:rgba(255,216,77,.68);
+  background:rgba(16,11,34,.78);
+  box-shadow:0 0 0 3px rgba(255,216,77,.09);
+}
+.sunny-app-field::placeholder { color:#8F80A7; opacity:1; }
+.sunny-app-shell :where(a,button,[role="button"],input,textarea,select):focus-visible {
+  outline-color:rgba(255,216,77,.82);
+}
+.sunny-app-shell :where(a,button,[role="button"]) { touch-action:manipulation; }
+.sunny-app-shell :where(h1,h2,h3,h4) { text-wrap:balance; }
+.sunny-app-shell :where(p) { text-wrap:pretty; }
+
+@media (hover:hover) and (pointer:fine) {
+  .sunny-app-card:hover {
+    border-color:rgba(191,159,226,.3);
+    box-shadow:0 16px 40px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.045);
+  }
+}
+@media (max-width:640px) {
+  .sunny-app-shell { padding-bottom:env(safe-area-inset-bottom); }
+  .sunny-app-button { min-height:2.85rem; }
+}
+@media (prefers-reduced-motion:reduce) {
+  html { scroll-behavior:auto; }
+  .sunny-app-card,.sunny-app-button,.sunny-app-field { transition:none !important; }
+  .sunny-app-button:not(:disabled):active { transform:none; }
+}
+
+
+/* Screen entrances stay subtle: the content settles in without shifting the layout. */
+.sunny-app-main > * {
+  min-width:0;
+  min-height:0;
+  animation:sunny-screen-settle 260ms var(--sunny-ease) both;
+}
+@keyframes sunny-screen-settle {
+  from { opacity:.72; transform:translateY(6px); }
+  to { opacity:1; transform:translateY(0); }
+}
+:root[data-theme='sunny-light'] {
+  --sunny-bg:#F8F6FC;
+  --sunny-surface:#F0EDF6;
+  --sunny-card:#FFFFFF;
+  --sunny-raised:#EAE3F2;
+  --sunny-line:rgba(76,53,104,.16);
+}
+:root[data-theme='sunny-light'] .sunny-app-shell {
+  background:
+    radial-gradient(ellipse at 82% -12%,rgba(157,120,191,.12),transparent 36%),
+    radial-gradient(ellipse at 0% 100%,rgba(177,147,211,.09),transparent 34%),
+    #F8F6FC;
+}
+@media (prefers-reduced-motion:reduce) {
+  .sunny-app-main > * { animation:none !important; }
+}
+
+
+/* Sunny's expressive signature typography: Gabriola stays for brand/display moments;
+   Plus Jakarta Sans handles the everyday interface for clearer reading. */
+.sunny-app-shell :where(h1, h2),
+.sunny-brand-script,
+.sunny-display-script,
+.sunny-chat-greeting-script {
+  font-family: var(--sunny-script-font);
+}
+.sunny-app-shell :where(button, input, textarea, select, label, small, time) {
+  font-family: var(--sunny-ui-font), system-ui, sans-serif;
+}
+
+
+/* Editorial surfaces: let spacing and type create hierarchy instead of stacking cards. */
+.sunny-home-hero,
+.sunny-daily-card,
+.sunny-recent-card,
+.sunny-memories-hero,
+.sunny-memory-card,
+.sunny-settings-hero,
+.sunny-settings-panel,
+.sunny-privacy-intro,
+.sunny-privacy-highlight,
+.sunny-about-screen .sunny-about-hero + .app-card,
+.sunny-about-screen .app-card,
+.sunny-notifications-screen .app-card {
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Keep the welcome area atmospheric, not a framed rectangle. */
+.sunny-home-hero {
+  background: linear-gradient(115deg, rgba(132,91,168,.13), rgba(33,22,58,.10) 58%, transparent) !important;
+  border-radius: 1.5rem !important;
+}
+.sunny-daily-card,
+.sunny-recent-card,
+.sunny-memory-card,
+.sunny-privacy-intro,
+.sunny-privacy-highlight,
+.sunny-about-screen .app-card,
+.sunny-notifications-screen .app-card {
+  background: transparent !important;
+  border-radius: 0 !important;
+}
+.sunny-daily-card,
+.sunny-recent-card,
+.sunny-memory-card,
+.sunny-privacy-highlight {
+  border-bottom: 1px solid rgba(198,184,229,.12) !important;
+}
+.sunny-memory-card {
+  padding-left: .25rem !important;
+  padding-right: .25rem !important;
+}
+.sunny-memories-hero {
+  background: radial-gradient(ellipse at 85% 15%, rgba(132,91,168,.18), transparent 55%) !important;
+  border-radius: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.sunny-settings-panel {
+  background: transparent !important;
+  border-color: transparent !important;
+  border-radius: 0 !important;
+}
+.sunny-settings-section {
+  border-radius: 0 !important;
+}
+.sunny-privacy-highlight {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.sunny-about-screen .app-card,
+.sunny-notifications-screen .app-card {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.sunny-vibe-card {
+  box-shadow: none !important;
+}
+.sunny-vibe-card:hover {
+  transform: translateY(-2px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .sunny-vibe-card:hover { transform: none; }
+}
+
+
+/* Memory Vault: tactile stacked-card deck with a clear active memory. */
+.sunny-memory-deck-stage {
+  position: relative;
+  isolation: isolate;
+  padding: 0 0 1.35rem;
+}
+.sunny-memory-deck-layer {
+  min-width: 0;
+  transform-origin: top center;
+  transition: transform 420ms cubic-bezier(.2,.8,.2,1), opacity 300ms ease;
+  will-change: transform;
+}
+.sunny-memory-deck-layer .sunny-memory-card {
+  border: 1px solid rgba(166,132,204,.24) !important;
+  border-radius: 1.5rem !important;
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(255,216,77,.075), transparent 42%),
+    linear-gradient(145deg, #281d40 0%, #211630 58%, #191229 100%) !important;
+  padding: 1.2rem !important;
+  box-shadow: 0 20px 46px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.055) !important;
+}
+.sunny-memory-deck-layer:first-child .sunny-memory-card { min-height: 15rem; }
+.sunny-memory-deck-control {
+  display: grid;
+  width: 2.65rem;
+  height: 2.65rem;
+  place-items: center;
+  border: 1px solid rgba(166,132,204,.24);
+  border-radius: 999px;
+  color: #FFD84D;
+  background: rgba(48,33,73,.72);
+  font-size: 1.2rem;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+.sunny-memory-deck-control:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255,216,77,.55);
+  background: rgba(65,45,94,.9);
+}
+.sunny-memory-deck-control:active { transform: scale(.94); }
+.sunny-memory-deck-control:focus-visible {
+  outline: 2px solid rgba(255,216,77,.85);
+  outline-offset: 3px;
+}
+:root[data-theme='sunny-light'] .sunny-memory-deck-layer .sunny-memory-card {
+  border-color: rgba(91,67,120,.18) !important;
+  background: linear-gradient(145deg,#fff 0%,#F7F2FC 100%) !important;
+  box-shadow: 0 18px 42px rgba(54,35,76,.13), inset 0 1px 0 rgba(255,255,255,.9) !important;
+}
+:root[data-theme='sunny-light'] .sunny-memory-deck-control {
+  color: #75520A;
+  border-color: rgba(91,67,120,.2);
+  background: #fff;
+}
+@media (max-width: 640px) {
+  .sunny-memory-deck-layer .sunny-memory-card {
+    border-radius: 1.25rem !important;
+    padding: 1rem !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sunny-memory-deck-layer,
+  .sunny-memory-deck-control { transition: none !important; }
+  .sunny-memory-deck-control:hover,
+  .sunny-memory-deck-control:active { transform: none; }
+}
+
+
+/* Memory Vault keepsake deck — real overlapping paper layers, not faded duplicate cards. */
+.sunny-memory-deck {
+  position: relative;
+  padding: .25rem 0 1rem;
+}
+.sunny-memory-deck-counter {
+  color: #FFD84D;
+  font-size: .82rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .04em;
+}
+.sunny-memory-deck-counter span {
+  color: #8F80A7;
+  font-weight: 500;
+}
+.sunny-memory-deck-stage {
+  position: relative;
+  isolation: isolate;
+  padding: 0 0 2.2rem;
+}
+.sunny-memory-deck-sheet {
+  position: absolute;
+  inset: 0 0 2.2rem;
+  border: 1px solid rgba(190,160,220,.25);
+  border-radius: 1.65rem;
+  pointer-events: none;
+  transform-origin: 50% 12%;
+}
+.sunny-memory-deck-sheet-back {
+  top: 1.35rem;
+  left: 1.05rem;
+  right: -.45rem;
+  bottom: 1.15rem;
+  transform: rotate(2.7deg);
+  background: linear-gradient(145deg,#392650,#261a3b 72%);
+  box-shadow: 0 20px 34px rgba(0,0,0,.22);
+}
+.sunny-memory-deck-sheet-middle {
+  top: .7rem;
+  left: .45rem;
+  right: -.2rem;
+  bottom: 1.65rem;
+  transform: rotate(-1.35deg);
+  background:
+    radial-gradient(ellipse at 90% 0%,rgba(255,216,77,.12),transparent 48%),
+    linear-gradient(145deg,#302044,#211630 75%);
+  box-shadow: 0 15px 28px rgba(0,0,0,.2);
+}
+.sunny-memory-deck-front {
+  position: relative;
+  z-index: 2;
+  animation: sunny-memory-card-arrive 380ms cubic-bezier(.2,.8,.2,1) both;
+}
+.sunny-memory-deck-front .sunny-memory-card {
+  min-height: 16rem;
+  padding: clamp(1.15rem,3vw,1.65rem) !important;
+  border: 1px solid rgba(197,166,226,.34) !important;
+  border-radius: 1.55rem !important;
+  background:
+    radial-gradient(ellipse at 100% 0%,rgba(255,216,77,.10),transparent 40%),
+    radial-gradient(ellipse at 0% 100%,rgba(145,105,190,.13),transparent 48%),
+    linear-gradient(145deg,#2c2043 0%,#211630 58%,#191229 100%) !important;
+  box-shadow:
+    0 28px 58px rgba(0,0,0,.34),
+    0 5px 14px rgba(0,0,0,.18),
+    inset 0 1px 0 rgba(255,255,255,.075) !important;
+}
+.sunny-memory-deck-front .sunny-memory-card h3 {
+  font-size: clamp(1.15rem,2.5vw,1.35rem);
+  line-height: 1.35;
+}
+.sunny-memory-deck-front .sunny-memory-card p {
+  max-width: 58ch;
+  line-height: 1.8;
+}
+.sunny-memory-deck-front .sunny-memory-card > div:last-child {
+  margin-top: auto;
+  padding-top: 1rem;
+}
+.sunny-memory-deck-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  margin-top: .25rem;
+}
+.sunny-memory-deck-control {
+  display: grid;
+  width: 2.8rem;
+  height: 2.8rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgba(181,148,214,.25);
+  border-radius: 50%;
+  color: #FFD84D;
+  background: linear-gradient(145deg,rgba(57,39,81,.92),rgba(34,23,54,.96));
+  box-shadow: 0 8px 22px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.06);
+  font-size: 1.2rem;
+  transition: transform 180ms ease,border-color 180ms ease,background 180ms ease;
+}
+.sunny-memory-deck-control:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255,216,77,.58);
+  background: #3c2a56;
+}
+.sunny-memory-deck-control:active { transform: scale(.94); }
+.sunny-memory-deck-control:focus-visible {
+  outline: 2px solid rgba(255,216,77,.9);
+  outline-offset: 3px;
+}
+.sunny-memory-deck-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .35rem;
+  min-width: 3rem;
+}
+.sunny-memory-deck-progress span {
+  width: .35rem;
+  height: .35rem;
+  border-radius: 999px;
+  background: rgba(198,184,229,.28);
+  transition: width 220ms ease,background 220ms ease;
+}
+.sunny-memory-deck-progress span.is-active {
+  width: 1.25rem;
+  background: #FFD84D;
+}
+@keyframes sunny-memory-card-arrive {
+  from { opacity: .65; transform: translateY(9px) scale(.985) rotate(-.4deg); }
+  to { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
+}
+:root[data-theme='sunny-light'] .sunny-memory-deck-sheet-back {
+  background: linear-gradient(145deg,#E8DDF2,#DCD0E9);
+  border-color: rgba(91,67,120,.2);
+}
+:root[data-theme='sunny-light'] .sunny-memory-deck-sheet-middle {
+  background: linear-gradient(145deg,#F0E9F7,#E8DFF1);
+  border-color: rgba(91,67,120,.18);
+}
+:root[data-theme='sunny-light'] .sunny-memory-deck-front .sunny-memory-card {
+  border-color: rgba(91,67,120,.2) !important;
+  background:
+    radial-gradient(ellipse at 100% 0%,rgba(255,216,77,.14),transparent 42%),
+    linear-gradient(145deg,#fff 0%,#F7F2FC 100%) !important;
+  box-shadow: 0 24px 48px rgba(54,35,76,.16),inset 0 1px 0 #fff !important;
+}
+:root[data-theme='sunny-light'] .sunny-memory-deck-control {
+  color: #75520A;
+  border-color: rgba(91,67,120,.2);
+  background: linear-gradient(145deg,#fff,#F1EAF7);
+}
+@media (max-width: 640px) {
+  .sunny-memory-deck-sheet { border-radius: 1.3rem; }
+  .sunny-memory-deck-sheet-back { left: .65rem; right: -.2rem; }
+  .sunny-memory-deck-sheet-middle { left: .25rem; right: -.1rem; }
+  .sunny-memory-deck-front .sunny-memory-card { min-height: 15rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sunny-memory-deck-front { animation: none; }
+  .sunny-memory-deck-control,.sunny-memory-deck-progress span { transition: none; }
+  .sunny-memory-deck-control:hover,.sunny-memory-deck-control:active { transform: none; }
+}
+
+
+/* Full-screen animated atmosphere for Sunny Home — original CSS artwork. */
+.sunny-home-screen {
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(77,48,112,.24), transparent 54%),
+    linear-gradient(155deg,#100B22 0%,#17102C 48%,#120D25 100%);
+}
+.sunny-home-atmosphere {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  contain: paint;
+  background:
+    radial-gradient(ellipse at 18% 22%,rgba(112,75,157,.10),transparent 36%),
+    radial-gradient(ellipse at 84% 58%,rgba(255,216,77,.045),transparent 34%);
+}
+.sunny-home-aurora {
+  position: absolute;
+  width: min(76vw,58rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: blur(72px);
+  opacity: .32;
+  will-change: transform;
+}
+.sunny-home-aurora-one {
+  top: -25rem;
+  left: -22rem;
+  background: radial-gradient(circle,rgba(137,91,190,.72) 0%,rgba(91,57,139,.25) 42%,transparent 70%);
+  animation: sunny-home-drift-one 24s ease-in-out infinite alternate;
+}
+.sunny-home-aurora-two {
+  top: 24%;
+  right: -30rem;
+  background: radial-gradient(circle,rgba(95,65,153,.7) 0%,rgba(74,48,119,.22) 45%,transparent 70%);
+  animation: sunny-home-drift-two 29s ease-in-out infinite alternate;
+}
+.sunny-home-glow {
+  position: absolute;
+  width: min(42vw,28rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: blur(58px);
+}
+.sunny-home-glow-sun {
+  top: 42%;
+  left: 42%;
+  background: radial-gradient(circle,rgba(255,216,77,.13),rgba(246,189,69,.035) 42%,transparent 72%);
+  animation: sunny-home-sun-breathe 12s ease-in-out infinite;
+}
+.sunny-home-stars {
+  position: absolute;
+  inset: 0;
+  opacity: .28;
+  background-image:
+    radial-gradient(1px 1px at 12% 18%,rgba(255,239,190,.9) 50%,transparent 100%),
+    radial-gradient(1px 1px at 76% 13%,rgba(255,255,255,.8) 50%,transparent 100%),
+    radial-gradient(1.5px 1.5px at 88% 42%,rgba(255,216,77,.8) 50%,transparent 100%),
+    radial-gradient(1px 1px at 31% 62%,rgba(255,255,255,.7) 50%,transparent 100%),
+    radial-gradient(1px 1px at 67% 79%,rgba(255,239,190,.75) 50%,transparent 100%),
+    radial-gradient(1px 1px at 8% 88%,rgba(255,255,255,.6) 50%,transparent 100%);
+  background-size: 100% 100%;
+  animation: sunny-home-star-shimmer 8s ease-in-out infinite alternate;
+}
+.sunny-home-content {
+  position: relative;
+  z-index: 1;
+  min-height: 100%;
+}
+@keyframes sunny-home-drift-one {
+  from { transform: translate3d(0,0,0) scale(.92); }
+  to { transform: translate3d(9rem,7rem,0) scale(1.12); }
+}
+@keyframes sunny-home-drift-two {
+  from { transform: translate3d(0,0,0) scale(1.05); }
+  to { transform: translate3d(-8rem,-5rem,0) scale(.9); }
+}
+@keyframes sunny-home-sun-breathe {
+  0%,100% { opacity:.55; transform:scale(.88); }
+  50% { opacity:1; transform:scale(1.12); }
+}
+@keyframes sunny-home-star-shimmer {
+  from { opacity:.16; }
+  to { opacity:.42; }
+}
+:root[data-theme='sunny-light'] .sunny-home-screen {
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(185,153,218,.24),transparent 56%),
+    linear-gradient(155deg,#F8F6FC 0%,#F1EBF8 52%,#FBF8F0 100%);
+}
+:root[data-theme='sunny-light'] .sunny-home-atmosphere {
+  background:
+    radial-gradient(ellipse at 18% 22%,rgba(171,139,207,.16),transparent 38%),
+    radial-gradient(ellipse at 84% 58%,rgba(255,216,77,.09),transparent 36%);
+}
+:root[data-theme='sunny-light'] .sunny-home-aurora { opacity:.2; }
+:root[data-theme='sunny-light'] .sunny-home-glow-sun { opacity:.48; }
+:root[data-theme='sunny-light'] .sunny-home-stars { opacity:.12; }
+@media (max-width:640px) {
+  .sunny-home-aurora { filter:blur(58px); opacity:.25; }
+  .sunny-home-aurora-one { top:-18rem; left:-24rem; }
+  .sunny-home-aurora-two { right:-26rem; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .sunny-home-aurora,.sunny-home-glow-sun,.sunny-home-stars { animation:none !important; }
+}
+
+
+/* MotionSites-inspired full-screen video background (locally hosted asset). */
+.sunny-home-video-backdrop {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: #100B22;
+}
+.sunny-home-background-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: .62;
+  filter: saturate(.82) brightness(.72);
+  transform: scale(1.015);
+}
+.sunny-home-video-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg,rgba(16,11,34,.66) 0%,rgba(16,11,34,.42) 38%,rgba(16,11,34,.72) 100%),
+    linear-gradient(90deg,rgba(16,11,34,.28),transparent 55%,rgba(16,11,34,.22));
+}
+:root[data-theme='sunny-light'] .sunny-home-background-video {
+  opacity: .34;
+  filter: saturate(.78) brightness(.95);
+}
+:root[data-theme='sunny-light'] .sunny-home-video-overlay {
+  background: linear-gradient(180deg,rgba(248,246,252,.72),rgba(248,246,252,.52) 48%,rgba(248,246,252,.78));
+}
+@media (max-width:640px) {
+  .sunny-home-background-video { object-position: center; opacity:.48; }
+  .sunny-home-video-overlay {
+    background: linear-gradient(180deg,rgba(16,11,34,.7),rgba(16,11,34,.5) 45%,rgba(16,11,34,.78));
+  }
+}
+@media (prefers-reduced-motion:reduce) {
+  .sunny-home-background-video { display:none; }
 }

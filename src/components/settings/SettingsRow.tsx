@@ -34,7 +34,7 @@ export const SettingsRow: React.FC<SettingsRowProps> = ({
     <>
       <div className="flex items-center gap-3.5 flex-1 min-w-0 pr-2">
         {icon && (
-          <div aria-hidden="true" className="w-8 h-8 rounded-xl bg-[#302149] flex items-center justify-center shrink-0">
+          <div aria-hidden="true" className="sunny-settings-icon w-9 h-9 rounded-[13px] bg-[#302149] flex items-center justify-center shrink-0">
             {icon}
           </div>
         )}
@@ -43,7 +43,7 @@ export const SettingsRow: React.FC<SettingsRowProps> = ({
             {title}
           </span>
           {subtitle && (
-            <span id={subtitleId} className="text-xs text-white/85 block truncate mt-0.5">
+            <span id={subtitleId} className="mt-0.5 block truncate text-xs text-[#B9AACA]">
               {subtitle}
             </span>
           )}
@@ -83,8 +83,8 @@ export const SettingsRow: React.FC<SettingsRowProps> = ({
       </div>
     </>
   );
-  const className = `flex min-h-[68px] w-full items-center justify-between px-4 py-3.5 text-left transition-colors ${
-    isClickable ? 'hover:bg-[#2b1d4a] cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#FFD84D]' : ''
+  const className = `sunny-settings-row flex min-h-[72px] w-full items-center justify-between px-4 py-3.5 text-left transition-colors ${
+    isClickable ? 'cursor-pointer hover:bg-white/[0.035] focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#FFD84D]' : ''
   }`;
 
   return (

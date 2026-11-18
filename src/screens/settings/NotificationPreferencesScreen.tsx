@@ -40,7 +40,7 @@ export const NotificationPreferencesScreen: React.FC<NotificationPreferencesScre
       onChange={(event) => {
         if (isValidClockTime(event.target.value)) void updateSetting(key, event.target.value);
       }}
-      className="w-[112px] rounded-lg border border-[#392858] bg-[#1B1430] px-2 py-1.5 text-xs font-semibold text-white [color-scheme:dark] focus:border-[#FFD84D] focus:outline-none"
+      className="sunny-notifications-time w-[116px] rounded-xl border border-[#604477]/55 bg-[#1B1430] px-2.5 py-2 text-xs font-semibold text-white shadow-inner [color-scheme:dark] transition-colors focus:border-[#FFD84D]/70 focus:outline-none focus:ring-2 focus:ring-[#FFD84D]/10"
     />
   );
 
@@ -115,27 +115,27 @@ export const NotificationPreferencesScreen: React.FC<NotificationPreferencesScre
   );
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-xl mx-auto w-full pb-6 sm:pb-8">
+    <div className="sunny-notifications-screen flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-xl mx-auto w-full pb-8 sm:pb-10">
       {/* Top Bar */}
-      <div className="flex items-center gap-3 py-2 mb-4">
+      <div className="sunny-notifications-header flex items-center gap-3 py-2 mb-5">
         <button
           type="button"
           onClick={onBack}
-          className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#21163A] border border-[#392858] text-[#C6B8E5] hover:text-white transition-colors cursor-pointer"
+          className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[#604477]/45 bg-[#21163A] text-[#C6B8E5] shadow-sm transition-all hover:border-[#FFD84D]/35 hover:text-white active:scale-95"
           aria-label="Back to settings"
         >
           <ArrowLeft size={18} />
         </button>
-        <h1 className="text-lg font-bold text-white">Notification Preferences</h1>
+        <h1 className="text-xl font-semibold tracking-tight text-white">Notification Preferences</h1>
       </div>
 
       {/* Delivery and permission status */}
-      <div className="p-4 mb-5 rounded-2xl bg-[#17102C] border border-[#FFD84D]/30">
-        <div className="flex items-center gap-2 mb-1">
+      <div className="sunny-notifications-status relative isolate mb-6 overflow-hidden rounded-[26px] border border-[#FFD84D]/25 bg-gradient-to-br from-[#302044] via-[#211633] to-[#17102C] p-4 shadow-[0_16px_40px_rgba(0,0,0,.2)] sm:p-5">
+        <div className="relative mb-2 flex items-center gap-2">
           <Info size={18} className="text-[#FFD84D]" />
           <h2 className="text-sm font-bold text-[#FFD84D]">Android local notifications</h2>
         </div>
-        <p className="text-xs text-[#C6B8E5] leading-relaxed">
+        <p className="relative text-xs leading-relaxed text-[#D0C3E2]">
           {permissionSummary} Scheduled reminders use local Android alarms and contain no chat or memory details. Android may defer inexact alarms, especially in battery-saving modes. The web app saves these preferences but does not deliver local notifications.
         </p>
         {canRequestPermission && (
@@ -230,7 +230,7 @@ export const NotificationPreferencesScreen: React.FC<NotificationPreferencesScre
               aria-label="Daily notification limit"
               value={prefs.dailyLimit}
               onChange={(event) => updateSetting('dailyLimit', Number(event.target.value))}
-              className="rounded-lg border border-[#392858] bg-[#1B1430] px-2 py-1.5 text-xs font-semibold text-white focus:border-[#FFD84D] focus:outline-none"
+              className="sunny-notifications-select rounded-xl border border-[#604477]/55 bg-[#1B1430] px-2.5 py-2 text-xs font-semibold text-white shadow-inner transition-colors focus:border-[#FFD84D]/70 focus:outline-none focus:ring-2 focus:ring-[#FFD84D]/10"
             >
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((limit) => <option key={limit} value={limit}>{limit} per day</option>)}
             </select>
@@ -262,8 +262,8 @@ export const NotificationPreferencesScreen: React.FC<NotificationPreferencesScre
       </SettingsSection>
 
       {/* Preview Section */}
-      <div className="mt-6">
-        <h3 className="text-[11px] font-bold tracking-wider text-[#9B8AB9] uppercase px-1 mb-3">
+      <div className="sunny-notifications-preview mt-7">
+        <h3 className="mb-3 px-1 text-[11px] font-bold tracking-[0.16em] text-[#B9AACA] uppercase">
           SAMPLE SUNNY NOTIFICATIONS
         </h3>
         <div className="space-y-2.5">
@@ -274,13 +274,13 @@ export const NotificationPreferencesScreen: React.FC<NotificationPreferencesScre
           ] satisfies { slot: NotificationSlot; label: string; name: string; time: string }[]).map((item) => {
             const content = getNotificationContent(item.slot, localDateKey(new Date()));
             return (
-              <AppCard key={item.slot} className="p-3.5 bg-[#21163A]">
-                <div className="flex items-center justify-between mb-1.5">
+              <AppCard key={item.slot} className="sunny-notifications-preview-card border border-[#604477]/40 bg-gradient-to-br from-[#261B3B] to-[#191229] p-4 shadow-[0_10px_26px_rgba(0,0,0,.13)]">
+                <div className="mb-2 flex items-center justify-between gap-3">
                   <Badge label={item.label} variant="yellow" />
                   <span className="text-xs text-[#9B8AB9]">{formatTime(item.time)}</span>
                 </div>
-                <h4 className="text-sm font-semibold text-white mb-0.5">{item.name}</h4>
-                <p className="text-xs italic text-[#C6B8E5] leading-relaxed">{content.body}</p>
+                <h4 className="mb-1 text-sm font-semibold tracking-tight text-white">{item.name}</h4>
+                <p className="text-xs italic leading-relaxed text-[#C6B8E5]">{content.body}</p>
               </AppCard>
             );
           })}

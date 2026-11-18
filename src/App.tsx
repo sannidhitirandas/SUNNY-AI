@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { App as CapacitorApp } from '@capacitor/app';
 import { Capacitor, type PluginListenerHandle } from '@capacitor/core';
+import { MOBILE_QUERY } from '@/lib/chatBackground';
 import { Keyboard } from '@capacitor/keyboard';
 import { Browser } from '@capacitor/browser';
 import { authService } from '@/services/authService';
@@ -74,6 +75,13 @@ export function App() {
   }, []);
   const [activeTab, setActiveTab] = useState<Tab>('home');
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+  // Desktop web only: in chat the message box sits flush at the bottom and the
+  // nav dock stays hidden until the user goes "back". Phones and the native app
+  // keep the always-available dock.
+  const [isWebDesktop, setIsWebDesktop] = useState(false);
+  const [navRevealed, setNavRevealed] = useState(false);
+  const navRevealedRef = useRef(false);
+  navRevealedRef.current = navRevealed;
   const [activeSubScreen, setActiveSubScreen] =
     useState<SubScreen>('none');
   const [authView, setAuthView] =
@@ -102,6 +110,7 @@ export function App() {
 
   const handleTabChange = (tab: Tab) => {
     setIsKeyboardVisible(false);
+    setNavRevealed(false);
     if (tab !== 'chat') {
       if (preferences.audioPreferences.musicEnabled) {
         void audioService.playNonChatMusic(preferences.audioPreferences.selectedBackgroundMusic);
@@ -115,6 +124,41 @@ export function App() {
     }
     setActiveTab(tab);
   };
+
+  const handleTabChangeRef = useRef(handleTabChange);
+  handleTabChangeRef.current = handleTabChange;
+
+  useEffect(() => {
+    if (Capacitor.isNativePlatform()) return;
+    const mediaQuery = window.matchMedia(MOBILE_QUERY);
+    const update = () => setIsWebDesktop(!mediaQuery.matches);
+    update();
+    mediaQuery.addEventListener('change', update);
+    return () => mediaQuery.removeEventListener('change', update);
+  }, []);
+
+  useEffect(() => {
+    if (activeTab !== 'chat') setNavRevealed(false);
+  }, [activeTab]);
+
+  // Browser Back inside desktop chat: 1st press slides the nav up under the
+  // message box, 2nd press goes Home (same as Android back).
+  useEffect(() => {
+    if (activeTab !== 'chat' || !isWebDesktop) return;
+
+    window.history.pushState({ sunnyChatNav: true }, '');
+    const onPopState = () => {
+      if (navRevealedRef.current) {
+        handleTabChangeRef.current('home');
+        return;
+      }
+      setNavRevealed(true);
+      window.history.pushState({ sunnyChatNav: true }, '');
+    };
+
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, [activeTab, isWebDesktop]);
 
   // Keyboard visibility.
   // - Web/PWA: infer it from the visual viewport shrinking.
@@ -412,11 +456,13 @@ export function App() {
     );
   }
 
-  const hideNavBar = activeTab === 'chat' && isKeyboardVisible;
+  const chatNavHidden =
+    activeTab === 'chat' && (isKeyboardVisible || (isWebDesktop && !navRevealed));
+  const hideNavBar = chatNavHidden;
 
   return (
-    <div className="h-dvh min-h-0 overflow-hidden bg-[#100B22] flex flex-col relative selection:bg-[#FFD84D] selection:text-[#100B22]">
-      <main className={`flex-1 min-h-0 flex flex-col overflow-hidden ${activeTab === 'chat' ? 'pb-0' : 'pb-16'}`}>
+    <div className="sunny-app-shell h-dvh min-h-0 overflow-hidden bg-[#100B22] flex flex-col relative selection:bg-[#FFD84D] selection:text-[#100B22]">
+      <main className={`sunny-app-main flex-1 min-h-0 flex flex-col overflow-hidden ${activeTab === 'chat' ? 'pb-0' : 'pb-16'}`}>
         {activeTab === 'home' && (
           <HomeScreen
             onNavigateToTab={(tab) => handleTabChange(tab)}
@@ -433,6 +479,7 @@ export function App() {
             onFocus={() => setIsKeyboardVisible(true)}
             onBlur={() => setIsKeyboardVisible(false)}
             isKeyboardVisible={isKeyboardVisible}
+            isNavHidden={chatNavHidden}
           />
         )}
 

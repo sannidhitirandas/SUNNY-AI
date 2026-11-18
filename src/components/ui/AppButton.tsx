@@ -66,7 +66,7 @@ export const AppButton: React.FC<AppButtonProps> = ({
       type="button"
       disabled={disabled || loading}
       onClick={handleClick}
-      className={`inline-flex items-center justify-center font-medium transition-all duration-150 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none ${getVariantStyles()} ${getSizeStyles()} ${fullWidth ? 'w-full' : ''} ${className}`}
+      className={`sunny-app-button inline-flex items-center justify-center font-medium transition-all duration-150 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed select-none ${getVariantStyles()} ${getSizeStyles()} ${fullWidth ? 'w-full' : ''} ${className}`}
       {...props}
     >
       {loading ? (

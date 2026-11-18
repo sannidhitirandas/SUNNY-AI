@@ -74,11 +74,29 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
 
         .sunrise-sun {
           position: relative;
+          display: grid;
+          place-items: center;
+          width: clamp(148px, 42vw, 190px);
+          aspect-ratio: 1;
+          margin-bottom: 2.1rem;
           animation: sunrise-sun-rise 1.5s cubic-bezier(0.2, 0.85, 0.25, 1) both;
         }
-
+        .sunrise-orbit {
+          position:absolute; inset:4px;
+          border:1px solid rgba(255,232,166,.22);
+          border-radius:9999px;
+          box-shadow:0 0 34px rgba(255,216,77,.09),inset 0 0 28px rgba(255,216,77,.045);
+        }
+        .sunrise-orbit::before,.sunrise-orbit::after {
+          content:''; position:absolute; width:7px;height:7px;border-radius:50%;
+          background:#FFE9A3; box-shadow:0 0 12px 3px rgba(255,216,77,.55);
+        }
+        .sunrise-orbit::before { top:18%;right:13%; }
+        .sunrise-orbit::after { bottom:17%;left:12%;width:4px;height:4px; }
         .sunrise-rays {
-          animation: sunrise-rays-spin 22s linear infinite;
+          position:relative; z-index:1;
+          filter:drop-shadow(0 12px 30px rgba(255,190,64,.2));
+          animation: sunrise-rays-spin 42s linear infinite;
         }
 
         .sunrise-sparkle {
@@ -90,14 +108,32 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           animation: sunrise-twinkle var(--sparkle-duration) ease-in-out var(--sparkle-delay) infinite;
         }
 
+        .sunrise-eyebrow {
+          margin-bottom:.75rem; color:rgba(255,232,166,.78);
+          font-size:.67rem; font-weight:700; letter-spacing:.28em;
+          text-transform:uppercase;
+          animation: sunrise-fade-up .8s ease-out .65s both;
+        }
         .sunrise-wordmark {
           animation: sunrise-fade-up 0.9s ease-out 0.9s both;
+          text-shadow:0 0 34px rgba(255,216,77,.18);
         }
         .sunrise-greeting {
           animation: sunrise-fade-up 0.9s ease-out 1.3s both;
         }
         .sunrise-tagline {
           animation: sunrise-fade-up 1s ease-out 1.7s both;
+        }
+        .sunrise-waiting {
+          margin-top:2rem; color:rgba(198,184,229,.68);
+          font-size:.68rem; letter-spacing:.13em;
+          animation:sunrise-fade-up .7s ease-out 2s both;
+        }
+        .sunrise-waiting::after {
+          content:''; display:inline-block; width:16px; height:1px;
+          margin-left:8px; vertical-align:middle;
+          background:linear-gradient(90deg,#FFD84D,transparent);
+          animation:sunrise-waiting-pulse 1.2s ease-in-out infinite;
         }
 
         .sunrise-bar {
@@ -150,6 +186,10 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           from { transform: scaleX(0); }
           to   { transform: scaleX(1); }
         }
+        @keyframes sunrise-waiting-pulse {
+          0%,100% { opacity:.3; transform:scaleX(.55); transform-origin:left; }
+          50% { opacity:1; transform:scaleX(1); transform-origin:left; }
+        }
 
         @media (prefers-reduced-motion: reduce) {
           .sunrise-horizon,
@@ -159,6 +199,8 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           .sunrise-wordmark,
           .sunrise-greeting,
           .sunrise-tagline,
+          .sunrise-eyebrow,
+          .sunrise-waiting,
           .sunrise-bar,
           .sunrise-bar::after {
             animation: none !important;
@@ -190,13 +232,15 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
         />
       ))}
 
-      <div className="sunrise-sun mb-8">
+      <div className="sunrise-sun">
         <div className="sunrise-halo" aria-hidden="true" />
-        <div className="sunrise-rays relative">
+        <div className="sunrise-orbit" aria-hidden="true" />
+        <div className="sunrise-rays">
           <SunnyLogo size="huge" />
         </div>
       </div>
 
+      <p className="sunrise-eyebrow">A little light, just for you</p>
       <h1 className="sunrise-wordmark text-4xl font-bold tracking-tight text-[#FFD84D] mb-2">
         Sunny
       </h1>
@@ -208,6 +252,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
       <p className="sunrise-tagline max-w-[16rem] text-sm italic leading-relaxed text-[#C6B8E5]">
         You don&rsquo;t have to start over every time you come back.
       </p>
+      <p className="sunrise-waiting" aria-hidden="true">GETTING YOUR SUNSHINE READY</p>
 
       <div className="sunrise-bar" aria-hidden="true" />
     </div>
