@@ -83,7 +83,7 @@ export const SettingsRow: React.FC<SettingsRowProps> = ({
       </div>
     </>
   );
-  const className = `flex min-h-[68px] w-full items-center justify-between px-4 py-3.5 text-left transition-colors ${
+  const className = `sunny-settings-row flex min-h-[72px] w-full items-center justify-between px-4 py-3.5 text-left transition-colors ${
     isClickable ? 'cursor-pointer hover:bg-white/[0.035] focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#FFD84D]' : ''
   }`;
 
