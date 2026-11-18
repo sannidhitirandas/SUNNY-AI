@@ -145,16 +145,16 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         .login-screen {
           isolation: isolate;
           background:
-            radial-gradient(ellipse 120% 50% at 50% 108%, rgba(255, 216, 77, 0.22) 0%, rgba(246, 189, 69, 0.10) 40%, rgba(16, 11, 34, 0) 72%),
-            linear-gradient(180deg, #100B22 0%, #17102C 55%, #221339 85%, #301a49 100%);
+            radial-gradient(ellipse 120% 50% at 50% 108%, rgba(218, 199, 169, 0.12) 0%, rgba(190, 176, 155, 0.05) 40%, rgba(18, 20, 24, 0) 72%),
+            linear-gradient(180deg, #121417 0%, #191B1F 55%, #202226 100%);
         }
 
         .login-sparkle {
           position: absolute;
           z-index: 1;
           border-radius: 9999px;
-          background: #FFE9A3;
-          box-shadow: 0 0 8px 1px rgba(255, 216, 77, 0.6);
+          background: #E8E1D5;
+          box-shadow: 0 0 8px 1px rgba(218, 199, 169, 0.32);
           opacity: 0;
           pointer-events: none;
           animation: login-twinkle var(--sparkle-duration) ease-in-out var(--sparkle-delay) infinite;
@@ -164,13 +164,13 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           position: absolute;
           inset: -40px;
           border-radius: 9999px;
-          background: radial-gradient(circle, rgba(255, 216, 77, 0.30) 0%, rgba(246, 189, 69, 0.10) 45%, rgba(255, 216, 77, 0) 72%);
+          background: radial-gradient(circle, rgba(218, 199, 169, 0.18) 0%, rgba(190, 176, 155, 0.06) 45%, rgba(218, 199, 169, 0) 72%);
           animation: login-halo-pulse 3.4s ease-in-out infinite;
           pointer-events: none;
         }
 
         .login-card {
-          background: rgba(20, 16, 35, 0.48);
+          background: rgba(20, 22, 25, 0.62);
           border: 1px solid rgba(255, 255, 255, 0.28);
           box-shadow: 0 24px 70px -28px rgba(0, 0, 0, 0.48), 0 1px 0 rgba(255, 255, 255, 0.16) inset;
           -webkit-backdrop-filter: blur(22px) saturate(1.15);
@@ -184,7 +184,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           inset: 0;
           overflow: hidden;
           pointer-events: none;
-          background: #100B22;
+          background: #121417;
         }
         .login-background-video {
           position: absolute;
@@ -199,9 +199,15 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         .login-video-overlay {
           position: absolute;
           inset: 0;
-          background: transparent;
+          background: linear-gradient(180deg, rgba(13, 15, 18, 0.34), rgba(18, 20, 24, 0.60));
         }
 
+        .login-background-video { filter: brightness(0.58) saturate(0.88); }
+        .login-rays svg line { stroke: #E8E1D5 !important; }
+        .login-rays svg stop:nth-child(1) { stop-color: #F8F4EB; }
+        .login-rays svg stop:nth-child(2) { stop-color: #E5D8C3; }
+        .login-rays svg stop:nth-child(3) { stop-color: #BFAF98; }
+        .login-rays svg feDropShadow { flood-color: #D8CBB5; flood-opacity: .28; }
         .login-hero h1 {
           color: #fff;
           text-shadow: 0 2px 18px rgba(12, 8, 24, 0.5);
@@ -242,7 +248,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
 
         .login-cta {
           border-radius: 0.875rem;
-          box-shadow: 0 10px 26px -12px rgba(255, 216, 77, 0.55);
+          box-shadow: 0 10px 26px -12px rgba(218, 199, 169, 0.28);
         }
 
         @keyframes login-fade-up {
@@ -316,14 +322,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
         <div className="login-hero mb-6 flex flex-col items-center text-center">
           <div className="relative">
             <div className="login-halo" aria-hidden="true" />
-            <div className="relative">
+            <div className="login-rays relative">
               <SunnyLogo size="large" />
             </div>
           </div>
           <h1 className="mt-5 mb-1.5 text-3xl font-bold tracking-tight text-white">
             {forgotPassword ? 'Reset your password' : 'Welcome back'}
           </h1>
-          <p className="max-w-xs text-sm leading-relaxed text-[#C6B8E5]">
+          <p className="max-w-xs text-sm leading-relaxed text-[#D7D4CC]">
             {forgotPassword
               ? 'We will send a secure reset link if this email has a Sunny account.'
               : 'Good to see you again. ☀️'}
@@ -387,15 +393,15 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             {!forgotPassword && (
               <>
                 <div className="flex items-center gap-3 py-4" aria-hidden="true">
-                  <div className="h-px flex-1 bg-[#392858]" />
-                  <span className="text-xs font-medium tracking-wide text-[#9B8AB9]">OR</span>
+                  <div className="h-px flex-1 bg-[#77736B]" />
+                  <span className="text-xs font-medium tracking-wide text-[#C4BFB5]">OR</span>
                   <div className="h-px flex-1 bg-[#392858]" />
                 </div>
                 <button
                   type="button"
                   onClick={() => void handleGoogleSignIn()}
                   disabled={loading || googleLoading}
-                  className="flex min-h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-xl border border-white/35 bg-white/12 px-4 py-3 text-sm font-semibold text-white shadow-sm backdrop-blur-md transition-colors hover:bg-white/20 hover:border-white/60 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="flex min-h-12 w-full cursor-pointer items-center justify-center gap-3 rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-sm font-semibold text-white shadow-sm backdrop-blur-md transition-colors hover:bg-white/20 hover:border-white/60 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {googleLoading ? (
                     <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" aria-hidden="true" />
@@ -416,7 +422,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
               <button
                 type="button"
                 onClick={() => { setForgotPassword(true); setError(''); setNotice(''); }}
-                className="w-full cursor-pointer pt-4 text-sm font-semibold text-[#FFD84D] hover:underline"
+                className="w-full cursor-pointer pt-4 text-sm font-semibold text-[#E8E1D5] hover:underline"
               >
                 Forgot password?
               </button>
