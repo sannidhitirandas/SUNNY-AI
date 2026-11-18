@@ -3,7 +3,7 @@ import { SunnyLogo } from '../brand/SunnyLogo';
 
 export const TypingIndicator: React.FC = () => {
   return (
-    <div className="mx-auto flex w-full max-w-4xl items-end gap-2.5 px-4 pb-0.5 pt-3 sm:px-6">
+    <div className="flex w-full items-end gap-2.5 px-4 pb-0.5 pt-3 sm:px-6 lg:px-10">
       <div className="mb-1 shrink-0">
         <SunnyLogo size="small" />
       </div>
