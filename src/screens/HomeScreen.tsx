@@ -48,19 +48,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
   return (
 <div className="sunny-home-screen relative isolate flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-7xl mx-auto w-full pb-8 sm:pb-10 lg:px-10 xl:px-14">
-      <div className="sunny-home-video-backdrop" aria-hidden="true">
-        <video
-          className="sunny-home-background-video"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-        >
-          <source src="/sunny-home-background.mp4" type="video/mp4" />
-        </video>
-        <span className="sunny-home-video-overlay" />
-      </div>
       <div className="sunny-home-content">
       {/* Top App Header */}
       <div className="flex items-center justify-between py-2 mb-3">
