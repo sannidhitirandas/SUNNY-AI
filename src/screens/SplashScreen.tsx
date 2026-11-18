@@ -132,26 +132,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           pointer-events: none;
         }
 
-        /* Soft pulsing halo behind the sun */
-        .sunrise-halo {
-          position: absolute;
-          inset: -46px;
-          border-radius: 9999px;
-          background: radial-gradient(circle, rgba(255, 216, 77, 0.62) 0%, rgba(246, 189, 69, 0.28) 48%, rgba(255, 216, 77, 0) 74%);
-          filter: drop-shadow(0 0 24px rgba(255, 196, 55, 0.55));
-          animation: sunrise-halo-pulse 3.2s ease-in-out 1.2s infinite;
-        }
-        .sunrise-sun::before {
-          content: '';
-          position: absolute;
-          inset: 23%;
-          border-radius: 50%;
-          z-index: 0;
-          background: radial-gradient(circle at 38% 32%, #FFF4B5 0%, #FFD84D 48%, #E99B27 100%);
-          border: 1px solid rgba(255, 246, 195, 0.9);
-          box-shadow: 0 0 26px rgba(255, 205, 66, 0.7), 0 0 70px rgba(255, 185, 54, 0.38), inset 0 -8px 18px rgba(174, 91, 18, 0.2);
-        }
-
         .sunrise-sun {
           position: relative;
           display: grid;
@@ -161,22 +141,10 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           margin-bottom: 2.1rem;
           animation: sunrise-sun-rise 1.5s cubic-bezier(0.2, 0.85, 0.25, 1) both;
         }
-        .sunrise-orbit {
-          position:absolute; inset:4px;
-          border:1px solid rgba(255,232,166,.22);
-          border-radius:9999px;
-          box-shadow:0 0 34px rgba(255,216,77,.09),inset 0 0 28px rgba(255,216,77,.045);
-        }
-        .sunrise-orbit::before,.sunrise-orbit::after {
-          content:''; position:absolute; width:7px;height:7px;border-radius:50%;
-          background:#FFE9A3; box-shadow:0 0 12px 3px rgba(255,216,77,.55);
-        }
-        .sunrise-orbit::before { top:18%;right:13%; }
-        .sunrise-orbit::after { bottom:17%;left:12%;width:4px;height:4px; }
         .sunrise-rays {
-          position:relative; z-index:1;
-          filter:drop-shadow(0 4px 8px rgba(30, 15, 12, .72)) drop-shadow(0 12px 30px rgba(255,190,64,.38));
-          animation: sunrise-rays-spin 42s linear infinite;
+          position: relative;
+          z-index: 1;
+          filter: drop-shadow(0 3px 8px rgba(30, 15, 12, .65)) drop-shadow(0 8px 18px rgba(255, 190, 64, .24));
         }
 
         .sunrise-sparkle {
@@ -247,13 +215,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           60%  { opacity: 1; }
           to   { opacity: 1; transform: translateY(0) scale(1); }
         }
-        @keyframes sunrise-halo-pulse {
-          0%, 100% { transform: scale(1);    opacity: 0.85; }
-          50%      { transform: scale(1.14); opacity: 1; }
-        }
-        @keyframes sunrise-rays-spin {
-          to { transform: rotate(360deg); }
-        }
         @keyframes sunrise-twinkle {
           0%, 100% { opacity: 0;    transform: scale(0.6); }
           50%      { opacity: 0.95; transform: scale(1); }
@@ -280,7 +241,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
 
         @media (prefers-reduced-motion: reduce) {
           .sunrise-horizon,
-          .sunrise-halo,
           .sunrise-sun,
           .sunrise-rays,
           .sunrise-wordmark,
@@ -327,8 +287,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
       ))}
 
       <div className="sunrise-sun">
-        <div className="sunrise-halo" aria-hidden="true" />
-        <div className="sunrise-orbit" aria-hidden="true" />
         <div className="sunrise-rays">
           <SunnyLogo size="huge" />
         </div>
