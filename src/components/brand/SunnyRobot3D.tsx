@@ -220,13 +220,42 @@ export const SunnyRobot3D: React.FC<SunnyRobot3DProps> = ({
           map: ringTexture, emissiveMap: ringTexture, emissive: 0xffffff,
           emissiveIntensity: 0.18, roughness: 0.32, clearcoat: 0.65,
         });
-        const faceRing = new THREE.Mesh(new THREE.TorusGeometry(0.72, 0.075, 32, 180), ringMaterial);
-        faceRing.position.set(0, 0.28, 0.61);
-        headPivot.add(faceRing);
-
-        const bezel = new THREE.Mesh(new THREE.TorusGeometry(0.615, 0.045, 24, 160), shell);
-        bezel.position.set(0, 0.28, 0.625);
-        headPivot.add(bezel);
+        // Rounded-square frame that hugs the face screen (screen is 1.08 x 0.83).
+        const roundedRectShape = (w: number, h: number, r: number) => {
+          const shape = new THREE.Shape();
+          const x = -w / 2;
+          const y = -h / 2;
+          shape.moveTo(x + r, y);
+          shape.lineTo(x + w - r, y);
+          shape.absarc(x + w - r, y + r, r, -Math.PI / 2, 0, false);
+          shape.lineTo(x + w, y + h - r);
+          shape.absarc(x + w - r, y + h - r, r, 0, Math.PI / 2, false);
+          shape.lineTo(x + r, y + h);
+          shape.absarc(x + r, y + h - r, r, Math.PI / 2, Math.PI, false);
+          shape.lineTo(x, y + r);
+          shape.absarc(x + r, y + r, r, Math.PI, Math.PI * 1.5, false);
+          return shape;
+        };
+        // The bevel adds 0.02 on every side, so these give a 1.34 x 1.09 outer edge
+        // and a 1.09 x 0.84 opening around the screen.
+        const frameShape = roundedRectShape(1.3, 1.05, 0.24);
+        frameShape.holes.push(roundedRectShape(1.13, 0.88, 0.17));
+        const frameGeometry = new THREE.ExtrudeGeometry(frameShape, {
+          depth: 0.09, bevelEnabled: true, bevelThickness: 0.02, bevelSize: 0.02, bevelSegments: 6, curveSegments: 28,
+        });
+        frameGeometry.computeBoundingBox();
+        const frameBox = frameGeometry.boundingBox;
+        const framePos = frameGeometry.attributes.position;
+        const frameUv = new Float32Array(framePos.count * 2);
+        for (let i = 0; i < framePos.count; i++) {
+          frameUv[i * 2] = (framePos.getX(i) - frameBox.min.x) / (frameBox.max.x - frameBox.min.x);
+          frameUv[i * 2 + 1] = (framePos.getY(i) - frameBox.min.y) / (frameBox.max.y - frameBox.min.y);
+        }
+        frameGeometry.setAttribute('uv', new THREE.BufferAttribute(frameUv, 2));
+        const faceFrame = new THREE.Mesh(frameGeometry, ringMaterial);
+        faceFrame.castShadow = true;
+        faceFrame.position.set(0, 0.28, 0.55);
+        headPivot.add(faceFrame);
 
         // Face is a generated canvas texture so blinking never needs image assets.
         const faceCanvas = document.createElement('canvas');
