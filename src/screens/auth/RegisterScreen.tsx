@@ -182,6 +182,7 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
         style={{ width: '100%', maxWidth: '26rem' }}
       >
         <SunnyAuthHero
+          compact
           className="reg-hero"
           title={confirmationRequired ? 'Check your inbox' : 'Join Sunny'}
           description={confirmationRequired
