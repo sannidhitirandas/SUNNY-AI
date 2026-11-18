@@ -19,21 +19,21 @@ export const DailySunshineCard: React.FC = () => {
   };
 
   return (
-    <AppCard className="my-4 rounded-2xl border border-[#4A345F]/70 bg-[#211633]/90 p-4 sm:p-5">
+    <AppCard className="sunny-daily-card my-5 rounded-[24px] border border-[#7C6394]/30 bg-gradient-to-r from-[#302044] via-[#261B3A] to-[#211633] p-4 shadow-[0_10px_30px_rgba(0,0,0,.14)] sm:p-5">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-[#FFD84D]">
+        <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#FFD84D]">
           Little reminder 💛
         </span>
         <button
           type="button"
           onClick={handleNext}
-          className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-[#FFD84D]/15 text-[#FFD84D] text-xs font-semibold hover:bg-[#FFD84D]/25 transition-colors cursor-pointer"
+          className="inline-flex items-center gap-1.5 rounded-full border border-[#FFD84D]/20 bg-[#FFD84D]/10 px-3 py-1.5 text-xs font-semibold text-[#FFD84D] transition-all hover:border-[#FFD84D]/40 hover:bg-[#FFD84D]/20 active:scale-95 cursor-pointer"
         >
           <Sparkles size={13} />
           <span>Another ☀️</span>
         </button>
       </div>
-      <p className="text-lg leading-relaxed text-[#F5EDFF] sm:text-xl">
+      <p key={index}\n        className="sunny-reminder-text text-[15px] leading-relaxed text-[#F5EDFF] sm:text-xl">
         "{DAILY_REMINDERS[index]}"
       </p>
     </AppCard>
