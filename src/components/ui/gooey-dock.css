@@ -14,6 +14,8 @@
   -webkit-backdrop-filter: blur(26px) saturate(145%);
   backdrop-filter: blur(26px) saturate(145%);
   transition: transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 220ms ease;
+  will-change:transform,opacity;
+  contain:layout paint;
 }
 .gooey-dock-shell--hidden {
   transform: translate(-50%, calc(100% + 2rem));
@@ -46,6 +48,7 @@
 .gooey-dock__item:focus-visible,
 .gooey-dock__item--active { color:#FFD84D; }
 .gooey-dock__item--emphasized { transform:translateY(-2px) scale(1.06); }
+.gooey-dock__item:active { transform:translateY(0) scale(.96); }
 .gooey-dock__item:focus-visible { outline:2px solid rgba(255,216,77,.8); outline-offset:2px; }
 .gooey-dock__icon-wrap { display:flex; align-items:center; justify-content:center; min-height:1.55rem; }
 .gooey-dock__label {
@@ -58,4 +61,6 @@
 }
 @media (prefers-reduced-motion:reduce) {
   .gooey-dock-shell,.gooey-dock__blob,.gooey-dock__item { transition:none; }
+  .gooey-dock-shell { will-change:auto; }
+  .gooey-dock__item:active,.gooey-dock__item--emphasized { transform:none; }
 }
