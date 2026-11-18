@@ -154,7 +154,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
 
         .login-video-backdrop {
           position: fixed;
-          z-index: 0;
+          z-index: -1;
           inset: 0;
           overflow: hidden;
           pointer-events: none;
@@ -204,6 +204,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
           box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.16);
         }
         .login-hero {
+          position: relative;
+          z-index: 3;
           animation: login-fade-up 0.7s ease-out both;
         }
 
