@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { App as CapacitorApp } from '@capacitor/app';
 import { Capacitor, type PluginListenerHandle } from '@capacitor/core';
-import { MOBILE_QUERY } from '@/lib/chatBackground';
 import { Keyboard } from '@capacitor/keyboard';
 import { Browser } from '@capacitor/browser';
 import { authService } from '@/services/authService';
@@ -75,10 +74,9 @@ export function App() {
   }, []);
   const [activeTab, setActiveTab] = useState<Tab>('home');
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
-  // Desktop web only: in chat the message box sits flush at the bottom and the
-  // nav dock stays hidden until the user goes "back". Phones and the native app
-  // keep the always-available dock.
-  const [isWebDesktop, setIsWebDesktop] = useState(false);
+  // On every platform, the message box sits flush at the bottom during a chat
+  // and the nav dock stays hidden. Pressing "back" once slides the dock up
+  // under the message box; pressing back again leaves the chat for Home.
   const [navRevealed, setNavRevealed] = useState(false);
   const navRevealedRef = useRef(false);
   navRevealedRef.current = navRevealed;
@@ -128,23 +126,25 @@ export function App() {
   const handleTabChangeRef = useRef(handleTabChange);
   handleTabChangeRef.current = handleTabChange;
 
-  useEffect(() => {
-    if (Capacitor.isNativePlatform()) return;
-    const mediaQuery = window.matchMedia(MOBILE_QUERY);
-    const update = () => setIsWebDesktop(!mediaQuery.matches);
-    update();
-    mediaQuery.addEventListener('change', update);
-    return () => mediaQuery.removeEventListener('change', update);
-  }, []);
+  // Back inside a chat (header arrow, browser back or Android back):
+  // 1st press reveals the nav dock, 2nd press goes Home.
+  const handleChatBack = () => {
+    if (!navRevealedRef.current) {
+      setNavRevealed(true);
+      return;
+    }
+    handleTabChange('home');
+  };
 
   useEffect(() => {
     if (activeTab !== 'chat') setNavRevealed(false);
   }, [activeTab]);
 
-  // Browser Back inside desktop chat: 1st press slides the nav up under the
-  // message box, 2nd press goes Home (same as Android back).
+  // Browser Back inside a web chat (desktop and mobile browsers): 1st press
+  // slides the nav up under the message box, 2nd press goes Home. The native
+  // Android app handles this through its own backButton listener below.
   useEffect(() => {
-    if (activeTab !== 'chat' || !isWebDesktop) return;
+    if (activeTab !== 'chat' || Capacitor.isNativePlatform()) return;
 
     window.history.pushState({ sunnyChatNav: true }, '');
     const onPopState = () => {
@@ -158,7 +158,7 @@ export function App() {
 
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
-  }, [activeTab, isWebDesktop]);
+  }, [activeTab]);
 
   // Keyboard visibility.
   // - Web/PWA: infer it from the visual viewport shrinking.
@@ -214,6 +214,7 @@ export function App() {
     if (preferences.audioPreferences.musicEnabled) {
       audioService.resumeMusic();
     }
+    setNavRevealed(false);
     setActiveTab('chat');
   };
 
@@ -313,7 +314,22 @@ export function App() {
     void CapacitorApp.addListener('backButton', () => {
       if (screenBackHandlerRef.current?.()) return;
 
-      switch (resolveAndroidBackAction(navigationStateRef.current)) {
+      // In a chat, the first back press only reveals the nav dock.
+      const navState = navigationStateRef.current;
+      if (
+        navState.activeTab === 'chat' &&
+        navState.isAuthenticated &&
+        !navState.showSplash &&
+        !navState.isLoading &&
+        !navState.hasActiveSubscreen &&
+        !navState.passwordRecovery &&
+        !navRevealedRef.current
+      ) {
+        setNavRevealed(true);
+        return;
+      }
+
+      switch (resolveAndroidBackAction(navState)) {
         case 'close-subscreen':
           setActiveSubScreen('none');
           break;
@@ -473,7 +489,7 @@ export function App() {
   }
 
   const chatNavHidden =
-    activeTab === 'chat' && (isKeyboardVisible || (isWebDesktop && !navRevealed));
+    activeTab === 'chat' && (isKeyboardVisible || !navRevealed);
   const hideNavBar = chatNavHidden;
 
   return (
@@ -496,6 +512,7 @@ export function App() {
             onBlur={() => setIsKeyboardVisible(false)}
             isKeyboardVisible={isKeyboardVisible}
             isNavHidden={chatNavHidden}
+            onBack={handleChatBack}
           />
         )}
 
