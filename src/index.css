@@ -1400,10 +1400,12 @@ button:disabled { cursor: not-allowed; }
   font-size: 1.2rem;
   transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
 }
-.sunny-memory-deck-control:hover {
-  transform: translateY(-2px);
-  border-color: rgba(217,70,239,.55);
-  background: rgba(65,45,94,.9);
+@media (hover: hover) {
+  .sunny-memory-deck-control:hover {
+    transform: translateY(-2px);
+    border-color: rgba(217,70,239,.55);
+    background: rgba(65,45,94,.9);
+  }
 }
 .sunny-memory-deck-control:active { transform: scale(.94); }
 .sunny-memory-deck-control:focus-visible {
@@ -1486,6 +1488,21 @@ button:disabled { cursor: not-allowed; }
 .sunny-memory-deck-front {
   position: relative;
   z-index: 2;
+  transform-origin: 50% 85%;
+  will-change: transform;
+}
+/* Horizontal drags swipe the card; vertical drags still scroll the page. */
+.sunny-memory-deck-front.is-swipeable {
+  touch-action: pan-y;
+  cursor: grab;
+}
+.sunny-memory-deck-front.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+  -webkit-user-select: none;
+}
+/* The entrance lives on an inner wrapper so it never fights the swipe transform. */
+.sunny-memory-deck-arrive {
   animation: sunny-memory-card-arrive 380ms cubic-bezier(.2,.8,.2,1) both;
 }
 .sunny-memory-deck-front .sunny-memory-card {
@@ -1535,10 +1552,12 @@ button:disabled { cursor: not-allowed; }
   font-size: 1.2rem;
   transition: transform 180ms ease,border-color 180ms ease,background 180ms ease;
 }
-.sunny-memory-deck-control:hover {
-  transform: translateY(-2px);
-  border-color: rgba(217,70,239,.58);
-  background: #3c2a56;
+@media (hover: hover) {
+  .sunny-memory-deck-control:hover {
+    transform: translateY(-2px);
+    border-color: rgba(217,70,239,.58);
+    background: #3c2a56;
+  }
 }
 .sunny-memory-deck-control:active { transform: scale(.94); }
 .sunny-memory-deck-control:focus-visible {
@@ -1564,8 +1583,8 @@ button:disabled { cursor: not-allowed; }
   background: #D946EF;
 }
 @keyframes sunny-memory-card-arrive {
-  from { opacity: .65; transform: translateY(9px) scale(.985) rotate(-.4deg); }
-  to { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
+  from { opacity: .55; transform: translateX(var(--arrive-x, 0px)) translateY(9px) scale(.97) rotate(-.4deg); }
+  to { opacity: 1; transform: translateX(0) translateY(0) scale(1) rotate(0); }
 }
 :root[data-theme='sunny-light'] .sunny-memory-deck-sheet-back {
   background: linear-gradient(145deg,#E8DDF2,#DCD0E9);
@@ -1594,7 +1613,7 @@ button:disabled { cursor: not-allowed; }
   .sunny-memory-deck-front .sunny-memory-card { min-height: 15rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sunny-memory-deck-front { animation: none; }
+  .sunny-memory-deck-arrive { animation: none; }
   .sunny-memory-deck-control,.sunny-memory-deck-progress span { transition: none; }
   .sunny-memory-deck-control:hover,.sunny-memory-deck-control:active { transform: none; }
 }

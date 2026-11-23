@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useMemories } from '@/context/MemoryContext';
 import { usePreferences } from '@/context/PreferencesContext';
 import { audioService } from '@/services/audioService';
@@ -18,6 +18,11 @@ const FILTER_CATEGORIES: { label: string; value: MemoryCategory | 'all' }[] = [
   { label: 'Preferences', value: 'preferences' },
 ];
 
+type DeckPhase = 'idle' | 'dragging' | 'returning' | 'exiting';
+const SWIPE_DISTANCE = 90; // px a card must travel to count as a swipe
+const EXIT_MS = 260;
+const RETURN_MS = 240;
+
 export const MemoriesScreen: React.FC = () => {
   const { preferences, toggleMemory } = usePreferences();
   const {
@@ -34,6 +39,102 @@ export const MemoriesScreen: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [activeMemoryIndex, setActiveMemoryIndex] = useState(0);
   const [editingMemory, setEditingMemory] = useState<Memory | null>(null);
+
+  // Card deck: swipe or tap the arrows. Next = card exits left, previous = exits right.
+  const [deckPhase, setDeckPhase] = useState<DeckPhase>('idle');
+  const [dragX, setDragX] = useState(0);
+  const [exitDir, setExitDir] = useState<1 | 0 | -1>(0);
+  const dragRef = useRef<{ x: number; y: number; id: number; t: number; active: boolean } | null>(null);
+  const deckTimer = useRef<number | undefined>(undefined);
+
+  const total = filteredMemories.length;
+  const safeIndex = total > 0 ? activeMemoryIndex % total : 0;
+
+  useEffect(() => () => window.clearTimeout(deckTimer.current), []);
+
+  // Start from the first card whenever the filter or search changes the list.
+  useEffect(() => {
+    window.clearTimeout(deckTimer.current);
+    setActiveMemoryIndex(0);
+    setDeckPhase('idle');
+    setDragX(0);
+    setExitDir(0);
+  }, [selectedCategory, searchQuery]);
+
+  const goTo = (direction: 1 | -1) => {
+    if (total < 2 || deckPhase === 'exiting') return;
+    window.clearTimeout(deckTimer.current);
+    const commit = () => {
+      setActiveMemoryIndex((safeIndex + direction + total) % total);
+      setDragX(0);
+      setDeckPhase('idle');
+    };
+    setExitDir(direction);
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      commit();
+      return;
+    }
+    setDeckPhase('exiting');
+    deckTimer.current = window.setTimeout(commit, EXIT_MS);
+  };
+
+  const handleDeckPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (total < 2 || deckPhase === 'exiting') return;
+    // Let taps on Edit / Delete behave like normal buttons.
+    if ((event.target as HTMLElement).closest('button')) return;
+    window.clearTimeout(deckTimer.current);
+    dragRef.current = { x: event.clientX, y: event.clientY, id: event.pointerId, t: performance.now(), active: false };
+  };
+
+  const handleDeckPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const drag = dragRef.current;
+    if (!drag || drag.id !== event.pointerId) return;
+    const dx = event.clientX - drag.x;
+    const dy = event.clientY - drag.y;
+    if (!drag.active) {
+      // Only take over for clearly horizontal movement so vertical scrolling still works.
+      if (Math.abs(dx) < 8 || Math.abs(dx) < Math.abs(dy)) return;
+      drag.active = true;
+      event.currentTarget.setPointerCapture(event.pointerId);
+      setDeckPhase('dragging');
+    }
+    setDragX(dx);
+  };
+
+  const handleDeckPointerEnd = (event: React.PointerEvent<HTMLDivElement>, cancelled = false) => {
+    const drag = dragRef.current;
+    if (!drag || drag.id !== event.pointerId) return;
+    dragRef.current = null;
+    if (!drag.active) return;
+    const dx = event.clientX - drag.x;
+    const elapsed = Math.max(performance.now() - drag.t, 1);
+    const width = event.currentTarget.getBoundingClientRect().width;
+    const farEnough = Math.abs(dx) > Math.min(SWIPE_DISTANCE, width * 0.25);
+    const quickFlick = Math.abs(dx) > 30 && Math.abs(dx) / elapsed > 0.5;
+    if (!cancelled && (farEnough || quickFlick)) {
+      goTo(dx < 0 ? 1 : -1);
+      return;
+    }
+    setDeckPhase('returning');
+    setDragX(0);
+    deckTimer.current = window.setTimeout(() => setDeckPhase('idle'), RETURN_MS);
+  };
+
+  const deckFrontStyle: React.CSSProperties =
+    deckPhase === 'dragging'
+      ? { transform: `translateX(${dragX}px) rotate(${dragX / 24}deg)`, transition: 'none' }
+      : deckPhase === 'exiting'
+        ? {
+            transform: `translateX(${exitDir === 1 ? '-125%' : '125%'}) rotate(${exitDir === 1 ? -14 : 14}deg)`,
+            opacity: 0,
+            transition: `transform ${EXIT_MS}ms cubic-bezier(.4,0,1,1), opacity ${EXIT_MS}ms ease-in`,
+          }
+        : deckPhase === 'returning'
+          ? { transform: 'translateX(0) rotate(0)', transition: `transform ${RETURN_MS}ms cubic-bezier(.2,.9,.3,1.2)` }
+          : {};
+
+  const dotCount = Math.min(total, 7);
+  const activeDot = total <= 7 ? safeIndex : Math.round((safeIndex / (total - 1)) * (dotCount - 1));
 
   const handleOpenAdd = () => {
     setEditingMemory(null);
@@ -177,7 +278,7 @@ export const MemoriesScreen: React.FC = () => {
                   <p className="mt-1 text-xs text-[#AA92CC]">Every card holds something worth remembering</p>
                 </div>
                 <span className="sunny-memory-deck-counter">
-                  {((activeMemoryIndex % filteredMemories.length) + 1).toString().padStart(2, '0')}
+                  {(safeIndex + 1).toString().padStart(2, '0')}
                   <span> / {filteredMemories.length.toString().padStart(2, '0')}</span>
                 </span>
               </div>
@@ -189,12 +290,25 @@ export const MemoriesScreen: React.FC = () => {
                     <div className="sunny-memory-deck-sheet sunny-memory-deck-sheet-middle" aria-hidden="true" />
                   </>
                 )}
-                <div className="sunny-memory-deck-front" key={filteredMemories[activeMemoryIndex % filteredMemories.length].id}>
-                  <MemoryCard
-                    memory={filteredMemories[activeMemoryIndex % filteredMemories.length]}
-                    onEdit={handleOpenEdit}
-                    onDelete={deleteMemory}
-                  />
+                <div
+                  className={`sunny-memory-deck-front ${total > 1 ? 'is-swipeable' : ''} ${deckPhase === 'dragging' ? 'is-dragging' : ''}`}
+                  style={deckFrontStyle}
+                  onPointerDown={handleDeckPointerDown}
+                  onPointerMove={handleDeckPointerMove}
+                  onPointerUp={(event) => handleDeckPointerEnd(event)}
+                  onPointerCancel={(event) => handleDeckPointerEnd(event, true)}
+                >
+                  <div
+                    className="sunny-memory-deck-arrive"
+                    key={filteredMemories[safeIndex].id}
+                    style={{ '--arrive-x': `${exitDir * 36}px` } as React.CSSProperties}
+                  >
+                    <MemoryCard
+                      memory={filteredMemories[safeIndex]}
+                      onEdit={handleOpenEdit}
+                      onDelete={deleteMemory}
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -202,20 +316,20 @@ export const MemoriesScreen: React.FC = () => {
                 <div className="sunny-memory-deck-navigation">
                   <button
                     type="button"
-                    onClick={() => setActiveMemoryIndex((current) => (current - 1 + filteredMemories.length) % filteredMemories.length)}
+                    onClick={() => goTo(-1)}
                     className="sunny-memory-deck-control"
                     aria-label="Previous memory"
                   >
                     <span aria-hidden="true">←</span>
                   </button>
                   <div className="sunny-memory-deck-progress" aria-hidden="true">
-                    {filteredMemories.slice(0, Math.min(filteredMemories.length, 7)).map((memory, index) => (
-                      <span key={memory.id} className={index === activeMemoryIndex % filteredMemories.length ? 'is-active' : ''} />
+                    {Array.from({ length: dotCount }, (_, index) => (
+                      <span key={index} className={index === activeDot ? 'is-active' : ''} />
                     ))}
                   </div>
                   <button
                     type="button"
-                    onClick={() => setActiveMemoryIndex((current) => (current + 1) % filteredMemories.length)}
+                    onClick={() => goTo(1)}
                     className="sunny-memory-deck-control"
                     aria-label="Next memory"
                   >
