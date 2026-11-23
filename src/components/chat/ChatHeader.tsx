@@ -1,5 +1,6 @@
 import React from 'react';
-import { ArrowLeft, Mic, MoreVertical, Sparkles, Sun } from 'lucide-react';
+import { ArrowLeft, Mic, MoreVertical, Sparkles } from 'lucide-react';
+import { SunnySun } from '@/components/brand/SunnySun';
 import { SunnyLogo } from '../brand/SunnyLogo';
 
 interface ChatHeaderProps {
@@ -26,7 +27,7 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
           </button>
         )}
         <div className="sunny-chat-avatar flex h-10 w-10 shrink-0 items-center justify-center rounded-[17px] border border-[#E879F9]/35 bg-gradient-to-br from-[#E879F9]/20 to-[#8B5CF6]/25 text-[#E879F9] shadow-[0_5px_22px_rgba(185,154,255,.08)]">
-          <Sun size={21} className="sunny-shine" />
+          <SunnySun compact className="h-8 w-8" />
         </div>
         <div className="min-w-0">
           <h2 className="flex items-center gap-1.5 text-[15px] font-bold tracking-tight text-white">

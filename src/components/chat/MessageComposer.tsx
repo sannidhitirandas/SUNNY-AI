@@ -37,7 +37,7 @@ const compressImageIfNeeded = async (file: File): Promise<File> => {
   });
 };
 
-export const MessageComposer: React.FC<MessageComposerProps> = ({ onSend, onVoicePress, disabled = false, placeholder = "Tell Sunny what's on your mind...", onFocus, onBlur, isKeyboardVisible = false }) => {
+export const MessageComposer: React.FC<MessageComposerProps> = ({ onSend, onVoicePress, disabled = false, placeholder = "What's on your mind?", onFocus, onBlur, isKeyboardVisible = false }) => {
   const [text, setText] = useState('');
   const [files, setFiles] = useState<File[]>([]);
   const [fileError, setFileError] = useState<string | null>(null);
