@@ -12,6 +12,11 @@ const CY = 120;
 
 const SPARKLE_PATH = 'M0 -14 Q2 -2 14 0 Q2 2 0 14 Q-2 2 -14 0 Q-2 -2 0 -14Z';
 
+// Flat-bottomed clouds built from overlapping circles; both sit behind the sun.
+const CLOUD_BASE = 246;
+const LEFT_CLOUD = { rect: { x: -26, w: 106 }, bumps: [[-4, 224, 22], [38, 200, 38], [80, 220, 26]] };
+const RIGHT_CLOUD = { rect: { x: 176, w: 114 }, bumps: [[198, 222, 24], [234, 208, 30], [270, 226, 20]] };
+
 /**
  * Sunny's mascot: a glossy, smiling sun with scalloped petals, rosy cheeks and
  * happy closed eyes. Pure SVG, no assets or WebGL required.
@@ -21,6 +26,7 @@ export const SunnySun: React.FC<SunnySunProps> = ({ className = '', compact = fa
   const bodyGradient = `sunny-sun-body-${uid}`;
   const petalGradient = `sunny-sun-petal-${uid}`;
   const shineGradient = `sunny-sun-shine-${uid}`;
+  const cloudGradient = `sunny-sun-cloud-${uid}`;
 
   return (
     <>
@@ -31,19 +37,22 @@ export const SunnySun: React.FC<SunnySunProps> = ({ className = '', compact = fa
         .sunny-sun-eyes { transform-box:fill-box; transform-origin:center; animation: sunny-sun-blink 6s ease-in-out infinite; }
         .sunny-sun-sparkle { transform-box:fill-box; transform-origin:center; animation: sunny-sun-twinkle 3.2s ease-in-out infinite; }
         .sunny-sun-sparkle-b { animation-delay:1.4s; }
+        .sunny-sun-cloud { animation: sunny-sun-drift 8s ease-in-out infinite alternate; }
+        .sunny-sun-cloud-b { animation-duration:10s; animation-delay:-3s; }
+        @keyframes sunny-sun-drift { from { transform:translateX(-4px); } to { transform:translateX(5px); } }
         @keyframes sunny-sun-float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-4px); } }
         @keyframes sunny-sun-spin { to { transform:rotate(360deg); } }
         @keyframes sunny-sun-blink { 0%,92%,100% { transform:scaleY(1); } 96% { transform:scaleY(.2); } }
         @keyframes sunny-sun-twinkle { 0%,100% { opacity:.55; transform:scale(.85); } 50% { opacity:1; transform:scale(1.1); } }
         @media(prefers-reduced-motion:reduce) {
-          .sunny-sun-float,.sunny-sun-petals,.sunny-sun-eyes,.sunny-sun-sparkle { animation:none !important; }
+          .sunny-sun-float,.sunny-sun-petals,.sunny-sun-eyes,.sunny-sun-sparkle,.sunny-sun-cloud { animation:none !important; }
         }
       `}</style>
       {/* The wrapper owns the size; the SVG fills it absolutely so it can never overflow its box. */}
       <div className={`sunny-sun-wrap ${className}`} style={{ position: 'relative', minWidth: 0, minHeight: 0 }}>
       <svg
         className="sunny-sun"
-        viewBox={compact ? '28 8 224 224' : '-30 0 340 240'}
+        viewBox={compact ? '28 8 224 224' : '-30 0 340 250'}
         preserveAspectRatio="xMidYMid meet"
         role="img"
         aria-label="Sunny, a smiling sun with rosy cheeks"
@@ -60,6 +69,10 @@ export const SunnySun: React.FC<SunnySunProps> = ({ className = '', compact = fa
             <stop offset="60%" stopColor="#FFD24A" />
             <stop offset="100%" stopColor="#FDBB4A" />
           </radialGradient>
+          <linearGradient id={cloudGradient} gradientUnits="userSpaceOnUse" x1="0" y1="160" x2="0" y2={CLOUD_BASE}>
+            <stop offset="0%" stopColor="#8B67B5" />
+            <stop offset="100%" stopColor="#3F2A66" />
+          </linearGradient>
           <radialGradient id={shineGradient} cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.75" />
             <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
@@ -74,6 +87,19 @@ export const SunnySun: React.FC<SunnySunProps> = ({ className = '', compact = fa
             <g transform="translate(268 26) scale(.7)" className="sunny-sun-sparkle sunny-sun-sparkle-b">
               <path d={SPARKLE_PATH} fill="#FFD84D" />
             </g>
+          </>
+        )}
+
+        {!compact && (
+          <>
+            {[LEFT_CLOUD, RIGHT_CLOUD].map((cloud, index) => (
+              <g key={index} className={`sunny-sun-cloud ${index ? 'sunny-sun-cloud-b' : ''}`} fill={`url(#${cloudGradient})`} opacity="0.92">
+                <rect x={cloud.rect.x} y={cloud.bumps[0][1]} width={cloud.rect.w} height={CLOUD_BASE - cloud.bumps[0][1]} />
+                {cloud.bumps.map(([x, y, r], i) => (
+                  <circle key={i} cx={x} cy={y} r={r} />
+                ))}
+              </g>
+            ))}
           </>
         )}
 
