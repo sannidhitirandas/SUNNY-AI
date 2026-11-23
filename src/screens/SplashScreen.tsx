@@ -52,8 +52,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
         .sunrise-screen > .sunrise-wordmark,
         .sunrise-screen > .sunrise-greeting,
         .sunrise-screen > .sunrise-tagline,
-        .sunrise-screen > .sunrise-waiting,
-        .sunrise-screen > .sunrise-bar {
+        .sunrise-screen > .sunrise-loader {
           position: relative;
           z-index: 3;
           text-shadow: 0 1px 2px rgba(0, 0, 0, 1), 0 3px 10px rgba(0, 0, 0, 0.98), 0 8px 28px rgba(0, 0, 0, 0.92);
@@ -117,38 +116,52 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
         .sunrise-tagline {
           animation: sunrise-fade-up 1s ease-out 1.7s both;
         }
-        .sunrise-waiting {
-          margin-top:2rem; color:#D6C2F2;
-          font-size:.68rem; letter-spacing:.13em;
-          animation:sunrise-fade-up .7s ease-out 2s both;
+        /* Centered loader: progress bar with the status label beneath it. */
+        .sunrise-loader {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: .8rem;
+          margin-top: 2.25rem;
+          text-shadow: none !important;
+          animation: sunrise-fade-up .7s ease-out 1.1s both;
         }
-        .sunrise-waiting::after {
-          content:''; display:inline-block; width:16px; height:1px;
-          margin-left:8px; vertical-align:middle;
-          background:linear-gradient(90deg,#D946EF,transparent);
-          animation:sunrise-waiting-pulse 1.2s ease-in-out infinite;
-        }
-
         .sunrise-bar {
-          position: absolute;
-          left: 50%;
-          bottom: max(env(safe-area-inset-bottom, 0px), 28px);
-          width: 72px;
-          height: 3px;
-          margin-left: -36px;
+          position: relative;
+          width: min(176px, 52vw);
+          height: 4px;
           border-radius: 9999px;
-          background: rgba(198, 184, 229, 0.18);
+          background: rgba(198, 184, 229, 0.16);
+          box-shadow: 0 0 0 1px rgba(198, 184, 229, 0.08);
           overflow: hidden;
-          animation: sunrise-fade-up 0.6s ease-out 0.4s both;
         }
         .sunrise-bar::after {
           content: '';
           position: absolute;
           inset: 0;
           border-radius: 9999px;
-          background: linear-gradient(90deg, #B99AFF, #F0ABFC);
+          background: linear-gradient(90deg, #FFD84D, #F0ABFC 60%, #B99AFF);
+          box-shadow: 0 0 10px rgba(255, 216, 77, .55);
           transform-origin: left center;
-          animation: sunrise-bar-fill 2.6s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
+          animation: sunrise-bar-fill 1.8s cubic-bezier(0.4, 0, 0.2, 1) 1.1s both;
+        }
+        .sunrise-bar::before {
+          content: '';
+          position: absolute;
+          top: 0; bottom: 0; left: 0;
+          width: 40%;
+          z-index: 1;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
+          transform: translateX(-120%);
+          animation: sunrise-bar-shimmer 1.4s ease-in-out 1.4s infinite;
+        }
+        .sunrise-waiting {
+          margin: 0;
+          color: #D6C2F2;
+          font-size: .68rem;
+          font-weight: 600;
+          letter-spacing: .18em;
+          text-transform: uppercase;
         }
 
         @keyframes sunrise-horizon-rise {
@@ -172,9 +185,9 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           from { transform: scaleX(0); }
           to   { transform: scaleX(1); }
         }
-        @keyframes sunrise-waiting-pulse {
-          0%,100% { opacity:.3; transform:scaleX(.55); transform-origin:left; }
-          50% { opacity:1; transform:scaleX(1); transform-origin:left; }
+        @keyframes sunrise-bar-shimmer {
+          from { transform: translateX(-120%); }
+          to   { transform: translateX(320%); }
         }
 
         @media (max-width: 640px) {
@@ -189,8 +202,8 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           .sunrise-greeting,
           .sunrise-tagline,
           .sunrise-eyebrow,
-          .sunrise-waiting,
-          .sunrise-bar,
+          .sunrise-loader,
+          .sunrise-bar::before,
           .sunrise-bar::after {
             animation: none !important;
           }
@@ -239,9 +252,11 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
       <p className="sunrise-tagline max-w-[16rem] text-sm italic leading-relaxed text-[#D8CBEF]">
         You don&rsquo;t have to start over every time you come back.
       </p>
-      <p className="sunrise-waiting" aria-hidden="true">GETTING YOUR SUNSHINE READY</p>
 
-      <div className="sunrise-bar" aria-hidden="true" />
+      <div className="sunrise-loader" aria-hidden="true">
+        <div className="sunrise-bar" />
+        <p className="sunrise-waiting">Getting your sunshine ready</p>
+      </div>
     </div>
   );
 };
