@@ -77,8 +77,6 @@ textarea:focus-visible {
 :root[data-theme='sunny-light'] [class*="bg-[#1A0A2E]"] { background-color: #F0EDF6 !important; }
 :root[data-theme='sunny-light'] [class*="bg-[#1E0B33]"] { background-color: #FFFFFF !important; }
 :root[data-theme='sunny-light'] [class*="bg-[#25103F]"] { background-color: #FFFFFF !important; }
-:root[data-theme='sunny-light'] [class*="bg-[#2D1450]"] { background-color: #F5EFFB !important; }
-:root[data-theme='sunny-light'] [class*="bg-[#2D1450]"] { background-color: #F5EFFB !important; }
 :root[data-theme='sunny-light'] [class*="bg-[#31175A]"] { background-color: #EFEAF5 !important; }
 :root[data-theme='sunny-light'] [class*="bg-[#381A60]"] { background-color: #EAE3F2 !important; }
 :root[data-theme='sunny-light'] [class*="bg-[#43206A]"] { background-color: #E2DAED !important; }
@@ -89,7 +87,6 @@ textarea:focus-visible {
 :root[data-theme='sunny-light'] [class*="from-[#12051F]"] { --tw-gradient-from: #F8F6FC var(--tw-gradient-from-position) !important; }
 :root[data-theme='sunny-light'] [class*="via-[#12051F]"] { --tw-gradient-to: rgb(248 246 252 / 0) var(--tw-gradient-to-position) !important; --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) 0%, #F8F6FC 50%, var(--tw-gradient-to) 100%) !important; }
 :root[data-theme='sunny-light'] [class*="to-[#12051F]"] { --tw-gradient-to: #F8F6FC var(--tw-gradient-to-position) !important; }
-:root[data-theme='sunny-light'] [class*="from-[#2D1450]"] { --tw-gradient-from: #FFFFFF var(--tw-gradient-from-position) !important; }
 :root[data-theme='sunny-light'] [class*="to-[#25103F]"] { --tw-gradient-to: #F5EFFB var(--tw-gradient-to-position) !important; }
 :root[data-theme='sunny-light'] [class*="from-[#25103F]"] { --tw-gradient-from: #FFFFFF var(--tw-gradient-from-position) !important; }
 :root[data-theme='sunny-light'] [class*="to-[#381A60]"] { --tw-gradient-to: #EAE3F2 var(--tw-gradient-to-position) !important; }
@@ -117,8 +114,6 @@ textarea:focus-visible {
 
 /* Border overrides */
 :root[data-theme='sunny-light'] [class*="border-[#4A2A73]"] { border-color: #D6CCE3 !important; }
-:root[data-theme='sunny-light'] [class*="border-[#4D2C78]"] { border-color: #D6CCE3 !important; }
-:root[data-theme='sunny-light'] [class*="border-[#6B3F96]"] { border-color: #D4C7E3 !important; }
 :root[data-theme='sunny-light'] [class*="border-white"] { border-color: rgba(37, 26, 53, 0.12) !important; }
 :root[data-theme='sunny-light'] [class*="border-[#D946EF]"] { border-color: #C026D3 !important; }
 
@@ -593,7 +588,7 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
 .sunny-settings-row { min-width:0; -webkit-tap-highlight-color:transparent; }
 .sunny-settings-row > div { min-width:0; }
 .sunny-settings-icon { transition:background 180ms ease,transform 180ms ease; }
-.sunny-settings-row:hover .sunny-settings-icon { background:#3A2A50; transform:scale(1.04); }
+.sunny-settings-row:hover .sunny-settings-icon { background:#381A60; transform:scale(1.04); }
 .sunny-settings-row [role="switch"]:active { transform:scale(.94); }
 .sunny-settings-row [role="switch"] > span:last-child { box-shadow:0 2px 7px rgba(0,0,0,.28); }
 .sunny-settings-choice:hover,.sunny-settings-wallpaper:hover { border-color:rgba(217,70,239,.4); }
@@ -853,7 +848,7 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
   border-radius: 1.8rem;
   background:
     radial-gradient(ellipse at 92% 0%, rgba(217,70,239,.10), transparent 42%),
-    linear-gradient(150deg, #281b40 0%, #25103F 58%, #19112d 100%);
+    linear-gradient(150deg, #25103F 0%, #25103F 58%, #1A0A2E 100%);
   box-shadow: 0 28px 90px rgba(0,0,0,.48), inset 0 1px 0 rgba(255,255,255,.055);
 }
 .sunny-personality-heading { position: relative; }
@@ -931,7 +926,7 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
 }
 .sunny-mood-option:hover { transform:translateY(-2px); border-color:rgba(217,70,239,.4); background:rgba(217,70,239,.055); }
 .sunny-mood-option[aria-pressed="true"] {
-  color:#FFF5CC; border-color:rgba(217,70,239,.72);
+  color:#FDF4FF; border-color:rgba(217,70,239,.72);
   background:linear-gradient(145deg,rgba(217,70,239,.16),rgba(217,70,239,.055));
   box-shadow:0 6px 22px rgba(217,70,239,.07),inset 0 1px 0 rgba(255,255,255,.05);
 }
@@ -955,7 +950,7 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
 .sunny-mood-day { display:flex; min-width:0; flex-direction:column; align-items:center; gap:.3rem; color:#9D8DB5; font-size:.62rem; }
 .sunny-mood-day-emoji { display:grid; place-items:center; width:2rem; height:2rem; border:1px solid rgba(166,132,204,.15); border-radius:50%; color:#8E7EA5; background:rgba(255,255,255,.025); font-size:1rem; }
 .sunny-mood-day.is-today .sunny-mood-day-emoji { border-color:rgba(217,70,239,.4); color:#D946EF; background:rgba(217,70,239,.08); }
-.sunny-mood-day.is-today { color:#F3DFA2; }
+.sunny-mood-day.is-today { color:#F0ABFC; }
 @media (max-width:420px) {
   .sunny-mood-card { padding:1rem; border-radius:1.35rem; }
   .sunny-mood-options { gap:.3rem; }
@@ -994,7 +989,7 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
   border-radius:1.55rem;
   background:
     radial-gradient(ellipse at 100% 0%,rgba(217,70,239,.13),transparent 48%),
-    linear-gradient(145deg,#281b40 0%,#1A0A2E 75%);
+    linear-gradient(145deg,#25103F 0%,#1A0A2E 75%);
   box-shadow:0 18px 48px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.045);
 }
 .sunny-privacy-intro h2 { letter-spacing:-.02em; }
@@ -1025,7 +1020,7 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
   border-radius:1.65rem;
   background:
     radial-gradient(ellipse at 100% 0%,rgba(255,141,154,.10),transparent 45%),
-    linear-gradient(145deg,#2b1c40,#25103F 65%,#19112d);
+    linear-gradient(145deg,#25103F,#25103F 65%,#1A0A2E);
   box-shadow:0 28px 90px rgba(0,0,0,.52),inset 0 1px 0 rgba(255,255,255,.04);
 }
 .sunny-privacy-screen button:focus-visible,
@@ -1072,7 +1067,7 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
   border-radius:1.55rem;
   background:
     radial-gradient(ellipse at 100% 0%,rgba(217,70,239,.14),transparent 46%),
-    linear-gradient(145deg,#2b2042 0%,#1A0A2E 76%);
+    linear-gradient(145deg,#25103F 0%,#1A0A2E 76%);
   box-shadow:0 18px 48px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.045);
 }
 .sunny-safety-boundary h2 { letter-spacing:-.02em; }
@@ -1185,7 +1180,7 @@ button:disabled { cursor: not-allowed; }
   background:
     radial-gradient(ellipse at 50% -10%, rgba(139,43,226,.42), transparent 55%),
     radial-gradient(ellipse at 100% 105%, rgba(217,70,239,.16), transparent 45%),
-    linear-gradient(180deg, #2A0B4A 0%, #1A0733 38%, var(--sunny-bg) 100%);
+    linear-gradient(180deg, #25103F 0%, #1A0A2E 38%, var(--sunny-bg) 100%);
 }
 :root[data-theme='sunny-light'] .sunny-app-shell {
   background:
@@ -1383,7 +1378,7 @@ button:disabled { cursor: not-allowed; }
   border-radius: 1.5rem !important;
   background:
     radial-gradient(ellipse at 100% 0%, rgba(217,70,239,.075), transparent 42%),
-    linear-gradient(145deg, #281d40 0%, #25103F 58%, #1E0B33 100%) !important;
+    linear-gradient(145deg, #25103F 0%, #25103F 58%, #1E0B33 100%) !important;
   padding: 1.2rem !important;
   box-shadow: 0 20px 46px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.055) !important;
 }
@@ -1471,7 +1466,7 @@ button:disabled { cursor: not-allowed; }
   right: -.45rem;
   bottom: 1.15rem;
   transform: rotate(2.7deg);
-  background: linear-gradient(145deg,#392650,#261a3b 72%);
+  background: linear-gradient(145deg,#381A60,#25103F 72%);
   box-shadow: 0 20px 34px rgba(0,0,0,.22);
 }
 .sunny-memory-deck-sheet-middle {
@@ -1513,7 +1508,7 @@ button:disabled { cursor: not-allowed; }
   background:
     radial-gradient(ellipse at 100% 0%,rgba(217,70,239,.10),transparent 40%),
     radial-gradient(ellipse at 0% 100%,rgba(145,105,190,.13),transparent 48%),
-    linear-gradient(145deg,#2c2043 0%,#25103F 58%,#1E0B33 100%) !important;
+    linear-gradient(145deg,#25103F 0%,#25103F 58%,#1E0B33 100%) !important;
   box-shadow:
     0 28px 58px rgba(0,0,0,.34),
     0 5px 14px rgba(0,0,0,.18),
@@ -1556,7 +1551,7 @@ button:disabled { cursor: not-allowed; }
   .sunny-memory-deck-control:hover {
     transform: translateY(-2px);
     border-color: rgba(217,70,239,.58);
-    background: #3c2a56;
+    background: #381A60;
   }
 }
 .sunny-memory-deck-control:active { transform: scale(.94); }
@@ -1624,7 +1619,7 @@ button:disabled { cursor: not-allowed; }
   isolation: isolate;
   background:
     radial-gradient(ellipse at 50% 0%, rgba(77,48,112,.24), transparent 54%),
-    linear-gradient(155deg,#12051F 0%,#1A0A2E 48%,#14061F 100%);
+    linear-gradient(155deg,#12051F 0%,#1A0A2E 48%,#12051F 100%);
 }
 .sunny-home-atmosphere {
   position: fixed;
@@ -1852,7 +1847,7 @@ button:disabled { cursor: not-allowed; }
 
 /* ---- Sunshine accents: small yellow details with a soft shine ---- */
 .sunny-shine {
-  color: #FFD84D;
+  color: #F0ABFC;
   filter: drop-shadow(0 0 4px rgba(255,216,77,.55));
   animation: sunny-shine 3.4s ease-in-out infinite;
 }

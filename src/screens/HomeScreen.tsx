@@ -55,7 +55,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           background:
             radial-gradient(ellipse at 50% -8%, rgba(126,83,190,.30), transparent 48%),
             radial-gradient(ellipse at 100% 38%, rgba(91,54,151,.13), transparent 34%),
-            linear-gradient(155deg,#12051F 0%,#1A0A2E 52%,#14061F 100%) !important;
+            linear-gradient(155deg,#12051F 0%,#1A0A2E 52%,#12051F 100%) !important;
         }
         .sunny-home-screen .sunny-home-content { max-width: 1120px; margin: 0 auto; }
         .sunny-home-screen .sunny-home-hero {
@@ -126,7 +126,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             <button
               type="button"
               onClick={() => onNavigateToTab('settings')}
-              className="cursor-pointer rounded-xl border border-[#A78BFA]/20 bg-[#2D1450]/80 p-2.5 text-[#D7C2FF] transition-colors hover:border-[#B99AFF]/55 hover:bg-[#39265B] hover:text-white"
+              className="cursor-pointer rounded-xl border border-[#A78BFA]/20 bg-[#25103F]/80 p-2.5 text-[#D7C2FF] transition-colors hover:border-[#B99AFF]/55 hover:bg-[#381A60] hover:text-white"
               aria-label="Open settings"
             >
               <Settings size={18} />
@@ -145,7 +145,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             onClick={handleTalkToSunny}
             className="group relative flex min-h-[104px] items-center gap-4 overflow-hidden rounded-[24px] border border-[#B99AFF]/25 bg-gradient-to-br from-[#3B2860] to-[#25103F] p-4 text-left shadow-[0_12px_30px_rgba(5,2,14,.16)] transition-all hover:-translate-y-1 hover:border-[#E879F9]/50 hover:shadow-[0_16px_36px_rgba(5,2,14,.24)] active:scale-[.99]"
           >
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#E879F9] text-[#2A1347] shadow-[0_6px_20px_rgba(232,121,249,.18)]"><MessageCircle size={22}/></span>
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#E879F9] text-[#25103F] shadow-[0_6px_20px_rgba(232,121,249,.18)]"><MessageCircle size={22}/></span>
             <span className="min-w-0 flex-1">
               <span className="block text-sm font-bold text-white">Start a new chat</span>
               <span className="mt-1 block text-xs leading-relaxed text-[#CDBEE4]">A fresh conversation with Sunny</span>
@@ -155,7 +155,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           <button
             type="button"
             onClick={() => onNavigateToTab('memories')}
-            className="group relative flex min-h-[104px] items-center gap-4 overflow-hidden rounded-[24px] border border-[#B99AFF]/25 bg-gradient-to-br from-[#30234B] to-[#1B142C] p-4 text-left shadow-[0_12px_30px_rgba(5,2,14,.16)] transition-all hover:-translate-y-1 hover:border-[#E879F9]/50 hover:shadow-[0_16px_36px_rgba(5,2,14,.24)] active:scale-[.99]"
+            className="group relative flex min-h-[104px] items-center gap-4 overflow-hidden rounded-[24px] border border-[#B99AFF]/25 bg-gradient-to-br from-[#25103F] to-[#1A0A2E] p-4 text-left shadow-[0_12px_30px_rgba(5,2,14,.16)] transition-all hover:-translate-y-1 hover:border-[#E879F9]/50 hover:shadow-[0_16px_36px_rgba(5,2,14,.24)] active:scale-[.99]"
           >
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-[#E879F9]/20 bg-[#E879F9]/10 text-[#E879F9]"><Bookmark size={21}/></span>
             <span className="min-w-0 flex-1">

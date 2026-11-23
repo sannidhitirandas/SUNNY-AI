@@ -93,7 +93,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
         .sunrise-sparkle {
           position: absolute;
           border-radius: 9999px;
-          background: #FFE9A3;
+          background: #F0ABFC;
           box-shadow: 0 0 8px 1px rgba(217,70,239, 0.65);
           opacity: 0;
           animation: sunrise-twinkle var(--sparkle-duration) ease-in-out var(--sparkle-delay) infinite;
@@ -140,7 +140,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           position: absolute;
           inset: 0;
           border-radius: 9999px;
-          background: linear-gradient(90deg, #FFD84D, #F0ABFC 60%, #B99AFF);
+          background: linear-gradient(90deg, #E879F9, #F0ABFC 60%, #B99AFF);
           box-shadow: 0 0 10px rgba(255, 216, 77, .55);
           transform-origin: left center;
           animation: sunrise-bar-fill 1.8s cubic-bezier(0.4, 0, 0.2, 1) 1.1s both;

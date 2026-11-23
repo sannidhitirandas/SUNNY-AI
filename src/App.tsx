@@ -399,10 +399,10 @@ export function App() {
       <div className="sunny-prehome-loading min-h-[100dvh] flex items-center justify-center overflow-hidden">
         <style>{`
           .sunny-prehome-loading { position:relative; isolation:isolate; background:transparent; color:#F2EFE8; }
-          .sunny-prehome-video-backdrop { position:absolute; inset:0; z-index:-1; overflow:hidden; background:#121417; }
+          .sunny-prehome-video-backdrop { position:absolute; inset:0; z-index:-1; overflow:hidden; background:#12051F; }
           .sunny-prehome-video-backdrop video { width:100%; height:100%; object-fit:cover; filter:none; }
           .sunny-prehome-video-backdrop::after { content:''; position:absolute; inset:0; background:transparent; }
-          .sunny-prehome-loading .border-\\[\\#D946EF\\] { border-color:#E8E1D5; }
+          .sunny-prehome-loading .border-\\[\\#D946EF\\] { border-color:#E879F9; }
           .sunny-prehome-loading-content { text-shadow:0 1px 2px rgba(0,0,0,.98),0 3px 10px rgba(0,0,0,.95),0 8px 24px rgba(0,0,0,.88); }
         `}</style>
         <div className="sunny-prehome-video-backdrop" aria-hidden="true">
@@ -411,8 +411,8 @@ export function App() {
           </video>
         </div>
         <div className="sunny-prehome-loading-content" role="status" aria-live="polite" aria-label="Sunny is getting ready">
-          <div className="w-8 h-8 rounded-full border-3 border-[#E8E1D5] border-t-transparent animate-spin" />
-          <span className="mt-4 text-[11px] font-bold tracking-[0.18em] text-[#E8E1D5]">GETTING SUNNY READY</span>
+          <div className="w-8 h-8 rounded-full border-3 border-[#E879F9] border-t-transparent animate-spin" />
+          <span className="mt-4 text-[11px] font-bold tracking-[0.18em] text-[#E879F9]">GETTING SUNNY READY</span>
         </div>
       </div>
     );

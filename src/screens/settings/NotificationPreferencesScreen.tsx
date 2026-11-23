@@ -40,7 +40,7 @@ export const NotificationPreferencesScreen: React.FC<NotificationPreferencesScre
       onChange={(event) => {
         if (isValidClockTime(event.target.value)) void updateSetting(key, event.target.value);
       }}
-      className="sunny-notifications-time w-[116px] rounded-xl border border-[#6B3F96]/55 bg-[#1E0B33] px-2.5 py-2 text-xs font-semibold text-white shadow-inner [color-scheme:dark] transition-colors focus:border-[#D946EF]/70 focus:outline-none focus:ring-2 focus:ring-[#D946EF]/10"
+      className="sunny-notifications-time w-[116px] rounded-xl border border-[#4A2A73]/55 bg-[#1E0B33] px-2.5 py-2 text-xs font-semibold text-white shadow-inner [color-scheme:dark] transition-colors focus:border-[#D946EF]/70 focus:outline-none focus:ring-2 focus:ring-[#D946EF]/10"
     />
   );
 
@@ -121,7 +121,7 @@ export const NotificationPreferencesScreen: React.FC<NotificationPreferencesScre
         <button
           type="button"
           onClick={onBack}
-          className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[#6B3F96]/45 bg-[#25103F] text-[#D6C2F2] shadow-sm transition-all hover:border-[#D946EF]/35 hover:text-white active:scale-95"
+          className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[#4A2A73]/45 bg-[#25103F] text-[#D6C2F2] shadow-sm transition-all hover:border-[#D946EF]/35 hover:text-white active:scale-95"
           aria-label="Back to settings"
         >
           <ArrowLeft size={18} />
@@ -230,7 +230,7 @@ export const NotificationPreferencesScreen: React.FC<NotificationPreferencesScre
               aria-label="Daily notification limit"
               value={prefs.dailyLimit}
               onChange={(event) => updateSetting('dailyLimit', Number(event.target.value))}
-              className="sunny-notifications-select rounded-xl border border-[#6B3F96]/55 bg-[#1E0B33] px-2.5 py-2 text-xs font-semibold text-white shadow-inner transition-colors focus:border-[#D946EF]/70 focus:outline-none focus:ring-2 focus:ring-[#D946EF]/10"
+              className="sunny-notifications-select rounded-xl border border-[#4A2A73]/55 bg-[#1E0B33] px-2.5 py-2 text-xs font-semibold text-white shadow-inner transition-colors focus:border-[#D946EF]/70 focus:outline-none focus:ring-2 focus:ring-[#D946EF]/10"
             >
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((limit) => <option key={limit} value={limit}>{limit} per day</option>)}
             </select>
@@ -274,7 +274,7 @@ export const NotificationPreferencesScreen: React.FC<NotificationPreferencesScre
           ] satisfies { slot: NotificationSlot; label: string; name: string; time: string }[]).map((item) => {
             const content = getNotificationContent(item.slot, localDateKey(new Date()));
             return (
-              <AppCard key={item.slot} className="sunny-notifications-preview-card border border-[#6B3F96]/40 bg-gradient-to-br from-[#261B3B] to-[#1E0B33] p-4 shadow-[0_10px_26px_rgba(0,0,0,.13)]">
+              <AppCard key={item.slot} className="sunny-notifications-preview-card border border-[#4A2A73]/40 bg-gradient-to-br from-[#25103F] to-[#1E0B33] p-4 shadow-[0_10px_26px_rgba(0,0,0,.13)]">
                 <div className="mb-2 flex items-center justify-between gap-3">
                   <Badge label={item.label} variant="yellow" />
                   <span className="text-xs text-[#AA92CC]">{formatTime(item.time)}</span>

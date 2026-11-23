@@ -215,7 +215,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       </div>
 
       {/* Settings hero uses the same soft glow and rounded gradient as Home */}
-      <section className="sunny-settings-hero relative isolate mb-7 overflow-hidden rounded-[30px] border border-[#8B6AA8]/30 bg-gradient-to-br from-[#381A60] via-[#1D1431] to-[#12051F] p-5 shadow-[0_18px_55px_rgba(0,0,0,.2)] sm:p-7 lg:p-9">
+      <section className="sunny-settings-hero relative isolate mb-7 overflow-hidden rounded-[30px] border border-[#4A2A73]/30 bg-gradient-to-br from-[#381A60] via-[#1A0A2E] to-[#12051F] p-5 shadow-[0_18px_55px_rgba(0,0,0,.2)] sm:p-7 lg:p-9">
         <div aria-hidden="true" className="sunny-settings-glow pointer-events-none absolute -right-8 -top-12 h-56 w-56 rounded-full bg-[#E879F9]/[0.10] blur-3xl" />
         <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="max-w-2xl">

@@ -25,7 +25,7 @@ export const AppCard: React.FC<AppCardProps> = ({
       data-card-interactive={isClickable ? 'true' : undefined}
       className={`sunny-app-card rounded-2xl border transition-all duration-200 ${
         elevated
-          ? 'bg-[#2D1450] border-[#4D2C78] shadow-lg'
+          ? 'bg-[#25103F] border-[#4A2A73] shadow-lg'
           : 'bg-[#25103F] border-[#4A2A73]'
       } ${
         isClickable

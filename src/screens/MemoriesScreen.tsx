@@ -181,7 +181,7 @@ export const MemoriesScreen: React.FC = () => {
       </div>
 
       {/* Warm, spacious page intro matching the Home screen */}
-      <section className="sunny-memories-hero relative isolate mb-7 overflow-hidden rounded-[30px] border border-[#8B6AA8]/30 bg-gradient-to-br from-[#381A60] via-[#1D1431] to-[#12051F] p-5 shadow-[0_18px_55px_rgba(0,0,0,.2)] sm:p-7 lg:p-9">
+      <section className="sunny-memories-hero relative isolate mb-7 overflow-hidden rounded-[30px] border border-[#4A2A73]/30 bg-gradient-to-br from-[#381A60] via-[#1A0A2E] to-[#12051F] p-5 shadow-[0_18px_55px_rgba(0,0,0,.2)] sm:p-7 lg:p-9">
         <div aria-hidden="true" className="sunny-memory-glow pointer-events-none absolute -right-8 -top-12 h-56 w-56 rounded-full bg-[#E879F9]/[0.10] blur-3xl" />
         <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl">
@@ -229,7 +229,7 @@ export const MemoriesScreen: React.FC = () => {
               placeholder="Search memories..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-2xl border border-[#6B3F96]/50 bg-[#1E0B33]/90 py-3 pl-10 pr-10 text-sm text-white shadow-[0_8px_24px_rgba(0,0,0,.12)] outline-none transition-all placeholder:text-[#AA92CC] focus:border-[#E879F9]/60 focus:ring-2 focus:ring-[#E879F9]/[0.08]"
+              className="w-full rounded-2xl border border-[#4A2A73]/50 bg-[#1E0B33]/90 py-3 pl-10 pr-10 text-sm text-white shadow-[0_8px_24px_rgba(0,0,0,.12)] outline-none transition-all placeholder:text-[#AA92CC] focus:border-[#E879F9]/60 focus:ring-2 focus:ring-[#E879F9]/[0.08]"
             />
             {searchQuery && (
               <button
@@ -254,7 +254,7 @@ export const MemoriesScreen: React.FC = () => {
                   className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap border transition-colors cursor-pointer shrink-0 ${
                     isSelected
                       ? 'border-[#E879F9]/55 bg-[#E879F9]/15 text-[#E879F9] shadow-[0_4px_16px_rgba(217,70,239,.08)]'
-                      : 'border-[#6B3F96]/45 bg-[#25103F]/80 text-[#B9AACA] hover:border-[#E879F9]/30 hover:text-white'
+                      : 'border-[#4A2A73]/45 bg-[#25103F]/80 text-[#B9AACA] hover:border-[#E879F9]/30 hover:text-white'
                   }`}
                 >
                   {item.label}

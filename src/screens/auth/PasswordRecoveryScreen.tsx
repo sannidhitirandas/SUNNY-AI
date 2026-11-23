@@ -32,7 +32,7 @@ export const PasswordRecoveryScreen: React.FC = () => {
   return (
     <div className="sunny-recovery-screen sunny-auth-screen relative flex min-h-[100dvh] w-full flex-col justify-center overflow-x-hidden overflow-y-auto px-6 py-12">
       <style>{`
-        .sunny-recovery-screen { isolation:isolate; background:radial-gradient(ellipse at 50% 12%,#3E1F68 0%,#25103F 44%,#12051F 100%); }
+        .sunny-recovery-screen { isolation:isolate; background:radial-gradient(ellipse at 50% 12%,#381A60 0%,#25103F 44%,#12051F 100%); }
         .sunny-recovery-card .sunny-app-button { background:linear-gradient(135deg,#F0ABFC,#D946EF) !important; color:#25103F !important; box-shadow:0 10px 28px -12px rgba(217,70,239,.55) !important; }
         .sunny-recovery-content { position:relative; z-index:1; width:100%; max-width:24rem; margin:0 auto; }
         .sunny-recovery-card {

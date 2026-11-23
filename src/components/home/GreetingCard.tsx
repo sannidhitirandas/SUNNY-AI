@@ -29,7 +29,7 @@ export const GreetingCard: React.FC<GreetingCardProps> = ({
   })();
 
   return (
-    <AppCard elevated className="sunny-home-hero relative isolate overflow-hidden rounded-[30px] border border-[#A78BFA]/30 bg-gradient-to-br from-[#38245E] via-[#211638] to-[#12051F] p-5 sm:p-7 lg:min-h-[300px] lg:p-9">
+    <AppCard elevated className="sunny-home-hero relative isolate overflow-hidden rounded-[30px] border border-[#A78BFA]/30 bg-gradient-to-br from-[#381A60] via-[#1E0B33] to-[#12051F] p-5 sm:p-7 lg:min-h-[300px] lg:p-9">
       <div className="sunny-hero-glow pointer-events-none absolute -right-10 -top-16 h-56 w-56 rounded-full bg-[#A78BFA]/20 blur-3xl" />
       <div className="relative z-20 flex items-center justify-between lg:mb-5">
         <span className="inline-flex items-center gap-2 text-sm font-semibold tracking-wide text-[#E9DEFF]">

@@ -144,13 +144,13 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
         .sunny-chat-ui {
           background:
             radial-gradient(ellipse at 50% -12%,rgba(126,83,190,.22),transparent 48%),
-            linear-gradient(160deg,#12051F 0%,#1A0A2E 52%,#14061F 100%) !important;
+            linear-gradient(160deg,#12051F 0%,#1A0A2E 52%,#12051F 100%) !important;
         }
         .sunny-chat-ui .chat-message-list {
           background: radial-gradient(ellipse at top,rgba(139,92,246,.13),transparent 58%) !important;
         }
         .sunny-chat-ui .sunny-modal-surface {
-          background:linear-gradient(145deg,#2D1450,#1E0B33) !important;
+          background:linear-gradient(145deg,#25103F,#1E0B33) !important;
           border-color:rgba(167,139,250,.28) !important;
           box-shadow:0 28px 80px rgba(5,2,14,.55),inset 0 1px 0 rgba(255,255,255,.07) !important;
         }
@@ -159,7 +159,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
         .sunny-chat-ui :where(button:not([class*="text-[#FF8D9A]"])):hover {
           border-color:rgba(185,154,255,.55);
         }
-        .sunny-chat-ui .sunny-chat-header .sunny-chat-avatar {\n          border-color:rgba(232,121,249,.32) !important;\n          color:#E879F9 !important;\n          background:linear-gradient(135deg,rgba(232,121,249,.16),rgba(139,92,246,.16)) !important;\n        }\n        .sunny-chat-ui .sunny-chat-header .sunny-chat-avatar svg { color:#E879F9 !important; }\n        .sunny-chat-ui .sunny-composer { border-color:rgba(232,121,249,.24) !important; }\n        .sunny-chat-ui .sunny-send-button:not(:disabled) { background:linear-gradient(135deg,#E879F9,#DDAE50) !important; color:#2A1347 !important; box-shadow:0 4px 18px rgba(232,121,249,.18) !important; }\n        .sunny-chat-ui .sunny-chat-header,
+        .sunny-chat-ui .sunny-chat-header .sunny-chat-avatar {\n          border-color:rgba(232,121,249,.32) !important;\n          color:#E879F9 !important;\n          background:linear-gradient(135deg,rgba(232,121,249,.16),rgba(139,92,246,.16)) !important;\n        }\n        .sunny-chat-ui .sunny-chat-header .sunny-chat-avatar svg { color:#E879F9 !important; }\n        .sunny-chat-ui .sunny-composer { border-color:rgba(232,121,249,.24) !important; }\n        .sunny-chat-ui .sunny-send-button:not(:disabled) { background:linear-gradient(135deg,#E879F9,#DDAE50) !important; color:#25103F !important; box-shadow:0 4px 18px rgba(232,121,249,.18) !important; }\n        .sunny-chat-ui .sunny-chat-header,
         .sunny-chat-ui .sunny-message-composer {
           border-color:rgba(167,139,250,.2);
         }

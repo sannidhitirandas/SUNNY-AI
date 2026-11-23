@@ -32,7 +32,7 @@ export const RecentConversations: React.FC<RecentConversationsProps> = ({
       {lastMessage ? (
         <AppCard
           onPress={onResume}
-          className="sunny-recent-card rounded-[22px] border border-[#8B6AC0]/25 bg-gradient-to-r from-[#2A1347] to-[#1E0B33] p-3.5 shadow-[0_8px_24px_rgba(0,0,0,.12)] transition-all hover:-translate-y-0.5 hover:border-[#B99AFF]/50 sm:p-4"
+          className="sunny-recent-card rounded-[22px] border border-[#4A2A73]/25 bg-gradient-to-r from-[#25103F] to-[#1E0B33] p-3.5 shadow-[0_8px_24px_rgba(0,0,0,.12)] transition-all hover:-translate-y-0.5 hover:border-[#B99AFF]/50 sm:p-4"
         >
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#8B5CF6]/20">
@@ -50,7 +50,7 @@ export const RecentConversations: React.FC<RecentConversationsProps> = ({
           </div>
         </AppCard>
       ) : (
-        <AppCard className="border border-[#8B6AC0]/20 bg-[#211832]/80 p-4 text-center">
+        <AppCard className="border border-[#4A2A73]/20 bg-[#1E0B33]/80 p-4 text-center">
           <p className="text-xs text-[#D7C8EF]">
             No past conversations yet. Tap "Talk to Sunny" above to get started!
           </p>

@@ -48,7 +48,7 @@
   border-radius: 1.8rem !important;
   background:
     radial-gradient(ellipse at 88% 10%, rgba(217,70,239, .09), transparent 34%),
-    linear-gradient(135deg, #211832 0%, #1E0B33 55%, #151024 100%) !important;
+    linear-gradient(135deg, #1E0B33 0%, #1E0B33 55%, #12051F 100%) !important;
   box-shadow: 0 22px 60px rgba(0,0,0,.20), inset 0 1px 0 rgba(255,255,255,.035) !important;
 }
 .sunny-home-hero { min-height: 17rem; }
@@ -214,7 +214,7 @@
 .sunny-settings-dialog {
   border-color: rgba(177,143,211,.24) !important;
   border-radius: 1.55rem !important;
-  background: linear-gradient(145deg,#271D3A,#1E0B33) !important;
+  background: linear-gradient(145deg,#25103F,#1E0B33) !important;
   box-shadow: 0 28px 90px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.05) !important;
 }
 .sunny-settings-wallpaper { border-color: rgba(157,125,190,.2) !important; }
@@ -296,7 +296,7 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   border-color: rgba(177,143,211,.24) !important;
-  background: linear-gradient(145deg, #271D3A, #1E0B33) !important;
+  background: linear-gradient(145deg, #25103F, #1E0B33) !important;
   box-shadow: 0 28px 90px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.05) !important;
 }
 :root[data-theme='sunny-light'] .sunny-subscreen > div:first-child {
@@ -506,8 +506,8 @@
 /* Dribbble-inspired AI companion finish: near-black plum surfaces, richer violet
    atmosphere, restrained rose accents and high-contrast conversation controls. */
 :root {
-  --sunny-ink: #08040E;
-  --sunny-plum: #1B1024;
+  --sunny-ink: #12051F;
+  --sunny-plum: #1A0A2E;
   --sunny-violet: #591097;
   --sunny-rose: #AF838B;
   --sunny-inner-line: rgba(194, 150, 205, .16);
@@ -516,7 +516,7 @@
   background:
     radial-gradient(ellipse at 50% -18%, rgba(89,16,151,.22), transparent 43%),
     radial-gradient(ellipse at 100% 35%, rgba(81,18,67,.12), transparent 32%),
-    #08040E !important;
+    #12051F !important;
 }
 .sunny-app-main {
   background: transparent !important;
@@ -539,7 +539,7 @@
   background:
     radial-gradient(ellipse at 90% 0%, rgba(194,26,56,.13), transparent 36%),
     radial-gradient(ellipse at 8% 100%, rgba(89,16,151,.22), transparent 48%),
-    linear-gradient(135deg,#211328 0%,#160D20 55%,#0D0814 100%) !important;
+    linear-gradient(135deg,#1E0B33 0%,#1A0A2E 55%,#12051F 100%) !important;
   box-shadow: 0 24px 70px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.045) !important;
 }
 .sunny-home-hero h1 {
@@ -567,7 +567,7 @@
 .sunny-chat-ui {
   background:
     radial-gradient(ellipse at 50% 0%,rgba(89,16,151,.16),transparent 42%),
-    #08040E !important;
+    #12051F !important;
 }
 .sunny-chat-header {
   background: rgba(12,7,17,.88) !important;
@@ -603,7 +603,7 @@
 }
 .sunny-settings-dialog,
 .sunny-modal-surface {
-  background: linear-gradient(145deg,#25162F,#100A18) !important;
+  background: linear-gradient(145deg,#25103F,#12051F) !important;
   border-color: rgba(175,131,139,.24) !important;
   box-shadow: 0 30px 100px rgba(0,0,0,.62) !important;
 }

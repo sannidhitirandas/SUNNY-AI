@@ -62,13 +62,13 @@ const TONE_OPTIONS: ToneOption[] = [
     tone: 'gentle',
     title: 'Listener & Supportive',
     description: 'Listens first, takes your feelings seriously, and asks thoughtful questions before offering advice.',
-    icon: <Heart size={20} className="text-[#D8C7C1]" />,
+    icon: <Heart size={20} className="text-[#D6C2F2]" />,
   },
   {
     tone: 'calm',
     title: 'Encourager',
     description: 'Believes in you realistically, celebrates small wins, and helps you find one manageable next step.',
-    icon: <Leaf size={20} className="text-[#C5C8BE]" />,
+    icon: <Leaf size={20} className="text-[#D6C2F2]" />,
   },
 ];
 
@@ -97,14 +97,14 @@ const OnboardingStyles: React.FC = () => (
       isolation: isolate;
       background: radial-gradient(ellipse at 50% 22%,rgba(139,92,246,.24),transparent 42%),radial-gradient(ellipse at 50% 100%,rgba(217,70,239,.1),transparent 40%),linear-gradient(160deg,#12051F 0%,#1E0B33 55%,#12051F 100%);
     }
-    .ob-rays svg line { stroke: #E8E1D5 !important; }
+    .ob-rays svg line { stroke: #E879F9 !important; }
     
     
     
     
     .ob-halo { opacity: .65; }
-    .ob-cta .sunny-app-button { background: linear-gradient(120deg,#F0ABFC,#D946EF) !important; color: #2A1347 !important; box-shadow: 0 8px 24px -10px rgba(217,70,239,.38) !important; }
-    .ob-cta .sunny-app-button:hover { background: #FFF0AD !important; }
+    .ob-cta .sunny-app-button { background: linear-gradient(120deg,#F0ABFC,#D946EF) !important; color: #25103F !important; box-shadow: 0 8px 24px -10px rgba(217,70,239,.38) !important; }
+    .ob-cta .sunny-app-button:hover { background: #F5D0FE !important; }
     .ob-sparkle { z-index: 1; }
     .sunny-onboarding-shell {
       position: relative;
@@ -134,7 +134,7 @@ const OnboardingStyles: React.FC = () => (
     .ob-sparkle {
       position: absolute;
       border-radius: 9999px;
-      background: #FFF9E8;
+      background: #FDF4FF;
       box-shadow: 0 0 8px 1px rgba(217,70,239, 0.6);
       opacity: 0;
       pointer-events: none;
@@ -214,7 +214,7 @@ const ProgressHeader: React.FC<ProgressHeaderProps> = ({ step, onBack }) => (
     </div>
     <div className="flex gap-1.5" role="progressbar" aria-valuemin={1} aria-valuemax={TOTAL_STEPS} aria-valuenow={step}>
       {Array.from({ length: TOTAL_STEPS }).map((_, index) => (
-        <div key={index} className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#77736B]">
+        <div key={index} className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#4A2A73]">
           {index < step && (
             <div className="ob-progress-fill h-full w-full rounded-full bg-gradient-to-r from-[#A78BFA] to-[#D946EF]" />
           )}
@@ -249,7 +249,7 @@ const ChoiceCard: React.FC<ChoiceCardProps> = ({
     aria-pressed={selected}
     className={`sunny-onboarding-choice w-full cursor-pointer rounded-2xl border p-4 text-left transition-all ${
       selected
-        ? 'border-[#E8E1D5] bg-[#3A3B3D] shadow-[0_0_0_1px_rgba(217,70,239,0.25),0_12px_28px_-18px_rgba(217,70,239,0.5)]'
+        ? 'border-[#E879F9] bg-[#381A60] shadow-[0_0_0_1px_rgba(217,70,239,0.25),0_12px_28px_-18px_rgba(217,70,239,0.5)]'
         : 'border-[#A78BFA]/30 bg-[#25103F]/80 hover:border-white/25'
     }`}
   >
@@ -259,7 +259,7 @@ const ChoiceCard: React.FC<ChoiceCardProps> = ({
         <div className="flex flex-wrap items-center gap-2">
           <h3 className={`text-base font-semibold ${selected ? 'text-[#F0ABFC]' : 'text-white'}`}>{title}</h3>
           {badge && (
-            <span className="rounded-full bg-[#E8E1D5]/15 px-2 py-0.5 text-[10px] font-bold text-[#F0ABFC]">
+            <span className="rounded-full bg-[#E879F9]/15 px-2 py-0.5 text-[10px] font-bold text-[#F0ABFC]">
               {badge}
             </span>
           )}
@@ -270,11 +270,11 @@ const ChoiceCard: React.FC<ChoiceCardProps> = ({
       </div>
       <div
         className={`mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${
-          selected ? 'border-[#E8E1D5]' : 'border-[#B9B4AA]'
+          selected ? 'border-[#E879F9]' : 'border-[#AA92CC]'
         }`}
         aria-hidden="true"
       >
-        {selected && <div className="h-2.5 w-2.5 rounded-full bg-[#E8E1D5]" />}
+        {selected && <div className="h-2.5 w-2.5 rounded-full bg-[#E879F9]" />}
       </div>
     </div>
   </button>
@@ -410,17 +410,17 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
 
               <div className="mb-6 flex flex-wrap items-center justify-center gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-[#A78BFA]/30 bg-[#25103F]/80 px-3 py-1.5 text-xs font-medium text-[#D8CBEF]">
-                  <Heart size={13} className="text-[#D8C7C1]" /> Listens
+                  <Heart size={13} className="text-[#D6C2F2]" /> Listens
                 </span>
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-[#A78BFA]/30 bg-[#25103F]/80 px-3 py-1.5 text-xs font-medium text-[#D8CBEF]">
                   <Smile size={13} className="text-[#F0ABFC]" /> Laughs with you
                 </span>
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-[#A78BFA]/30 bg-[#25103F]/80 px-3 py-1.5 text-xs font-medium text-[#D8CBEF]">
-                  <Leaf size={13} className="text-[#C5C8BE]" /> Cheers you on
+                  <Leaf size={13} className="text-[#D6C2F2]" /> Cheers you on
                 </span>
               </div>
 
-              <div className="sunny-onboarding-quote max-w-xs rounded-2xl border border-[#E8E1D5]/30 bg-[#292B2E]/80 p-4 text-center shadow-lg">
+              <div className="sunny-onboarding-quote max-w-xs rounded-2xl border border-[#E879F9]/30 bg-[#25103F]/80 p-4 text-center shadow-lg">
                 <p className="text-sm font-medium italic text-[#F0ABFC]">
                   &ldquo;You don&rsquo;t have to start over every time you come back.&rdquo;
                 </p>
@@ -468,12 +468,12 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                       aria-pressed={isSelected}
                       className={`sunny-onboarding-interest inline-flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2.5 text-left text-sm transition-all ${
                         isSelected
-                          ? 'border-[#E8E1D5] bg-[#3A3B3D] font-semibold text-white shadow-[0_8px_20px_-14px_rgba(217,70,239,0.6)]'
+                          ? 'border-[#E879F9] bg-[#381A60] font-semibold text-white shadow-[0_8px_20px_-14px_rgba(217,70,239,0.6)]'
                           : 'border-[#A78BFA]/30 bg-[#25103F]/80 text-[#D8CBEF] hover:border-white/25'
                       }`}
                     >
                       {isSelected && (
-                        <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#E8E1D5] text-[#121417]">
+                        <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#E879F9] text-[#12051F]">
                           <Check size={11} strokeWidth={3.5} />
                         </span>
                       )}
@@ -560,21 +560,21 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                   selected={memoryConsent}
                   onClick={() => setMemoryConsent(true)}
                   icon={<Bookmark size={18} className="text-[#F0ABFC]" />}
-                  iconBg="bg-[#E8E1D5]/15"
+                  iconBg="bg-[#E879F9]/15"
                   title="Enable memory"
                   description="Sunny remembers meaningful personal context so you don't have to re-explain yourself every time."
                 />
                 <ChoiceCard
                   selected={!memoryConsent}
                   onClick={() => setMemoryConsent(false)}
-                  icon={<Lock size={18} className="text-[#B9B4AA]" />}
+                  icon={<Lock size={18} className="text-[#AA92CC]" />}
                   iconBg="bg-white/5"
                   title="Keep memory off for now"
                   description="Conversations will remain session-by-session without long-term notes saved."
                 />
               </div>
 
-              <div className="mt-4 flex items-start gap-2.5 rounded-2xl border border-[#77736B] bg-[#202226]/80 p-3.5">
+              <div className="mt-4 flex items-start gap-2.5 rounded-2xl border border-[#4A2A73] bg-[#1E0B33]/80 p-3.5">
                 <ShieldCheck size={18} className="mt-0.5 shrink-0 text-[#F0ABFC]" />
                 <p className="text-sm leading-relaxed text-[#D8CBEF]">
                   You are always in control. You can view, edit, or delete any saved memory at any time in the Memories tab.
@@ -608,7 +608,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                 Sunny can send occasional gentle notes to brighten your morning, afternoon, or evening. Never spammy, never guilt-tripping.
               </p>
 
-              <div className="sunny-onboarding-notification-preview mb-4 space-y-3 rounded-2xl border border-[#77736B] bg-[#202226]/80 p-4">
+              <div className="sunny-onboarding-notification-preview mb-4 space-y-3 rounded-2xl border border-[#4A2A73] bg-[#1E0B33]/80 p-4">
                 <div className="flex items-start gap-3">
                   <Sun size={18} className="mt-0.5 shrink-0 text-[#F0ABFC]" />
                   <div>
@@ -619,7 +619,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                   </div>
                 </div>
                 <div className="flex items-start gap-3 border-t border-white/5 pt-3">
-                  <Heart size={18} className="mt-0.5 shrink-0 text-[#D8C7C1]" />
+                  <Heart size={18} className="mt-0.5 shrink-0 text-[#D6C2F2]" />
                   <div>
                     <h4 className="text-sm font-semibold text-white">Gentle Check-in</h4>
                     <p className="mt-0.5 text-sm italic text-[#D8CBEF]">
@@ -634,13 +634,13 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                   selected={notificationConsent}
                   onClick={() => setNotificationConsent(true)}
                   icon={<Bell size={18} className="text-[#F0ABFC]" />}
-                  iconBg="bg-[#E8E1D5]/15"
+                  iconBg="bg-[#E879F9]/15"
                   title="Enable gentle notifications"
                 />
                 <ChoiceCard
                   selected={!notificationConsent}
                   onClick={() => setNotificationConsent(false)}
-                  icon={<BellOff size={18} className="text-[#B9B4AA]" />}
+                  icon={<BellOff size={18} className="text-[#AA92CC]" />}
                   iconBg="bg-white/5"
                   title="Not now"
                 />

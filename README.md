@@ -24,18 +24,18 @@ Sunny is a warm, emotionally supportive AI companion built for conversations tha
 
 ## 🎨 Visual identity
 
-Sunny uses a cosy dark-purple theme with sunshine-yellow accents.
+Sunny uses a cosy blackish-purple theme with magenta accents.
 
 | Element | Colour | Purpose |
 | --- | --- | --- |
-| Main background | `#100B22` | Primary app canvas |
-| Secondary background | `#17102C` | Headers and secondary surfaces |
-| Card background | `#21163A` | Cards and grouped content |
-| Elevated surface | `#302149` | Elevated interactive surfaces |
-| Input background | `#1B1430` | Composer and form fields |
-| Sunshine yellow | `#FFD84D` | Primary accent and highlights |
-| Lavender text | `#C6B8E5` | Supporting text |
-| Muted text | `#9B8AB9` | Captions and placeholders |
+| Main background | `#12051F` | Primary app canvas |
+| Secondary background | `#1A0A2E` | Headers and secondary surfaces |
+| Card background | `#25103F` | Cards and grouped content |
+| Elevated surface | `#381A60` | Elevated interactive surfaces |
+| Input background | `#1E0B33` | Composer and form fields |
+| Magenta accent | `#D946EF` | Primary accent and highlights |
+| Lavender text | `#D6C2F2` | Supporting text |
+| Muted text | `#AA92CC` | Captions and placeholders |
 
 The app also includes a light theme preference.
 

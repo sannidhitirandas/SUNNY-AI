@@ -117,7 +117,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
       <style>{`
         .login-screen {
           isolation: isolate;
-          background: radial-gradient(ellipse at 50% 12%, #3E1F68 0%, #25103F 44%, #12051F 100%);
+          background: radial-gradient(ellipse at 50% 12%, #381A60 0%, #25103F 44%, #12051F 100%);
         }
 
         .login-sparkle {
@@ -151,7 +151,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
 
 
         .login-cta .sunny-app-button { background: linear-gradient(135deg,#F0ABFC,#D946EF) !important; color: #25103F !important; box-shadow: 0 10px 28px -12px rgba(217,70,239,.55) !important; }
-        .login-cta .sunny-app-button:hover { background: linear-gradient(135deg,#FFF0B2,#FFE16A) !important; }
+        .login-cta .sunny-app-button:hover { background: linear-gradient(135deg,#F5D0FE,#F0ABFC) !important; }
         .login-hero h1 { color: #fff; text-shadow: 0 2px 16px rgba(10,4,26,.72); }
         .login-hero p { color: rgba(245,237,255,.9); text-shadow: 0 2px 12px rgba(10,4,26,.7); }
         .login-card label {
@@ -305,7 +305,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({
             {!forgotPassword && (
               <>
                 <div className="flex items-center gap-3 py-4" aria-hidden="true">
-                  <div className="h-px flex-1 bg-[#77736B]" />
+                  <div className="h-px flex-1 bg-[#4A2A73]" />
                   <span className="text-xs font-medium tracking-wide text-[#C4BFB5]">OR</span>
                   <div className="h-px flex-1 bg-[#4A2A73]" />
                 </div>

@@ -7,7 +7,7 @@ export const TypingIndicator: React.FC = () => {
       <div className="mb-1 shrink-0">
         <SunnyLogo size="small" />
       </div>
-      <div className="sunny-bot-bubble flex items-center gap-1.5 rounded-[22px] rounded-bl-md border border-[#7656A5]/55 bg-gradient-to-br from-[#2D1450] to-[#25103F] px-4 py-2.5 text-white shadow-[0_5px_20px_rgba(0,0,0,0.10)] sm:px-5">
+      <div className="sunny-bot-bubble flex items-center gap-1.5 rounded-[22px] rounded-bl-md border border-[#4A2A73]/55 bg-gradient-to-br from-[#25103F] to-[#25103F] px-4 py-2.5 text-white shadow-[0_5px_20px_rgba(0,0,0,0.10)] sm:px-5">
         <span className="h-2 w-2 rounded-full bg-[#B99AFF] typing-dot-1" />
         <span className="h-2 w-2 rounded-full bg-[#B99AFF] typing-dot-2" />
         <span className="h-2 w-2 rounded-full bg-[#B99AFF] typing-dot-3" />

@@ -44,7 +44,7 @@ export const MemoryCard: React.FC<MemoryCardProps> = ({
   };
 
   return (
-    <AppCard className="sunny-memory-card group mb-0 rounded-[24px] border border-[#5A426F]/45 bg-gradient-to-br from-[#261B3B] to-[#1E0B33] p-4 shadow-[0_10px_28px_rgba(0,0,0,.14)] transition-all duration-200 hover:-translate-y-1 hover:border-[#E879F9]/35 hover:shadow-[0_16px_34px_rgba(0,0,0,.22)] sm:p-5">
+    <AppCard className="sunny-memory-card group mb-0 rounded-[24px] border border-[#4A2A73]/45 bg-gradient-to-br from-[#25103F] to-[#1E0B33] p-4 shadow-[0_10px_28px_rgba(0,0,0,.14)] transition-all duration-200 hover:-translate-y-1 hover:border-[#E879F9]/35 hover:shadow-[0_16px_34px_rgba(0,0,0,.22)] sm:p-5">
       <div className="mb-3 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <Badge

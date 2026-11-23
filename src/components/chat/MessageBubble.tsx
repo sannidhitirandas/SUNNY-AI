@@ -114,7 +114,7 @@ const MessageBubbleBase: React.FC<MessageBubbleProps> = ({
         <div className="w-8 shrink-0" aria-hidden="true" />
       )}
       <div
-        className={`sunny-bot-bubble relative max-w-[88%] border border-[#7656A5]/55 bg-gradient-to-br from-[#2D1450] to-[#25103F] px-4 py-2.5 text-white shadow-[0_5px_20px_rgba(0,0,0,0.10)] sm:max-w-[min(70%,42rem)] sm:px-5 ${isFirstInGroup ? 'rounded-t-[22px]' : 'rounded-t-[15px]'} ${isLastInGroup ? 'rounded-bl-md rounded-br-[22px]' : 'rounded-b-[15px]'}`}
+        className={`sunny-bot-bubble relative max-w-[88%] border border-[#4A2A73]/55 bg-gradient-to-br from-[#25103F] to-[#25103F] px-4 py-2.5 text-white shadow-[0_5px_20px_rgba(0,0,0,0.10)] sm:max-w-[min(70%,42rem)] sm:px-5 ${isFirstInGroup ? 'rounded-t-[22px]' : 'rounded-t-[15px]'} ${isLastInGroup ? 'rounded-bl-md rounded-br-[22px]' : 'rounded-b-[15px]'}`}
         onTouchStart={handleTouchStart}
         onTouchEnd={clearLongPress}
         onTouchMove={clearLongPress}
@@ -151,7 +151,7 @@ const MessageBubbleBase: React.FC<MessageBubbleProps> = ({
               className="fixed inset-0 z-20 cursor-default"
               onClick={() => setMenuOpen(false)}
             />
-            <div className="absolute bottom-10 right-2 z-30 min-w-48 rounded-xl border border-[#7656A5] bg-[#1A0A2E] p-1.5 shadow-xl shadow-black/30">
+            <div className="absolute bottom-10 right-2 z-30 min-w-48 rounded-xl border border-[#4A2A73] bg-[#1A0A2E] p-1.5 shadow-xl shadow-black/30">
               {onSaveAsMemory && (
                 <button
                   type="button"

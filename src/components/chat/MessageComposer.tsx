@@ -127,7 +127,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({ onSend, onVoic
         {files.length > 0 && (
           <div className="mb-3 flex flex-wrap gap-2 px-1" aria-label="Attached files">
             {files.map((file, index) => (
-              <div key={`${file.name}-${file.size}-${index}`} className="flex max-w-full items-center gap-2 rounded-2xl border border-[#7656A5]/45 bg-[#25103F]/95 px-3 py-2 shadow-sm">
+              <div key={`${file.name}-${file.size}-${index}`} className="flex max-w-full items-center gap-2 rounded-2xl border border-[#4A2A73]/45 bg-[#25103F]/95 px-3 py-2 shadow-sm">
                 <FileText size={15} className="shrink-0 text-[#A78BFA]" />
                 <div className="min-w-0"><p className="max-w-[180px] truncate text-xs text-white">{file.name}</p><p className="text-[10px] text-[#AA92CC]">{formatSize(file.size)}</p></div>
                 <button type="button" onClick={() => removeFile(index)} disabled={preparingAttachment || sending} className="cursor-pointer p-1 text-[#AA92CC] hover:text-white" aria-label={`Remove ${file.name}`}><X size={14} /></button>
@@ -145,7 +145,7 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({ onSend, onVoic
               <Mic size={19} strokeWidth={2} />
             </button>
           )}
-          <button type="button" onPointerDown={(event) => event.preventDefault()} onClick={() => void handleSend()} disabled={isSendDisabled} className={`sunny-send-button mb-0.5 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full transition-all duration-200 active:scale-90 ${isSendDisabled ? 'bg-white/[0.06] text-[#AA92CC] cursor-not-allowed opacity-50' : 'bg-gradient-to-br from-[#E879F9] to-[#DDAE50] text-[#2A1347] shadow-[0_4px_16px_rgba(232,121,249,.2)] hover:brightness-105'}`} aria-label="Send message">
+          <button type="button" onPointerDown={(event) => event.preventDefault()} onClick={() => void handleSend()} disabled={isSendDisabled} className={`sunny-send-button mb-0.5 flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-full transition-all duration-200 active:scale-90 ${isSendDisabled ? 'bg-white/[0.06] text-[#AA92CC] cursor-not-allowed opacity-50' : 'bg-gradient-to-br from-[#E879F9] to-[#DDAE50] text-[#25103F] shadow-[0_4px_16px_rgba(232,121,249,.2)] hover:brightness-105'}`} aria-label="Send message">
             <ArrowUp size={19} strokeWidth={2.7} />
           </button>
         </div>

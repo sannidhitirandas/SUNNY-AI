@@ -3,8 +3,8 @@
   "short_name": "Sunny",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#1F0B37",
-  "theme_color": "#1F0B37",
+  "background_color": "#12051F",
+  "theme_color": "#12051F",
   "icons": [
     {
       "src": "/icons/sunny-192.png",

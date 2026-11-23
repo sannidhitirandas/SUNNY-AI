@@ -19,7 +19,7 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
   preferredTone = 'The Mix',
 }) => {
   return (
-    <header className="sunny-chat-header sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-[#4A2A73]/70 bg-gradient-to-r from-[#1E0B33]/95 via-[#211638]/92 to-[#1E0B33]/95 px-4 py-3.5 backdrop-blur-2xl sm:px-6">
+    <header className="sunny-chat-header sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-[#4A2A73]/70 bg-gradient-to-r from-[#1E0B33]/95 via-[#1E0B33]/92 to-[#1E0B33]/95 px-4 py-3.5 backdrop-blur-2xl sm:px-6">
       <div className="flex min-w-0 items-center gap-3">
         {onBack && (
           <button type="button" onClick={onBack} className="flex h-9 w-9 items-center justify-center rounded-full text-[#D6C2F2] transition-colors hover:bg-white/5 hover:text-white" aria-label="Go back">

@@ -85,10 +85,10 @@ export const RegisterScreen: React.FC<RegisterScreenProps> = ({
       <style>{`
         .reg-screen {
           isolation: isolate;
-          background: radial-gradient(ellipse at 50% 12%, #3E1F68 0%, #25103F 44%, #12051F 100%);
+          background: radial-gradient(ellipse at 50% 12%, #381A60 0%, #25103F 44%, #12051F 100%);
         }
         .reg-cta .sunny-app-button { background: linear-gradient(135deg,#F0ABFC,#D946EF) !important; color: #25103F !important; box-shadow: 0 10px 28px -12px rgba(217,70,239,.55) !important; }
-        .reg-cta .sunny-app-button:hover { background: linear-gradient(135deg,#FFF0B2,#FFE16A) !important; }
+        .reg-cta .sunny-app-button:hover { background: linear-gradient(135deg,#F5D0FE,#F0ABFC) !important; }
         .reg-screen .sunny-auth-shell { position: relative; z-index: 2; }
         .reg-screen .reg-hero { position: relative; z-index: 3; }
         .reg-hero h1, .reg-card label { text-shadow: 0 2px 12px rgba(10,4,26,.55); }

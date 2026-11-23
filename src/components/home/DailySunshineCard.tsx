@@ -15,7 +15,7 @@ export const DailySunshineCard: React.FC = () => {
   const [index, setIndex] = useState<number>(0);
 
   return (
-    <AppCard className="sunny-daily-card my-5 rounded-[24px] border border-[#8B6AC0]/25 bg-gradient-to-r from-[#2D1450] via-[#2A1347] to-[#1B142C] p-4 shadow-[0_10px_30px_rgba(0,0,0,.14)] sm:p-5">
+    <AppCard className="sunny-daily-card my-5 rounded-[24px] border border-[#4A2A73]/25 bg-gradient-to-r from-[#25103F] via-[#25103F] to-[#1A0A2E] p-4 shadow-[0_10px_30px_rgba(0,0,0,.14)] sm:p-5">
       <div className="mb-2 flex items-center justify-between">
         <span className="text-[10px] font-bold uppercase tracking-[0.18em] sunny-shine">
           Little reminder
