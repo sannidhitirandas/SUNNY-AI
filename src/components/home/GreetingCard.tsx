@@ -2,17 +2,17 @@ import React from 'react';
 import { MessageCircle, Sparkles } from 'lucide-react';
 import { AppCard } from '../ui/AppCard';
 import { AppButton } from '../ui/AppButton';
-import { SunnyRobot3D } from '@/components/brand/SunnyRobot3D';
+import { SunnySun } from '@/components/brand/SunnySun';
 
 interface GreetingCardProps {
   displayName?: string;
   onTalkPress: () => void;
 }
 
-function SunnyRobotArtwork() {
+function SunnySunArtwork() {
   return (
     <div aria-hidden="true" className="sunny-hero-art relative mx-auto flex h-36 w-full max-w-[270px] items-center justify-center sm:h-44 sm:max-w-[320px] lg:absolute lg:bottom-0 lg:right-3 lg:h-full lg:w-[43%] lg:max-w-none">
-      <SunnyRobot3D className="relative z-10 h-full w-full" />
+      <SunnySun className="relative z-10 h-full w-full" />
     </div>
   );
 }
@@ -55,7 +55,7 @@ export const GreetingCard: React.FC<GreetingCardProps> = ({
           />
         </div>
       </div>
-      <SunnyRobotArtwork />
+      <SunnySunArtwork />
     </AppCard>
   );
 };

@@ -9,7 +9,7 @@ import { SettingsSection } from '@/components/settings/SettingsSection';
 import { SettingsRow } from '@/components/settings/SettingsRow';
 import { AppInput } from '@/components/ui/AppInput';
 import { AppButton } from '@/components/ui/AppButton';
-import { SunnyRobot3D } from '@/components/brand/SunnyRobot3D';
+import { SunnySun } from '@/components/brand/SunnySun';
 import { authService } from '@/services/authService';
 
 import {
@@ -203,7 +203,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       {/* Shared Sunny website header */}
       <div className="flex items-center justify-between py-2 mb-4">
         <div className="flex items-center gap-2.5">
-          <SunnyRobot3D compact className="h-14 w-14 shrink-0" />
+          <SunnySun compact className="h-14 w-14 shrink-0" />
           <div>
             <div className="flex items-center gap-1.5">
               <h1 className="text-lg font-bold text-white tracking-tight">Sunny</h1>

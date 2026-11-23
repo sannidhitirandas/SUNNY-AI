@@ -7,7 +7,7 @@ import { MemoryCard } from '@/components/memories/MemoryCard';
 import { MemoryModal } from '@/components/memories/MemoryModal';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Plus, Search, X, Lock, Sparkles, Brain, ShieldCheck } from 'lucide-react';
-import { SunnyRobot3D } from '@/components/brand/SunnyRobot3D';
+import { SunnySun } from '@/components/brand/SunnySun';
 
 const FILTER_CATEGORIES: { label: string; value: MemoryCategory | 'all' }[] = [
   { label: 'All', value: 'all' },
@@ -64,7 +64,7 @@ export const MemoriesScreen: React.FC = () => {
       {/* Shared Sunny website header */}
       <div className="flex items-center justify-between py-2 mb-4">
         <div className="flex items-center gap-2.5">
-          <SunnyRobot3D compact className="h-14 w-14 shrink-0" />
+          <SunnySun compact className="h-14 w-14 shrink-0" />
           <div>
             <div className="flex items-center gap-1.5">
               <h1 className="text-lg font-bold text-white tracking-tight">Sunny</h1>

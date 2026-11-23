@@ -3,7 +3,7 @@ import { Capacitor } from '@capacitor/core';
 import { usePreferences } from '@/context/PreferencesContext';
 import { notificationService } from '@/services/notificationService';
 import { PersonalityTone } from '@/types/user';
-import { SunnyRobot3D } from '@/components/brand/SunnyRobot3D';
+import { SunnySun } from '@/components/brand/SunnySun';
 import { AppButton } from '@/components/ui/AppButton';
 import {
   Sparkles,
@@ -187,7 +187,7 @@ const OnboardingStyles: React.FC = () => (
 
 const SunnyHero: React.FC = () => (
   <div className="relative flex h-56 w-60 items-center justify-center sm:h-64 sm:w-64">
-    <SunnyRobot3D className="relative z-10 h-full w-full" />
+    <SunnySun className="relative z-10 h-full w-full" />
   </div>
 );
 

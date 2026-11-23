@@ -9,7 +9,7 @@ import { TypingIndicator } from '@/components/chat/TypingIndicator';
 import { MemoryModal } from '@/components/memories/MemoryModal';
 import { VoiceConversationScreen } from '@/components/chat/VoiceConversationScreen';
 import { MemoryCategory } from '@/types/memory';
-import { SunnyRobot3D } from '@/components/brand/SunnyRobot3D';
+import { SunnySun } from '@/components/brand/SunnySun';
 import { getPersonalityLabel } from '@/types/user';
 import type { StarterIntent } from '@/types/chat';
 import { useChatBackground } from '@/lib/chatBackground';
@@ -228,7 +228,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
         {messages.length === 0 && !isThinking && (
           <section className="sunny-chat-welcome mx-auto flex min-h-full w-full max-w-4xl flex-col items-center justify-center px-5 py-7 text-center sm:px-8" aria-label="Start a conversation with Sunny">
             <div className="relative mb-3 h-36 w-40 sm:h-44 sm:w-48">
-              <SunnyRobot3D compact className="relative z-10 h-full w-full" />
+              <SunnySun compact className="relative z-10 h-full w-full" />
             </div>
             <span className="mb-2 inline-flex items-center gap-2 rounded-full border border-[#E879F9]/25 bg-[#E879F9]/[0.08] px-3 py-1 text-[10px] font-bold uppercase tracking-[.18em] text-[#E879F9]">
               <span className="h-1.5 w-1.5 rounded-full bg-[#E879F9] shadow-[0_0_10px_rgba(232,121,249,.8)]"/> Here with you

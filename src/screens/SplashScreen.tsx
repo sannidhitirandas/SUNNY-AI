@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { SunnyRobot3D } from '@/components/brand/SunnyRobot3D';
+import { SunnySun } from '@/components/brand/SunnySun';
 import { audioService } from '@/services/audioService';
 import { usePreferences } from '@/context/PreferencesContext';
 
@@ -229,7 +229,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
 
       <div className="sunrise-sun">
         <div className="sunrise-rays h-full w-full">
-          <SunnyRobot3D className="h-full w-full" />
+          <SunnySun className="h-full w-full" />
         </div>
       </div>
 
