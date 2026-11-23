@@ -80,7 +80,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           position: relative;
           display: grid;
           place-items: center;
-          width: clamp(148px, 42vw, 190px);
+          width: clamp(210px, 62vw, 280px);
           aspect-ratio: 1;
           margin-bottom: 2.1rem;
           animation: sunrise-sun-rise 1.5s cubic-bezier(0.2, 0.85, 0.25, 1) both;
@@ -90,12 +90,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady }) => {
           z-index: 1;
           filter: drop-shadow(0 3px 8px rgba(0, 0, 0, .58)) drop-shadow(0 8px 18px rgba(218, 199, 169, .16));
         }
-        .sunrise-rays > div > div:first-child { opacity: 0 !important; }
-        .sunrise-rays svg line { stroke: #E8E1D5 !important; }
-        .sunrise-rays svg stop:nth-child(1) { stop-color: #FFF9E8; }
-        .sunrise-rays svg stop:nth-child(2) { stop-color: #DCCBFF; }
-        .sunrise-rays svg stop:nth-child(3) { stop-color: #A78BFA; }
-        .sunrise-rays svg feDropShadow { flood-color: #B99AFF; flood-opacity: .28; }
 
         .sunrise-sparkle {
           position: absolute;

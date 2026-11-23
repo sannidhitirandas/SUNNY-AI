@@ -39,13 +39,15 @@ export const SunnySun: React.FC<SunnySunProps> = ({ className = '', compact = fa
           .sunny-sun-float,.sunny-sun-petals,.sunny-sun-eyes,.sunny-sun-sparkle { animation:none !important; }
         }
       `}</style>
+      {/* The wrapper owns the size; the SVG fills it absolutely so it can never overflow its box. */}
+      <div className={`sunny-sun-wrap ${className}`} style={{ position: 'relative', minWidth: 0, minHeight: 0 }}>
       <svg
-        className={`sunny-sun ${className}`}
+        className="sunny-sun"
         viewBox={compact ? '28 8 224 224' : '-30 0 340 240'}
         preserveAspectRatio="xMidYMid meet"
         role="img"
         aria-label="Sunny, a smiling sun with rosy cheeks"
-        style={{ filter: 'drop-shadow(0 0 16px rgba(255, 200, 70, 0.35))' }}
+        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', filter: 'drop-shadow(0 0 16px rgba(255, 200, 70, 0.35))' }}
       >
         <defs>
           <radialGradient id={bodyGradient} cx="36%" cy="28%" r="80%">
@@ -113,6 +115,7 @@ export const SunnySun: React.FC<SunnySunProps> = ({ className = '', compact = fa
           />
         </g>
       </svg>
+      </div>
     </>
   );
 };
