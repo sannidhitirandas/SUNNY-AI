@@ -1964,3 +1964,69 @@ body {
 .sunny-subscreen :where(img, video, canvas, iframe, table, pre) {
   max-width: 100%;
 }
+
+
+/* ---- Shared gradient panels for Home + Memories ---- */
+:root:not([data-theme='sunny-light']) .sunny-home-screen .sunny-home-hero,
+:root:not([data-theme='sunny-light']) .sunny-memories-screen .sunny-memories-hero {
+  background:
+    radial-gradient(ellipse at 92% 8%,rgba(232,121,249,.20),transparent 42%),
+    radial-gradient(ellipse at 4% 100%,rgba(139,43,226,.20),transparent 48%),
+    linear-gradient(118deg,#3A1B55 0%,#28133D 48%,#190D2A 100%) !important;
+  border: 1px solid rgba(207,166,255,.24) !important;
+  border-radius: 28px !important;
+  padding: clamp(1.25rem,3vw,2.25rem) !important;
+  box-shadow: 0 20px 54px rgba(5,1,15,.25),inset 0 1px 0 rgba(255,255,255,.07) !important;
+}
+:root:not([data-theme='sunny-light']) .sunny-home-screen .sunny-home-quick-grid > button,
+:root:not([data-theme='sunny-light']) .sunny-home-screen .sunny-vibe-card,
+:root:not([data-theme='sunny-light']) .sunny-home-screen .sunny-daily-card,
+:root:not([data-theme='sunny-light']) .sunny-home-screen .sunny-recent-card,
+:root:not([data-theme='sunny-light']) .sunny-memories-screen .sunny-memory-count,
+:root:not([data-theme='sunny-light']) .sunny-memories-screen .sunny-memory-deck-front .sunny-memory-card {
+  background:
+    radial-gradient(ellipse at 100% 0%,rgba(232,121,249,.13),transparent 48%),
+    linear-gradient(135deg,rgba(72,39,103,.96) 0%,rgba(43,24,66,.97) 52%,rgba(29,15,46,.98) 100%) !important;
+  border: 1px solid rgba(199,158,242,.24) !important;
+  box-shadow: 0 14px 34px rgba(5,1,15,.22),inset 0 1px 0 rgba(255,255,255,.07) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(135%);
+  backdrop-filter: blur(14px) saturate(135%);
+}
+:root:not([data-theme='sunny-light']) .sunny-home-screen .sunny-home-quick-grid > button:hover,
+:root:not([data-theme='sunny-light']) .sunny-home-screen .sunny-vibe-card:hover,
+:root:not([data-theme='sunny-light']) .sunny-home-screen .sunny-recent-card:hover {
+  border-color: rgba(232,121,249,.52) !important;
+  box-shadow: 0 18px 40px rgba(5,1,15,.30),0 0 24px rgba(217,70,239,.08) !important;
+}
+:root:not([data-theme='sunny-light']) .sunny-memories-screen .sunny-memory-search input {
+  background: linear-gradient(120deg,rgba(57,33,81,.94),rgba(31,17,48,.96)) !important;
+  border-color: rgba(199,158,242,.25) !important;
+}
+:root:not([data-theme='sunny-light']) .sunny-memories-screen .sunny-memory-filters button {
+  background-image: linear-gradient(135deg,rgba(72,39,103,.72),rgba(35,19,54,.86));
+}
+:root:not([data-theme='sunny-light']) .sunny-memories-screen .sunny-memory-deck-sheet-back {
+  background: linear-gradient(135deg,#43235F,#26143C 78%) !important;
+}
+:root:not([data-theme='sunny-light']) .sunny-memories-screen .sunny-memory-deck-sheet-middle {
+  background:
+    radial-gradient(ellipse at 90% 0%,rgba(232,121,249,.14),transparent 48%),
+    linear-gradient(135deg,#50306D,#2C1944 78%) !important;
+}
+:root[data-theme='sunny-light'] .sunny-home-screen .sunny-home-hero,
+:root[data-theme='sunny-light'] .sunny-memories-screen .sunny-memories-hero {
+  background: linear-gradient(120deg,#F1E5FC 0%,#E8D8F6 52%,#F6EAF8 100%) !important;
+  border: 1px solid rgba(117,82,150,.20) !important;
+  border-radius: 28px !important;
+  padding: clamp(1.25rem,3vw,2.25rem) !important;
+}
+:root[data-theme='sunny-light'] .sunny-home-screen .sunny-home-quick-grid > button,
+:root[data-theme='sunny-light'] .sunny-home-screen .sunny-vibe-card,
+:root[data-theme='sunny-light'] .sunny-home-screen .sunny-daily-card,
+:root[data-theme='sunny-light'] .sunny-home-screen .sunny-recent-card,
+:root[data-theme='sunny-light'] .sunny-memories-screen .sunny-memory-count,
+:root[data-theme='sunny-light'] .sunny-memories-screen .sunny-memory-deck-front .sunny-memory-card {
+  background: linear-gradient(135deg,#F4EAFE 0%,#E9DDF7 55%,#F8EDF8 100%) !important;
+  border: 1px solid rgba(117,82,150,.20) !important;
+  box-shadow: 0 12px 28px rgba(54,35,76,.10),inset 0 1px 0 rgba(255,255,255,.8) !important;
+}
