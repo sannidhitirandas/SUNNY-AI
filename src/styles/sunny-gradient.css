@@ -1,0 +1,95 @@
+/* Sunny gradient system (dark theme).
+   One source of truth for the violet/magenta gradients first used on the Settings screen.
+   Loaded last (see main.tsx) so it wins over earlier per-screen rules.
+   Light theme is intentionally untouched: every rule below is scoped to non-light themes. */
+
+:root {
+  /* Hero cards: violet fading to near-black, top-left to bottom-right */
+  --g-hero: linear-gradient(135deg, #381A60 0%, #1A0A2E 55%, #12051F 100%);
+  /* Glass cards: translucent violet */
+  --g-card: linear-gradient(150deg, rgba(120, 52, 190, .30), rgba(37, 16, 63, .62));
+  /* Calmer surface for long lists (settings rows, about sections) */
+  --g-panel: linear-gradient(145deg, rgba(56, 26, 96, .62), rgba(26, 10, 46, .88));
+  /* Dialogs and sheets */
+  --g-modal: linear-gradient(145deg, #381A60 0%, #1A0A2E 60%, #12051F 100%);
+  /* Active / primary accents */
+  --g-accent: linear-gradient(135deg, #8B2BE2, #D946EF);
+  --g-accent-glow: 0 0 22px rgba(217, 70, 239, .6);
+  /* App background atmosphere */
+  --g-shell:
+    radial-gradient(ellipse at 50% -10%, rgba(139, 43, 226, .42), transparent 55%),
+    radial-gradient(ellipse at 100% 105%, rgba(217, 70, 239, .16), transparent 45%),
+    linear-gradient(180deg, #25103F 0%, #1A0A2E 38%, #12051F 100%);
+}
+
+/* App background */
+:root:not([data-theme='sunny-light']) .sunny-app-shell,
+:root:not([data-theme='sunny-light']) .sunny-home-screen,
+:root:not([data-theme='sunny-light']) .sunny-chat-ui {
+  background: var(--g-shell) !important;
+}
+
+/* Hero cards */
+:root:not([data-theme='sunny-light']) .sunny-home-hero,
+:root:not([data-theme='sunny-light']) .sunny-memories-hero,
+:root:not([data-theme='sunny-light']) .sunny-settings-hero,
+:root:not([data-theme='sunny-light']) .sunny-about-hero,
+:root:not([data-theme='sunny-light']) .sunny-privacy-intro,
+:root:not([data-theme='sunny-light']) .sunny-safety-boundary,
+:root:not([data-theme='sunny-light']) .sunny-grounding-card {
+  background: var(--g-hero) !important;
+}
+
+/* Glass cards */
+:root:not([data-theme='sunny-light']) .sunny-vibe-card,
+:root:not([data-theme='sunny-light']) .sunny-daily-card,
+:root:not([data-theme='sunny-light']) .sunny-recent-card,
+:root:not([data-theme='sunny-light']) .sunny-memory-card,
+:root:not([data-theme='sunny-light']) .sunny-memory-deck-front .sunny-memory-card,
+:root:not([data-theme='sunny-light']) .sunny-app-card,
+:root:not([data-theme='sunny-light']) .sunny-mood-card,
+:root:not([data-theme='sunny-light']) .sunny-auth-card,
+:root:not([data-theme='sunny-light']) .sunny-onboarding-choice:not([aria-pressed="true"]),
+:root:not([data-theme='sunny-light']) .sunny-privacy-highlight,
+:root:not([data-theme='sunny-light']) .sunny-safety-resource,
+:root:not([data-theme='sunny-light']) .sunny-notifications-preview-card {
+  background: var(--g-card) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+}
+
+/* List panels */
+:root:not([data-theme='sunny-light']) .sunny-settings-panel,
+:root:not([data-theme='sunny-light']) .sunny-about-screen > div:not(:first-child) {
+  background: var(--g-panel) !important;
+}
+
+/* Dialogs and sheets (the privacy delete dialog keeps its red tint on purpose) */
+:root:not([data-theme='sunny-light']) .sunny-settings-dialog,
+:root:not([data-theme='sunny-light']) .sunny-modal-surface,
+:root:not([data-theme='sunny-light']) .sunny-personality-dialog {
+  background: var(--g-modal) !important;
+}
+
+/* Accents: nav bubble, send button, active filter chips */
+:root:not([data-theme='sunny-light']) .gooey-dock__blob {
+  background: var(--g-accent) !important;
+  box-shadow: var(--g-accent-glow) !important;
+}
+:root:not([data-theme='sunny-light']) .gooey-dock__item--active {
+  color: #FFFFFF !important;
+}
+:root:not([data-theme='sunny-light']) .sunny-send-button:not(:disabled) {
+  background: var(--g-accent) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 6px 18px rgba(217, 70, 239, .35);
+}
+:root:not([data-theme='sunny-light']) .sunny-send-button:not(:disabled) * {
+  color: #FFFFFF !important;
+}
+:root:not([data-theme='sunny-light']) .sunny-memory-filters button[aria-pressed="true"],
+:root:not([data-theme='sunny-light']) .sunny-memory-filters button[data-state="active"] {
+  background: var(--g-accent) !important;
+  border-color: transparent !important;
+  color: #FFFFFF !important;
+}
