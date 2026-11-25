@@ -687,3 +687,108 @@
   .sunny-chat-header { border-radius: 0 !important; }
   .sunny-composer-wrap { padding-bottom: 1.25rem !important; }
 }
+
+
+/* Shared purple-plum visual language across Home, Memories and Voice.
+   Soft violet light, blush accents, and rounded glass-like surfaces. */
+:root .sunny-home-screen,
+:root .sunny-memories-screen {
+  background:
+    radial-gradient(ellipse at 8% 12%, rgba(139,92,246,.16), transparent 34%),
+    radial-gradient(ellipse at 92% 42%, rgba(232,121,249,.10), transparent 32%),
+    linear-gradient(155deg,#12051F 0%,#1A0A2E 52%,#12051F 100%) !important;
+}
+:root .sunny-home-hero,
+:root .sunny-memories-hero {
+  border: 1px solid rgba(190,160,255,.25) !important;
+  border-radius: 30px !important;
+  background:
+    radial-gradient(ellipse at 84% 12%,rgba(190,150,255,.22),transparent 42%),
+    radial-gradient(ellipse at 10% 100%,rgba(232,121,249,.10),transparent 42%),
+    linear-gradient(130deg,#39245F 0%,#24183C 55%,#17102A 100%) !important;
+  box-shadow: 0 24px 64px rgba(7,3,18,.34),inset 0 1px 0 rgba(255,255,255,.08) !important;
+}
+:root .sunny-vibe-card,
+:root .sunny-daily-card,
+:root .sunny-recent-card,
+:root .sunny-memory-card {
+  border: 1px solid rgba(190,160,255,.20) !important;
+  border-radius: 22px !important;
+  background: linear-gradient(145deg,rgba(55,37,79,.94),rgba(27,17,43,.98)) !important;
+  box-shadow: 0 14px 34px rgba(5,2,14,.20),inset 0 1px 0 rgba(255,255,255,.045) !important;
+}
+:root .sunny-home-screen button,
+:root .sunny-memories-screen button {
+  border-radius: 18px;
+}
+:root .sunny-home-screen button.rounded-full,
+:root .sunny-memories-screen button.rounded-full,
+:root .sunny-memories-screen .sunny-memory-filters button {
+  border-radius: 9999px;
+}
+
+/* Voice receives the same ambient gradient and soft, rounded plum panels. */
+:root .sunny-voice-mode {
+  background:
+    radial-gradient(ellipse at 12% 18%,rgba(139,92,246,.22),transparent 38%),
+    radial-gradient(ellipse at 88% 76%,rgba(232,121,249,.12),transparent 36%),
+    linear-gradient(155deg,#12051F 0%,#24133D 52%,#12051F 100%) !important;
+}
+:root .sunny-voice-mode header button {
+  border: 1px solid rgba(190,160,255,.25) !important;
+  border-radius: 18px !important;
+  background: linear-gradient(145deg,rgba(64,43,88,.72),rgba(31,19,48,.86)) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+}
+:root .sunny-voice-mode .sunny-voice-status,
+:root .sunny-voice-mode .sunny-voice-panel {
+  border: 1px solid rgba(190,160,255,.22);
+  border-radius: 24px;
+  background: linear-gradient(145deg,rgba(55,37,79,.72),rgba(27,17,43,.86));
+  box-shadow: 0 16px 42px rgba(5,2,14,.22),inset 0 1px 0 rgba(255,255,255,.05);
+}
+:root .sunny-voice-mode .sunny-voice-orb {
+  background: radial-gradient(circle at 34% 28%,#FCE7F3 0%,#D8B4FE 18%,#A78BFA 48%,#7C3AED 76%,#32105F 100%);
+  box-shadow: 0 0 38px rgba(192,132,252,.38),0 0 105px rgba(217,70,239,.16),inset -12px -16px 30px rgba(35,12,76,.4),inset 8px 8px 24px rgba(255,255,255,.35);
+}
+:root .sunny-voice-mode .sunny-voice-orb::before,
+:root .sunny-voice-mode .sunny-voice-orb::after {
+  border-color: rgba(216,180,254,.24);
+}
+:root .sunny-voice-mode .sunny-voice-wave span {
+  background: linear-gradient(180deg,#F0ABFC,#A78BFA);
+}
+:root .sunny-voice-mode button:focus-visible {
+  outline-color: #F0ABFC !important;
+}
+:root[data-theme='sunny-light'] .sunny-home-screen,
+:root[data-theme='sunny-light'] .sunny-memories-screen {
+  background:
+    radial-gradient(ellipse at 8% 12%,rgba(167,139,250,.12),transparent 34%),
+    radial-gradient(ellipse at 92% 42%,rgba(232,121,249,.08),transparent 32%),
+    linear-gradient(155deg,#F8F6FC,#F0EAF8 58%,#F8F5FC) !important;
+}
+:root[data-theme='sunny-light'] .sunny-home-hero,
+:root[data-theme='sunny-light'] .sunny-memories-hero {
+  background: linear-gradient(130deg,#F0E8FF 0%,#E6D9FA 55%,#F5EFFC 100%) !important;
+  border-color: rgba(121,87,163,.2) !important;
+  box-shadow: 0 18px 48px rgba(65,40,90,.10) !important;
+}
+:root[data-theme='sunny-light'] .sunny-vibe-card,
+:root[data-theme='sunny-light'] .sunny-daily-card,
+:root[data-theme='sunny-light'] .sunny-recent-card,
+:root[data-theme='sunny-light'] .sunny-memory-card {
+  background: linear-gradient(145deg,#FFFFFF,#F3EDF9) !important;
+  border-color: rgba(121,87,163,.16) !important;
+}
+:root[data-theme='sunny-light'] .sunny-voice-mode {
+  background:
+    radial-gradient(ellipse at 12% 18%,rgba(167,139,250,.18),transparent 38%),
+    radial-gradient(ellipse at 88% 76%,rgba(232,121,249,.12),transparent 36%),
+    linear-gradient(155deg,#F8F6FC,#EEE6F7 58%,#F8F5FC) !important;
+}
+:root[data-theme='sunny-light'] .sunny-voice-mode header button {
+  background: linear-gradient(145deg,#FFFFFF,#F0EAF8) !important;
+  border-color: rgba(121,87,163,.2) !important;
+  color: #593B78 !important;
+}
