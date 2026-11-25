@@ -28,7 +28,7 @@ import { OnboardingFlow } from '@/screens/onboarding/OnboardingFlow';
 import { resolveAppRoute } from '@/lib/authRouting';
 import { resolveAndroidBackAction, type AndroidBackState } from '@/lib/androidBackNavigation';
 import { apiUrl } from '@/lib/api';
-import GooeyDock from '@/components/ui/gooey-dock';
+import LiquidNavbar from '@/components/ui/liquid-navbar';
 
 import {
   Home,
@@ -533,36 +533,30 @@ export function App() {
           />
         )}
       </main>
+<LiquidNavbar
+  tone="dark"
+  compact={false}
+  active={(['home', 'chat', 'memories', 'settings'] as Tab[]).indexOf(activeTab)}
+  className={`sunny-liquid-navbar ${
+    hideNavBar ? 'sunny-liquid-navbar--hidden' : ''
+  }`}
+  onChange={(index) => {
+    const tabs: Tab[] = ['home', 'chat', 'memories', 'settings'];
+    const tab = tabs[index];
 
-      <GooeyDock
-        hidden={hideNavBar}
-        items={[
-          {
-            icon: Home,
-            label: 'Home',
-            active: activeTab === 'home',
-            onClick: () => handleTabChange('home'),
-          },
-          {
-            icon: MessageSquare,
-            label: 'Chat',
-            active: activeTab === 'chat',
-            onClick: () => void handleEnterChat({ source: 'normal' }),
-          },
-          {
-            icon: Bookmark,
-            label: 'Memories',
-            active: activeTab === 'memories',
-            onClick: () => handleTabChange('memories'),
-          },
-          {
-            icon: Settings,
-            label: 'Settings',
-            active: activeTab === 'settings',
-            onClick: () => handleTabChange('settings'),
-          },
-        ]}
-      />
+    if (tab === 'chat') {
+      void handleEnterChat({ source: 'normal' });
+    } else {
+      handleTabChange(tab);
+    }
+  }}
+  items={[
+    { label: 'Home', icon: <Home size={20} />, fx: 'glow' },
+    { label: 'Chat', icon: <MessageSquare size={20} />, fx: 'pop' },
+    { label: 'Memories', icon: <Bookmark size={20} />, fx: 'drop' },
+    { label: 'Settings', icon: <Settings size={20} />, fx: 'spin' },
+  ]}
+/>
     </div>
   );
 }
