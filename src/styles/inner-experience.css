@@ -22,7 +22,7 @@
 .sunny-home-screen,
 .sunny-memories-screen,
 .sunny-settings-screen {
-  max-width: 78rem;
+  max-width: none;
   padding-top: clamp(1rem, 2.5vw, 2rem);
 }
 .sunny-home-screen > .sunny-home-content > div:first-child,
@@ -417,7 +417,7 @@
     min-height: 8.85rem;
   }
   .sunny-memories-screen,
-  .sunny-settings-screen { max-width: 88rem; }
+  .sunny-settings-screen { max-width: none; }
   .sunny-memories-hero,
   .sunny-settings-hero { min-height: 17.75rem; }
   .sunny-settings-grid { gap: 1.5rem !important; }

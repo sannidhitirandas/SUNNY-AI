@@ -199,7 +199,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   };
 
   return (
-    <div className="sunny-settings-screen flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-7xl mx-auto w-full pb-8 sm:pb-10 lg:px-10 xl:px-14">
+    <div className="sunny-settings-screen flex-1 overflow-y-auto px-4 py-3 sm:px-6 w-full max-w-none overflow-x-hidden pb-8 sm:pb-10 lg:px-10 xl:px-14">
       {/* Shared Sunny website header */}
       <div className="flex items-center justify-between py-2 mb-4">
         <div className="flex items-center gap-2.5">

@@ -115,7 +115,7 @@ export const NotificationPreferencesScreen: React.FC<NotificationPreferencesScre
   );
 
   return (
-    <div className="sunny-notifications-screen sunny-subscreen flex-1 overflow-y-auto px-4 py-3 sm:px-6 max-w-xl mx-auto w-full pb-8 sm:pb-10">
+    <div className="sunny-notifications-screen sunny-subscreen flex-1 overflow-y-auto px-4 py-3 sm:px-6 w-full max-w-none overflow-x-hidden pb-8 sm:pb-10">
       {/* Top Bar */}
       <div className="sunny-notifications-header flex items-center gap-3 py-2 mb-5">
         <button

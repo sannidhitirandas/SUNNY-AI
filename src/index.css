@@ -772,7 +772,7 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
 
 /* About Sunny: a warm, editorial brand page that feels like part of the companion. */
 .sunny-about-screen {
-  max-width: 48rem;
+  max-width: none;
   padding-top: clamp(1rem, 3vw, 2rem);
   padding-bottom: max(2rem, env(safe-area-inset-bottom));
 }
@@ -966,7 +966,7 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
 
 /* Privacy & data controls: make sensitive actions clear, calm and deliberate. */
 .sunny-privacy-screen {
-  max-width:48rem;
+  max-width:none;
   padding-top:clamp(1rem,3vw,2rem);
   padding-bottom:max(2rem,env(safe-area-inset-bottom));
   isolation:isolate;
@@ -1044,7 +1044,7 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
 
 /* Help & emotional safety: calm, clear hierarchy for support resources and grounding. */
 .sunny-safety-screen {
-  max-width:48rem;
+  max-width:none;
   padding-top:clamp(1rem,3vw,2rem);
   padding-bottom:max(2rem,env(safe-area-inset-bottom));
   isolation:isolate;
@@ -1857,3 +1857,110 @@ button:disabled { cursor: not-allowed; }
 }
 @media (prefers-reduced-motion: reduce) { .sunny-shine { animation: none; } }
 :root[data-theme='sunny-light'] .sunny-shine { color: #C58A00; filter: none; animation: none; }
+
+
+/* ---------------------------------------------------------------------------
+   Full-screen fill, no horizontal scroll (mobile + desktop)
+   - Screens use the whole viewport width instead of a centred, capped column.
+   - Any `overflow-y: auto` container silently computes `overflow-x: auto` too,
+     so decorative glows/aurora that poke past the edge produced sideways
+     scrollbars. Every scroll container now clips the x axis explicitly.
+   --------------------------------------------------------------------------- */
+html {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  width: 100%;
+  min-height: 100%;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+#root > * {
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Every screen-level scroller: vertical only, full width. */
+.sunny-app-shell,
+.sunny-app-main,
+.sunny-home-screen,
+.sunny-memories-screen,
+.sunny-settings-screen,
+.sunny-subscreen,
+.sunny-about-screen,
+.sunny-privacy-screen,
+.sunny-safety-screen,
+.sunny-notifications-screen,
+.sunny-auth-screen,
+.sunny-onboarding,
+.chat-message-list {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Sub-screens render straight into #root: make their background fill the viewport. */
+.sunny-subscreen {
+  min-height: 100dvh;
+  scrollbar-gutter: auto;
+}
+
+/* A permanently reserved scrollbar gutter leaves an empty strip on desktop. */
+.sunny-home-screen,
+.sunny-memories-screen,
+.sunny-settings-screen,
+.sunny-privacy-screen,
+.sunny-safety-screen,
+.sunny-about-screen,
+.chat-message-list {
+  scrollbar-gutter: auto;
+}
+
+.sunny-home-content {
+  width: 100%;
+  max-width: none;
+}
+
+/* Comfortable side padding on wide displays now that nothing caps the width. */
+@media (min-width: 1024px) {
+  .sunny-subscreen {
+    padding-left: clamp(2.5rem, 5vw, 5rem);
+    padding-right: clamp(2.5rem, 5vw, 5rem);
+  }
+}
+
+/* The memory filter chips may scroll sideways on a phone, but never show a bar. */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Long words, URLs and filenames must wrap instead of widening the page. */
+.sunny-app-shell :where(p, h1, h2, h3, h4, li, span, a),
+.sunny-subscreen :where(p, h1, h2, h3, h4, li, span, a) {
+  overflow-wrap: anywhere;
+}
+
+/* Media and form controls never exceed their container. */
+.sunny-app-shell :where(img, video, canvas, iframe, table, pre),
+.sunny-subscreen :where(img, video, canvas, iframe, table, pre) {
+  max-width: 100%;
+}

@@ -47,7 +47,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     messages.length > 0 ? messages[messages.length - 1] : undefined;
 
   return (
-    <div className="sunny-home-screen relative isolate mx-auto w-full max-w-7xl flex-1 overflow-y-auto px-4 py-3 pb-8 sm:px-6 sm:py-5 sm:pb-10 lg:px-10 xl:px-14">
+    <div className="sunny-home-screen relative isolate w-full max-w-none flex-1 overflow-y-auto overflow-x-hidden px-4 py-3 pb-8 sm:px-6 sm:py-5 sm:pb-10 lg:px-10 xl:px-14">
       <style>{`
         .sunny-home-screen {
           --sunny-home-accent: #B99AFF;
@@ -57,7 +57,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             radial-gradient(ellipse at 100% 38%, rgba(91,54,151,.13), transparent 34%),
             linear-gradient(155deg,#12051F 0%,#1A0A2E 52%,#12051F 100%) !important;
         }
-        .sunny-home-screen .sunny-home-content { max-width: 1120px; margin: 0 auto; }
+        .sunny-home-screen .sunny-home-content { width: 100%; max-width: none; margin: 0; }
         .sunny-home-screen .sunny-home-hero {
           background:
             radial-gradient(ellipse at 82% 18%,rgba(169,131,255,.27),transparent 40%),
