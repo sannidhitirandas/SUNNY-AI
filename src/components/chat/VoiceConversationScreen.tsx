@@ -142,7 +142,7 @@ export const VoiceConversationScreen: React.FC<VoiceConversationScreenProps> = (
   return (
     <section className="sunny-voice-mode fixed inset-0 z-[100] flex min-h-0 flex-col overflow-hidden text-white" role="dialog" aria-modal="true" aria-label="Voice conversation with Sunny">
       <style>{`
-        .sunny-voice-mode { background:radial-gradient(ellipse at 50% 38%,rgba(139,92,246,.28),transparent 43%),radial-gradient(ellipse at 50% 100%,rgba(91,33,182,.2),transparent 55%),linear-gradient(155deg,#12051F,#1D1237 55%,#12051F); }
+        .sunny-voice-mode { background-color:#10071B; background-image:radial-gradient(ellipse at 8% 8%,rgba(126,64,170,.22) 0%,transparent 38%),radial-gradient(ellipse at 92% 24%,rgba(190,76,154,.13) 0%,transparent 34%),radial-gradient(ellipse at 76% 88%,rgba(91,45,151,.22) 0%,transparent 42%),radial-gradient(ellipse at 18% 76%,rgba(119,64,170,.13) 0%,transparent 38%),linear-gradient(135deg,#10071B 0%,#170A26 48%,#10071B 100%); background-attachment:fixed; }
         .sunny-voice-orb { background:radial-gradient(circle at 34% 28%,#E9D5FF 0%,#C4B5FD 16%,#8B5CF6 48%,#5B21B6 78%,#32105F 100%); box-shadow:0 0 35px rgba(167,139,250,.35),0 0 100px rgba(139,92,246,.22),inset -12px -16px 30px rgba(35,12,76,.4),inset 8px 8px 24px rgba(255,255,255,.35); }
         .sunny-voice-orb::before,.sunny-voice-orb::after { content:''; position:absolute; inset:-18px; border:1px solid rgba(196,181,253,.22); border-radius:9999px; }
         .sunny-voice-orb::after { inset:-36px; border-color:rgba(196,181,253,.11); }
