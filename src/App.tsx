@@ -493,7 +493,7 @@ export function App() {
   const hideNavBar = chatNavHidden;
 
   return (
-    <div className="sunny-app-shell h-dvh min-h-0 overflow-hidden bg-[#12051F] flex flex-col relative selection:bg-[#D946EF] selection:text-white">
+    <div className="sunny-app-shell h-dvh min-h-0 overflow-visible bg-[#12051F] flex flex-col relative selection:bg-[#D946EF] selection:text-white">
       <main className={`sunny-app-main flex-1 min-h-0 flex flex-col overflow-hidden ${activeTab === 'chat' ? 'pb-0' : 'pb-24'}`}>
         {activeTab === 'home' && (
           <HomeScreen
