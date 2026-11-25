@@ -1,3 +1,4 @@
+/* stylelint-disable-next-line at-rule-no-unknown */
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
 @import "tailwindcss";
 @import "./styles/inner-experience.css";
@@ -10,8 +11,11 @@
   font-display: swap;
 }
 
+/* Tailwind CSS v4 directive; keep this rule for theme token generation. */
+/*noinspection CssUnknownAtRule */
+/* stylelint-disable at-rule-no-unknown -- Tailwind CSS v4 uses @theme. */
 @theme {
-  --font-sans: var(--sunny-ui-font), system-ui, sans-serif;
+  --font-sans: var(--sunny-ui-font, "Plus Jakarta Sans"), system-ui, sans-serif;
   --color-sunny-bg: #12051F;
   --color-sunny-secondary: #1A0A2E;
   --color-sunny-card: #25103F;
@@ -27,9 +31,10 @@
   --color-sunny-error: #FF8D9A;
   --color-sunny-success: #A8D9A0;
 }
+/* stylelint-enable at-rule-no-unknown */
 
 body {
-  font-family: var(--sunny-ui-font), system-ui, sans-serif;
+  font-family: var(--sunny-ui-font, "Plus Jakarta Sans"), system-ui, sans-serif;
   font-size: 16px;
   background-color: var(--sunny-page-background, #12051F);
   color: var(--sunny-primary-text, #FFFFFF);
@@ -548,7 +553,7 @@ html:root .sunny-bubbles-on .sunny-you-bubble .sunny-you-meta {
 }
 .sunny-memory-glow { animation:sunny-memory-breathe 7s ease-in-out infinite; }
 .sunny-memory-count { backdrop-filter:blur(16px); }
-.sunny-memory-search input { -webkit-appearance:none; }
+.sunny-memory-search input { appearance:none; -webkit-appearance:none; }
 .sunny-memory-filters { scrollbar-width:none; -webkit-overflow-scrolling:touch; }
 .sunny-memory-filters::-webkit-scrollbar { display:none; }
 .sunny-memory-card { min-width:0; -webkit-tap-highlight-color:transparent; }
