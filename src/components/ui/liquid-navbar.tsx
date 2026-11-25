@@ -104,7 +104,7 @@ const NIMBUS_CSS = `
 .nv-ico[data-fx="glow"] svg{animation:nvHop .8s cubic-bezier(.3,1.4,.5,1) both;transform-origin:50% 100%}
 @keyframes nvHop{0%{transform:none}30%{transform:translateY(-5px) scale(1.04,.96)}55%{transform:translateY(0) scale(1.12,.88)}75%{transform:translateY(-2px) scale(.98,1.04)}100%{transform:translateY(-1px) scale(1.08)}}
 .nv-ico[data-fx="glow"] .nv-door{animation:nvDoor 1.3s ease both}
-@keyframes nvDoor{0%{fill:transparent}30%{fill:#FFF3A8}100%{fill:rgba(126,232,255,.6)}}
+@keyframes nvDoor{0%{fill:transparent}30%{fill:#FFF3A8}100%{fill:rgba(255,216,77,.6)}}
 .nv-ico[data-fx="wave"] svg{animation:nvWave .9s ease-in-out both;transform-origin:50% 92%}
 @keyframes nvWave{0%{transform:none}20%{transform:rotate(-15deg)}40%{transform:rotate(12deg)}60%{transform:rotate(-8deg)}80%{transform:rotate(4deg)}100%{transform:translateY(-1px) scale(1.08)}}
 .nimbus-nav[data-compact="true"] .nimbus-item{padding:0 13px}
@@ -115,6 +115,14 @@ const NIMBUS_CSS = `
 /* Sunny theme + fixed, active-pill navigation */
 .nimbus-nav.sunny-liquid-navbar {
   --n-tint: rgba(23, 16, 44, .88);
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: nowrap;
+  width: max-content;
+  min-width: 0;
+  gap: 1px;
+  padding: 5px;
+  overflow: visible;
   --n-fg: #F7F2FF;
   --n-fg-soft: rgba(247, 242, 255, .68);
   --n-rim: rgba(255, 216, 77, .34);
@@ -137,8 +145,18 @@ const NIMBUS_CSS = `
     0 2px 8px rgba(0,0,0,.28);
 }
 .nimbus-nav.sunny-liquid-navbar .nimbus-item {
-  padding-inline: 14px;
-  gap: 8px;
+  box-sizing: border-box;
+  flex: 0 1 auto;
+  min-width: 0;
+  padding-inline: 10px;
+  gap: 7px;
+  white-space: nowrap;
+}
+.nimbus-nav.sunny-liquid-navbar .nimbus-item:first-of-type { margin-left: 0; }
+.nimbus-nav.sunny-liquid-navbar .nimbus-item:last-of-type { margin-right: 0; }
+.nimbus-nav.sunny-liquid-navbar .nimbus-item:focus-visible {
+  outline: 2px solid rgba(199, 174, 255, .85);
+  outline-offset: 2px;
 }
 .nimbus-nav.sunny-liquid-navbar .nimbus-label {
   display: inline-block;
@@ -154,6 +172,7 @@ const NIMBUS_CSS = `
 .nimbus-nav.sunny-liquid-navbar .nimbus-item[aria-current="page"] .nimbus-label {
   max-width: 5.5rem;
   opacity: 1;
+  overflow: visible;
 }
 .nimbus-nav.sunny-liquid-navbar .nimbus-item[aria-current="page"] .nv-ico {
   color: #FFD84D;
@@ -174,7 +193,7 @@ const NIMBUS_CSS = `
   pointer-events: none;
 }
 @media (max-width: 520px) {
-  .nimbus-nav.sunny-liquid-navbar .nimbus-item { padding-inline: 11px; }
+  .nimbus-nav.sunny-liquid-navbar .nimbus-item { padding-inline: 9px; gap: 6px; }
   .nimbus-nav.sunny-liquid-navbar .nimbus-item[aria-current="page"] .nimbus-label {
     max-width: 4.8rem;
   }
@@ -216,17 +235,17 @@ void main(){
  vec3 irid=.5+.5*cos(6.2831*(vec3(0.,.33,.67)+fres*.85+p.x*.0028+uTime*.035));
  float pm=smoothstep(1.,-1.,dp);float dm=smoothstep(1.,-1.,dd)*smoothstep(1.,-2.,dp);
  float sh=smoothstep(9.,-9.,dropD(p-vec2(0.,5.)))*(1.-dm)*pm*(.11+.07*uDark);
- vec3 c=vec3(0.,.14,.36)*sh;float a=sh;
+ vec3 c=vec3(.20,.12,.30)*sh;float a=sh;
  float pa=clamp(pm*(fres*.5+spec*.9+spec2),0.,1.);
  c=mix(vec3(1.),irid,.5*fres)*pa+c*(1.-pa);a=pa+a*(1.-pa);
  float th=lens(dd,11.);
  float cs=caus((p+n.xy*th*18.)*.085,uTime*.9);
- vec3 tint=mix(vec3(.80,.95,1.),vec3(.55,.82,1.),uDark);
+ vec3 tint=mix(vec3(1.,.91,.58),vec3(1.,.78,.30),uDark);
  float rim=dm*(1.-smoothstep(0.,8.,-dd));
  float cres=dm*smoothstep(.12,.55,dot(n.xy,normalize(vec2(.55,.85))))*smoothstep(0.,3.,-dd);
  float body=.5+.5*clamp(-n.y*3.,-1.,1.);
  float da=dm*(.26+.14*body)*(1.-.35*uDark);vec3 dc=mix(tint,vec3(1.),body*.6);
- float la=rim*.22;vec3 lc=mix(vec3(0.,.42,.78),vec3(.1,.55,.95),uDark);dc=lc*la+dc*da*(1.-la);da=la+da*(1.-la);
+ float la=rim*.22;vec3 lc=mix(vec3(.78,.55,.20),vec3(.98,.72,.22),uDark);dc=lc*la+dc*da*(1.-la);da=la+da*(1.-la);
  la=clamp(cres*.7+smoothstep(.6,1.,cs)*.28*th*dm,0.,1.);dc=vec3(1.)*la+dc*(1.-la);da=la+da*(1.-la);
  la=clamp(dm*(spec*1.2+spec2*.5),0.,1.);dc=vec3(1.)*la+dc*(1.-la);da=la+da*(1.-la);
  la=dm*smoothstep(-2.,0.,dd)*.4;dc=mix(vec3(1.),irid,.35)*la+dc*(1.-la);da=la+da*(1.-la);
