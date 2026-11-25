@@ -158,23 +158,8 @@ const NIMBUS_CSS = `
   position: relative;
   z-index: 1;
 }
-.nimbus-nav.sunny-liquid-navbar .nimbus-item[aria-current="page"]::before {
-  content: "";
-  position: absolute;
-  z-index: 0;
-  inset: 0 -5px;
-  border-radius: 999px;
-  background:
-    radial-gradient(120% 150% at 28% 0%, rgba(255,255,255,.38), transparent 58%),
-    linear-gradient(135deg, rgba(255,216,77,.30), rgba(183,112,255,.20));
-  border: 1px solid rgba(255,216,77,.95);
-  box-shadow:
-    inset 0 1px 2px rgba(255,255,255,.45),
-    inset 0 -3px 8px rgba(255,190,45,.16),
-    0 0 0 1px rgba(255,216,77,.14),
-    0 0 14px rgba(255,216,77,.20);
-  pointer-events: none;
-}
+/* The WebGL water canvas (or CSS fallback) is the sole active pill.
+   Do not add a second ::before oval on the selected item. */
 .nimbus-nav.sunny-liquid-navbar .nimbus-item:first-of-type { margin-left: 0; }
 .nimbus-nav.sunny-liquid-navbar .nimbus-item:last-of-type { margin-right: 0; }
 .nimbus-nav.sunny-liquid-navbar .nimbus-item:focus-visible {
