@@ -454,7 +454,7 @@ export function App() {
 
   if (activeSubScreen !== 'none') {
     return (
-      <div className="sunny-app-shell h-dvh min-h-0 overflow-hidden bg-[#12051F] flex flex-col relative">
+      <div className="sunny-app-shell sunny-subscreen-shell h-dvh min-h-0 overflow-hidden bg-[#12051F] flex flex-col relative">
         <main className="sunny-app-main flex-1 min-h-0 flex flex-col overflow-hidden">
           {activeSubScreen === 'notifications' && (
             <NotificationPreferencesScreen onBack={() => setActiveSubScreen('none')} />
