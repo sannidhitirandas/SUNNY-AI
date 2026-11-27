@@ -2195,3 +2195,49 @@ iframe {
     height: 100vh;
   }
 }
+
+
+/* All primary tabs must own a bounded scrollport inside the app shell.
+   Without min-height:0, flex children can grow to their content height while
+   the parent clips overflow, making Home and Memories appear frozen. */
+.sunny-app-main > .sunny-home-screen,
+.sunny-app-main > .sunny-memories-screen,
+.sunny-app-main > .sunny-settings-screen {
+  display: block;
+  flex: 1 1 0% !important;
+  min-width: 0;
+  min-height: 0 !important;
+  height: 100%;
+  max-height: 100%;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  scrollbar-width: none;
+}
+
+.sunny-app-main > .sunny-home-screen::-webkit-scrollbar,
+.sunny-app-main > .sunny-memories-screen::-webkit-scrollbar,
+.sunny-app-main > .sunny-settings-screen::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* Keep chat's message history as its own scroll area while the composer stays
+   anchored; never let the chat surface itself expand beyond the viewport. */
+.sunny-app-main > .sunny-chat-ui {
+  flex: 1 1 0% !important;
+  min-height: 0 !important;
+  height: 100%;
+  max-height: 100%;
+}
+.sunny-app-main > .sunny-chat-ui .chat-message-list {
+  min-height: 0 !important;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
