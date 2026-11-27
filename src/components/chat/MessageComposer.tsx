@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Capacitor, registerPlugin } from '@capacitor/core';
 import { ArrowUp, FileText, Mic, Paperclip, X } from 'lucide-react';
+import { audioService } from '@/services/audioService';
 
 const MAX_FILES = 3;
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
@@ -44,6 +45,8 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({ onSend, onVoic
   const [preparingAttachment, setPreparingAttachment] = useState(false);
   const [sending, setSending] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const typingCountRef = useRef(0);
+  const lastTypingSoundAtRef = useRef(0);
 
   const addFiles = async (selected: File[]) => {
     if (!selected.length) return; setFileError(null);
@@ -116,6 +119,17 @@ export const MessageComposer: React.FC<MessageComposerProps> = ({ onSend, onVoic
     if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) { event.preventDefault(); void handleSend(); }
   };
   const handleInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const nativeEvent = event.nativeEvent as InputEvent;
+    const isTypingAction = nativeEvent.inputType === 'insertText' || nativeEvent.inputType === 'deleteContentBackward';
+    if (isTypingAction) {
+      typingCountRef.current += 1;
+      const now = Date.now();
+      // Play one quiet tick every third edit, with a minimum gap between ticks.
+      if (typingCountRef.current % 3 === 0 && now - lastTypingSoundAtRef.current >= 140) {
+        lastTypingSoundAtRef.current = now;
+        audioService.playTypingClick();
+      }
+    }
     setText(event.target.value); event.target.style.height = 'auto'; event.target.style.height = `${Math.min(event.target.scrollHeight, 120)}px`;
   };
   const isSendDisabled = disabled || preparingAttachment || sending || (!text.trim() && !files.length);
