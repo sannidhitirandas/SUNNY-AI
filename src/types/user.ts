@@ -15,7 +15,7 @@ export const PERSONALITY_LABELS: Record<PersonalityTone, string> = {
 
 export const getPersonalityLabel = (tone: PersonalityTone | string): string =>
   PERSONALITY_LABELS[tone as PersonalityTone] ?? PERSONALITY_LABELS.adaptive;
-export type SunnyTheme = 'sunny-dark' | 'sunny-light';
+export type SunnyTheme = 'sunny-dark';
 export type BackgroundMusicOption = 'ambient' | 'midnight-notes' | 'blossoms' | 'dust' | 'after-school-rain';
 
 export interface AudioPreferences {
@@ -85,7 +85,7 @@ export const normalizeUserPreferences = (value: Partial<UserPreferences>): UserP
     preferredName: typeof value.preferredName === 'string' ? value.preferredName : 'Sunshine',
     memoryEnabled: typeof value.memoryEnabled === 'boolean' ? value.memoryEnabled : true,
     notificationsEnabled,
-    theme: value.theme === 'sunny-light' ? 'sunny-light' : 'sunny-dark',
+    theme: 'sunny-dark',
     notificationPreferences: { ...notificationPreferences, enabled: notificationsEnabled },
     audioPreferences,
   };
