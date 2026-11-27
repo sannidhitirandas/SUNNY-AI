@@ -44,7 +44,7 @@ test('user preference normalization synchronizes the notification master switch'
 
   assert.equal(preferences.notificationsEnabled, false);
   assert.equal(preferences.notificationPreferences.enabled, false);
-  assert.equal(preferences.theme, 'sunny-light');
+  assert.equal(preferences.theme, 'sunny-dark');
 });
 
 test('new notification preferences default off until the user opts in', () => {
