@@ -62,6 +62,7 @@ class AudioService {
   private isMusicPaused: boolean = false;
   private failedAssets = new Set<string>();
   private audioUnlocked = false;
+  private typingAudioContext: AudioContext | null = null;
 
   constructor() {
     this.initAutoplayUnlock();
@@ -197,6 +198,39 @@ class AudioService {
       } catch {
         this.failedAssets.add(assetPath);
       }
+    }
+  }
+
+  /** Plays a very quiet, short keyboard tick without requiring a bundled audio asset. */
+  public playTypingClick(): void {
+    if (!this.settings.soundEnabled) return;
+    const volume = this.getEffectiveSfxVolume() * 0.12;
+    if (volume <= 0 || typeof window === 'undefined') return;
+
+    try {
+      const AudioContextClass = window.AudioContext;
+      if (!AudioContextClass) return;
+      this.typingAudioContext ??= new AudioContextClass();
+      const context = this.typingAudioContext;
+      if (context.state === 'suspended') void context.resume().catch(() => undefined);
+
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      const now = context.currentTime;
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(1250 + Math.random() * 180, now);
+      gain.gain.setValueAtTime(Math.max(0.0001, volume * 0.16), now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.018);
+      oscillator.connect(gain);
+      gain.connect(context.destination);
+      oscillator.start(now);
+      oscillator.stop(now + 0.02);
+      oscillator.onended = () => {
+        oscillator.disconnect();
+        gain.disconnect();
+      };
+    } catch {
+      // Typing feedback must never interrupt text entry.
     }
   }
 
