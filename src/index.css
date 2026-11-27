@@ -2035,3 +2035,116 @@ body {
   border: 1px solid rgba(117,82,150,.20) !important;
   box-shadow: 0 12px 28px rgba(54,35,76,.10),inset 0 1px 0 rgba(255,255,255,.8) !important;
 }
+
+
+/* Device-adaptive layout and visually hidden scrollbars.
+   Scrolling remains enabled; only the scrollbar chrome is removed. */
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+html {
+  height: 100%;
+  overflow-x: clip;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: clip;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: clip;
+}
+
+/* Hide bars on every scrollable surface and browser engine without disabling
+   touch, wheel, trackpad, keyboard, or programmatic scrolling. */
+* {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+*::-webkit-scrollbar,
+*::-webkit-scrollbar-track,
+*::-webkit-scrollbar-thumb {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+
+.sunny-app-shell,
+.sunny-app-main,
+.sunny-home-screen,
+.sunny-chat-ui,
+.sunny-memories-screen,
+.sunny-settings-screen {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.sunny-app-shell {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.sunny-app-main {
+  width: 100%;
+  flex: 1 1 0%;
+}
+
+img,
+video,
+canvas,
+iframe {
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  .sunny-app-shell {
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .sunny-home-screen,
+  .sunny-memories-screen,
+  .sunny-settings-screen,
+  .sunny-chat-ui {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 641px) {
+  .sunny-home-screen,
+  .sunny-memories-screen,
+  .sunny-settings-screen {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@supports not (height: 100dvh) {
+  .sunny-app-shell,
+  #root {
+    height: 100vh;
+    min-height: 100vh;
+  }
+}
