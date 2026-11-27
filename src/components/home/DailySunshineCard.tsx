@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Sparkles } from 'lucide-react';
-import { AppCard } from '../ui/AppCard';
 
 const DAILY_REMINDERS = [
   "You don't have to figure everything out today. One small step is enough.",
@@ -15,8 +14,8 @@ export const DailySunshineCard: React.FC = () => {
   const [index, setIndex] = useState<number>(0);
 
   return (
-    <AppCard className="sunny-daily-card my-5 rounded-[24px] border border-[#4A2A73]/25 bg-gradient-to-r from-[#25103F] via-[#25103F] to-[#1A0A2E] p-4 shadow-[0_10px_30px_rgba(0,0,0,.14)] sm:p-5">
-      <div className="mb-2 flex items-center justify-between">
+    <section className="sunny-daily-reminder my-5 px-1 sm:px-2" aria-label="Little reminder">
+      <div className="mb-2 flex items-center justify-between gap-3">
         <span className="text-[10px] font-bold uppercase tracking-[0.18em] sunny-shine">
           Little reminder
         </span>
@@ -32,6 +31,5 @@ export const DailySunshineCard: React.FC = () => {
       <p key={index} className="sunny-reminder-text text-[15px] leading-relaxed text-[#F5EDFF] sm:text-xl">
         “{DAILY_REMINDERS[index]}”
       </p>
-    </AppCard>
-  );
+    </section>
 };
