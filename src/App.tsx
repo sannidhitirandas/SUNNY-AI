@@ -74,6 +74,7 @@ export function App() {
   }, []);
   const [activeTab, setActiveTab] = useState<Tab>('home');
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+  const [keyboardViewport, setKeyboardViewport] = useState({ height: 0, top: 0 });
   // On every platform, the message box sits flush at the bottom during a chat
   // and the nav dock stays hidden. Pressing "back" once slides the dock up
   // under the message box; pressing back again leaves the chat for Home.
@@ -173,14 +174,21 @@ export function App() {
     }
 
     if (!Capacitor.isNativePlatform()) {
+      const viewport = window.visualViewport;
       const handleResize = () => {
-        if (window.visualViewport) {
-          setIsKeyboardVisible(window.visualViewport.height < window.innerHeight - 150);
-        }
+        if (!viewport) return;
+        setKeyboardViewport({
+          height: Math.round(viewport.height),
+          top: Math.round(viewport.offsetTop),
+        });
+        setIsKeyboardVisible(viewport.height < window.innerHeight - 150);
       };
-      window.visualViewport?.addEventListener('resize', handleResize);
+      handleResize();
+      viewport?.addEventListener('resize', handleResize);
+      viewport?.addEventListener('scroll', handleResize);
       return () => {
-        window.visualViewport?.removeEventListener('resize', handleResize);
+        viewport?.removeEventListener('resize', handleResize);
+        viewport?.removeEventListener('scroll', handleResize);
       };
     }
 
@@ -484,7 +492,19 @@ export function App() {
   const hideNavBar = chatNavHidden;
 
   return (
-    <div className="sunny-app-shell h-dvh min-h-0 overflow-visible bg-[#12051F] flex flex-col relative selection:bg-[#D946EF] selection:text-white">
+    <div
+      className="sunny-app-shell h-dvh min-h-0 overflow-visible bg-[#12051F] flex flex-col relative selection:bg-[#D946EF] selection:text-white"
+      style={activeTab === 'chat' && isKeyboardVisible && !Capacitor.isNativePlatform() && keyboardViewport.height > 0
+        ? {
+            position: 'fixed',
+            top: keyboardViewport.top + 'px',
+            left: 0,
+            right: 0,
+            height: keyboardViewport.height + 'px',
+            width: '100%',
+          }
+        : undefined}
+    >
       <main className={`sunny-app-main flex-1 min-h-0 flex flex-col overflow-hidden ${activeTab === 'chat' ? 'pb-0' : 'pb-24'}`}>
         {activeTab === 'home' && (
           <HomeScreen
