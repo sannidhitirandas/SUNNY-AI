@@ -58,6 +58,20 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             linear-gradient(155deg,#12051F 0%,#1A0A2E 52%,#12051F 100%) !important;
         }
         .sunny-home-screen .sunny-home-content { width: 100%; max-width: none; margin: 0; }
+        .sunny-home-screen .sunny-home-content > .sunny-home-section,
+        .sunny-home-screen .sunny-home-content > .sunny-daily-reminder {
+          display: block;
+          width: 100%;
+          max-width: none;
+          margin-block: 1rem;
+        }
+        .sunny-home-screen .sunny-home-content > .sunny-home-section {
+          min-width: 0;
+        }
+        .sunny-home-screen .sunny-home-content > .sunny-daily-reminder {
+          padding-top: 0;
+          padding-bottom: 0;
+        }
         .sunny-home-screen .sunny-home-hero {
           background:
             radial-gradient(ellipse at 82% 18%,rgba(169,131,255,.27),transparent 40%),
