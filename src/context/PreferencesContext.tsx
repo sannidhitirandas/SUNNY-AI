@@ -245,8 +245,9 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
   };
 
   useEffect(() => {
-    document.documentElement.dataset.theme = preferences.theme;
-  }, [preferences.theme]);
+    // Sunny is permanently dark-themed; ignore any legacy light-theme preference.
+    document.documentElement.dataset.theme = 'sunny-dark';
+  }, []);
 
   useEffect(() => {
     audioService.updateSettings(preferences.audioPreferences);
