@@ -3,7 +3,7 @@ import { useAuth } from '@/context/AuthContext';
 import { usePreferences } from '@/context/PreferencesContext';
 import { useChat } from '@/context/ChatContext';
 import { audioService } from '@/services/audioService';
-import { getPersonalityLabel, PersonalityTone, SunnyTheme } from '@/types/user';
+import { getPersonalityLabel, PersonalityTone } from '@/types/user';
 import { useChatBackground } from '@/lib/chatBackground';
 import { SettingsSection } from '@/components/settings/SettingsSection';
 import { SettingsRow } from '@/components/settings/SettingsRow';
@@ -15,7 +15,6 @@ import { authService } from '@/services/authService';
 import {
   Sparkles,
   User as UserIcon,
-  Palette,
   Image as ImageIcon,
   Bookmark,
   List,
@@ -81,7 +80,6 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
     preferences,
     updateTone,
     updatePreferredName,
-    updateTheme,
     toggleMemory,
     updateAudioPreferences,
     resetOnboarding,
@@ -90,7 +88,6 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   const { background, setChatBackground, availableBackgrounds, device } = useChatBackground();
 
   const [toneModalVisible, setToneModalVisible] = useState(false);
-  const [themeModalVisible, setThemeModalVisible] = useState(false);
   const [backgroundModalVisible, setBackgroundModalVisible] = useState(false);
   const [nameModalVisible, setNameModalVisible] = useState(false);
   const [profileModalVisible, setProfileModalVisible] = useState(false);
@@ -109,11 +106,6 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
     { tone: 'playful', label: 'Funny Friend', desc: 'Playful banter, silly ideas, and laughs when they fit' },
     { tone: 'calm', label: 'Encourager', desc: 'Realistic encouragement and small, doable next steps' },
     { tone: 'adaptive', label: 'The Mix', desc: 'Blends all three styles based on what the moment calls for' },
-  ];
-
-  const THEMES: { theme: SunnyTheme; label: string; description: string }[] = [
-    { theme: 'sunny-dark', label: 'Sunny Night', description: 'The original dark purple and sunshine palette' },
-    { theme: 'sunny-light', label: 'Sunny Day', description: 'A bright, soft version of Sunny’s colors' },
   ];
 
   const formatTime = (time: string) => {
@@ -269,13 +261,6 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             setNewName(preferences.preferredName || user?.displayName || '');
             setNameModalVisible(true);
           }}
-        />
-        <SettingsRow
-          title="Theme"
-          subtitle="Choose Sunny’s appearance"
-          icon={<Palette size={16} className="text-[#E879F9]" />}
-          rightText={preferences.theme === 'sunny-light' ? 'Sunny Day' : 'Sunny Night'}
-          onPress={() => setThemeModalVisible(true)}
         />
         <SettingsRow
           title="Chat background"
@@ -537,39 +522,6 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               variant="ghost"
               fullWidth
             />
-          </div>
-        </div>
-      )}
-
-      {themeModalVisible && (
-        <div className="sunny-modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#12051F]/80 backdrop-blur-xs">
-          <div role="dialog" aria-modal="true" aria-labelledby="theme-picker-title" className="sunny-modal-surface w-full max-w-sm bg-[#25103F] border border-[#4A2A73] rounded-2xl p-5 shadow-2xl animate-in fade-in zoom-in-95 duration-150">
-            <h3 id="theme-picker-title" className="text-base font-bold text-white mb-3">Choose a theme</h3>
-            <div className="space-y-2 mb-4">
-              {THEMES.map((item) => {
-                const isSelected = preferences.theme === item.theme;
-                return (
-                  <button
-                    key={item.theme}
-                    type="button"
-                    onClick={async () => {
-                      await updateTheme(item.theme);
-                      setThemeModalVisible(false);
-                    }}
-                    className={`w-full flex items-center justify-between p-3 rounded-2xl border text-left transition-colors cursor-pointer ${
-                      isSelected ? 'border-[#E879F9] bg-[#E879F9]/15' : 'border-[#4A2A73] bg-[#381A60] hover:border-white/20'
-                    }`}
-                  >
-                    <span>
-                      <span className={`text-sm font-semibold block ${isSelected ? 'text-[#E879F9]' : 'text-white'}`}>{item.label}</span>
-                      <span className="text-xs text-[#D6C2F2] block mt-0.5">{item.description}</span>
-                    </span>
-                    {isSelected && <CheckCircle2 size={18} className="text-[#E879F9] shrink-0 ml-2" />}
-                  </button>
-                );
-              })}
-            </div>
-            <AppButton title="Close" onPress={() => setThemeModalVisible(false)} variant="ghost" fullWidth />
           </div>
         </div>
       )}
