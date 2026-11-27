@@ -44,7 +44,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
 
   // Wallpaper-matched bubble backgrounds (Sunny's and yours), handed to CSS as variables.
   // Only on when a wallpaper is picked; "Plain" keeps the normal bubble colours.
-  const bubbleColors = bubbleGradient ? (preferences.theme === 'sunny-light' ? bubbleGradient.light : bubbleGradient.dark) : null;
+  const bubbleColors = bubbleGradient ? bubbleGradient.dark : null;
   const gradientStyle = bubbleColors
     ? ({
         '--sunny-bot-1': bubbleColors.sunny[0],
@@ -163,13 +163,6 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
         .sunny-chat-ui .sunny-message-composer {
           border-color:rgba(167,139,250,.2);
         }
-        :root[data-theme='sunny-light'] .sunny-chat-ui {
-          background:linear-gradient(160deg,#F8F6FC,#F0EAF8 58%,#F8F5FC) !important;
-        }
-        :root[data-theme='sunny-light'] .sunny-chat-ui .sunny-modal-surface {
-          background:linear-gradient(145deg,#FFFFFF,#F2EBFC) !important;
-          border-color:rgba(91,67,120,.2) !important;
-        }
       `}</style>
 
       {/* Chat wallpaper: image + theme-aware veil so message text stays readable */}
@@ -186,10 +179,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
           <div
             className="absolute inset-0"
             style={{
-              background:
-                preferences.theme === 'sunny-light'
-                  ? 'linear-gradient(to bottom, rgba(248,246,252,0.72), rgba(248,246,252,0.82))'
-                  : 'linear-gradient(to bottom, rgba(18,5,31,0.38), rgba(18,5,31,0.62))',
+              background: 'linear-gradient(to bottom, rgba(18,5,31,0.38), rgba(18,5,31,0.62))',
             }}
           />
         </div>
