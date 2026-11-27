@@ -82,7 +82,7 @@ export const PrivacyScreen: React.FC<PrivacyScreenProps> = ({ onBack, onResetToO
   };
 
   return (
-    <div className="sunny-privacy-screen sunny-subscreen flex-1 overflow-y-auto px-4 py-3 sm:px-6 w-full max-w-none overflow-x-hidden pb-6 sm:pb-8">
+    <div className="sunny-privacy-screen sunny-subscreen flex-1 min-h-0 h-full overflow-y-auto px-4 py-3 sm:px-6 w-full max-w-none overflow-x-hidden pb-6 sm:pb-8">
       {/* Top Bar */}
       <div className="sunny-privacy-header flex items-center gap-3 py-2 mb-4">
         <button
