@@ -149,7 +149,9 @@ const NIMBUS_CSS = `
   flex: 0 0 auto;
   min-width: max-content;
   padding-inline: 11px;
-  gap: 7px;
+  /* No flex gap: a gap would still reserve space next to the collapsed label and push
+     the icon off-center. The label carries its own margin while active instead. */
+  gap: 0;
   white-space: nowrap;
   isolation: isolate;
   overflow: visible;
@@ -169,10 +171,11 @@ const NIMBUS_CSS = `
 .nimbus-nav.sunny-liquid-navbar .nimbus-label {
   display: inline-block;
   max-width: 0;
+  margin-left: 0;
   opacity: 0;
   overflow: hidden;
   white-space: nowrap;
-  transition: max-width .26s ease, opacity .18s ease;
+  transition: max-width .26s ease, margin-left .26s ease, opacity .18s ease;
 }
 .nimbus-nav.sunny-liquid-navbar .nimbus-item[aria-current="page"] {
   color: #FFD84D;
@@ -180,6 +183,7 @@ const NIMBUS_CSS = `
 }
 .nimbus-nav.sunny-liquid-navbar .nimbus-item[aria-current="page"] .nimbus-label {
   max-width: 5.5rem;
+  margin-left: 7px;
   opacity: 1;
   overflow: visible;
 }
@@ -202,9 +206,10 @@ const NIMBUS_CSS = `
   pointer-events: none;
 }
 @media (max-width: 520px) {
-  .nimbus-nav.sunny-liquid-navbar .nimbus-item { padding-inline: 10px; gap: 6px; }
+  .nimbus-nav.sunny-liquid-navbar .nimbus-item { padding-inline: 10px; }
   .nimbus-nav.sunny-liquid-navbar .nimbus-item[aria-current="page"] .nimbus-label {
     max-width: 5.8rem;
+    margin-left: 6px;
     overflow: visible;
   }
 }
@@ -483,7 +488,9 @@ export function LiquidNavbar({
   }, [draw, step])
 
   /* ---- layout ---- */
-  const measure = React.useCallback(() => {
+  // `resize` = the layout moved under us (label transition, window resize), not a tab change:
+  // retarget the drop and let the springs follow, without restarting the split/jump animation.
+  const measure = React.useCallback((resize = false) => {
     const nav = navRef.current
     const el = itemRefs.current[current]
     if (!nav || !el) return
@@ -499,7 +506,7 @@ export function LiquidNavbar({
       s.a.x = s.b.x = nx
       s.q = T.q
       s.ready = true
-    } else if (Math.abs(nx - T.x) > 0.5) {
+    } else if (!resize && Math.abs(nx - T.x) > 0.5) {
       s.lead = Math.abs(nx - s.a.x) <= Math.abs(nx - s.b.x) ? 0 : 1
       s.lagFrom = performance.now() + 70
       s.moving = true
@@ -549,7 +556,7 @@ export function LiquidNavbar({
     let lastW = -1
     const ro = new ResizeObserver(() => {
       const w = navRef.current?.offsetWidth ?? 0
-      if (w !== lastW) { lastW = w; st.current.ready = false; measureRef.current() }
+      if (w !== lastW) { lastW = w; measureRef.current(true) }
     })
     if (navRef.current) ro.observe(navRef.current)
     return () => ro.disconnect()
@@ -634,6 +641,10 @@ export function LiquidNavbar({
       data-refract={refract ? "on" : "off"}
       aria-label="Main"
       onKeyDown={onKeyDown}
+      onTransitionEnd={(e) => {
+        // labels finished opening/closing: re-measure once so the drop lands exactly on the final layout
+        if (e.propertyName === "max-width" || e.propertyName === "margin-left") measureRef.current(true)
+      }}
       onPointerMove={onMove}
       onPointerLeave={() => { st.current.mouse.on = false; loop() }}
       onPointerDown={(e) => { const p = local(e.clientX, e.clientY); ripple(p.x, p.y, 0.8) }}
