@@ -9,7 +9,6 @@ import { StarterIntent } from '@/types/chat';
 import { SunnyLogo } from '@/components/brand/SunnyLogo';
 import { GreetingCard } from '@/components/home/GreetingCard';
 import { ConversationStarter } from '@/components/home/ConversationStarter';
-import { DailySunshineCard } from '@/components/home/DailySunshineCard';
 import { RecentConversations } from '@/components/home/RecentConversations';
 
 import { Settings, Sparkles, MessageCircle, Bookmark, ArrowUpRight } from 'lucide-react';
@@ -167,8 +166,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </section>
 
         <ConversationStarter onSelectIntent={handleSelectIntent} />
-
-        <DailySunshineCard />
 
         <RecentConversations
           lastMessage={lastMessage}
