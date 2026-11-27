@@ -452,39 +452,30 @@ export function App() {
     );
   }
 
-  if (activeSubScreen === 'notifications') {
+  if (activeSubScreen !== 'none') {
     return (
-      <NotificationPreferencesScreen
-        onBack={() => setActiveSubScreen('none')}
-      />
-    );
-  }
-
-  if (activeSubScreen === 'privacy') {
-    return (
-      <PrivacyScreen
-        onBack={() => setActiveSubScreen('none')}
-        onResetToOnboarding={() => {
-          setActiveSubScreen('none');
-          setActiveTab('home');
-        }}
-      />
-    );
-  }
-
-  if (activeSubScreen === 'safety') {
-    return (
-      <SafetyScreen
-        onBack={() => setActiveSubScreen('none')}
-      />
-    );
-  }
-
-  if (activeSubScreen === 'about') {
-    return (
-      <AboutScreen
-        onBack={() => setActiveSubScreen('none')}
-      />
+      <div className="sunny-app-shell h-dvh min-h-0 overflow-hidden bg-[#12051F] flex flex-col relative">
+        <main className="sunny-app-main flex-1 min-h-0 flex flex-col overflow-hidden">
+          {activeSubScreen === 'notifications' && (
+            <NotificationPreferencesScreen onBack={() => setActiveSubScreen('none')} />
+          )}
+          {activeSubScreen === 'privacy' && (
+            <PrivacyScreen
+              onBack={() => setActiveSubScreen('none')}
+              onResetToOnboarding={() => {
+                setActiveSubScreen('none');
+                setActiveTab('home');
+              }}
+            />
+          )}
+          {activeSubScreen === 'safety' && (
+            <SafetyScreen onBack={() => setActiveSubScreen('none')} />
+          )}
+          {activeSubScreen === 'about' && (
+            <AboutScreen onBack={() => setActiveSubScreen('none')} />
+          )}
+        </main>
+      </div>
     );
   }
 
