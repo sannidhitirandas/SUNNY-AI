@@ -2241,3 +2241,44 @@ iframe {
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
 }
+
+
+/* Settings detail pages (Privacy, Safety, Notifications, About) are direct
+   children of the bounded app-main flex column. Give each one a real,
+   independent scrollport; avoid 100% height + flex sizing competing and
+   clipping content on mobile WebViews. */
+.sunny-subscreen-shell > .sunny-app-main {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 0% !important;
+  min-height: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+.sunny-subscreen-shell > .sunny-app-main > .sunny-subscreen {
+  display: block !important;
+  position: relative;
+  flex: 1 1 0% !important;
+  min-height: 0 !important;
+  height: 0 !important;
+  max-height: none !important;
+  width: 100%;
+  overflow-x: hidden !important;
+  overflow-y: scroll !important;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  scrollbar-width: none;
+  padding-bottom: max(2rem, env(safe-area-inset-bottom, 0px)) !important;
+}
+
+.sunny-subscreen-shell > .sunny-app-main > .sunny-subscreen::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.sunny-subscreen-shell > .sunny-app-main > .sunny-subscreen > :first-child {
+  flex-shrink: 0;
+}
