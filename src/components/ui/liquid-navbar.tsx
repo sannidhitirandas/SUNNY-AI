@@ -185,7 +185,7 @@ const NIMBUS_CSS = `
   overflow: visible;
 }
 .nimbus-nav.sunny-liquid-navbar .nimbus-item[aria-current="page"] .nimbus-label {
-  max-width: 5.5rem;
+  max-width: 8rem;
   margin-left: 7px;
   opacity: 1;
   overflow: visible;
@@ -210,7 +210,7 @@ const NIMBUS_CSS = `
 @media (max-width: 520px) {
   .nimbus-nav.sunny-liquid-navbar .nimbus-item { padding-inline: 10px; }
   .nimbus-nav.sunny-liquid-navbar .nimbus-item[aria-current="page"] .nimbus-label {
-    max-width: 5.8rem;
+    max-width: 8rem;
     margin-left: 6px;
     overflow: visible;
   }
@@ -472,6 +472,10 @@ export function LiquidNavbar({
     s.mouse.s += (target - s.mouse.s) * Math.min(1, dt * 7)
   }, [])
 
+  // Re-reads the active item's real box every frame (set below, once `measure` exists), so the
+  // bubble always hugs the icon + word, even while the label is opening or the font is loading.
+  const syncRef = React.useRef<() => void>(() => {})
+
   const loop = React.useCallback(() => {
     const s = st.current
     if (s.raf) return
@@ -479,6 +483,7 @@ export function LiquidNavbar({
     const tick = (now: number) => {
       const dt = Math.min((now - s.last) / 1000, 1 / 30)
       s.last = now
+      syncRef.current()
       step(dt, now)
       draw()
       const busy = s.moving || s.rips.length || s.sats.length || s.mouse.s > 0.01 || Math.abs(s.t.q - s.q) > 0.2
@@ -554,6 +559,18 @@ export function LiquidNavbar({
   React.useLayoutEffect(() => { measure() }, [measure, items.length, compact])
   const measureRef = React.useRef(measure)
   measureRef.current = measure
+  syncRef.current = () => {
+    const nav = navRef.current
+    const el = itemRefs.current[current]
+    const s = st.current
+    if (!nav || !el || !s.ready) return
+    const T = s.t
+    const q = Math.max(0, el.offsetWidth / 2 - el.offsetHeight / 2)
+    const nx = PAD + el.offsetLeft + el.offsetWidth / 2
+    if (nav.offsetWidth !== s.w || nav.offsetHeight !== s.h || Math.abs(nx - T.x) > 0.25 || Math.abs(q - T.q) > 0.25) {
+      measure(true)
+    }
+  }
   React.useEffect(() => {
     let lastW = -1
     const ro = new ResizeObserver(() => {
