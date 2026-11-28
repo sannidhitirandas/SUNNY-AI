@@ -115,6 +115,8 @@ const NIMBUS_CSS = `
 /* Sunny theme + fixed, active-pill navigation */
 .nimbus-nav.sunny-liquid-navbar {
   --n-tint: rgba(23, 16, 44, .88);
+  /* Use the app's UI font so labels never fall back to a serif on some phones */
+  font-family: var(--sunny-ui-font, "Plus Jakarta Sans"), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   box-sizing: border-box;
   display: flex;
   flex-wrap: nowrap;
@@ -251,7 +253,7 @@ void main(){
  float pm=smoothstep(1.,-1.,dp);float dm=smoothstep(1.,-1.,dd)*smoothstep(1.,-2.,dp);
  float sh=smoothstep(9.,-9.,dropD(p-vec2(0.,5.)))*(1.-dm)*pm*(.11+.07*uDark);
  vec3 c=vec3(.20,.12,.30)*sh;float a=sh;
- float pa=clamp(pm*(fres*.5+spec*.9+spec2),0.,1.);
+ float pa=clamp(pm*spec*.5,0.,1.)*(1.-dm);
  c=mix(vec3(1.),irid,.5*fres)*pa+c*(1.-pa);a=pa+a*(1.-pa);
  float th=lens(dd,11.);
  float cs=caus((p+n.xy*th*18.)*.085,uTime*.9);
@@ -404,7 +406,8 @@ export function LiquidNavbar({
     const s = st.current
     const T = s.t
     s.time += dt
-    s.q += (T.q - s.q) * Math.min(1, dt * 12)
+    // reduced motion: snap the pill's width, otherwise easing stalls partway when the loop stops
+    s.q = s.reduce ? T.q : s.q + (T.q - s.q) * Math.min(1, dt * 12)
     const bodies = [s.a, s.b]
     let still = true
     if (s.reduce) {
@@ -478,7 +481,7 @@ export function LiquidNavbar({
       s.last = now
       step(dt, now)
       draw()
-      const busy = s.moving || s.rips.length || s.sats.length || s.mouse.s > 0.01
+      const busy = s.moving || s.rips.length || s.sats.length || s.mouse.s > 0.01 || Math.abs(s.t.q - s.q) > 0.2
       // ambient water keeps moving while visible; reduced-motion only animates on change
       if (s.visible && (!s.reduce || busy)) s.raf = requestAnimationFrame(tick)
       else s.raf = 0
