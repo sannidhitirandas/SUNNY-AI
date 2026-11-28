@@ -501,6 +501,10 @@ export function App() {
             left: 0,
             right: 0,
             height: keyboardViewport.height + 'px',
+            // .sunny-app-shell sets min-height:100dvh, which would keep the shell full-screen
+            // tall and push the chat header above the visible area while the keyboard is open.
+            minHeight: 0,
+            maxHeight: keyboardViewport.height + 'px',
             width: '100%',
           }
         : undefined}
