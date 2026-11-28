@@ -1253,11 +1253,14 @@ button:disabled { cursor: not-allowed; }
 .sunny-app-main > * {
   min-width:0;
   min-height:0;
-  animation:sunny-screen-settle 260ms var(--sunny-ease) both;
+  /* `backwards` (not `both`) + `transform:none` at the end: a lingering transform makes the
+     screen the containing block for position:fixed, which shrank every popup to the scrolled
+     screen instead of the viewport. */
+  animation:sunny-screen-settle 260ms var(--sunny-ease) backwards;
 }
 @keyframes sunny-screen-settle {
   from { opacity:.72; transform:translateY(6px); }
-  to { opacity:1; transform:translateY(0); }
+  to { opacity:1; transform:none; }
 }
 :root[data-theme='sunny-light'] {
   --sunny-bg:#F8F6FC;
@@ -2281,4 +2284,33 @@ iframe {
 
 .sunny-subscreen-shell > .sunny-app-main > .sunny-subscreen > :first-child {
   flex-shrink: 0;
+}
+
+
+/* Settings popups cover the whole viewport (above the floating navbar, z-index 99999). */
+.sunny-modal-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 100001 !important;
+  height: 100dvh;
+}
+
+/* Sub-screen header: flush with the top of the scrollport and fully opaque, so nothing
+   scrolls above or shows through it. The old top padding on the scroll container left a
+   strip where content peeked out above the sticky header. */
+.sunny-subscreen {
+  padding-top: 0 !important;
+}
+.sunny-subscreen > div:first-child {
+  top: 0 !important;
+  margin-top: 0 !important;
+  padding-top: max(.9rem, env(safe-area-inset-top, 0px), clamp(1rem, 2.5vw, 2rem)) !important;
+  background: #12051F !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: 0 10px 18px -12px rgba(0, 0, 0, .55);
+}
+:root[data-theme='sunny-light'] .sunny-subscreen > div:first-child {
+  background: #F8F6FC !important;
+  box-shadow: 0 10px 18px -12px rgba(60, 40, 90, .25);
 }
