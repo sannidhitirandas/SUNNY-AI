@@ -2314,3 +2314,13 @@ iframe {
   background: #F8F6FC !important;
   box-shadow: 0 10px 18px -12px rgba(60, 40, 90, .25);
 }
+
+
+/* Chat composer: the text field is part of the composer pill, never a second dark pill inside it. */
+.sunny-composer textarea {
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent;
+}
