@@ -95,6 +95,15 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   const [profileError, setProfileError] = useState<string | null>(null);
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [passwordModalVisible, setPasswordModalVisible] = useState(false);
+  // Only one popup at a time, so a popup opened earlier can never linger underneath another.
+  const openExclusiveModal = (open: () => void) => {
+    setToneModalVisible(false);
+    setBackgroundModalVisible(false);
+    setNameModalVisible(false);
+    setProfileModalVisible(false);
+    setPasswordModalVisible(false);
+    open();
+  };
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [passwordError, setPasswordError] = useState<string | null>(null);
@@ -224,7 +233,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             onClick={() => {
               setProfileName(user?.displayName || preferences.preferredName || '');
               setProfileError(null);
-              setProfileModalVisible(true);
+              openExclusiveModal(() => setProfileModalVisible(true));
             }}
             className="sunny-settings-profile flex items-center gap-3 rounded-[22px] border border-white/10 bg-white/[0.055] px-4 py-3.5 text-left shadow-[inset_0_1px_0_rgba(255,255,255,.05)] sm:min-w-56"
             aria-label="Edit account profile"
@@ -250,7 +259,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           subtitle="Change how Sunny responds to you"
           icon={<Sparkles size={16} className="sunny-shine" />}
           rightText={getPersonalityLabel(preferences.preferredTone)}
-          onPress={() => setToneModalVisible(true)}
+          onPress={() => openExclusiveModal(() => setToneModalVisible(true))}
         />
         <SettingsRow
           title="Preferred Name"
@@ -259,7 +268,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           rightText={preferences.preferredName || user?.displayName || 'Set Name'}
           onPress={() => {
             setNewName(preferences.preferredName || user?.displayName || '');
-            setNameModalVisible(true);
+            openExclusiveModal(() => setNameModalVisible(true));
           }}
         />
         <SettingsRow
@@ -267,7 +276,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           subtitle="Pick a wallpaper for your chat with Sunny"
           icon={<ImageIcon size={16} className="text-[#E879F9]" />}
           rightText={background.label}
-          onPress={() => setBackgroundModalVisible(true)}
+          onPress={() => openExclusiveModal(() => setBackgroundModalVisible(true))}
         />
       </SettingsSection>
 
@@ -324,7 +333,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               setNewPassword('');
               setConfirmNewPassword('');
               setPasswordError(null);
-              setPasswordModalVisible(true);
+              openExclusiveModal(() => setPasswordModalVisible(true));
             }}
           />
         )}
@@ -336,7 +345,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           onPress={() => {
             setProfileName(user?.displayName || preferences.preferredName || '');
             setProfileError(null);
-            setProfileModalVisible(true);
+            openExclusiveModal(() => setProfileModalVisible(true));
           }}
         />
         <SettingsRow
