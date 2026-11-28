@@ -140,7 +140,6 @@ const NIMBUS_CSS = `
   background: rgba(23, 16, 44, .88);
   box-shadow:
     inset 0 1px 1px rgba(255,255,255,.16),
-    inset 0 0 0 1px rgba(255,216,77,.18),
     0 12px 32px -14px rgba(0,0,0,.72),
     0 2px 8px rgba(0,0,0,.28);
 }
@@ -164,9 +163,11 @@ const NIMBUS_CSS = `
    Do not add a second ::before oval on the selected item. */
 .nimbus-nav.sunny-liquid-navbar .nimbus-item:first-of-type { margin-left: 0; }
 .nimbus-nav.sunny-liquid-navbar .nimbus-item:last-of-type { margin-right: 0; }
-.nimbus-nav.sunny-liquid-navbar .nimbus-item:focus-visible {
-  outline: 2px solid rgba(199, 174, 255, .85);
-  outline-offset: 2px;
+.nimbus-nav.sunny-liquid-navbar .nimbus-item:focus,
+.nimbus-nav.sunny-liquid-navbar .nimbus-item:focus-visible { outline: none; }
+.nimbus-nav.sunny-liquid-navbar .nimbus-item:not([aria-current="page"]):focus-visible {
+  outline: 2px solid rgba(199, 174, 255, .6);
+  outline-offset: -3px;
 }
 .nimbus-nav.sunny-liquid-navbar .nimbus-label {
   display: inline-block;
@@ -195,9 +196,8 @@ const NIMBUS_CSS = `
     radial-gradient(120% 140% at 30% 0%, rgba(255,255,255,.72), rgba(255,255,255,0) 55%),
     rgba(255,216,77,.34);
   box-shadow:
-    inset 0 1px 1px rgba(255,255,255,.78),
+    inset 0 1px 1px rgba(255,255,255,.5),
     inset 0 -2px 6px rgba(255,216,77,.22),
-    inset 0 0 0 1px rgba(255,216,77,.48),
     0 6px 16px -6px rgba(0,0,0,.42);
 }
 .nimbus-nav.sunny-liquid-navbar.sunny-liquid-navbar--hidden {
@@ -260,10 +260,9 @@ void main(){
  float cres=dm*smoothstep(.12,.55,dot(n.xy,normalize(vec2(.55,.85))))*smoothstep(0.,3.,-dd);
  float body=.5+.5*clamp(-n.y*3.,-1.,1.);
  float da=dm*(.26+.14*body)*(1.-.35*uDark);vec3 dc=mix(tint,vec3(1.),body*.6);
- float la=rim*.22;vec3 lc=mix(vec3(.78,.55,.20),vec3(.98,.72,.22),uDark);dc=lc*la+dc*da*(1.-la);da=la+da*(1.-la);
+ float la=rim*.1;vec3 lc=mix(vec3(.78,.55,.20),vec3(.98,.72,.22),uDark);dc=lc*la+dc*da*(1.-la);da=la+da*(1.-la);
  la=clamp(cres*.7+smoothstep(.6,1.,cs)*.28*th*dm,0.,1.);dc=vec3(1.)*la+dc*(1.-la);da=la+da*(1.-la);
  la=clamp(dm*(spec*1.2+spec2*.5),0.,1.);dc=vec3(1.)*la+dc*(1.-la);da=la+da*(1.-la);
- la=dm*smoothstep(-2.,0.,dd)*.4;dc=mix(vec3(1.),irid,.35)*la+dc*(1.-la);da=la+da*(1.-la);
  c=dc+c*(1.-da);a=da+a*(1.-da);
  gl_FragColor=vec4(c,a);
 }`
